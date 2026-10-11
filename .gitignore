@@ -1,0 +1,32 @@
+# Local credentials and per-machine agent state
+.env
+.env.*
+!.env.example
+.codex/
+auth.json
+*.pem
+*.key
+
+# Environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.cache/
+.DS_Store
+
+# Local data and generated runs; selected figures belong in figures/.
+/data/*
+!/data/README.md
+/outputs/*
+!/outputs/README.md
+*.log
+
+# Temporary document build files
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
