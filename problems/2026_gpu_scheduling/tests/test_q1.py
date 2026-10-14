@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-from gpu_scheduling.q1 import ccdf, demand_timeline, gini, lorenz, phase_exposure, top_share
+from gpu_scheduling.q1 import ccdf, demand_timeline, gini, interval_demand, lorenz, phase_exposure, top_share
 
 
 class Q1Checks(unittest.TestCase):
@@ -38,3 +38,21 @@ class Q1Checks(unittest.TestCase):
         self.assertEqual(exposure[0], 1.5)
         self.assertEqual(exposure[1], 1)
         self.assertEqual(exposure.sum()*3600, 86400+1800)
+
+    def test_binned_demand_crossing_boundaries_and_partial_day(self):
+        # 2 GPUs [0,4), 3 GPUs [4,10), 5 GPUs [2,7); last arrival at T is excluded.
+        bins, areas = interval_demand([0,4,2,10], [4,6,5,3], [2,3,5,99], 10, 4)
+        self.assertEqual(bins.tolist(), [0,4,8,10])
+        self.assertEqual(areas.tolist(), [18,27,6])
+        self.assertEqual(int(areas.sum()), 51)
+
+    def test_daily_integral_matches_independent_overlap_for_every_bin(self):
+        arrival=np.array([0,86399,86400,172799,180000])
+        duration=np.array([90000,2,86400,20000,1])
+        quantity=np.array([2,3,5,7,999])
+        bins,areas=interval_demand(arrival,duration,quantity,180000)
+        expected=[sum(int(q)*max(0,min(int(a+p),int(right))-max(int(a),int(left)))
+                      for a,p,q in zip(arrival,duration,quantity))
+                  for left,right in zip(bins[:-1],bins[1:])]
+        self.assertEqual(areas.tolist(),expected)
+        self.assertEqual(bins[-1]-bins[-2],7200)

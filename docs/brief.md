@@ -9,7 +9,7 @@
 | 題目 | 使用者確認 2026 MCM Senior Problem B，已核對原題 PDF 與兩個 raw CSV |
 | 規則 | 初始空閒、非搶佔、已知 duration、gang 同步、逐節點同 worker CPU/GPU；10 A4 頁英文、至少 11pt、姓名與真實 AI 披露 |
 | 工程 | 一個活動 DES、共享 loader／evaluator、獨立 ledger replay；原 scripts 逐 byte inert 歸檔 |
-| Q1 | PASS：已審核包整合、39 統計／九表核對、資料驅動圖；沿用 feat/b-q1 |
+| Q1 | feat/b-q1：唯一英文章節、繁中對照、正文／補充圖與獨立交付；數值沿用 39 統計／九表，最終狀態見 [Q1 任務](../notes/tasks/b-q1.md) |
 | Q2 基線 | PASS：FCFS／嚴格 SJF-HOL 全 trace 各 224,112 jobs，節點容量及持久化 metrics 核查；改進算法 NOT_RUN |
 | Q3 | 研究材料已納入；技術／金融實驗 NOT_RUN，耦合 donor／相容性驗證 BLOCKED |
 | 論文 | 跨章 Q1 量綱／需求語義已修正；Q2/Q3 性能數字保留為未驗證歷史主張；編譯與排版狀態見整合驗收，不代表可提交 |
@@ -22,6 +22,7 @@
 - `read_data(source)` 回傳 nodes/jobs/input hashes；秒、每 worker 需求、0.01 vCPU 整數縮放。
 - `simulate_pool(nodes,jobs,policy)` 是唯一活動 DES；FCFS 或 SJF-HOL，completions → arrivals → scheduling，FF 按 node_name；回傳 jobs/starts/ends/plans。
 - `metrics(result,nodes,horizon)` 是共享 evaluator；全部作業排空等待，分配積分 `[0,H)`、完成 `end<=H`；預設 exact trace 窗口，名義 90 天須顯式設定。BSLD 最低為 1。
+- Q1 build 新增 `--scope q1|full`，預設 full；全文與獨立預覽共用 `q1_section.tex`。整合者將 feat/b-q1 的共用入口變更併入 Q2/Q3，勿複製章節或手抄數字。
 - Q1 兩個 EDA 入口共享 `q1.py`；完整生命週期工作量、immediate-start 假設需求、實際調度分配三者分開。論文共享 Q1 數值由 build 生成，不各章寫死。
 - Q2 研究排序／放置；Q3 研究明示假設的耦合跨池方案；圖與全文由整合者協調。需要改共用 loader／DES／evaluator 介面時，在此記錄並由依賴方透過 PR 審閱，不另起永久引擎。
 - 目前人員分工未指定，不把分支名當成已認領；不同電腦的 Codex 對話與本機 outputs 不會自動同步。

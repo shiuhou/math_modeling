@@ -1,37 +1,4 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{charter}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage[margin=0.78in, top=0.82in, bottom=0.82in]{geometry}
-\usepackage{graphicx,booktabs,tabularx,hyperref,xcolor,fancyhdr,microtype,caption}
-
-\definecolor{primary}{RGB}{27, 79, 114}
-\definecolor{accent}{RGB}{192, 57, 43}
-\definecolor{graytext}{RGB}{90, 90, 90}
-
-\hypersetup{colorlinks=true, linkcolor=primary, citecolor=primary, urlcolor=primary}
-\setlength{\parskip}{4pt plus 1pt minus 1pt}
-\setlength{\parindent}{0pt}
-
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\small\color{graytext}2026 MCM Senior Group Problem B: Scheduling a GPU Cluster}
-\fancyhead[R]{\small\color{graytext}Team Submission Report}
-\fancyfoot[C]{\small\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
-
-\newcommand{\takeaway}[2]{%
-  \vspace{4pt}%
-  \noindent\colorbox{primary!7}{%
-    \parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
-      \vspace{2pt}\textbf{\color{primary}#1:}\hspace{0.4em}#2\vspace{2pt}%
-    }%
-  }%
-  \vspace{4pt}%
-}
-
-\input{q1_values.tex}
+\input{preamble.tex}
 \begin{document}
 
 \begin{center}
@@ -47,68 +14,13 @@
 
 \noindent\textbf{\color{primary}Executive Summary.} Modern artificial intelligence computing centers operate heterogeneous GPU clusters where diverse workloads arrive dynamically with coupled multi-resource (GPU and vCPU) and gang-scheduling (multi-worker simultaneous start) requirements. Using the three-month Alibaba GPU cluster trace ($224,112$ jobs across $4,278$ servers and $10,412$ physical GPUs), we perform a full-cycle empirical diagnosis, formulate an exact continuous-time multi-resource gang-scheduling optimization model, design an $O(K + N)$ event-driven scheduling and placement engine, and evaluate technical and financial mechanisms to eliminate cross-model congestion imbalance:
 \begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
-  \item \textbf{Data Characteristics and Bottleneck Hypotheses (Question 1):} GPU work is highly concentrated (Gini $0.9522$; the top $2,241$ and $11,205$ jobs account for $43.30\%$ and $87.68\%$). Relative 24-hour arrival phase varies by $2.29\times$ without identifying calendar clock times. \texttt{A10}'s lifetime-work/window-capacity ratio is $\QOneAtenRho$; its exact-window, unconstrained immediate-start demand averages $\QOneAtenMean$ GPUs against $\QOneAtenCapacity$ available GPUs. Neither quantity is actual utilization. On \texttt{GPU-series-1}, $2,478$ jobs ($25.70\%$) exceed the $24$ vCPU/GPU ratio of its 8-GPU nodes, motivating placement and queueing hypotheses for subsequent experiments.
+  \item \input{q1_summary.tex}
   \item \textbf{Aging-Aware Multi-Dimensional Backfilling \& Ratio-Matched Placement (Question 2):} Under baseline First-Come-First-Served with First-Fit (\texttt{FCFS-FF}), severe head-of-line (HoL) blocking by multi-week jobs drives cluster-wide mean waiting time to $447.37$ hours ($900.13$ hours on \texttt{A10}) and limits 90-day job completions to $164,868$ ($73.57\%$). Meanwhile, load-spreading placement (\texttt{EASY-WF}) fragments 8-GPU servers on \texttt{A100-SXM4-80GB}, inflating A100 mean waiting time from $0.00$h to $16.92$h (P95 $= 84.82$h). We propose \textbf{Aging-Aware Multi-Dimensional Backfilling with Ratio-Matched Best-Fit Placement (\texttt{AMBF-RM})}. By matching worker CPU/GPU ratios $c_j/g_j$ to tightest compatible node ratios $C_i^{\text{cap}}/G_i^{\text{cap}}$, \texttt{AMBF-RM} eliminates CPU-induced GPU stranding on \texttt{GPU-series-1}, reducing its mean and maximum waiting times from $9.38$h and $122.2$h to \textbf{$0.00$ seconds} across all $9,643$ jobs. On \texttt{A10}, \texttt{AMBF-1080} ($212.12$h mean wait, $149$s median wait, $1,414.0$h max wait, $242.9$d makespan) \textbf{strictly Pareto-dominates} \texttt{FCFS-FF} on every metric, while \texttt{AMBF-1500} slashes cluster-wide mean waiting time by \textbf{$95.03\%$} (to $22.25$h, median $0.0$s, $96.98\%$ 90-day completions) while cutting maximum starvation delay in half compared to pure Smallest-Area-First (\texttt{SAF-BF}, $1,573.4$h vs.\ $3,017.3$h).
   \item \textbf{Technical \& Financial Cross-Pool Rebalancing (Question 3):} To investigate \texttt{A10}'s counterfactual mean-demand excess ($\QOneAtenExcess$ GPUs; not a proven expansion requirement), we evaluate three mechanisms: (1) \textbf{Dynamic Cross-Pool Elastic Overflow} with a $10\%$ native reservation guard cuts \texttt{A10} mean wait to $4.99$h ($720$ donor GPUs, $\kappa=1.45$) and $0.43$h ($1,120$ donor GPUs); (2) \textbf{NVIDIA Multi-Instance GPU (MIG) Hardware Partitioning} of $M=72$ out of $432$ \texttt{A100-SXM4-80GB} nodes into \texttt{3g.40gb} ($m=2$, $+1,152$ vGPUs) or \texttt{2g.20gb} ($m=3$, $+1,728$ vGPUs) slashes \texttt{A10} mean wait to \textbf{$4.27$h} (median $8.0$s) and \textbf{$2.55$h} (median $0.0$s), respectively, while maintaining \textbf{$0.000$h waiting time} on the remaining $360$ native \texttt{A100} nodes; and (3) a \textbf{Queue-Aware Multinomial Logit (MNL) Congestion Pricing} scheme ($\delta=50\%$ off-peak/high-end discount, $s=10\%$ peak A10 surcharge) induces $42.1\%$ job migration, cutting \texttt{A10} mean wait to \textbf{$1.86$h} while increasing cloud revenue by \textbf{$+13.0\%$} ($\$11.12\text{M} \to \$12.57\text{M}$) and raising cluster utilization Jain's fairness index from $0.941$ to $0.992$.
 \end{itemize}
 
 \vspace{4pt}
-\section{Question 1: Exploratory Data Analysis and Workload Characterization}
-
-\subsection{Data Characteristics}
-The supplied CSVs contain $224,112$ jobs and $4,278$ nodes with $10,412$ GPUs and $632,636$ vCPUs across six GPU models. Required fields have no missing values or duplicate identifiers; fractional vCPU requests are retained. Let $r_j$, $W_j$, $g_j$, $c_j$, and $d_j$ denote submission time, worker count, per-worker GPU and vCPU requests, and duration, respectively. Both times are in seconds. Full-lifetime GPU work is $H_j=W_jg_jd_j$ in GPU-seconds, or $H_j/3600$ in GPU-hours. All submitted jobs contribute, including work extending beyond the observation window.
-
-Total requested work is $24.606\times10^6$ GPU-hours. Most jobs have one worker ($90.95\%$), and $78.42\%$ request one GPU per worker; their respective means are $1.539$ workers and $2.003$ GPUs per worker. The duration median is $1,330$ s, the 95th percentile is $309.09$ h, and the maximum is $184$ days. The empirical GPU-work and duration Gini coefficients are $0.9522$ and $0.9580$. Ranking jobs by $H_j$, we use $k=\lfloor f|\mathcal{J}|\rfloor$: the top $0.1\%$, $1\%$, and $5\%$ select $224$, $2,241$, and $11,205$ jobs and account for $14.66\%$, $43.30\%$, and $87.68\%$ of work. Figure~\ref{fig:q1} includes the Lorenz origin and the strict empirical duration CCDF $\Pr(d_j>x)$ with ties grouped. These distributions demonstrate concentration without establishing a fitted power-law model.
-
-The $3,512$ jobs submitted at $r_j=0$ form the trace-origin submission batch; the problem specifies initially idle nodes. They are not pre-existing running services. Submitted lifetime work totals $12.67$, $5.53$, and $6.41$ million GPU-hours in successive 30-day blocks; the first includes the trace-origin batch. Excluding this batch, exposure-corrected arrival rates peak at relative phase $16$ ($151.1$ jobs/h) and reach a minimum at phase $4$ ($66.1$ jobs/h), a $2.29$-fold difference. Phase means $(r_j\bmod86400)/3600$; no calendar origin or timezone is supplied, so these are not real-world afternoon/night labels.
-
-\subsection{Supply--Demand Imbalance}
-We use the exact window $[0,T)$ with $T=\max_j r_j=7,775,878$ s, or $2,159.966$ h ($122$ s shorter than a nominal 90 days). The later scheduling sections retain the separate nominal horizon $T_H=2,160$ h; Q1 uses $T$ consistently. For model $m$, the lifetime-work/window-capacity ratios are
-\begin{equation}
- \rho_m^{\mathrm{GPU}}=\frac{\sum_{j\in\mathcal{J}_m}H_j}{T\sum_{i\in\mathcal{I}_m}G_i^{\mathrm{cap}}},\qquad
- \rho_m^{\mathrm{CPU}}=\frac{\sum_{j\in\mathcal{J}_m}W_jc_jd_j}{T\sum_{i\in\mathcal{I}_m}C_i^{\mathrm{cap}}}.
- \label{eq:load_ratio}
-\end{equation}
-Both numerator and denominator use seconds. These ratios measure submitted lifetime work relative to window supply; they are not measured allocation rates or, alone, evidence of steady-state instability.
-
-\begin{table}[htbp]
-\centering
-\caption{Submitted lifetime work and capacity ratios over the exact trace window. GPU-s1/s2 denote GPU-series-1/2; A100/A800-80G abbreviate the supplied SXM4-80GB models.}
-\label{tab:q1_summary}
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{lrrrrr}
-\toprule
-Model & GPUs & Jobs & Work ($10^6$ GPU-h) & $\rho^{\mathrm{GPU}}$ & $\rho^{\mathrm{CPU}}$ \\
-\midrule
-\texttt{A10} & 2,494 & 111,284 & 11.119 & 2.064 & 0.391 \\
-\texttt{A100-80G} & 3,456 & 80,877 & 5.936 & 0.795 & 0.534 \\
-\texttt{GPU-s1} & 1,558 & 9,643 & 3.892 & 1.156 & 0.590 \\
-\texttt{H800} & 1,752 & 4,716 & 2.203 & 0.582 & 0.540 \\
-\texttt{GPU-s2} & 976 & 13,633 & 1.224 & 0.580 & 0.382 \\
-\texttt{A800-80G} & 176 & 3,959 & 0.232 & 0.611 & 0.527 \\
-\textbf{Total} & 10,412 & 224,112 & 24.606 & 1.094 & 0.473 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\texttt{A10} receives $49.66\%$ of jobs and $45.19\%$ of lifetime GPU work but has $23.95\%$ of GPUs. Its $\rho^{\mathrm{GPU}}=2.064$ contrasts with $0.580$--$0.795$ in the four higher-end pools. To distinguish window overlap from lifetime work, define the \emph{counterfactual immediate-start demand}
-\begin{equation}
- D_m(t)=\sum_{j\in\mathcal{J}_m}W_jg_j\,\mathbf{1}\{r_j\le t<r_j+d_j\},\qquad
- \overline{D}_m=T^{-1}\int_0^T D_m(t)\,dt.
-\end{equation}
-This assumes every job starts on submission and ignores capacity constraints. Exact event integration, independently checked by interval overlap, gives an \texttt{A10} mean of $\QOneAtenMean$ GPUs ($144.93\%$ of its $\QOneAtenCapacity$-GPU capacity) and peak of $4,103$. These are demand quantities, not actual GPU utilization. A lower pool-average ratio also does not guarantee available capacity at every instant.
-
-\begin{figure}[htbp]
- \centering
- \includegraphics[width=0.96\textwidth]{fig1_data_patterns.pdf}
- \caption{Data-derived Q1 diagnostics: (a) GPU capacity, job and lifetime-work shares with Eq.~\ref{eq:load_ratio}; (b) Lorenz curves and floor-count top-$k$ work shares; (c) relative 24-hour arrival phase, excluding $r_j=0$ and correcting partial-window exposure; (d) strict duration CCDF with ties grouped (terminal zero omitted on log axes). All panels are reproducible from the supplied CSVs.}
- \label{fig:q1}
-\end{figure}
-
-\subsection{Bottleneck Hypotheses}
-\texttt{GPU-series-1} has $901$ nodes with $(1\text{ GPU},192\text{ vCPUs})$, one with $(1,128)$, ten with $(4,192)$, and $77$ with $(8,192)$. Their CPU/GPU ratios are $192$, $128$, $48$, and $24$; a pool average cannot represent all nodes. Exactly $2,478$ of $9,643$ jobs ($25.70\%$; $78.07\%$ of this pool's lifetime GPU work) exceed $24$ vCPU/GPU. For example, one $(1\text{ GPU},192\text{ vCPUs})$ worker exhausts an 8-GPU node's CPUs, leaving seven GPUs unavailable for positive-CPU workers. This is a feasible stranding mechanism, not an observed allocation history.
-
-These observations motivate three testable hypotheses: concentrated long jobs may cause head-of-line blocking under strict FIFO; node-ratio-aware placement may reduce CPU-induced GPU stranding; and explicitly compatible cross-model capacity may alleviate \texttt{A10} demand pressure. Actual waiting times, allocation rates, fairness, and the relative merits of schedulers require capacity-valid scheduling experiments in Questions 2--3. Q1 alone establishes neither causal effects nor an optimal scheduling policy.
+\input{q1_section.tex}
 
 \vspace{4pt}
 \section{Question 2: Mathematical Formulation and Scheduling Algorithm Design}

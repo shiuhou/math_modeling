@@ -71,7 +71,7 @@ Q2 以此引擎擴充排序／放置，勿另建 DES／評分器。Q3 保持此�
 
 | 部件 | 狀態與範圍 |
 | --- | --- |
-| Q1 共用公式、九張核算表、四面板圖 | 已驗證 PASS：原 CSV 重算、39 項統計對照、九表 byte 相同、數值測試與圖檢視；[Q1 清單](../../results/20261014-b-q1-intake-4a8f8f2b/manifest.json) |
+| Q1 共用公式、九張核算表 | 已驗證 PASS：原 CSV 重算、39 項統計對照、九表 byte 相同、數值測試與圖檢視；[Q1 清單](../../results/20261014-b-q1-intake-4a8f8f2b/manifest.json) |
 | 正式 FCFS／SJF-HOL 基線及 evaluator | 已驗證 PASS：手算／30 組雙策略小案例、CLI 持久化核查；全 trace 各 224,112 jobs 已跑並獨立回放，不代表所有未來算法正確 |
 | 源碼 ZIP 的 AMBF／EASY／特殊單 GPU 分支 | 待修正：GPU-only reservation 未保護 CPU/gang；特殊路徑硬編容量／排序；BSLD 缺外層 max；已作 inert `.py.txt` 歸檔，不接入正式流程 |
 | 原 Q3 donor／MIG／pricing | 待修正／BLOCKED：缺 helper，donor 耦合與相容性／速度／價格假設未核實；不啟動舊算法 |
@@ -94,16 +94,33 @@ Q2 以此引擎擴充排序／放置，勿另建 DES／評分器。Q3 保持此�
 
 ## Q1 與論文入口
 
+Q1 延續整合基礎 `abdbc4c`，在 `feat/b-q1` 完成獨立交付。切換本分支後，使用上方相同 Python 環境；另安裝 Tectonic（本機 0.17.0）或 pdflatex，首次編譯可能下載 TeX 套件。可用 `--compiler PATH` 指定編譯器，缺少時明示 BLOCKED。
+
 ```bash
-.venv/bin/python problems/2026_gpu_scheduling/experiments/eda_analysis.py --out outputs/b-q1-01
-.venv/bin/python problems/2026_gpu_scheduling/experiments/generate_figures.py --results outputs/b-q1-01 --out outputs/b-q1-01-figures
-# 可選：需本機 tectonic 或 pdflatex（不影響基本測試／基線）。
-.venv/bin/python problems/2026_gpu_scheduling/experiments/build_paper.py --out outputs/b-paper-01
+# 從 Git 中的 raw CSV 生成兩頁英文、繁中離線 HTML、正文／補充圖與交付 ZIP。
+.venv/bin/python problems/2026_gpu_scheduling/experiments/build_paper.py --scope q1 --out outputs/q1-run --bundle
+# 與 Git 中已核查的 39 項統計及九張表比較，不需要原交接 ZIP。
+.venv/bin/python problems/2026_gpu_scheduling/experiments/verify_q1.py --reference-dir results/20261014-b-q1-intake-4a8f8f2b --results outputs/q1-run/q1 --out outputs/q1-run-verified.json
+# 相關數值／交付測試；不執行全量調度。
+PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -p 'test_q1*.py' -v
+# 全稿仍是預設；包含明示 NOT_RUN 的 Q2/Q3 歷史圖，不重驗算法。
+.venv/bin/python problems/2026_gpu_scheduling/experiments/build_paper.py --scope full --out outputs/b-paper-run
 ```
 
-`eda_deep.py` 共用 Q1 入口，不重複公式。`H_j=W_j*g_j*d_j` 是 GPU-seconds；`rho=sum(H)/(T*capacity)` 不是利用率。A10 exact-window immediate-start 平均 3,614.54040431、峰值 4,103、容量 2,494；平均差 1,120.54040431 不是已證擴容方案。GPU-s1 按四種節點配置分析，超過 24 vCPU/GPU 為 2,478 jobs（25.6974%）。t=0 是提交批次，24 小時是 relative phase；Lorenz 含原點、CCDF 嚴格處理 ties，Top-k floor。
+每次使用新的 `--out`。`--data` 可覆寫 CSV 目錄或原資料 ZIP。交付目錄包含 `q1_en.pdf`、`q1_zh.html`、`supplementary.html`、`figures/` 的 PDF／PNG、`q1/` 九表及統計、數值 macros、來源快照與 `build.json`；`--bundle` 額外產生低於 50 MB 的 `Q1_delivery.zip`。閱讀 HTML 必須保留相鄰圖像目錄，無須網路。ZIP 不重複裝入 raw CSV；重現時從 clone 的 `data/raw/` 取得，按 `DELIVERY.txt` 執行。歷史 job byte 差異仍未消除。
 
-`build_paper.py` 從 raw 重算 Q1、生成共享數值 macros 及正式 Q1 圖；Q2/Q3 圖只重繪明示 NOT_RUN 的原稿表值，未執行舊方法，無插補值。Q3 的需求／容量圖改用精確事件積分。缺編譯器明示 BLOCKED。編譯結果、頁數與 logs 在 build 目錄；編譯成功不能代替研究或提交格式驗收。英文已修正需求／利用率混淆、錯誤 Gini 推論、BSLD 公式與披露；中文原稿保留參考。
+英文唯一章節為 [q1_section.tex](paper/q1_section.tex)，由全稿及獨立 PDF 共用；[q1_summary.tex](paper/q1_summary.tex) 提供摘要 Q1 項，[preamble.tex](paper/preamble.tex) 共用格式。[q1_zh.html](paper/q1_zh.html) 是繁中對照模板；舊 `document_zh.html` 仍只作歷史參考。英文、中文表格與全文 Q1 引用的數值由 [q1_publication.py](src/gpu_scheduling/q1_publication.py) 讀取既有結果產生，不另建公式。
+
+正文固定六型號一表、兩圖：`fig1_data_patterns` 保留檔名，改為 Lorenz／CCDF 雙面板；新增 `fig1_demand`，以既有事件積分計算精確每日需求，保留最後不足一天。五張補充圖包括完整分型號分布、份額、每日提交／工作量、relative phase 與節點配比。單獨計算／繪圖仍可使用：
+
+```bash
+.venv/bin/python problems/2026_gpu_scheduling/experiments/eda_analysis.py --out outputs/b-q1-01
+.venv/bin/python problems/2026_gpu_scheduling/experiments/generate_figures.py --results outputs/b-q1-01 --out outputs/b-q1-01-figures --figures all
+```
+
+`--figures main|supplementary|all` 預設 `main`；Q2/Q3 歷史圖須額外 `--paper-reference`。`eda_deep.py` 與 `eda_analysis.py` 仍共用 Q1 公式及原九表格式。`H_j=W_j*g_j*d_j` 是 GPU-seconds，`rho=sum(H)/(T*capacity)` 不是利用率。A10 exact-window immediate-start 平均 3,614.54040431、峰值 4,103、容量 2,494；平均差 1,120.54040431 不是已證擴容方案。GPU-s1 按四種節點配置分析，超過 24 vCPU/GPU 為 2,478 jobs（25.6974%）。t=0 是提交批次，24 小時是 relative trace phase；Lorenz 含原點、CCDF 使用嚴格大於並合併 ties，Top-k floor。
+
+驗收與未確認事項集中於 [Q1 任務筆記](../../notes/tasks/b-q1.md)。編譯與計算成功不代表人工審閱或整篇競賽提交已完成。整合 Q2/Q3 時須一併採用共用章節、數值及 build／figure 入口；新增 Q1 圖會自然改變後續圖號，應使用 LaTeX label 交叉引用。此分支不直接改動兩個研究分支。
 
 ## Q2／Q3 下一步
 

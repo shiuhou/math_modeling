@@ -86,6 +86,25 @@ def phase_exposure(horizon):
     return cycles + np.clip(remainder - np.arange(24) * SECOND_PER_HOUR, 0, SECOND_PER_HOUR) / SECOND_PER_HOUR
 
 
+def interval_demand(arrival, duration, quantity, horizon, bin_seconds=SECOND_PER_DAY):
+    """Exact resource-seconds in consecutive bins, including the last partial bin.
+
+    Evaluate the event integral at each boundary with integer arithmetic;
+    averages are for display and must never be mistaken for instantaneous peaks.
+    """
+    if horizon <= 0 or bin_seconds <= 0:
+        raise ValueError('Positive horizon and bin size required')
+    edges, values, total = demand_timeline(arrival, duration, quantity, horizon)
+    boundaries = np.r_[np.arange(0, horizon, bin_seconds, dtype=np.int64), horizon]
+    cumulative = np.r_[0, np.cumsum(values * np.diff(edges))]
+    indexes = np.minimum(np.searchsorted(edges, boundaries, side='right') - 1, len(values)-1)
+    areas = cumulative[indexes] + values[indexes] * (boundaries - edges[indexes])
+    resource_seconds = np.diff(areas)
+    if int(resource_seconds.sum()) != total:
+        raise AssertionError('Binned demand integral differs from event integral')
+    return boundaries, resource_seconds
+
+
 def empty_pool_fit(nodes, grp):
     configs = nodes.groupby(['gpu_capacity_num', 'cpu_scaled']).size()
     capacity = np.zeros(len(grp), dtype=np.int64)

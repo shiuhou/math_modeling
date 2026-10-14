@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the original four-panel Q1 figure with audited data-derived values.
+"""Generate publication and supplementary Q1 figures from audited data.
 
 Q2/Q3 archived table figures are opt-in and visibly marked as unverified.
 """
@@ -17,10 +17,9 @@ sys.path.insert(0, str(PROBLEM / "src"))
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 import numpy as np
 import pandas as pd
-from gpu_scheduling.q1 import ccdf, gini, load_data, lorenz, top_share, demand_timeline
+from gpu_scheduling.q1 import ccdf, gini, load_data, lorenz, top_share, demand_timeline, interval_demand
 
 
 def paper_reference_figures(nodes, jobs, stats, pools, out):
@@ -94,143 +93,152 @@ def paper_reference_figures(nodes, jobs, stats, pools, out):
     },indent=2)+'\n')
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data", type=Path, default=PROBLEM / "data/raw")
-    parser.add_argument("--results", type=Path, required=True, help="Recomputed Q1 output directory")
-    parser.add_argument("--out", type=Path, required=True, help="New local figure directory")
-    parser.add_argument("--paper-reference", action="store_true", help="Also render visibly unverified Q2/Q3 archived table figures")
-    args = parser.parse_args()
-    if args.out.exists():
-        parser.error("Output exists; choose a new directory")
-    nodes, jobs, hashes = load_data(args.data)
-    stats = json.loads((args.results / "q1_results.json").read_text(encoding="utf-8"))
-    if hashes != stats["input_sha256"]:
-        parser.error("Q1 results and plotting inputs have different byte hashes")
-    pools = pd.read_csv(args.results / "pool_summary.csv")
-    phases = pd.read_csv(args.results / "relative_24h_phase.csv")
-    if set(pools.gpu_model) != set(jobs.gpu_model):
-        parser.error("Pool summary does not match input GPU models")
-    args.out.mkdir(parents=True, exist_ok=False)
+PALETTE = ['#c0392b', '#1b4f72', '#27ae60', '#8e44ad', '#e67e22', '#2e86c1']
+SHORT = {'A10': 'A10', 'A100-SXM4-80GB': 'A100', 'A800-SXM4-80GB': 'A800',
+         'GPU-series-1': 'GPU-s1', 'GPU-series-2': 'GPU-s2', 'ALL': 'All jobs'}
 
-    # Keep the supplied figure's typography, palette, four-panel layout and
-    # dimensional labels; calculate every plotted statistic from this run.
-    plt.rcParams["font.sans-serif"] = "DejaVu Sans"
-    plt.rcParams["axes.edgecolor"] = "#333333"
-    plt.rcParams["axes.linewidth"] = 0.8
-    palette = ["#1b4f72", "#2e86c1", "#c0392b", "#e67e22", "#27ae60", "#8e44ad"]
-    short = {"A100-SXM4-80GB": "A100-80G", "A800-SXM4-80GB": "A800-80G",
-             "GPU-series-1": "GPU-s1", "GPU-series-2": "GPU-s2"}
-    models = pools.gpu_model.tolist()
-    names = [short.get(model, model) for model in models]
-    fig = plt.figure(figsize=(13, 9.5), dpi=200)
-    gs = gridspec.GridSpec(2, 2, hspace=.34, wspace=.30)
 
-    ax1 = fig.add_subplot(gs[0, 0])
-    x, width = np.arange(len(models)), .25
-    ax1.bar(x-width, pools.capacity_share*100, width=width, label="GPU capacity share (%)", color="#2e86c1", alpha=.9)
-    ax1.bar(x, pools.job_share*100, width=width, label="Job arrival share (%)", color="#27ae60", alpha=.9)
-    ax1.bar(x+width, pools.work_share*100, width=width, label="Lifetime GPU-work share (%)", color="#c0392b", alpha=.9)
-    ax1.set_xticks(x, names, fontsize=9)
-    ax1.set_ylabel("Percentage share (%)", fontsize=10)
-    ax1.set_ylim(0, max(pools[["capacity_share", "job_share", "work_share"]].max())*100*1.25)
-    ax1.grid(axis="y", linestyle="--", alpha=.4)
-    twin = ax1.twinx()
-    twin.plot(x, pools.rho_gpu, color="#d35400", marker="o", linewidth=2.2, markersize=7, label="Lifetime work / window capacity")
-    twin.axhline(1, color="#7f8c8d", linestyle=":", linewidth=1.2)
-    twin.set_ylabel("Work / capacity over exact trace window", color="#d35400", fontsize=9)
-    twin.set_ylim(0, pools.rho_gpu.max()*1.25)
-    for i, value in enumerate(pools.rho_gpu):
-        twin.annotate(f"{value:.2f}x", (i, value), xytext=(0, 7), textcoords="offset points", ha="center", fontsize=8, color="#a04000")
-    lines1, labels1 = ax1.get_legend_handles_labels()
-    lines2, labels2 = twin.get_legend_handles_labels()
-    ax1.legend(lines1+lines2, labels1+labels2, loc="upper right", fontsize=7.4)
-    ax1.set_title("(a) GPU-model supply and submitted lifetime work", fontsize=11, fontweight="bold", pad=8)
-
-    ax2 = fig.add_subplot(gs[0, 1])
-    x_lorenz, y_lorenz = lorenz(jobs.gpu_seconds)
-    indices = np.unique(np.r_[0, np.linspace(0, len(x_lorenz)-1, 1000).astype(int)])
-    ax2.plot(x_lorenz[indices]*100, y_lorenz[indices]*100, color="#c0392b", linewidth=2.5,
-             label=f"All jobs (Gini={gini(jobs.gpu_seconds):.4f})")
-    for model, color, style in [("A10", "#1b4f72", "--"), ("A100-SXM4-80GB", "#2e86c1", "-."), ("GPU-series-1", "#27ae60", ":")]:
-        sub = jobs[jobs.gpu_model == model]
-        if sub.empty:
-            continue
-        xl, yl = lorenz(sub.gpu_seconds)
-        ix = np.unique(np.r_[0, np.linspace(0, len(xl)-1, 500).astype(int)])
-        ax2.plot(xl[ix]*100, yl[ix]*100, color=color, linestyle=style, linewidth=1.8,
-                 label=f"{short.get(model, model)} (Gini={gini(sub.gpu_seconds):.3f})")
-    ax2.plot([0, 100], [0, 100], color="#7f8c8d", linestyle="--", linewidth=1, label="Equality")
-    annotations = []
-    for fraction in [.05, .01]:
-        count, share = top_share(jobs.gpu_seconds, fraction)
-        ax2.scatter(100*(1-count/len(jobs)), 100*(1-share), color="#c0392b", zorder=5, s=40)
-        annotations.append(f"Top {fraction*100:g}% ({count:,} jobs): {share*100:.2f}% work")
-    ax2.text(.40, .30, "\n".join(annotations), transform=ax2.transAxes, fontsize=8,
-             bbox=dict(boxstyle="round,pad=0.3", facecolor="#fdedec", edgecolor="#c0392b", alpha=.9))
-    ax2.set(xlabel="Cumulative share of jobs (%)", ylabel="Cumulative share of GPU work (%)", xlim=(0, 100), ylim=(0, 100))
-    ax2.grid(True, linestyle="--", alpha=.4)
-    ax2.legend(loc="upper left", fontsize=8)
-    ax2.set_title("(b) Concentration of full-lifetime GPU work", fontsize=11, fontweight="bold", pad=8)
-
-    ax3 = fig.add_subplot(gs[1, 0])
-    for model, color, marker, style in [("ALL", "#1b4f72", "o", "-"), ("A10", "#c0392b", "s", "--"), ("A100-SXM4-80GB", "#2e86c1", "^", ":")]:
-        frame = phases[phases.gpu_model == model].sort_values("relative_phase_hour")
-        ax3.plot(frame.relative_phase_hour, frame.jobs_per_exposed_hour, color=color, marker=marker,
-                 linestyle=style, linewidth=1.8, markersize=4, label=short.get(model, "All models" if model == "ALL" else model))
-    overall = phases[phases.gpu_model == "ALL"]
-    peak = overall.loc[overall.jobs_per_exposed_hour.idxmax()]
-    trough = overall.loc[overall.jobs_per_exposed_hour.idxmin()]
-    ax3.annotate(f"Phase {int(peak.relative_phase_hour)}: {peak.jobs_per_exposed_hour:.1f} jobs/h\n"
-                 f"Peak/trough: {peak.jobs_per_exposed_hour/trough.jobs_per_exposed_hour:.2f}x",
-                 xy=(peak.relative_phase_hour, peak.jobs_per_exposed_hour), xytext=(.50, .92), textcoords="axes fraction",
-                 arrowprops=dict(arrowstyle="->", color="#1b4f72", lw=1.2), fontsize=8.5, va="top")
-    ax3.set_xlabel("Relative trace phase (hour modulo 24; no timezone)", fontsize=9)
-    ax3.set_ylabel("Arrivals per exposed phase-hour (t > 0)", fontsize=9)
-    ax3.set_xticks(range(0, 24, 2))
-    ax3.set_ylim(0, overall.jobs_per_exposed_hour.max()*1.3)
-    ax3.grid(True, linestyle="--", alpha=.4)
-    ax3.legend(loc="upper left", fontsize=8)
-    ax3.set_title("(c) Arrival variation by relative 24-hour phase", fontsize=11, fontweight="bold", pad=8)
-
-    ax4 = fig.add_subplot(gs[1, 1])
-    ccdf_checks = {}
-    for index, model in enumerate(models):
-        values = jobs.loc[jobs.gpu_model == model, "duration"]
-        durations, probability = ccdf(values)
-        positive = probability > 0  # The terminal zero cannot appear on a log axis.
-        # Show the last positive plateau up to the maximum duration; the drop
-        # to zero at that maximum is outside the logarithmic probability axis.
-        plot_durations = np.r_[durations[positive], durations[-1]]
-        plot_probability = np.r_[probability[positive], probability[positive][-1]]
-        ax4.step(plot_durations/3600, plot_probability, where="post", label=short.get(model, model),
-                 color=palette[index % len(palette)], linewidth=1.5)
-        ccdf_checks[model] = {"unique_durations": len(durations), "ties_grouped": True,
-                              "terminal_probability": float(probability[-1])}
-    ax4.set_xscale("log")
-    ax4.set_yscale("log")
-    ax4.axvline(stats["horizon_hours"], color="#7f8c8d", linestyle="--", linewidth=1.2, label="Exact observation window")
-    ax4.set_xlabel("Job duration (hours, log scale)", fontsize=10)
-    ax4.set_ylabel("Strict empirical P(duration > d), log scale", fontsize=9)
-    ax4.grid(True, which="both", linestyle="--", alpha=.35)
-    ax4.legend(loc="lower left", fontsize=8, ncol=2)
-    ax4.set_title("(d) Job-duration CCDF (no fitted tail law)", fontsize=11, fontweight="bold", pad=8)
-
-    fig.savefig(args.out / "fig1_data_patterns.pdf", bbox_inches="tight")
-    fig.savefig(args.out / "fig1_data_patterns.png", bbox_inches="tight")
+def save_figure(fig, out, name):
+    # Fixed page-width canvas: no tight bounding-box rescaling of 11pt labels.
+    fig.savefig(out/f'{name}.pdf')
+    fig.savefig(out/f'{name}.png', dpi=200)
     plt.close(fig)
-    record = {"scope": "Q1 only", "input_sha256": hashes, "q1_results_sha256": hashlib.sha256((args.results / "q1_results.json").read_bytes()).hexdigest(),
-              "style": "Original four-panel layout, DejaVu Sans, supplied palette",
-              "lorenz_origin": [float(x_lorenz[0]), float(y_lorenz[0])],
-              "ccdf": ccdf_checks, "hardcoded_statistical_values": False,
-              "q2_q3": "NOT_RUN; original ZIP figure sections not changed",
-              "files": {name: hashlib.sha256((args.out / name).read_bytes()).hexdigest()
-                        for name in ["fig1_data_patterns.pdf", "fig1_data_patterns.png"]}}
-    (args.out / "q1_figure.json").write_text(json.dumps(record, indent=2, allow_nan=False) + "\n")
-    if args.paper_reference:
-        paper_reference_figures(nodes, jobs, stats, pools, args.out)
-    print("Generated Q1 fig1_data_patterns.pdf and .png from the raw CSVs and matching Q1 results")
 
 
-if __name__ == "__main__":
-    main()
+def draw_lorenz(ax, values, label, color, style='-'):
+    x,y=lorenz(values)
+    sample=np.unique(np.r_[0,np.linspace(0,len(x)-1,1000).astype(int)])
+    ax.plot(x[sample]*100,y[sample]*100,label=label,color=color,linestyle=style)
+
+
+def draw_ccdf(ax, values, label, color, style='-'):
+    durations,probability=ccdf(values)
+    positive=probability>0
+    if positive.any():
+        ax.step(np.r_[durations[positive],durations[-1]]/3600,
+                np.r_[probability[positive],probability[positive][-1]],where='post',
+                label=label,color=color,linestyle=style)
+    ax.set(xscale='log',yscale='log')
+
+
+def main_figures(nodes,jobs,stats,out):
+    fig,axes=plt.subplots(1,2,figsize=(6.70,2.35),layout='constrained')
+    ax=axes[0]
+    draw_lorenz(ax,jobs.gpu_seconds,'GPU work',PALETTE[0])
+    ax.plot([0,100],[0,100],color='#777777',linestyle='--',linewidth=.9)
+    for fraction in [.01,.05]:
+        k,share=top_share(jobs.gpu_seconds,fraction)
+        ax.scatter(100*(1-k/len(jobs)),100*(1-share),color=PALETTE[0],s=18)
+    ax.text(.04,.95,f'Gini {gini(jobs.gpu_seconds):.4f}\nTop 1%: {top_share(jobs.gpu_seconds,.01)[1]*100:.2f}%\nTop 5%: {top_share(jobs.gpu_seconds,.05)[1]*100:.2f}%',
+            transform=ax.transAxes,va='top',fontsize=11.2)
+    ax.set(xlabel='Jobs, cumulative (%)',ylabel='GPU work (%)',xlim=(0,100),ylim=(0,100),title='(a) Work concentration')
+    ax=axes[1]
+    for model,color,style in [('ALL','#333333','-'),('A10',PALETTE[0],'--'),('A100-SXM4-80GB',PALETTE[1],':')]:
+        sub=jobs if model=='ALL' else jobs[jobs.gpu_model==model]
+        draw_ccdf(ax,sub.duration,SHORT[model],color,style)
+    ax.set(xlabel='Duration (hours)',ylabel='P(duration > d)',title='(b) Duration tails')
+    ax.legend(loc='lower left',frameon=False)
+    for ax in axes: ax.grid(alpha=.2)
+    save_figure(fig,out,'fig1_data_patterns')
+
+    fig,ax=plt.subplots(figsize=(6.70,2.0),layout='constrained')
+    records=[]
+    for model,color in [('A10',PALETTE[0]),('A100-SXM4-80GB',PALETTE[1])]:
+        sub=jobs[jobs.gpu_model==model]
+        bins,areas=interval_demand(sub.submit_time,sub.duration,sub.total_gpu,stats['horizon_seconds'])
+        means=areas/np.diff(bins)
+        capacity=int(nodes.loc[nodes.gpu_model==model,'gpu_capacity_num'].sum())
+        ax.stairs(means,bins/86400,color=color,label=SHORT[model]+' demand')
+        ax.axhline(capacity,color=color,linestyle='--',label=SHORT[model]+' capacity')
+        records.extend({'gpu_model':model,'start_seconds':int(a),'end_seconds':int(b),
+                        'gpu_seconds':int(area),'mean_gpus':float(mean),'capacity':capacity}
+                       for a,b,area,mean in zip(bins[:-1],bins[1:],areas,means))
+    ax.set(xlabel='Trace-relative day',ylabel='GPUs',xlim=(0,stats['horizon_seconds']/86400))
+    # Upper bound comes from data (headroom for a two-column legend).
+    ax.set_ylim(0,max(max(r['mean_gpus'],r['capacity']) for r in records)*1.65)
+    ax.legend(ncol=2,loc='upper left',frameon=False,columnspacing=1.5)
+    ax.grid(alpha=.2)
+    save_figure(fig,out,'fig1_demand')
+    pd.DataFrame(records).to_csv(out/'q1_daily_demand.csv',index=False,float_format='%.12g')
+
+
+def supplementary_figures(nodes,jobs,stats,results,out):
+    models=pd.read_csv(results/'pool_summary.csv').gpu_model.tolist()
+    fig,axes=plt.subplots(1,2,figsize=(10,4.8),layout='constrained')
+    for i,model in enumerate(models):
+        sub=jobs[jobs.gpu_model==model];style=['-','--',':','-.','-','--'][i%6]
+        draw_lorenz(axes[0],sub.gpu_seconds,SHORT.get(model,model),PALETTE[i%6],style)
+        draw_ccdf(axes[1],sub.duration,SHORT.get(model,model),PALETTE[i%6],style)
+    axes[0].plot([0,100],[0,100],color='#999999',linestyle=':')
+    axes[0].set(xlabel='Jobs, cumulative (%)',ylabel='GPU work, cumulative (%)',title='S1a. Lorenz curves by GPU model')
+    axes[1].set(xlabel='Duration (hours)',ylabel='P(duration > d)',title='S1b. Strict duration CCDF')
+    for ax in axes:ax.legend(frameon=False);ax.grid(alpha=.2)
+    save_figure(fig,out,'supplement_model_distributions')
+
+    pools=pd.read_csv(results/'pool_summary.csv')
+    fig,ax=plt.subplots(figsize=(8,4),layout='constrained');x=np.arange(len(pools))
+    for offset,key,label,color in [(-.25,'capacity_share','Physical GPUs',PALETTE[1]),(0,'job_share','Submitted jobs',PALETTE[2]),(.25,'work_share','Lifetime GPU work',PALETTE[0])]:
+        ax.bar(x+offset,pools[key]*100,width=.25,label=label,color=color)
+    ax.set_xticks(x,[SHORT.get(m,m) for m in pools.gpu_model]);ax.set(ylabel='Share (%)',title='S2. Supply and submitted demand shares')
+    ax.legend(frameon=False);ax.grid(axis='y',alpha=.2);save_figure(fig,out,'supplement_supply_shares')
+
+    daily=pd.read_csv(results/'daily_arrivals.csv');frame=daily[daily.gpu_model=='ALL']
+    fig,axes=plt.subplots(2,1,figsize=(8,5.5),layout='constrained',sharex=True)
+    axes[0].plot(frame.trace_day,frame.jobs,color=PALETTE[1],label='All submissions')
+    axes[0].plot(frame.trace_day,frame.jobs_excluding_t0,color=PALETTE[0],linestyle='--',label='Excluding trace-origin batch')
+    axes[0].set(ylabel='Jobs submitted',title='S3. Daily submissions and lifetime work');axes[0].legend(frameon=False)
+    axes[1].plot(frame.trace_day,frame.submitted_full_lifetime_gpu_hours/1e6,color=PALETTE[1],label='All submitted work')
+    axes[1].plot(frame.trace_day,(frame.submitted_full_lifetime_gpu_hours-frame.t0_gpu_hours)/1e6,color=PALETTE[0],linestyle='--',label='Excluding trace-origin batch')
+    axes[1].set(xlabel='Trace-relative day',ylabel='Million GPU-hours');axes[1].legend(frameon=False)
+    for ax in axes:ax.grid(alpha=.2)
+    save_figure(fig,out,'supplement_daily_arrivals_work')
+
+    phases=pd.read_csv(results/'relative_24h_phase.csv');fig,ax=plt.subplots(figsize=(8,3.8),layout='constrained')
+    for model,color,style in [('ALL','#333333','-'),('A10',PALETTE[0],'--'),('A100-SXM4-80GB',PALETTE[1],':')]:
+        frame=phases[phases.gpu_model==model].sort_values('relative_phase_hour')
+        ax.plot(frame.relative_phase_hour,frame.jobs_per_exposed_hour,color=color,linestyle=style,label=SHORT[model])
+    ax.set(xlabel='Relative trace phase (hour modulo 24; no timezone)',ylabel='Jobs per exposed hour',title='S4. Exposure-corrected phase profile (t > 0)')
+    ax.set_xticks(range(0,24,2));ax.legend(frameon=False);ax.grid(alpha=.2);save_figure(fig,out,'supplement_relative_phase')
+
+    shape=pd.read_csv(results/'resource_shape.csv');shape=shape[shape.gpu_model=='GPU-series-1'].sort_values('node_cpu_per_gpu')
+    fig,ax=plt.subplots(figsize=(8,4.2),layout='constrained');x=np.arange(len(shape))
+    ax.bar(x-.18,shape.fraction_jobs_above_ratio*100,width=.36,label='Jobs above ratio',color=PALETTE[1])
+    ax.bar(x+.18,shape.work_share_above_ratio*100,width=.36,label='Work from those jobs',color=PALETTE[0])
+    ax.set_xticks(x,[f'{r.node_cpu_per_gpu:g} vCPU/GPU\n{r.gpus_per_node:g} GPU, {r.vcpus_per_node:g} vCPU\n{r.nodes:g} nodes' for r in shape.itertuples()])
+    ax.set(ylabel='Share within GPU-series-1 (%)',title='S5. Jobs exceeding each node configuration ratio')
+    ax.legend(frameon=False);ax.grid(axis='y',alpha=.2);save_figure(fig,out,'supplement_resource_shape')
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--data',type=Path,default=PROBLEM/'data/raw')
+    parser.add_argument('--results',type=Path,required=True)
+    parser.add_argument('--out',type=Path,required=True,help='New figure directory')
+    parser.add_argument('--figures',choices=['main','supplementary','all'],default='main')
+    parser.add_argument('--paper-reference',action='store_true',help='Also render archived Q2/Q3 figures, marked NOT_RUN')
+    args=parser.parse_args()
+    if args.out.exists():parser.error('Output exists; choose a new directory')
+    nodes,jobs,hashes=load_data(args.data)
+    stats=json.loads((args.results/'q1_results.json').read_text(encoding='utf-8'))
+    if hashes!=stats['input_sha256']:parser.error('Q1 results and raw input byte hashes differ')
+    pools=pd.read_csv(args.results/'pool_summary.csv')
+    if set(pools.gpu_model)!=set(jobs.gpu_model):parser.error('Pool summary does not match raw GPU models')
+    args.out.mkdir(parents=True,exist_ok=False)
+    plt.rcParams.update({'font.family':'DejaVu Sans','font.size':11.2,'axes.titlesize':11.2,'axes.labelsize':11.2,
+                         'xtick.labelsize':11.2,'ytick.labelsize':11.2,'legend.fontsize':11.2,
+                         'axes.edgecolor':'#333333','axes.linewidth':.8,'pdf.fonttype':42})
+    if args.figures in ['main','all']:main_figures(nodes,jobs,stats,args.out)
+    if args.figures in ['supplementary','all']:supplementary_figures(nodes,jobs,stats,args.results,args.out)
+    record={'scope':'Q1 '+args.figures,'input_sha256':hashes,
+            'results_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(args.results.iterdir()) if p.suffix in ['.json','.csv']},
+            'main_width_inches':6.70,'main_label_points':11.2,'lorenz_origin':[0,0],
+            'ccdf':'strict P(duration > d), ties grouped; terminal zero omitted on log axes',
+            'top_k_rule':stats['top_k_rule'],'daily_demand':'Exact event integral within each bin; final partial day retained',
+            'q2_q3':'NOT_RUN; optional archived figures only',
+            'files':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(args.out.iterdir()) if p.is_file()}}
+    (args.out/'q1_figure.json').write_text(json.dumps(record,indent=2)+'\n')
+    if args.paper_reference:paper_reference_figures(nodes,jobs,stats,pools,args.out)
+    print(f'Generated Q1 {args.figures} figures from matching raw CSVs and results')
+
+
+if __name__=='__main__':main()
