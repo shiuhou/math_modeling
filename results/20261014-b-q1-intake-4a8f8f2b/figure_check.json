@@ -1,0 +1,55 @@
+{
+  "scope": "Q1 only",
+  "input_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "q1_results_sha256": "e0b7397e4fdd83aa06d948c4eea5ca381c8c923be34e689ae164127ff9c3d8c8",
+  "style": "Original four-panel layout, DejaVu Sans, supplied palette",
+  "lorenz_origin": [
+    0.0,
+    0.0
+  ],
+  "ccdf": {
+    "A10": {
+      "unique_durations": 18973,
+      "ties_grouped": true,
+      "terminal_probability": 0.0
+    },
+    "A100-SXM4-80GB": {
+      "unique_durations": 22433,
+      "ties_grouped": true,
+      "terminal_probability": 0.0
+    },
+    "GPU-series-1": {
+      "unique_durations": 5237,
+      "ties_grouped": true,
+      "terminal_probability": 0.0
+    },
+    "H800": {
+      "unique_durations": 2805,
+      "ties_grouped": true,
+      "terminal_probability": 0.0
+    },
+    "GPU-series-2": {
+      "unique_durations": 6948,
+      "ties_grouped": true,
+      "terminal_probability": 0.0
+    },
+    "A800-SXM4-80GB": {
+      "unique_durations": 2936,
+      "ties_grouped": true,
+      "terminal_probability": 0.0
+    }
+  },
+  "hardcoded_statistical_values": false,
+  "q2_q3": "NOT_RUN; original ZIP figure sections not changed",
+  "files": {
+    "fig1_data_patterns.pdf": "21cdc71a935af518df0d2fe3707660b63aa4576adca6fbc2395b60dcea0debd5",
+    "fig1_data_patterns.png": "06840baf01cac0200bf4b48ecddd9103321855b5c5652b2aabed7656ea2ed033"
+  },
+  "visual_check": {
+    "status": "PASS",
+    "scope": "Final PDF-produced PNG inspected: panel labels, legends, axis units, Lorenz origin and relative phase; full-paper page placement remains BLOCKED"
+  }
+}

@@ -8,7 +8,7 @@ auth.json
 *.key
 
 # Environments and caches
-.venv/
+.venv
 venv/
 __pycache__/
 *.py[cod]
@@ -29,3 +29,13 @@ __pycache__/
 *.fdb_latexmk
 *.fls
 *.synctex.gz
+
+# Supplied intake archives and duplicate handoff tables stay local.
+/2026_MCM_Problem_B_Source_Code.zip
+/B題_GPU調度_研究報告與計算包.zip
+/Q1_final_handoff.zip
+/2026_MCM_Senior_GPU_Scheduling.zip
+/resource_shape.csv
+/immediate_start_demand.csv
+/problems/2026_gpu_scheduling/outputs/
+/problems/2026_gpu_scheduling/figures/

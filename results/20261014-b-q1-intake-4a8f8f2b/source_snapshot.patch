@@ -1,0 +1,672 @@
+diff --git a/problems/2026_gpu_scheduling/experiments/eda_analysis.py b/problems/2026_gpu_scheduling/experiments/eda_analysis.py
+new file mode 100644
+index 0000000..733264a
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/experiments/eda_analysis.py
+@@ -0,0 +1,24 @@
++#!/usr/bin/env python3
++"""Q1 computation entry; shared audited formulas are in gpu_scheduling.q1."""
++import argparse
++import json
++from pathlib import Path
++import sys
++PROBLEM = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROBLEM / "src"))
++from gpu_scheduling.q1 import analyze
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--data", type=Path, default=PROBLEM / "data/raw", help="CSV directory or original data ZIP")
++    parser.add_argument("--out", type=Path, required=True, help="New output directory; existing results are preserved")
++    args = parser.parse_args()
++    if args.out.exists():
++        parser.error("Output exists; choose a new directory")
++    _, _, stats = analyze(args.data, args.out)
++    print(json.dumps(stats, ensure_ascii=False, indent=2))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/problems/2026_gpu_scheduling/experiments/eda_deep.py b/problems/2026_gpu_scheduling/experiments/eda_deep.py
+new file mode 100644
+index 0000000..6f433c5
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/experiments/eda_deep.py
+@@ -0,0 +1,6 @@
++#!/usr/bin/env python3
++"""Compatibility entry: use the same Q1 formulas and output as eda_analysis."""
++from eda_analysis import main
++
++if __name__ == "__main__":
++    main()
+diff --git a/problems/2026_gpu_scheduling/experiments/generate_figures.py b/problems/2026_gpu_scheduling/experiments/generate_figures.py
+new file mode 100644
+index 0000000..18d3fec
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/experiments/generate_figures.py
+@@ -0,0 +1,162 @@
++#!/usr/bin/env python3
++"""Reproduce the original four-panel Q1 figure with audited data-derived values.
++
++Q2/Q3 figures and their archived data are outside this entry's scope.
++"""
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import sys
++
++PROBLEM = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROBLEM / "src"))
++
++import matplotlib
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import matplotlib.gridspec as gridspec
++import numpy as np
++import pandas as pd
++from gpu_scheduling.q1 import ccdf, gini, load_data, lorenz, top_share
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--data", type=Path, default=PROBLEM / "data/raw")
++    parser.add_argument("--results", type=Path, required=True, help="Recomputed Q1 output directory")
++    parser.add_argument("--out", type=Path, required=True, help="New local figure directory")
++    args = parser.parse_args()
++    if args.out.exists():
++        parser.error("Output exists; choose a new directory")
++    _, jobs, hashes = load_data(args.data)
++    stats = json.loads((args.results / "q1_results.json").read_text(encoding="utf-8"))
++    if hashes != stats["input_sha256"]:
++        parser.error("Q1 results and plotting inputs have different byte hashes")
++    pools = pd.read_csv(args.results / "pool_summary.csv")
++    phases = pd.read_csv(args.results / "relative_24h_phase.csv")
++    if set(pools.gpu_model) != set(jobs.gpu_model):
++        parser.error("Pool summary does not match input GPU models")
++    args.out.mkdir(parents=True, exist_ok=False)
++
++    # Keep the supplied figure's typography, palette, four-panel layout and
++    # dimensional labels; calculate every plotted statistic from this run.
++    plt.rcParams["font.sans-serif"] = "DejaVu Sans"
++    plt.rcParams["axes.edgecolor"] = "#333333"
++    plt.rcParams["axes.linewidth"] = 0.8
++    palette = ["#1b4f72", "#2e86c1", "#c0392b", "#e67e22", "#27ae60", "#8e44ad"]
++    short = {"A100-SXM4-80GB": "A100-80G", "A800-SXM4-80GB": "A800-80G",
++             "GPU-series-1": "GPU-s1", "GPU-series-2": "GPU-s2"}
++    models = pools.gpu_model.tolist()
++    names = [short.get(model, model) for model in models]
++    fig = plt.figure(figsize=(13, 9.5), dpi=200)
++    gs = gridspec.GridSpec(2, 2, hspace=.34, wspace=.30)
++
++    ax1 = fig.add_subplot(gs[0, 0])
++    x, width = np.arange(len(models)), .25
++    ax1.bar(x-width, pools.capacity_share*100, width=width, label="GPU capacity share (%)", color="#2e86c1", alpha=.9)
++    ax1.bar(x, pools.job_share*100, width=width, label="Job arrival share (%)", color="#27ae60", alpha=.9)
++    ax1.bar(x+width, pools.work_share*100, width=width, label="Lifetime GPU-work share (%)", color="#c0392b", alpha=.9)
++    ax1.set_xticks(x, names, fontsize=9)
++    ax1.set_ylabel("Percentage share (%)", fontsize=10)
++    ax1.set_ylim(0, max(pools[["capacity_share", "job_share", "work_share"]].max())*100*1.25)
++    ax1.grid(axis="y", linestyle="--", alpha=.4)
++    twin = ax1.twinx()
++    twin.plot(x, pools.rho_gpu, color="#d35400", marker="o", linewidth=2.2, markersize=7, label="Lifetime work / window capacity")
++    twin.axhline(1, color="#7f8c8d", linestyle=":", linewidth=1.2)
++    twin.set_ylabel("Work / capacity over exact trace window", color="#d35400", fontsize=9)
++    twin.set_ylim(0, pools.rho_gpu.max()*1.25)
++    for i, value in enumerate(pools.rho_gpu):
++        twin.annotate(f"{value:.2f}x", (i, value), xytext=(0, 7), textcoords="offset points", ha="center", fontsize=8, color="#a04000")
++    lines1, labels1 = ax1.get_legend_handles_labels()
++    lines2, labels2 = twin.get_legend_handles_labels()
++    ax1.legend(lines1+lines2, labels1+labels2, loc="upper right", fontsize=7.4)
++    ax1.set_title("(a) GPU-model supply and submitted lifetime work", fontsize=11, fontweight="bold", pad=8)
++
++    ax2 = fig.add_subplot(gs[0, 1])
++    x_lorenz, y_lorenz = lorenz(jobs.gpu_seconds)
++    indices = np.unique(np.r_[0, np.linspace(0, len(x_lorenz)-1, 1000).astype(int)])
++    ax2.plot(x_lorenz[indices]*100, y_lorenz[indices]*100, color="#c0392b", linewidth=2.5,
++             label=f"All jobs (Gini={gini(jobs.gpu_seconds):.4f})")
++    for model, color, style in [("A10", "#1b4f72", "--"), ("A100-SXM4-80GB", "#2e86c1", "-."), ("GPU-series-1", "#27ae60", ":")]:
++        sub = jobs[jobs.gpu_model == model]
++        if sub.empty:
++            continue
++        xl, yl = lorenz(sub.gpu_seconds)
++        ix = np.unique(np.r_[0, np.linspace(0, len(xl)-1, 500).astype(int)])
++        ax2.plot(xl[ix]*100, yl[ix]*100, color=color, linestyle=style, linewidth=1.8,
++                 label=f"{short.get(model, model)} (Gini={gini(sub.gpu_seconds):.3f})")
++    ax2.plot([0, 100], [0, 100], color="#7f8c8d", linestyle="--", linewidth=1, label="Equality")
++    annotations = []
++    for fraction in [.05, .01]:
++        count, share = top_share(jobs.gpu_seconds, fraction)
++        ax2.scatter(100*(1-count/len(jobs)), 100*(1-share), color="#c0392b", zorder=5, s=40)
++        annotations.append(f"Top {fraction*100:g}% ({count:,} jobs): {share*100:.2f}% work")
++    ax2.text(.40, .30, "\n".join(annotations), transform=ax2.transAxes, fontsize=8,
++             bbox=dict(boxstyle="round,pad=0.3", facecolor="#fdedec", edgecolor="#c0392b", alpha=.9))
++    ax2.set(xlabel="Cumulative share of jobs (%)", ylabel="Cumulative share of GPU work (%)", xlim=(0, 100), ylim=(0, 100))
++    ax2.grid(True, linestyle="--", alpha=.4)
++    ax2.legend(loc="upper left", fontsize=8)
++    ax2.set_title("(b) Concentration of full-lifetime GPU work", fontsize=11, fontweight="bold", pad=8)
++
++    ax3 = fig.add_subplot(gs[1, 0])
++    for model, color, marker, style in [("ALL", "#1b4f72", "o", "-"), ("A10", "#c0392b", "s", "--"), ("A100-SXM4-80GB", "#2e86c1", "^", ":")]:
++        frame = phases[phases.gpu_model == model].sort_values("relative_phase_hour")
++        ax3.plot(frame.relative_phase_hour, frame.jobs_per_exposed_hour, color=color, marker=marker,
++                 linestyle=style, linewidth=1.8, markersize=4, label=short.get(model, "All models" if model == "ALL" else model))
++    overall = phases[phases.gpu_model == "ALL"]
++    peak = overall.loc[overall.jobs_per_exposed_hour.idxmax()]
++    trough = overall.loc[overall.jobs_per_exposed_hour.idxmin()]
++    ax3.annotate(f"Phase {int(peak.relative_phase_hour)}: {peak.jobs_per_exposed_hour:.1f} jobs/h\n"
++                 f"Peak/trough: {peak.jobs_per_exposed_hour/trough.jobs_per_exposed_hour:.2f}x",
++                 xy=(peak.relative_phase_hour, peak.jobs_per_exposed_hour), xytext=(.50, .92), textcoords="axes fraction",
++                 arrowprops=dict(arrowstyle="->", color="#1b4f72", lw=1.2), fontsize=8.5, va="top")
++    ax3.set_xlabel("Relative trace phase (hour modulo 24; no timezone)", fontsize=9)
++    ax3.set_ylabel("Arrivals per exposed phase-hour (t > 0)", fontsize=9)
++    ax3.set_xticks(range(0, 24, 2))
++    ax3.set_ylim(0, overall.jobs_per_exposed_hour.max()*1.3)
++    ax3.grid(True, linestyle="--", alpha=.4)
++    ax3.legend(loc="upper left", fontsize=8)
++    ax3.set_title("(c) Arrival variation by relative 24-hour phase", fontsize=11, fontweight="bold", pad=8)
++
++    ax4 = fig.add_subplot(gs[1, 1])
++    ccdf_checks = {}
++    for index, model in enumerate(models):
++        values = jobs.loc[jobs.gpu_model == model, "duration"]
++        durations, probability = ccdf(values)
++        positive = probability > 0  # The terminal zero cannot appear on a log axis.
++        # Show the last positive plateau up to the maximum duration; the drop
++        # to zero at that maximum is outside the logarithmic probability axis.
++        plot_durations = np.r_[durations[positive], durations[-1]]
++        plot_probability = np.r_[probability[positive], probability[positive][-1]]
++        ax4.step(plot_durations/3600, plot_probability, where="post", label=short.get(model, model),
++                 color=palette[index % len(palette)], linewidth=1.5)
++        ccdf_checks[model] = {"unique_durations": len(durations), "ties_grouped": True,
++                              "terminal_probability": float(probability[-1])}
++    ax4.set_xscale("log")
++    ax4.set_yscale("log")
++    ax4.axvline(stats["horizon_hours"], color="#7f8c8d", linestyle="--", linewidth=1.2, label="Exact observation window")
++    ax4.set_xlabel("Job duration (hours, log scale)", fontsize=10)
++    ax4.set_ylabel("Strict empirical P(duration > d), log scale", fontsize=9)
++    ax4.grid(True, which="both", linestyle="--", alpha=.35)
++    ax4.legend(loc="lower left", fontsize=8, ncol=2)
++    ax4.set_title("(d) Job-duration CCDF (no fitted tail law)", fontsize=11, fontweight="bold", pad=8)
++
++    fig.savefig(args.out / "fig1_data_patterns.pdf", bbox_inches="tight")
++    fig.savefig(args.out / "fig1_data_patterns.png", bbox_inches="tight")
++    plt.close(fig)
++    record = {"scope": "Q1 only", "input_sha256": hashes, "q1_results_sha256": hashlib.sha256((args.results / "q1_results.json").read_bytes()).hexdigest(),
++              "style": "Original four-panel layout, DejaVu Sans, supplied palette",
++              "lorenz_origin": [float(x_lorenz[0]), float(y_lorenz[0])],
++              "ccdf": ccdf_checks, "hardcoded_statistical_values": False,
++              "q2_q3": "NOT_RUN; original ZIP figure sections not changed",
++              "files": {name: hashlib.sha256((args.out / name).read_bytes()).hexdigest()
++                        for name in ["fig1_data_patterns.pdf", "fig1_data_patterns.png"]}}
++    (args.out / "q1_figure.json").write_text(json.dumps(record, indent=2, allow_nan=False) + "\n")
++    print("Generated Q1 fig1_data_patterns.pdf and .png from the raw CSVs and matching Q1 results")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/problems/2026_gpu_scheduling/experiments/verify_q1.py b/problems/2026_gpu_scheduling/experiments/verify_q1.py
+new file mode 100644
+index 0000000..b0b2cc9
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/experiments/verify_q1.py
+@@ -0,0 +1,68 @@
++#!/usr/bin/env python3
++"""Compare recomputed Q1 evidence with the audited handoff, without rescheduling."""
++import argparse
++import hashlib
++import io
++import json
++import math
++from pathlib import Path
++from zipfile import ZipFile
++
++import pandas as pd
++
++
++def sha(blob):
++    return hashlib.sha256(blob).hexdigest()
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--handoff-zip", type=Path, required=True)
++    parser.add_argument("--results", type=Path, required=True)
++    parser.add_argument("--out", type=Path, required=True, help="New verification JSON")
++    args = parser.parse_args()
++    if args.out.exists():
++        parser.error("Output exists; choose a new file")
++    checks = {}
++    with ZipFile(args.handoff_zip) as archive:
++        prefix = "Q1_final/results/"
++        saved = json.loads(archive.read(prefix + "q1_results.json"))
++        current = json.loads((args.results / "q1_results.json").read_text())
++        if set(saved) != set(current):
++            raise ValueError("Q1 JSON fields differ")
++        for key in saved.keys() - {"input_sha256"}:
++            a, b = saved[key], current[key]
++            agrees = (math.isclose(a, b, rel_tol=1e-11, abs_tol=1e-9)
++                      if isinstance(a, (int, float)) else a == b)
++            if not agrees:
++                raise ValueError(f"Q1 statistic differs: {key}: {a!r} != {b!r}")
++        checks["q1_statistics"] = {"status": "PASS", "fields_checked": len(saved)-1,
++                                   "excluded_field": "input_sha256 (reported separately)"}
++        tables = sorted(name for name in archive.namelist()
++                        if name.startswith(prefix) and name.endswith(".csv"))
++        if len(tables) != 9:
++            raise ValueError("Expected all nine audited Q1 tables")
++        for member in tables:
++            name = Path(member).name
++            original = archive.read(member)
++            regenerated = (args.results / name).read_bytes()
++            a, b = pd.read_csv(io.BytesIO(original)), pd.read_csv(io.BytesIO(regenerated))
++            pd.testing.assert_frame_equal(a, b, check_exact=False, rtol=1e-11, atol=1e-9)
++            checks[name] = {"status": "PASS", "rows": len(b), "columns": len(b.columns),
++                            "byte_identical": original == regenerated,
++                            "handoff_sha256": sha(original), "recomputed_sha256": sha(regenerated)}
++    result = {"kind": "q1_handoff_comparison", "status": "PASS",
++              "scope": "All numeric and semantic Q1 outputs; input byte provenance is separate",
++              "handoff_zip_sha256": sha(args.handoff_zip.read_bytes()), "checks": checks,
++              "input_provenance": {
++                  "handoff": saved["input_sha256"], "current": current["input_sha256"],
++                  "node_bytes": "PASS" if saved["input_sha256"]["node_info_df.csv"] == current["input_sha256"]["node_info_df.csv"] else "FAIL",
++                  "historical_job_byte_identity": "BLOCKED" if saved["input_sha256"]["job_info_clean.csv"] != current["input_sha256"]["job_info_clean.csv"] else "PASS",
++                  "reason": "Historical job bytes/original data ZIP are unavailable. Matching outputs do not establish byte identity; independent job-field comparison is recorded in the run manifest."}}
++    args.out.parent.mkdir(parents=True, exist_ok=True)
++    args.out.write_text(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False)+"\n")
++    print("PASS: all Q1 statistics and nine handoff tables agree; byte provenance reported separately")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/problems/2026_gpu_scheduling/requirements.txt b/problems/2026_gpu_scheduling/requirements.txt
+new file mode 100644
+index 0000000..54b8ec1
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/requirements.txt
+@@ -0,0 +1,5 @@
++# Supplied research package versions; Python 3.11+ is needed for NumPy 2.3.5.
++# This is a reproducibility starting point, not the confirmed team environment.
++numpy==2.3.5
++pandas==2.2.3
++matplotlib==3.10.8
+diff --git a/problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py b/problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py
+new file mode 100644
+index 0000000..dae9642
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py
+@@ -0,0 +1 @@
++"""Problem B research modules; Q1 and checked data loading share one interface."""
+diff --git a/problems/2026_gpu_scheduling/src/gpu_scheduling/data.py b/problems/2026_gpu_scheduling/src/gpu_scheduling/data.py
+new file mode 100644
+index 0000000..b3619a4
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/src/gpu_scheduling/data.py
+@@ -0,0 +1,94 @@
++"""Read immutable CSV bytes from a directory or the original data ZIP.
++
++The scale of 100 is an explicit restriction of the supplied research baseline,
++checked before conversion; it is not an additional competition requirement.
++"""
++from __future__ import annotations
++
++import hashlib
++import io
++from pathlib import Path
++from zipfile import ZipFile
++
++import numpy as np
++import pandas as pd
++
++CPU_SCALE = 100
++DAY = 86400
++FILENAMES = ("node_info_df.csv", "job_info_clean.csv")
++
++
++def native(value):
++    if isinstance(value, dict):
++        return {str(key): native(item) for key, item in value.items()}
++    if isinstance(value, (tuple, list)):
++        return [native(item) for item in value]
++    if isinstance(value, np.ndarray):
++        return native(value.tolist())
++    if isinstance(value, np.generic):
++        return value.item()
++    return value
++
++
++def integer_array(series, scale=1):
++    values = series.to_numpy(dtype=float) * scale
++    if (not np.isfinite(values).all()
++            or not np.allclose(values, np.rint(values), rtol=0, atol=1e-8)
++            or (np.abs(values) >= 2**63).any()):
++        raise ValueError(f"{series.name}: cannot represent values at scale {scale}")
++    return np.rint(values).astype(np.int64)
++
++
++def prepare_data(nodes, jobs):
++    """Validate and normalize copies; do not edit the source dataframes or files."""
++    nodes, jobs = nodes.copy(), jobs.copy()
++    required_n = {"node_name", "gpu_model", "gpu_capacity_num", "cpu_num"}
++    required_j = {"job_name", "gpu_model", "cpu_request", "gpu_request",
++                  "worker_num", "submit_time", "duration"}
++    if not required_n <= set(nodes) or not required_j <= set(jobs):
++        raise ValueError("Required columns missing")
++    if nodes.empty or jobs.empty:
++        raise ValueError("Empty node or job data")
++    if nodes.isna().any().any() or jobs.isna().any().any():
++        raise ValueError("Missing values found")
++    for column in ("node_name", "gpu_capacity_num"):
++        nodes[column] = integer_array(nodes[column])
++    for column in ("job_name", "gpu_request", "worker_num", "submit_time", "duration"):
++        jobs[column] = integer_array(jobs[column])
++    if nodes.node_name.duplicated().any() or jobs.job_name.duplicated().any():
++        raise ValueError("Duplicate IDs")
++    # Unlike the original reader, accept fractional node CPU capacity at the
++    # same checked precision as requests. Raw values remain available for metrics.
++    nodes["cpu_units"] = integer_array(nodes.cpu_num, CPU_SCALE)
++    jobs["cpu_units"] = integer_array(jobs.cpu_request, CPU_SCALE)
++    if not (nodes.gpu_capacity_num > 0).all() or not (nodes.cpu_units >= 0).all():
++        raise ValueError("Invalid capacity")
++    if not (jobs[["gpu_request", "worker_num", "duration"]] > 0).all().all():
++        raise ValueError("Invalid positive demand/duration")
++    if not (jobs[["cpu_units", "submit_time"]] >= 0).all().all():
++        raise ValueError("Invalid CPU demand or arrival time")
++    if not set(jobs.gpu_model) <= set(nodes.gpu_model):
++        raise ValueError("Unknown GPU type")
++    nodes = nodes.sort_values("node_name", kind="stable").reset_index(drop=True)
++    jobs = jobs.sort_values(["submit_time", "job_name"], kind="stable").reset_index(drop=True)
++    return nodes, jobs
++
++
++def read_data(path: Path):
++    """Return validated nodes, jobs and hashes of the actual input bytes."""
++    path = Path(path)
++    if path.is_dir():
++        contents = {name: (path / name).read_bytes() for name in FILENAMES}
++    else:
++        with ZipFile(path) as archive:
++            contents = {}
++            for name in FILENAMES:
++                matches = [entry for entry in archive.infolist()
++                           if Path(entry.filename).name == name
++                           and not entry.filename.startswith("__MACOSX/")]
++                if len(matches) != 1:
++                    raise ValueError(f"Expected one {name}, found {len(matches)}")
++                contents[name] = archive.read(matches[0])
++    nodes, jobs = prepare_data(*(pd.read_csv(io.BytesIO(contents[name])) for name in FILENAMES))
++    hashes = {name: hashlib.sha256(blob).hexdigest() for name, blob in contents.items()}
++    return nodes, jobs, hashes
+diff --git a/problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py b/problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py
+new file mode 100644
+index 0000000..bca17ae
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py
+@@ -0,0 +1,218 @@
++"""Q1 audited handoff computations: a single source for both EDA entry points.
++
++All demand below is counterfactual immediate-start demand, never allocation.
++The floor top-k convention differs from the older independent audit's ceil
++convention; do not combine the two concentration tables without recomputation.
++"""
++from __future__ import annotations
++import json
++from pathlib import Path
++import numpy as np
++import pandas as pd
++from .data import CPU_SCALE, read_data
++
++SECOND_PER_HOUR = 3600
++SECOND_PER_DAY = 86400
++MODEL_ORDER = ['A10', 'A100-SXM4-80GB', 'GPU-series-1', 'H800', 'GPU-series-2', 'A800-SXM4-80GB']
++
++def load_data(source: Path):
++    nodes, jobs, hashes = read_data(source)
++    # Q1 copies share the baseline's checked byte loader; Q2/Q3 never receive
++    # these derived work or counterfactual-demand columns.
++    nodes = nodes.rename(columns={"cpu_units": "cpu_scaled"})
++    jobs = jobs.rename(columns={"cpu_units": "cpu_scaled"})
++    if jobs.submit_time.min() != 0:
++        raise ValueError("Expected trace origin at zero; do not silently rebase it")
++    jobs["total_gpu"] = jobs.gpu_request * jobs.worker_num
++    jobs["total_cpu_scaled"] = jobs.cpu_scaled * jobs.worker_num
++    jobs["total_cpu"] = jobs.total_cpu_scaled / CPU_SCALE
++    jobs["gpu_seconds"] = jobs.total_gpu * jobs.duration
++    jobs["gpu_hours"] = jobs.gpu_seconds / SECOND_PER_HOUR
++    jobs["cpu_hours"] = jobs.total_cpu_scaled * jobs.duration / (CPU_SCALE * SECOND_PER_HOUR)
++    jobs["cpu_per_gpu"] = jobs.cpu_request / jobs.gpu_request
++    return nodes, jobs, hashes
++
++
++def gini(values):
++    """Uncorrected empirical Gini, as in the original eda_deep.py."""
++    x = np.sort(np.asarray(values, dtype=float))
++    if len(x) == 0 or not np.isfinite(x).all() or (x < 0).any() or x.sum() <= 0:
++        raise ValueError('Gini requires nonempty nonnegative data with positive sum')
++    rank = np.arange(1, len(x) + 1, dtype=float)
++    return float(np.dot(2 * rank - len(x) - 1, x) / (len(x) * x.sum()))
++
++
++def top_share(values, fraction):
++    """Floor count preserves the original EDA convention; report k explicitly."""
++    x = np.sort(np.asarray(values, dtype=float))[::-1]
++    k = int(np.floor(len(x) * fraction))
++    return k, float(x[:k].sum() / x.sum())
++
++
++def lorenz(values):
++    x = np.sort(np.asarray(values, dtype=float))
++    return np.arange(len(x) + 1) / len(x), np.r_[0., np.cumsum(x) / x.sum()]
++
++
++def ccdf(values):
++    """Exact strict empirical P(X > x), grouping ties before calculation."""
++    x, counts = np.unique(np.asarray(values), return_counts=True)
++    return x, 1 - np.cumsum(counts) / counts.sum()
++
++
++def demand_timeline(arrival, duration, quantity, horizon):
++    """Counterfactual immediate-start demand on half-open [0,T); NOT allocation."""
++    a, p, q = [np.asarray(v, dtype=np.int64) for v in (arrival, duration, quantity)]
++    valid = (a < horizon) & (a + p > 0)
++    start = np.maximum(a[valid], 0)
++    stop = np.minimum(a[valid] + p[valid], horizon)
++    t = np.r_[0, horizon, start, stop]
++    delta = np.r_[0, 0, q[valid], -q[valid]]
++    edges, inv = np.unique(t, return_inverse=True)
++    changes = np.zeros(len(edges), dtype=np.int64)
++    np.add.at(changes, inv, delta)
++    value = np.cumsum(changes)
++    if value[-1] != 0 or np.any(value < 0):
++        raise AssertionError('Immediate-start demand event accounting failed')
++    area = int(np.dot(value[:-1], np.diff(edges)))
++    direct = int(np.dot(q, np.maximum(0, np.minimum(a + p, horizon) - np.maximum(a, 0))))
++    if area != direct:
++        raise AssertionError('Event integral disagrees with direct interval overlap')
++    return edges, value[:-1], area
++
++
++def phase_exposure(horizon):
++    cycles, remainder = divmod(horizon, SECOND_PER_DAY)
++    return cycles + np.clip(remainder - np.arange(24) * SECOND_PER_HOUR, 0, SECOND_PER_HOUR) / SECOND_PER_HOUR
++
++
++def empty_pool_fit(nodes, grp):
++    configs = nodes.groupby(['gpu_capacity_num', 'cpu_scaled']).size()
++    capacity = np.zeros(len(grp), dtype=np.int64)
++    q, c = grp.gpu_request.to_numpy(), grp.cpu_scaled.to_numpy()
++    for (gpu, cpu), count in configs.items():
++        h = gpu // q
++        positive = c > 0
++        h[positive] = np.minimum(h[positive], cpu // c[positive])
++        capacity += h * count
++    return capacity >= grp.worker_num.to_numpy()
++
++
++def save_csv(df, out, name):
++    df.to_csv(out / name, index=False, encoding='utf-8-sig', float_format='%.12g')
++
++
++def analyze(source: Path, out: Path):
++    nodes, jobs, hashes = load_data(source)
++    T = int(jobs.submit_time.max())
++    if T <= 0:
++        raise ValueError('Positive observation window required')
++    out.mkdir(parents=True, exist_ok=False)
++    configs = nodes.groupby(['gpu_model','gpu_capacity_num','cpu_num']).size().reset_index(name='nodes')
++    save_csv(configs, out, 'node_configurations.csv')
++    summary, demand, ratios, bymodel = [], [], [], []
++    ordered = [m for m in MODEL_ORDER if m in set(nodes.gpu_model)] + sorted(set(nodes.gpu_model) - set(MODEL_ORDER))
++    for model in ordered:
++        nd = nodes[nodes.gpu_model == model]
++        j = jobs[jobs.gpu_model == model]
++        if j.empty:
++            continue
++        B = int(nd.gpu_capacity_num.sum()); C = float(nd.cpu_num.sum())
++        z = j[j.submit_time == 0]
++        row = dict(gpu_model=model, nodes=len(nd), physical_gpus=B, vcpus=C, jobs=len(j),
++                   capacity_share=float(B/nodes.gpu_capacity_num.sum()), job_share=float(len(j)/len(jobs)),
++                   gpu_hours=float(j.gpu_hours.sum()), work_share=float(j.gpu_hours.sum()/jobs.gpu_hours.sum()),
++                   cpu_hours=float(j.cpu_hours.sum()), rho_gpu=float(j.gpu_seconds.sum()/(T*B)),
++                   rho_cpu=float(j.cpu_hours.sum()/(T/SECOND_PER_HOUR*C)),
++                   rho_gpu_nominal_90d=float(j.gpu_seconds.sum()/(90*SECOND_PER_DAY*B)),
++                   mean_workers=float(j.worker_num.mean()), max_workers=int(j.worker_num.max()),
++                   mean_gpu_per_worker=float(j.gpu_request.mean()), max_gpu_per_job=int(j.total_gpu.max()),
++                   single_worker_fraction=float((j.worker_num==1).mean()),
++                   one_gpu_per_worker_fraction=float((j.gpu_request==1).mean()),
++                   median_duration_seconds=float(j.duration.median()), mean_duration_hours=float(j.duration.mean()/3600),
++                   p95_duration_hours=float(j.duration.quantile(.95)/3600),
++                   t0_jobs=len(z), t0_gpu_hours=float(z.gpu_hours.sum()), t0_work_share=float(z.gpu_hours.sum()/j.gpu_hours.sum()),
++                   infeasible_empty_pool_jobs=int((~empty_pool_fit(nd,j)).sum()),
++                   gini_work=gini(j.gpu_seconds), gini_duration=gini(j.duration))
++        summary.append(row)
++        for res, quantity, cap in [('GPU',j.total_gpu,B), ('CPU',j.total_cpu_scaled,int(nd.cpu_scaled.sum()))]:
++            edges, val, area = demand_timeline(j.submit_time,j.duration,quantity,T)
++            scale = 1 if res=='GPU' else CPU_SCALE
++            demand.append(dict(gpu_model=model,resource=res,capacity=cap/scale,
++                immediate_start_mean=area/T/scale,immediate_start_mean_ratio=area/T/cap,
++                immediate_start_peak=float(val.max()/scale),
++                time_above_capacity_seconds=int(np.diff(edges)[val>cap].sum()),
++                fraction_time_above_capacity=float(np.diff(edges)[val>cap].sum()/T),
++                window_requested_resource_hours=area/scale/3600))
++        for c in configs[configs.gpu_model==model].itertuples(index=False):
++            threshold=c.cpu_num/c.gpu_capacity_num
++            high=j.cpu_per_gpu>threshold
++            ratios.append(dict(gpu_model=model,gpus_per_node=c.gpu_capacity_num,vcpus_per_node=c.cpu_num,
++                nodes=c.nodes,node_cpu_per_gpu=threshold,jobs_above_ratio=int(high.sum()),
++                fraction_jobs_above_ratio=float(high.mean()),work_share_above_ratio=float(j.loc[high,'gpu_hours'].sum()/j.gpu_hours.sum())))
++    save_csv(pd.DataFrame(summary),out,'pool_summary.csv')
++    save_csv(pd.DataFrame(demand),out,'immediate_start_demand.csv')
++    save_csv(pd.DataFrame(ratios),out,'resource_shape.csv')
++    concentration=[]
++    for model,j in [('ALL',jobs)]+[(m,jobs[jobs.gpu_model==m]) for m in ordered]:
++        if j.empty: continue
++        for f in [.001,.005,.01,.05,.10,.20]:
++            k,share=top_share(j.gpu_seconds,f)
++            concentration.append(dict(gpu_model=model,nominal_top_fraction=f,jobs_selected=k,
++                actual_top_fraction=k/len(j),work_share=share))
++    save_csv(pd.DataFrame(concentration),out,'concentration.csv')
++    quantiles=[]
++    for q in [.05,.1,.25,.5,.75,.9,.95,.99,1.]:
++        x=float(jobs.duration.quantile(q))
++        quantiles.append(dict(quantile=q,duration_seconds=x,duration_hours=x/3600,duration_days=x/86400))
++    save_csv(pd.DataFrame(quantiles),out,'duration_quantiles.csv')
++    days=np.arange(int(np.ceil(T/86400)))
++    daily=[]; blocks=[]
++    for model,j in [('ALL',jobs)]+[(m,jobs[jobs.gpu_model==m]) for m in ordered]:
++        di=j.submit_time//86400
++        # Inclusive final arrival; here supplied T is not exactly a day boundary.
++        for d in days:
++            part=j[di==d]
++            daily.append(dict(gpu_model=model,trace_day=int(d),exposure_seconds=int(min(T,(d+1)*86400)-d*86400),
++                jobs=len(part),jobs_excluding_t0=int((part.submit_time>0).sum()),
++                submitted_full_lifetime_gpu_hours=float(part.gpu_hours.sum()),
++                t0_gpu_hours=float(part.loc[part.submit_time==0,'gpu_hours'].sum())))
++        for begin in range(0,len(days),30):
++            part=j[(di>=begin)&(di<begin+30)]
++            blocks.append(dict(gpu_model=model,start_trace_day=begin,end_trace_day=min(begin+30,len(days)),
++                jobs=len(part),submitted_full_lifetime_gpu_hours=float(part.gpu_hours.sum()),
++                t0_gpu_hours=float(part.loc[part.submit_time==0,'gpu_hours'].sum())))
++    save_csv(pd.DataFrame(daily),out,'daily_arrivals.csv')
++    save_csv(pd.DataFrame(blocks),out,'thirty_day_blocks.csv')
++    phases=[]
++    exposure=phase_exposure(T)
++    for model,j in [('ALL',jobs)]+[(m,jobs[jobs.gpu_model==m]) for m in ordered]:
++        phase=((j.loc[j.submit_time>0,'submit_time']%86400)//3600).astype(int)
++        counts=np.bincount(phase,minlength=24)
++        for h in range(24):
++            phases.append(dict(gpu_model=model,relative_phase_hour=h,jobs=int(counts[h]),
++                exposure_hours=float(exposure[h]),jobs_per_exposed_hour=float(counts[h]/exposure[h])))
++    phase_df=pd.DataFrame(phases);save_csv(phase_df,out,'relative_24h_phase.csv')
++    ap=phase_df[phase_df.gpu_model=='ALL'];hi=ap.loc[ap.jobs_per_exposed_hour.idxmax()];lo=ap.loc[ap.jobs_per_exposed_hour.idxmin()]
++    stats=dict(jobs=len(jobs),nodes=len(nodes),physical_gpus=int(nodes.gpu_capacity_num.sum()),
++        vcpus=float(nodes.cpu_num.sum()),gpu_models=len(ordered),first_arrival_seconds=int(jobs.submit_time.min()),
++        horizon_seconds=T,horizon_hours=T/3600,horizon_days=T/86400,
++        nominal_90day_difference_seconds=90*86400-T,missing_required_values=0,duplicate_job_ids=0,duplicate_node_ids=0,
++        fractional_cpu_jobs=int((jobs.cpu_request%1!=0).sum()),zero_cpu_jobs=int((jobs.cpu_request==0).sum()),
++        min_duration_seconds=int(jobs.duration.min()),max_duration_seconds=int(jobs.duration.max()),
++        total_gpu_hours=float(jobs.gpu_hours.sum()),total_cpu_hours=float(jobs.cpu_hours.sum()),
++        mean_workers=float(jobs.worker_num.mean()),mean_gpu_per_worker=float(jobs.gpu_request.mean()),
++        single_worker_jobs=int((jobs.worker_num==1).sum()),one_gpu_per_worker_jobs=int((jobs.gpu_request==1).sum()),
++        t0_jobs=int((jobs.submit_time==0).sum()),t0_gpu_hours=float(jobs.loc[jobs.submit_time==0,'gpu_hours'].sum()),
++        jobs_duration_longer_than_T=int((jobs.duration>T).sum()),jobs_immediate_finish_after_T=int(((jobs.submit_time+jobs.duration)>T).sum()),
++        gini_gpu_work=gini(jobs.gpu_seconds),gini_duration=gini(jobs.duration),
++        peak_relative_hour=int(hi.relative_phase_hour),trough_relative_hour=int(lo.relative_phase_hour),
++        peak_phase_rate=float(hi.jobs_per_exposed_hour),trough_phase_rate=float(lo.jobs_per_exposed_hour),
++        phase_peak_trough_ratio=float(hi.jobs_per_exposed_hour/lo.jobs_per_exposed_hour),
++        top_k_rule='floor(n*f), descending full-lifetime GPU work',
++        quantile_rule='linear interpolation (pandas default)',
++        window_rule='[0,T), T=last submission; all supplied rows included in lifetime work',
++        immediate_start_rule='start=submit_time, ignoring resource feasibility; not actual allocation',
++        allocation_rate_status='NOT_IDENTIFIABLE_FROM_SUPPLIED_CSVS',input_sha256=hashes)
++    (out/'q1_results.json').write_text(json.dumps(stats,indent=2,ensure_ascii=False),encoding='utf-8')
++    return nodes,jobs,stats
+diff --git a/problems/2026_gpu_scheduling/tests/test_q1.py b/problems/2026_gpu_scheduling/tests/test_q1.py
+new file mode 100644
+index 0000000..dbd53bc
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/tests/test_q1.py
+@@ -0,0 +1,40 @@
++"""Independent numerical checks of the Q1 window and distribution corrections."""
++import unittest
++
++import numpy as np
++
++from gpu_scheduling.q1 import ccdf, demand_timeline, gini, lorenz, phase_exposure, top_share
++
++
++class Q1Checks(unittest.TestCase):
++    def test_seconds_integral_and_boundary_release(self):
++        edges, values, area = demand_timeline([0, 2, 5], [2, 10, 1], [2, 3, 99], 5)
++        self.assertEqual(area, 13)  # 2 GPUs * 2 s + 3 GPUs * 3 s.
++        self.assertEqual(edges.tolist(), [0, 2, 5])
++        self.assertEqual(values.tolist(), [2, 3])
++
++    def test_gini_matches_pairwise_definition(self):
++        values = np.array([1, 1, 2, 8])
++        expected = np.abs(values[:, None]-values).sum()/(2*len(values)*values.sum())
++        self.assertAlmostEqual(gini(values), expected)
++
++    def test_lorenz_includes_origin_and_endpoint(self):
++        x, y = lorenz([1, 1, 2])
++        self.assertEqual((x[0], y[0]), (0, 0))
++        self.assertEqual((x[-1], y[-1]), (1, 1))
++
++    def test_ccdf_groups_tied_durations(self):
++        x, probability = ccdf([1, 1, 2, 4])
++        self.assertEqual(x.tolist(), [1, 2, 4])
++        self.assertEqual(probability.tolist(), [.5, .25, 0])
++
++    def test_top_count_is_floor(self):
++        count, share = top_share([1, 2, 3], .5)
++        self.assertEqual(count, 1)
++        self.assertEqual(share, .5)
++
++    def test_partial_phase_exposure(self):
++        exposure = phase_exposure(86400+1800)
++        self.assertEqual(exposure[0], 1.5)
++        self.assertEqual(exposure[1], 1)
++        self.assertEqual(exposure.sum()*3600, 86400+1800)

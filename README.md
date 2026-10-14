@@ -2,7 +2,7 @@
 
 `shiuhou/math_modeling` 由隊員各自在自己的電腦 clone，按任務分支與 GitHub PR 協作。目標是讓題目、推導、程式、實驗證據與論文可以互相核對。
 
-目前階段：**倉庫初始化**。選題、隊員分工、資料授權及正式運行環境待確認；題目原文尚未取得核對。模型、正式實驗、指標重算及論文建置入口均未建立。手冊中的 A／B 題附錄不表示團隊已選題。
+目前階段：**Problem B Q1 修正版整合**。原題與兩個 CSV 已核對，Q1 已重算；此分支未整合或驗證 Q2/Q3 演算法。題目程式、狀態與重現命令見 [B 題唯一入口](problems/2026_gpu_scheduling/README.md)。隊員分工、資料公開範圍與正式環境待確認。
 
 ## 從這裡開始
 
@@ -14,7 +14,7 @@
 
 ## 現在可執行的檢查
 
-倉庫檢查使用 **Python 3.10+ 標準函式庫與 Git**，無需安裝研究套件。每位隊員在自己的電腦準備環境並登入自己的 GitHub／Codex 帳號，見 [個人電腦設定](docs/host.md)。完整測試包含舊 Linux 工具，目前只在 Linux 驗證；其他平台狀態見該文件。研究環境仍待題目確認。
+倉庫檢查使用 **Python 3.10+ 標準函式庫與 Git**，無需安裝研究套件。每位隊員在自己的電腦準備環境並登入自己的 GitHub／Codex 帳號，見 [個人電腦設定](docs/host.md)。完整測試包含舊 Linux 工具，目前只在 Linux 驗證；其他平台狀態見該文件。B 題研究套件與本機版本見 B 題入口；全隊正式環境待確認。
 
 在倉庫根目錄執行：
 
@@ -35,9 +35,9 @@ git diff --check
 | [docs/brief.md](docs/brief.md) | 唯一專案入口：選題、覆蓋、介面、依賴與驗證摘要 |
 | [CONTRIBUTING.md](CONTRIBUTING.md)、[任務模板](.github/ISSUE_TEMPLATE/research_task.md)、[PR 模板](.github/pull_request_template.md) | 認領、審閱與整合 |
 | [scripts/](scripts/)、[tests/](tests/) | 倉庫檢查及既有團隊工具；工程行為測試 |
-| [src/](src/)、[experiments/](experiments/)、[notebooks/](notebooks/) | 可重用研究程式、實驗執行入口、探索；目前未實作模型 |
-| [data/](data/README.md)、[outputs/](outputs/README.md) | 本機原始資料與可再生暫存；內容預設不進 Git |
-| [results/](results/README.md) | 可追蹤的正式清單、指標及必要明細；目前只有格式示例 |
+| [src/](src/)、[experiments/](experiments/)、[notebooks/](notebooks/) | 可重用研究程式、實驗執行入口、探索；B 題實作集中於 problems/2026_gpu_scheduling |
+| [data/](data/README.md)、[outputs/](outputs/README.md) | 本機原始資料與可再生暫存；內容預設不進 Git，B 題沿用既有已追蹤 raw CSV |
+| [results/](results/README.md) | 可追蹤的正式清單、指標及必要明細；已有 Q1 重算表及清單，完整論文仍未驗證 |
 | [paper/](paper/draft.md)、[figures/](figures/) | 論文工作稿與選用圖表；寫作工具待確認 |
 | [notes/tasks/](notes/tasks/) | 隨 Git 保存的任務交付摘要；已有 Issue 時引用其狀態 |
 | [.agents/skills/](.agents/skills/) | 按需要選用的工具，不固定成員角色 |
