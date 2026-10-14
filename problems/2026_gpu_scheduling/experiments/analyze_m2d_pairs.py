@@ -28,6 +28,7 @@ def read_times(path: Path) -> dict[int, dict[str, int]]:
                 raise ValueError(f"duplicate job_name in {path}: {jid}")
             out[jid] = {
                 "duration": int(row["duration"]),
+                "submit_time": int(row["submit_time"]),
                 "wait": int(row["start"]) - int(row["submit_time"]),
                 "start": int(row["start"]),
                 "finish": int(row["finish"]),
@@ -39,6 +40,9 @@ def compare(base: dict[int, dict[str, int]], other: dict[int, dict[str, int]]) -
     ids = sorted(set(base) & set(other))
     if len(ids) != len(base) or len(ids) != len(other):
         raise ValueError("paired outputs have different job sets")
+    if any((base[j]["duration"], base[j]["submit_time"]) !=
+           (other[j]["duration"], other[j]["submit_time"]) for j in ids):
+        raise ValueError("paired outputs have different inputs")
     delta = np.asarray([other[j]["wait"] - base[j]["wait"] for j in ids], dtype=np.int64)
     base_wait = np.asarray([base[j]["wait"] for j in ids], dtype=np.int64)
     durations = np.asarray([base[j]["duration"] for j in ids], dtype=np.int64)
@@ -79,16 +83,30 @@ def main() -> None:
     for (jobs, theta), group in sorted(groups.items()):
         if "SPT-URGENT-TIME" not in group:
             continue
-        base = read_times(args.benchmark / group["SPT-URGENT-TIME"]["child_output"] /
-                          "SPT-URGENT-TIME_job_times.csv.gz")
-        for policy in ("SPT-URGENT-FIXED", "SPT-URGENT-FLEX"):
-            if policy not in group:
+        for baseline, policy in (("SPT-URGENT-TIME", "SPT-URGENT-FIXED"),
+                                 ("SPT-URGENT-TIME", "SPT-URGENT-FLEX"),
+                                 ("SPT-URGENT-FIXED", "SPT-URGENT-FLEX")):
+            if baseline not in group or policy not in group:
                 continue
+            base = read_times(args.benchmark / group[baseline]["child_output"] /
+                              f"{baseline}_job_times.csv.gz")
             other = read_times(args.benchmark / group[policy]["child_output"] /
                                f"{policy}_job_times.csv.gz")
+            pair_result = compare(base, other)
+            detail = args.benchmark / f"paired-{jobs}-{theta}-{baseline}-to-{policy}.csv.gz"
+            if detail.exists():
+                raise ValueError(f"paired detail exists: {detail}")
+            with gzip.open(detail, "wt", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow(["job_name", "duration_seconds", "baseline_wait_seconds",
+                                 "candidate_wait_seconds", "wait_delta_seconds"])
+                for jid in sorted(base):
+                    writer.writerow([jid, base[jid]["duration"], base[jid]["wait"],
+                                     other[jid]["wait"], other[jid]["wait"] - base[jid]["wait"]])
             output["comparisons"].append({"jobs": jobs, "theta_seconds": theta,
-                                           "baseline": "SPT-URGENT-TIME", "policy": policy,
-                                           "result": compare(base, other)})
+                "baseline": baseline, "policy": policy, "result": pair_result,
+                "detail": detail.name,
+                "detail_sha256": hashlib.sha256(detail.read_bytes()).hexdigest()})
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")
     print(json.dumps(output, indent=2, ensure_ascii=False))

@@ -270,3 +270,14 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - 子程序控制：`run_m2b_benchmark.py` 新增 `--timeout-seconds` 與 `--max-rss-kib`，監測 `/proc/<pid>/status`，超限 kill 並保存 `*-status.json`／`benchmark.json` 的 `TIMEOUT` 或 `RSS_LIMIT`。用 16-job、1000KiB 上限實際觸發 `RSS_LIMIT`，退出碼 2，未冒充成功。
 - 正式證據：M2-C manifest、A/B compact summaries、六份獨立 replay 摘要與 source/data/config hash 見 `results/20261015-b-q2-m2c/manifest.json`；大型明細留在 ignored `outputs/q2-m2c-*`，不覆寫 M2-A 證據。
 - 狀態：M2-C validator／queue／evidence 修正 `PASS`；A/B 受控探針 `PASS`；16,384 `theta=4s`、短門檻更大前綴與完整 224,112 trace 仍 `NOT_RUN`／受限。正式 Q2 九策略全 trace 應在後續獨立核准後執行。
+
+## 13. M2-D 結果（正式 A10 比較的受控前綴與停止，2026-10-15）
+
+- 基準：`9d1ade07f1a61f587b32305503460317a9cffc77`；validator 增量修補與 M2-D 工具提交為 `c7c99f7`。保留 M2-C 與原始 M0/M1/M2-A/B 證據，沒有修改 scheduler、placement、evaluator 或 Q1/Q3。
+- validator：`validate_reservations()` 以單一 `active_promise_id` 增量追蹤待履約承諾；start event 不再掃描歷史 `contexts.values()`。重疊承諾、缺履約、偽造 FIXED／FIXED→FLEX 更新仍拒絕；同一份有效 schema-2 FIXED→FLEX 證據由修補前後 verifier 均 PASS。Problem B 測試總數 36 PASS。
+- 可重現工具：`run_m2b_benchmark.py` 對正式門檻標示 `exploratory-168h`／`historical-anchor-1350h`；`run_m2a_pressure.py` 增加固定分位 duration strata；`analyze_m2d_pairs.py` 以相同 jobs/theta 配對 TIME→FIXED→FLEX，保存等待差、長作業差與原零等待作業新增延遲。
+- 資料範圍：原始 A10 為 111,284 jobs、2,494 nodes；raw SHA 沿用 node `1aba161...7bc9d18`、job `ef14d...32eedb0`；horizon `7,776,000` 秒、FF-id、K=200、shared-timer、精確 duration。
+- 受控前綴實測：65,536 jobs、`theta=168h`、SPT-FILL 單一子程序完成，scheduler 約 360.13 s、validation 1.57 s、總 runtime 363.70 s、per-process peak RSS 557,120 KiB、35,685,893 candidate checks、0 reservations/crossings；capacity ledger 與 reservation replay PASS，schedule hash `7cc447d9...2a5067`。duration strata 與所有核心 metrics 在正式摘要保存。
+- 成本停止：同一前綴 SPT-URGENT-HOL 在 900 s policy timeout 內未完成，RSS 上限未觸發（observed 216,564 KiB）；診斷保存為 `TIMEOUT`。依資源規範停止父程序，未把其餘 65,536 策略、`theta=1350h` 或 111,284 全量結果填成零或估算。
+- 正式清單：`results/20261015-b-q2-m2d-01/manifest.json`；壓力摘要 `benchmark.json`、獨立重播 `prefix-65536-604800-spt-fill-verified.json`、超時診斷 `timeout-spt-urgent-hol.json`。大型 job times／allocations／events 仍在被忽略的 `outputs/q2-m2d-prefix-20261015/`，以摘要及雜湊追溯。
+- 驗證狀態：repo check PASS、root 12 tests PASS、Problem B 36 tests PASS、git diff check PASS；M2-D 正式比較 `INCOMPLETE`。完整兩門檻六／九策略、TIME→FIXED→FLEX 配對與完整 A10 均 `NOT_RUN`，原因是 65,536 HOL 前綴已顯示目前成本不足以安全展開矩陣。theta=4s 仍僅屬工程壓力情景，不列入主表。
