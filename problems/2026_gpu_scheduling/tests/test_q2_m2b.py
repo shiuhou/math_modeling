@@ -162,6 +162,25 @@ class M2BCertificateReplay(unittest.TestCase):
         with self.assertRaises(AssertionError):
             validate_reservations(nd, jobs, legacy)
 
+    def test_overlapping_pending_promises_are_rejected(self):
+        jobs, result = _fixed_then_flex_fixture()
+        bad = copy.deepcopy(result)
+        second = copy.deepcopy(bad["reservations"][0])
+        second["promise_id"] = "promise-2"
+        bad["reservations"].append(second)
+        issuance = copy.deepcopy(bad["events"][1])
+        issuance["promise_id"] = "promise-2"
+        bad["events"].insert(2, issuance)
+        with self.assertRaisesRegex(AssertionError, "overlapping"):
+            validate_reservations(_nodes(), jobs, bad)
+
+    def test_missing_fulfillment_is_rejected_even_with_valid_record(self):
+        jobs, result = _fixed_then_flex_fixture()
+        bad = copy.deepcopy(result)
+        bad["events"] = [e for e in bad["events"] if e["kind"] != "reservation_fulfilled"]
+        with self.assertRaisesRegex(AssertionError, "fulfillment"):
+            validate_reservations(_nodes(), jobs, bad)
+
 
 if __name__ == "__main__":
     unittest.main()

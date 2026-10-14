@@ -136,6 +136,11 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
     policy = str(result.get("policy", ""))
     current_g, current_c = caps_g.copy(), caps_c.copy()
     active: dict[int, tuple[tuple[int, int], ...]] = {}
+    # The scheduler permits at most one pending promise per pool.  Keep that
+    # invariant explicit during replay so start events do not rescan every
+    # historical context (which made validation quadratic in the number of
+    # promises).  Fulfilled contexts remain in ``contexts`` for final audit.
+    active_promise_id: str | None = None
     last_time = -1
 
     def apply_job(j: int, sign: int) -> None:
@@ -159,6 +164,8 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             pid = item.get("promise_id")
             if pid not in contexts or pid in issued_ids:
                 raise AssertionError("reservation issuance is missing or duplicated")
+            if active_promise_id is not None:
+                raise AssertionError("overlapping pending promises")
             ctx = contexts[pid]
             if (t != ctx["issued"] or int(item.get("protected_job")) != ctx["protected"]
                     or int(item.get("promised_R")) != ctx["R"]):
@@ -180,6 +187,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             check_snapshot(ctx["promise"], "future_free_initial", future_g, future_c)
             ctx["future_g"], ctx["future_c"] = future_g, future_c
             issued_ids.add(pid)
+            active_promise_id = pid
             continue
 
         if kind == "certificate_update":
@@ -272,6 +280,9 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 raise AssertionError("fulfillment certificate is inconsistent")
             ctx["fulfilled"] = t
             fulfilled_ids.add(pid)
+            if active_promise_id != pid:
+                raise AssertionError("fulfilled promise is not the active pending promise")
+            active_promise_id = None
             continue
 
         if kind == "start":
@@ -281,7 +292,8 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 raise AssertionError("invalid start event")
             if not 0 <= j < len(jobs) or j in active or t != int(starts[j]):
                 raise AssertionError("start event disagrees with timing ledger")
-            for ctx in contexts.values():
+            if active_promise_id is not None:
+                ctx = contexts[active_promise_id]
                 if (ctx["issued_seen"] and ctx["fulfilled"] is None
                         and ctx["issued"] <= t < ctx["R"]
                         and j != ctx["protected"] and j not in ctx["active_at_issue"]):
@@ -300,6 +312,8 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             apply_job(j, 1)
             del active[j]
 
+    if active_promise_id is not None:
+        raise AssertionError("pending promise has no fulfillment")
     if set(contexts) != issued_ids or set(contexts) != fulfilled_ids:
         raise AssertionError("reservation evidence is missing issuance or fulfillment")
     for pid, ctx in contexts.items():

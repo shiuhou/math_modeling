@@ -17,6 +17,7 @@ import platform
 import resource
 import sys
 import time
+import numpy as np
 
 PROBLEM = Path(__file__).resolve().parents[1]
 REPO = PROBLEM.parents[1]
@@ -33,6 +34,33 @@ def sha256(path: Path) -> str:
 
 def write_json(path: Path, value) -> None:
     path.write_text(json.dumps(native(value), ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+
+
+def duration_strata(jobs, starts, ends, horizon: int) -> dict:
+    """Report fixed rank-based duration strata for cross-policy comparison."""
+    durations = jobs.duration.to_numpy(dtype="int64")
+    waits = starts - jobs.submit_time.to_numpy(dtype="int64")
+    bounds = np.quantile(durations, [0.0, 0.5, 0.9, 0.99, 1.0], method="linear")
+    labels = ("q00_q50", "q50_q90", "q90_q99", "q99_q100")
+    out = {}
+    for i, label in enumerate(labels):
+        lo, hi = bounds[i], bounds[i + 1]
+        mask = (durations >= lo) & ((durations <= hi) if i == len(labels) - 1 else (durations < hi))
+        if not mask.any():
+            out[label] = {"count": 0, "duration_min_seconds": None,
+                          "duration_max_seconds": None, "mean_wait_hours": None,
+                          "p95_wait_hours": None, "zero_wait_fraction": None}
+            continue
+        group_wait = waits[mask]
+        out[label] = {
+            "count": int(mask.sum()),
+            "duration_min_seconds": int(durations[mask].min()),
+            "duration_max_seconds": int(durations[mask].max()),
+            "mean_wait_hours": float(group_wait.mean() / 3600),
+            "p95_wait_hours": float(np.quantile(group_wait, 0.95) / 3600),
+            "zero_wait_fraction": float(np.mean(group_wait == 0)),
+        }
+    return {"quantile_bounds_seconds": [float(x) for x in bounds], "bands": out}
 
 
 def main() -> None:
@@ -72,6 +100,8 @@ def main() -> None:
         validation_seconds = time.perf_counter() - validation_started
         metrics_started = time.perf_counter()
         metric_values = metrics(result, pool, 7_776_000)
+        metric_values["duration_strata"] = duration_strata(
+            result["jobs"], result["starts"], result["ends"], 7_776_000)
         metrics_seconds = time.perf_counter() - metrics_started
         output_started = time.perf_counter()
         policy = result["policy"]

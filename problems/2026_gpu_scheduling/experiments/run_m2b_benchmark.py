@@ -59,7 +59,14 @@ def main() -> None:
         parser.error("--max-rss-kib must be positive")
     args.out.mkdir(parents=True)
     records = []
-    probe_specs = [(int(n), int(theta), "historical-anchor")
+    def threshold_label(theta: int) -> str:
+        if theta == 4_860_000:
+            return "historical-anchor-1350h"
+        if theta == 604_800:
+            return "exploratory-168h"
+        return "configured-threshold"
+
+    probe_specs = [(int(n), int(theta), threshold_label(int(theta)))
                    for n in args.jobs for theta in args.theta_seconds]
     if args.short_theta_seconds not in args.theta_seconds:
         probe_specs.append((min(args.jobs), int(args.short_theta_seconds), "mechanism-short-threshold"))
@@ -96,6 +103,7 @@ def main() -> None:
                 status = stop_reason or "FAILED"
                 failure = {
                     "status": status, "tag": tag, "jobs": jobs, "theta_seconds": theta,
+                    "threshold_label": threshold_label,
                     "policy": policy, "elapsed_seconds": wall,
                     "observed_peak_rss_kib": observed_peak_rss,
                     "returncode": child.returncode, "command": command,
