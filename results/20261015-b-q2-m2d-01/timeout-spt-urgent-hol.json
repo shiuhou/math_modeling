@@ -9,8 +9,8 @@
   "observed_peak_rss_kib": 216564,
   "returncode": -9,
   "command": [
-    "/home/shiuhou/math_modeling-b-q2/.venv/bin/python",
-    "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py",
+    ".venv/bin/python",
+    "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py",
     "--data",
     "problems/2026_gpu_scheduling/data/raw",
     "--out",

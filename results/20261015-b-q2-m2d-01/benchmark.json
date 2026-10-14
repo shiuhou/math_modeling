@@ -5,13 +5,13 @@
   "configuration": {
     "model": "A10",
     "jobs_prefix": [
-      65536
+      "65536"
     ],
     "jobs_full": 111284,
     "nodes": 2494,
     "theta_seconds": [
-      604800,
-      4860000
+      "604800",
+      "4860000"
     ],
     "theta_roles": {
       "604800": "exploratory-168h",
@@ -47,128 +47,8 @@
     "dirty": true
   },
   "records": [
-    {
-      "jobs": 65536,
-      "theta_seconds": 604800,
-      "threshold_label": "exploratory-168h",
-      "policy": "SPT-FILL",
-      "child_output": "a10-65536-theta604800-spt-fill",
-      "child_summary_sha256": "d6e3427ea53a8d259a7090b45e97fb1b413f6b271f68703126fb0f52d5b2bfb7",
-      "peak_rss_kib_process": 557120,
-      "scheduler_seconds": 360.1310558929981,
-      "validation_seconds": 1.5721481690125074,
-      "metrics_seconds": 0.00771676299336832,
-      "io_seconds": 1.9869517350016395,
-      "input_seconds": 0.15691195099498145,
-      "runtime_seconds": 363.6978646689968,
-      "schedule_sha256": "7cc447d910164051695f7d3188d070d4aad1569618f874310ab5f86aad2a5067",
-      "reservations": 0,
-      "event_count": 372966,
-      "cost": {
-        "planner_calls": 35685893,
-        "candidate_checks": 35685893,
-        "order_builds": 183079,
-        "bypass_candidate_checks": 35460175,
-        "reservation_calls": 0,
-        "crossing_accepted": 0,
-        "crossing_rejected": 0,
-        "certificate_updates": 0,
-        "reservation_rejects": 0
-      },
-      "metrics": {
-        "jobs": 65536,
-        "mean_wait_hours": 31.041706458197698,
-        "median_wait_hours": 0.02361111111111111,
-        "p95_wait_hours": 61.66236111111111,
-        "p99_wait_hours": 1254.2176944444461,
-        "max_wait_hours": 1860.19,
-        "mean_jct_hours": 157.17423668755424,
-        "zero_wait_fraction": 0.0726470947265625,
-        "mean_bounded_slowdown_60s": 2.2158897686650945,
-        "p99_bounded_slowdown_60s": 6.718516260162606,
-        "completed_at_horizon": 63403,
-        "gpu_allocation_rate_at_horizon": 0.9884900151825287,
-        "cpu_allocation_rate_at_horizon": 0.18087401911437154,
-        "final_completion_days": 261.5079050925926,
-        "duration_strata": {
-          "quantile_bounds_seconds": [
-            1.0,
-            455.0,
-            365855.5,
-            10953785.850000024,
-            15897599.0
-          ],
-          "bands": {
-            "q00_q50": {
-              "count": 32757,
-              "duration_min_seconds": 1,
-              "duration_max_seconds": 454,
-              "mean_wait_hours": 0.036279455112223684,
-              "p95_wait_hours": 0.085,
-              "zero_wait_fraction": 0.05852184265958421
-            },
-            "q50_q90": {
-              "count": 26225,
-              "duration_min_seconds": 455,
-              "duration_max_seconds": 365836,
-              "mean_wait_hours": 3.490046478127317,
-              "p95_wait_hours": 2.7723333333333318,
-              "zero_wait_fraction": 0.03332697807435653
-            },
-            "q90_q99": {
-              "count": 5898,
-              "duration_min_seconds": 365875,
-              "duration_max_seconds": 10943185,
-              "mean_wait_hours": 275.0958997871218,
-              "p95_wait_hours": 1448.3224166666662,
-              "zero_wait_fraction": 0.2619532044760936
-            },
-            "q99_q100": {
-              "count": 656,
-              "duration_min_seconds": 10959494,
-              "duration_max_seconds": 15897599,
-              "mean_wait_hours": 486.4615586890244,
-              "p95_wait_hours": 1813.1536805555556,
-              "zero_wait_fraction": 0.6478658536585366
-            }
-          }
-        }
-      },
-      "validation": "PASS"
-    },
-    {
-      "status": "TIMEOUT",
-      "tag": "a10-65536-theta604800-spt-urgent-hol",
-      "jobs": 65536,
-      "theta_seconds": 604800,
-      "threshold_label": "exploratory-168h",
-      "policy": "SPT-URGENT-HOL",
-      "elapsed_seconds": 900.0315343270049,
-      "observed_peak_rss_kib": 216564,
-      "returncode": -9,
-      "command": [
-        "/home/shiuhou/math_modeling-b-q2/.venv/bin/python",
-        "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py",
-        "--data",
-        "problems/2026_gpu_scheduling/data/raw",
-        "--out",
-        "outputs/q2-m2d-prefix-20261015/a10-65536-theta604800-spt-urgent-hol",
-        "--model",
-        "A10",
-        "--jobs",
-        "65536",
-        "--theta-seconds",
-        "604800",
-        "--reservation-k",
-        "200",
-        "--event-mode",
-        "shared-timer",
-        "--policies",
-        "SPT-URGENT-HOL"
-      ],
-      "stdout_tail": "",
-      "stderr_tail": ""
-    }
+    "{'jobs': 65536, 'theta_seconds': 604800, 'threshold_label': 'exploratory-168h', 'policy': 'SPT-FILL', 'child_output': 'a10-65536-theta604800-spt-fill', 'child_summary_sha256': 'd6e3427ea53a8d259a7090b45e97fb1b413f6b271f68703126fb0f52d5b2bfb7', 'peak_rss_kib_process': 557120, 'scheduler_seconds': 360.1310558929981, 'validation_seconds': 1.5721481690125074, 'metrics_seconds': 0.00771676299336832, 'io_seconds': 1.9869517350016395, 'input_seconds': 0.15691195099498145, 'runtime_seconds': 363.6978646689968, 'schedule_sha256': '7cc447d910164051695f7d3188d070d4aad1569618f874310ab5f86aad2a5067', 'reservations': 0, 'event_count': 372966, 'cost': {'planner_calls': 35685893, 'candidate_checks': 35685893, 'order_builds': 183079, 'bypass_candidate_checks': 35460175, 'reservation_calls': 0, 'crossing_accepted': 0, 'crossing_rejected': 0, 'certificate_updates': 0, 'reservation_rejects': 0}, 'metrics': {'jobs': 65536, 'mean_wait_hours': 31.041706458197698, 'median_wait_hours': 0.02361111111111111, 'p95_wait_hours': 61.66236111111111, 'p99_wait_hours': 1254.2176944444461, 'max_wait_hours': 1860.19, 'mean_jct_hours': 157.17423668755424, 'zero_wait_fraction': 0.0726470947265625, 'mean_bounded_slowdown_60s': 2.2158897686650945, 'p99_bounded_slowdown_60s': 6.718516260162606, 'completed_at_horizon': 63403, 'gpu_allocation_rate_at_horizon': 0.9884900151825287, 'cpu_allocation_rate_at_horizon': 0.18087401911437154, 'final_completion_days': 261.5079050925926, 'duration_strata': {'quantile_bounds_seconds': [1.0, 455.0, 365855.5, 10953785.850000024, 15897599.0], 'bands': {'q00_q50': {'count': 32757, 'duration_min_seconds': 1, 'duration_max_seconds': 454, 'mean_wait_hours': 0.036279455112223684, 'p95_wait_hours': 0.085, 'zero_wait_fraction': 0.05852184265958421}, 'q50_q90': {'count': 26225, 'duration_min_seconds': 455, 'duration_max_seconds': 365836, 'mean_wait_hours': 3.490046478127317, 'p95_wait_hours': 2.7723333333333318, 'zero_wait_fraction': 0.03332697807435653}, 'q90_q99': {'count': 5898, 'duration_min_seconds': 365875, 'duration_max_seconds': 10943185, 'mean_wait_hours': 275.0958997871218, 'p95_wait_hours': 1448.3224166666662, 'zero_wait_fraction': 0.2619532044760936}, 'q99_q100': {'count': 656, 'duration_min_seconds': 10959494, 'duration_max_seconds': 15897599, 'mean_wait_hours': 486.4615586890244, 'p95_wait_hours': 1813.1536805555556, 'zero_wait_fraction': 0.6478658536585366}}}}, 'validation': 'PASS'}",
+    "{'status': 'TIMEOUT', 'tag': 'a10-65536-theta604800-spt-urgent-hol', 'jobs': 65536, 'theta_seconds': 604800, 'threshold_label': 'exploratory-168h', 'policy': 'SPT-URGENT-HOL', 'elapsed_seconds': 900.0315343270049, 'observed_peak_rss_kib': 216564, 'returncode': -9, 'command': ['.venv/bin/python', 'problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py', '--data', 'problems/2026_gpu_scheduling/data/raw', '--out', 'outputs/q2-m2d-prefix-20261015/a10-65536-theta604800-spt-urgent-hol', '--model', 'A10', '--jobs', '65536', '--theta-seconds', '604800', '--reservation-k', '200', '--event-mode', 'shared-timer', '--policies', 'SPT-URGENT-HOL'], 'stdout_tail': '', 'stderr_tail': ''}"
   ],
   "stopping_reason": "65,536 exploratory prefix SPT-URGENT-HOL exceeded 900 second policy limit; remaining prefix and full-trace probes intentionally NOT_RUN."
 }
