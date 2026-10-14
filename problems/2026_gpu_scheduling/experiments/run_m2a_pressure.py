@@ -126,9 +126,11 @@ def main() -> None:
                                reservation_k=args.reservation_k, event_mode=args.event_mode, progress=phase)
         scheduler_seconds = time.perf_counter() - scheduler_started
         phase("simulate_pool", "end", jobs=len(jobs), events=len(result["events"]), promises=len(result["reservations"]))
+        phase("reservation_validation", "begin", jobs=len(jobs), events=len(result["events"]), promises=len(result["reservations"]))
         validation_started = time.perf_counter()
         validate_reservations(pool, result["jobs"], result, progress=phase)
         validation_seconds = time.perf_counter() - validation_started
+        phase("reservation_validation", "end")
         phase("metrics", "begin")
         metrics_started = time.perf_counter()
         metric_values = metrics(result, pool, 7_776_000)
