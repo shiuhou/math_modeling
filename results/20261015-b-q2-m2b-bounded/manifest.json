@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261015-b-q2-m2b-bounded",
+  "question_or_claim": "Q2 M2-B certificate replay correctness and bounded FIXED/FLEX cost probe; no full-trace performance claim",
+  "code": {
+    "commit": "2769171c82888b8402c55212f0d45bff3ac29349",
+    "dirty": true,
+    "changes": [
+      "versioned certificate replay with immutable initial witness",
+      "sparse future_delta evidence",
+      "independent child-process cost runner"
+    ]
+  },
+  "data": {
+    "source": "problems/2026_gpu_scheduling/data/raw",
+    "sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "scope": "A10 prefix selected by stable raw order"
+  },
+  "configuration": {
+    "model": "A10",
+    "prefix_jobs": [
+      16384,
+      32768
+    ],
+    "policies": [
+      "SPT-URGENT-TIME",
+      "SPT-URGENT-FIXED",
+      "SPT-URGENT-FLEX"
+    ],
+    "theta_seconds": 4860000,
+    "short_theta_seconds": 4,
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "placement": "FF-id ascending node_name",
+    "horizon_seconds": 7776000,
+    "full_trace": "NOT_RUN"
+  },
+  "command": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py --jobs 16384 32768 --theta-seconds 4860000 --short-theta-seconds 4 --reservation-k 200 --event-mode shared-timer --policies SPT-URGENT-TIME SPT-URGENT-FIXED SPT-URGENT-FLEX --out outputs/q2-m2b-bounded-20261014",
+  "working_directory": ".",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "process_isolation": "one child per policy"
+  },
+  "duration_seconds": 493.7463377100066,
+  "duration_scope": "sum of six completed child runtimes; parent wall time was not finalized because the short-threshold probe was intentionally terminated",
+  "validation": {
+    "status": "PASS_WITH_TIMEOUT_SCOPE",
+    "checks": [
+      {
+        "name": "repo checks/root/problem tests",
+        "status": "PASS",
+        "evidence": "command output in task log",
+        "count": "34 Problem B/root tests combined"
+      },
+      {
+        "name": "certificate replay directed tests",
+        "status": "PASS",
+        "evidence": "problems/2026_gpu_scheduling/tests/test_q2_m2b.py"
+      },
+      {
+        "name": "six 1350h persisted independent replays",
+        "status": "PASS",
+        "evidence": "*-verified.json"
+      },
+      {
+        "name": "short threshold theta=4s",
+        "status": "TIMEOUT",
+        "evidence": "bounded_summary.json"
+      },
+      {
+        "name": "full trace 224112 jobs",
+        "status": "NOT_RUN",
+        "reason": "bounded probe scaling/RSS stop"
+      }
+    ]
+  },
+  "results": {
+    "summary": "bounded_summary.json",
+    "child_summaries": "six *-summary.json",
+    "verifications": "six *-verified.json",
+    "large_outputs": "outputs/q2-m2b-bounded-20261014 (ignored; hashes in child summaries)",
+    "source_hashes": "child summaries and code commit"
+  },
+  "open_items": [
+    "Optimize high-frequency reservation/event replay before rerunning short threshold",
+    "Run short FIXED/FLEX only after bounded memory is controlled",
+    "Full nine-policy 224112-job comparison NOT_RUN",
+    "No performance improvement claim: all six anchor schedules identical and crossing count zero"
+  ]
+}
