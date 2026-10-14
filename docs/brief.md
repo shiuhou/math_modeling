@@ -1,42 +1,29 @@
 # 專案入口
 
-本檔集中保存選題、覆蓋與共用依賴；唯一規範正文見 [modeling.md](../modeling.md)，協作見 [CONTRIBUTING.md](../CONTRIBUTING.md)。沒有另建 SPEC／DESIGN／PLAN 副本。
+唯一規範正文見 [modeling.md](../modeling.md)，協作見 [CONTRIBUTING.md](../CONTRIBUTING.md)。沒有另建 SPEC／DESIGN／PLAN 副本；B 題細節與可執行命令集中於 [B README](../problems/2026_gpu_scheduling/README.md)。
 
-## 現況
+## 現況與題目覆蓋
 
-| 項目 | 已知狀態 |
+| 項目 | 狀態 |
 | --- | --- |
-| 任務 | feat/b-q1：已審核 Q1 成果最小整合；其他 intake 在獨立工作區，未包含 |
-| 選題／來源 | 使用者已確認 2026 MCM Senior Group Problem B；核對既有原題 PDF 第 1–3 頁與兩個 CSV |
-| 規則 | 初始空閒、非搶佔、duration 提交時已知、同 worker CPU/GPU 同節點、gang 同步開始；10 A4 頁英文、至少 11pt、姓名與實際 AI 披露 |
-| 協作 | 隊員各自 clone、短期任務分支與 GitHub PR；worktree 僅供同機多任務選用 |
-| 分工 | 主要負責人、審閱者與整合者待確認，不自行分派 |
-| 資料 | 既有 raw CSV 未改寫；雜湊見 B 題入口。歷史 job byte 雜湊不同，缺原資料 ZIP；公開再散布範圍待確認 |
-| 環境 | 本機 Q1：Linux x86_64、Python 3.12.3、固定 numpy/pandas/matplotlib；全隊正式環境／硬體預算待確認 |
-| 論文 | 英文 LaTeX Q1 已修正；全稿編譯及頁數 BLOCKED，缺 LaTeX 與 Q2/Q3 圖資產 |
-| Git | 不推 main、不合併 PR。Q1 允許 commit／push feat/b-q1；其他整合尚待審閱 |
+| 題目 | 使用者確認 2026 MCM Senior Problem B，已核對原題 PDF 與兩個 raw CSV |
+| 規則 | 初始空閒、非搶佔、已知 duration、gang 同步、逐節點同 worker CPU/GPU；10 A4 頁英文、至少 11pt、姓名與真實 AI 披露 |
+| 工程 | 一個活動 DES、共享 loader／evaluator、獨立 ledger replay；原 scripts 逐 byte inert 歸檔 |
+| Q1 | PASS：已審核包整合、39 統計／九表核對、資料驅動圖；沿用 feat/b-q1 |
+| Q2 基線 | PASS：FCFS／嚴格 SJF-HOL 全 trace 各 224,112 jobs，節點容量及持久化 metrics 核查；改進算法 NOT_RUN |
+| Q3 | 研究材料已納入；技術／金融實驗 NOT_RUN，耦合 donor／相容性驗證 BLOCKED |
+| 論文 | 跨章 Q1 量綱／需求語義已修正；Q2/Q3 性能數字保留為未驗證歷史主張；編譯與排版狀態見整合驗收，不代表可提交 |
+| 協作 | 各自在自己的電腦 clone；Q2/Q3 研究分支由同一整合提交建立。分工及 reviewer 待確認 |
+| 資料／環境 | raw 保持不變、依賴固定；歷史 job byte 不同的原因未知；公開再散布範圍及全隊正式硬體待確認 |
+| Git | 使用者授權整理後建立／推送 feat/b-q2、feat/b-q3；不推 main、不合併 PR |
 
-## 題目覆蓋
+## 共用介面與協調
 
-| 子問／原題來源 | 交付 | 證據／狀態 |
-| --- | --- | --- |
-| Q1，PDF 第 2 頁 (1) | 資料特徵、容量／需求、集中度與瓶頸假說 | PASS：原 CSV 計算、39 項統計／9 表對照、獨立小例核查與四面板圖；來源 byte／全稿限制見清單 |
-| Q2，PDF 第 2 頁 (2) | 符合逐節點容量的排序與放置、共享評價 | NOT_RUN：此分支只保留原英文 Q2 章節；原性能主張未核查 |
-| Q3，PDF 第 2 頁 (3) | 明示假設的跨型號技術／財務評估 | BLOCKED：缺可追溯耦合驗證；原性能／最優性主張未確認，本轮未修改 |
+- `read_data(source)` 回傳 nodes/jobs/input hashes；秒、每 worker 需求、0.01 vCPU 整數縮放。
+- `simulate_pool(nodes,jobs,policy)` 是唯一活動 DES；FCFS 或 SJF-HOL，completions → arrivals → scheduling，FF 按 node_name；回傳 jobs/starts/ends/plans。
+- `metrics(result,nodes,horizon)` 是共享 evaluator；全部作業排空等待，分配積分 `[0,H)`、完成 `end<=H`；預設 exact trace 窗口，名義 90 天須顯式設定。BSLD 最低為 1。
+- Q1 兩個 EDA 入口共享 `q1.py`；完整生命週期工作量、immediate-start 假設需求、實際調度分配三者分開。論文共享 Q1 數值由 build 生成，不各章寫死。
+- Q2 研究排序／放置；Q3 研究明示假設的耦合跨池方案；圖與全文由整合者協調。需要改共用 loader／DES／evaluator 介面時，在此記錄並由依賴方透過 PR 審閱，不另起永久引擎。
+- 目前人員分工未指定，不把分支名當成已認領；不同電腦的 Codex 對話與本機 outputs 不會自動同步。
 
-研究細節、命令與限制只維護於 [B 題唯一入口](../problems/2026_gpu_scheduling/README.md)，Q1 小型結果見 [驗證清單](../results/20261014-b-q1-intake-4a8f8f2b/manifest.json)。
-
-## 共用介面與依賴
-
-- 原始欄位、秒為時間單位、每 worker 需求等按原題；loader 精確縮放 0.01 vCPU，遇更細精度拒絕，不默默捨入。
-- Q1 兩個 EDA 入口共享同一 q1 模組；GPU work 是全生命週期，immediate-start 是忽略容量的假設需求，不代表調度利用率。
-- 新的跨任務 loader／評價接口仍需相關隊員審閱；現有 Q1 實際輸入／输出、取整與窗口定義見 B README，勿另建平行公式。
-- 正式證據保存按 [results 約定](../results/README.md)，可再生圖／大明細留本機 outputs；數值結論不得僅存在被忽略的圖中。
-
-## 驗證與下一步
-
-工程檢查與研究核查分開：倉庫檢查不證明 scheduler 正確，Q1 資料分析不證明 scheduler 最優。遠端 CI、各隊員電腦、全稿編譯與 10 頁限制未完成，按適用範圍標記 NOT_RUN／BLOCKED。
-
-接續在 feat/b-q1 優化 Q1 與排版；其後審閱 intake 及共用 loader 重疊，再授權 Q2/Q3 正式實驗。Q3 仍有旧 3,664／約 1,170 GPU 需求描述、AI 披露與性能主張待處理，不能把本轮 Q1 PASS 外推成全稿 PASS。
-
-本輪 Codex 用於資源核對、Q1 程式整合／重算、圖與英文編修；沒有求解器或新調度算法，也尚未由全體隊員人工審閱。
+實際驗收與剩餘缺口見 [整合任務](../notes/tasks/b-intake.md)；正式證據按 [results 約定](../results/README.md) 保存。根目錄工程測試不證明模型正確，基線 PASS 不證明舊改進器／Q3 性能成立。使用者最新要求優先提供 Q2/Q3 開工基礎，本輪不測試或重構舊算法。

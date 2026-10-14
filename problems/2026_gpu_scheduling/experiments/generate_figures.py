@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Reproduce the original four-panel Q1 figure with audited data-derived values.
 
-Q2/Q3 figures and their archived data are outside this entry's scope.
+Q2/Q3 archived table figures are opt-in and visibly marked as unverified.
 """
 from __future__ import annotations
 
@@ -20,7 +20,78 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
 import pandas as pd
-from gpu_scheduling.q1 import ccdf, gini, load_data, lorenz, top_share
+from gpu_scheduling.q1 import ccdf, gini, load_data, lorenz, top_share, demand_timeline
+
+
+def paper_reference_figures(nodes, jobs, stats, pools, out):
+    """Render archived table values; never present them as new experiment results."""
+    source = PROBLEM / "references/paper_metrics.reference.json"
+    ref = json.loads(source.read_text())
+    original = PROBLEM / ref['original_git_path']
+    if hashlib.sha256(original.read_bytes()).hexdigest() != ref['source_sha256']:
+        raise ValueError('Archived paper source hash differs')
+    rows = ref['q2']
+    labels = [r['policy'] for r in rows]
+    x = np.arange(len(rows))
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.3), layout='constrained')
+    for key, label, color in [('mean_h','Mean','#1b4f72'),('p95_h','P95','#e67e22'),('max_h','Maximum','#c0392b')]:
+        axes[0].plot(x, [r[key] for r in rows], 'o-', label=label, color=color)
+    axes[0].set(yscale='log', ylabel='Waiting time (hours)', title='(a) Archived overall waiting times')
+    axes[0].set_xticks(x, labels, rotation=55, ha='right', fontsize=8)
+    axes[0].legend(fontsize=8)
+    for offset, key, label in [(-.18,'a100_mean_h','A100'),(.18,'gs1_mean_h','GPU-s1')]:
+        axes[1].bar(x+offset, [r[key] for r in rows], width=.36, label=label)
+    axes[1].set(ylabel='Mean wait (hours; zeros retained)', title='(b) Policy and placement comparison')
+    axes[1].set_xticks(x, labels, rotation=55, ha='right', fontsize=8)
+    axes[1].legend(fontsize=8)
+    for row in rows:
+        axes[2].scatter(row['a10_mean_h'],row['max_h'],s=25)
+        axes[2].annotate(row['policy'],(row['a10_mean_h'],row['max_h']),fontsize=7,xytext=(3,3),textcoords='offset points')
+    axes[2].set(xlabel='A10 mean wait (hours)',ylabel='Cluster maximum wait (hours)', title='(c) Archived delay trade-off')
+    for ax in axes: ax.grid(alpha=.2)
+    fig.suptitle('Archived Q2 claims - verification pending (NOT_RUN)',fontsize=12)
+    fig.savefig(out/'fig2_q2_scheduling.pdf'); plt.close(fig)
+
+    fig, axes = plt.subplots(2,2,figsize=(13,8),layout='constrained')
+    horizon = stats['horizon_seconds']
+    bins = np.r_[np.arange(0,horizon,86400),horizon]
+    demand_checks = {}
+    for model,color in [('A10','#c0392b'),('A100-SXM4-80GB','#1b4f72')]:
+        sub=jobs[jobs.gpu_model==model]
+        edges,values,area=demand_timeline(sub.submit_time,sub.duration,sub.total_gpu,horizon)
+        integral=np.r_[0,np.cumsum(values*np.diff(edges))]
+        # Piecewise-linear cumulative area gives exact overlap in every bin.
+        averages=np.diff(np.interp(bins,edges,integral))/np.diff(bins)
+        capacity=int(nodes.loc[nodes.gpu_model==model,'gpu_capacity_num'].sum())
+        axes[0,0].stairs(averages,bins/86400,color=color,label=f'{model}: immediate start')
+        axes[0,0].axhline(capacity,color=color,linestyle='--',label=f'{model}: capacity {capacity:,}')
+        demand_checks[model]={'mean':area/horizon,'capacity':capacity,'peak':int(values.max())}
+    axes[0,0].set(xlabel='Trace-relative day',ylabel='GPUs (exact daily overlap average)',title='(a) Counterfactual demand, not allocation')
+    axes[0,0].legend(fontsize=8)
+    mig=ref['q3_mig']
+    for key,label in [('mig2_mean_h','MIG-2x'),('mig3_mean_h','MIG-3x')]:
+        axes[0,1].plot(mig['nodes'],[np.nan if v is None else v for v in mig[key]],'o-',label=label)
+    axes[0,1].set(xlabel='Converted A100 nodes',ylabel='A10 mean wait (hours)',title='(b) Archived MIG claims - NOT_RUN')
+    axes[0,1].legend(fontsize=8)
+    pricing=ref['q3_pricing']; ax=axes[1,0]; twin=ax.twinx()
+    ax.plot(pricing['discount_pct'],pricing['mean_h'],'o-',color='#1b4f72',label='Mean wait (h)')
+    ax.plot(pricing['discount_pct'],pricing['migration_pct'],'s--',color='#27ae60',label='Migrated jobs (%)')
+    twin.plot(pricing['discount_pct'],pricing['revenue_million_usd'],'d:',color='#c0392b',label='Revenue ($M)')
+    ax.set(xlabel='Discount (%); last two surcharges 10%, 15%',ylabel='Hours / percent',title='(c) Archived pricing claims - NOT_RUN')
+    twin.set_ylabel('Revenue (million USD)')
+    lines= ax.get_lines()+twin.get_lines(); ax.legend(lines,[l.get_label() for l in lines],fontsize=8)
+    axes[1,1].bar(pools.gpu_model,pools.rho_gpu,color='#2e86c1')
+    axes[1,1].axhline(1,linestyle='--',color='#c0392b')
+    axes[1,1].tick_params(axis='x',rotation=35,labelsize=8)
+    axes[1,1].set(ylabel='Lifetime work / exact-window capacity',title='(d) Q1 data context, not utilization')
+    for ax in axes.flat: ax.grid(alpha=.2)
+    fig.suptitle('Q3 context: data-derived (a,d); archived and unverified (b,c)',fontsize=12)
+    fig.savefig(out/'fig3_q3_imbalance.pdf'); plt.close(fig)
+    (out/'paper_reference_figures.json').write_text(json.dumps({
+        'historical_claims':'NOT_RUN','reference_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
+        'counterfactual_demand':demand_checks,'interpolated_metrics':False,
+        'files':{n:hashlib.sha256((out/n).read_bytes()).hexdigest() for n in ['fig2_q2_scheduling.pdf','fig3_q3_imbalance.pdf']}
+    },indent=2)+'\n')
 
 
 def main():
@@ -28,10 +99,11 @@ def main():
     parser.add_argument("--data", type=Path, default=PROBLEM / "data/raw")
     parser.add_argument("--results", type=Path, required=True, help="Recomputed Q1 output directory")
     parser.add_argument("--out", type=Path, required=True, help="New local figure directory")
+    parser.add_argument("--paper-reference", action="store_true", help="Also render visibly unverified Q2/Q3 archived table figures")
     args = parser.parse_args()
     if args.out.exists():
         parser.error("Output exists; choose a new directory")
-    _, jobs, hashes = load_data(args.data)
+    nodes, jobs, hashes = load_data(args.data)
     stats = json.loads((args.results / "q1_results.json").read_text(encoding="utf-8"))
     if hashes != stats["input_sha256"]:
         parser.error("Q1 results and plotting inputs have different byte hashes")
@@ -155,6 +227,8 @@ def main():
               "files": {name: hashlib.sha256((args.out / name).read_bytes()).hexdigest()
                         for name in ["fig1_data_patterns.pdf", "fig1_data_patterns.png"]}}
     (args.out / "q1_figure.json").write_text(json.dumps(record, indent=2, allow_nan=False) + "\n")
+    if args.paper_reference:
+        paper_reference_figures(nodes, jobs, stats, pools, args.out)
     print("Generated Q1 fig1_data_patterns.pdf and .png from the raw CSVs and matching Q1 results")
 
 

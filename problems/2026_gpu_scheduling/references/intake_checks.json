@@ -1,0 +1,114 @@
+{
+  "kind": "intake_evidence_check",
+  "research_zip_sha256": "b2220bb77c80a49b56e458380868a7d871ca482e3d338d2abfbf62aca5c5b088",
+  "current_data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "historical_data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1"
+  },
+  "node_bytes_match": true,
+  "job_bytes_match": false,
+  "historical_original_job_bytes_available": false,
+  "checks": {
+    "FCFS": {
+      "jobs": 224112,
+      "input_field_differences": {
+        "gpu_model": 0,
+        "submit_time": 0,
+        "duration": 0,
+        "worker_num": 0,
+        "gpu_request": 0,
+        "cpu_request": 0
+      },
+      "input_comparison": "PASS",
+      "metric_recalculation": "PASS",
+      "gpu_models_checked": [
+        "A10",
+        "A100-SXM4-80GB",
+        "A800-SXM4-80GB",
+        "GPU-series-1",
+        "GPU-series-2",
+        "H800",
+        "ALL"
+      ],
+      "horizon_seconds": 7775878,
+      "saved_job_times_sha256": "0cb7b0423760bd335a286b486d41ed452f663ff67e29fdb8840d2e67906459a3",
+      "capacity_replay": "BLOCKED: archived timing CSV lacks node placements",
+      "fresh_simulation": "NOT_RUN"
+    },
+    "SJF-HOL": {
+      "jobs": 224112,
+      "input_field_differences": {
+        "gpu_model": 0,
+        "submit_time": 0,
+        "duration": 0,
+        "worker_num": 0,
+        "gpu_request": 0,
+        "cpu_request": 0
+      },
+      "input_comparison": "PASS",
+      "metric_recalculation": "PASS",
+      "gpu_models_checked": [
+        "A10",
+        "A100-SXM4-80GB",
+        "A800-SXM4-80GB",
+        "GPU-series-1",
+        "GPU-series-2",
+        "H800",
+        "ALL"
+      ],
+      "horizon_seconds": 7775878,
+      "saved_job_times_sha256": "3ed2742a29d528559fa83efe809c77b743a09adf816d4e7ec53ec0c7eaa0cf5a",
+      "capacity_replay": "BLOCKED: archived timing CSV lacks node placements",
+      "fresh_simulation": "NOT_RUN"
+    }
+  },
+  "limitations": "Numeric input fields and stored metric arithmetic checked only; this does not establish historical node feasibility, rerun algorithms, or verify the source-code ZIP paper claims.",
+  "small_source_comparisons": [
+    {
+      "case": "First-fit ordering changes feasible start times",
+      "node_order_baseline": "node_name",
+      "node_order_source": "GPU capacity, CPU capacity, node_name",
+      "baseline_starts": [
+        0,
+        10
+      ],
+      "source_starts": [
+        0.0,
+        0.0
+      ],
+      "status": "PASS: expected difference observed"
+    },
+    {
+      "case": "Aggregate GPU EASY reservation delays protected head (CPU/node layout ignored)",
+      "source_FCFS_starts": [
+        0.0,
+        10.0,
+        11.0
+      ],
+      "source_EASY_starts": [
+        0.0,
+        20.0,
+        0.0
+      ],
+      "protected_head_delay_seconds": 10,
+      "status": "PASS: reservation defect reproduced"
+    },
+    {
+      "case": "Single-GPU specialization ignores general CPU capacity",
+      "node_cpu": 2,
+      "worker_cpu": 3,
+      "source_start": 0,
+      "status": "PASS: CPU overallocation reproduced"
+    }
+  ],
+  "small_source_comparisons_scope": "Original Q2 function isolated using AST; no archive top-level experiment code executed; no full trace run.",
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3"
+  }
+}

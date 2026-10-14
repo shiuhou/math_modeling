@@ -1,0 +1,67 @@
+import pandas as pd
+import numpy as np
+
+node_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/node_info_df.csv")
+job_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/job_info_clean.csv")
+
+job_df['total_gpu'] = job_df['gpu_request'] * job_df['worker_num']
+job_df['total_cpu'] = job_df['cpu_request'] * job_df['worker_num']
+job_df['gpu_hours'] = job_df['total_gpu'] * job_df['duration'] / 3600.0
+job_df['cpu_hours'] = job_df['total_cpu'] * job_df['duration'] / 3600.0
+job_df['cpu_per_gpu'] = job_df['cpu_request'] / job_df['gpu_request']
+
+print("=== 1. INITIAL BACKLOG (submit_time == 0) VS DYNAMIC ARRIVALS (submit_time > 0) ===")
+for m, grp in job_df.groupby('gpu_model'):
+    t0 = grp[grp['submit_time'] == 0]
+    t_pos = grp[grp['submit_time'] > 0]
+    print(f"{m:15s} | Total Jobs: {len(grp):6d} | t=0 Jobs: {len(t0):4d} ({len(t0)/len(grp)*100:5.2f}%), t=0 GPU-hrs: {t0['gpu_hours'].sum():10.1f} ({t0['gpu_hours'].sum()/grp['gpu_hours'].sum()*100:5.2f}%) | t>0 GPU-hrs: {t_pos['gpu_hours'].sum():10.1f}")
+
+print("\n=== 2. PARETO / HEAVY-TAIL CONCENTRATION (OVERALL & BY MODEL) ===")
+def gini(array):
+    array = np.sort(array)
+    index = np.arange(1, array.shape[0] + 1)
+    n = array.shape[0]
+    return ((np.sum((2 * index - n  - 1) * array)) / (n * np.sum(array)))
+
+sorted_gh = job_df['gpu_hours'].sort_values(ascending=False).values
+tot_gh = sorted_gh.sum()
+for pct in [0.1, 0.5, 1, 5, 10, 20]:
+    k = int(len(sorted_gh) * pct / 100.0)
+    print(f"Top {pct:4.1f}% jobs ({k:6d} jobs) account for {sorted_gh[:k].sum()/tot_gh*100:6.2f}% of total GPU-hours")
+print(f"Overall GPU-hours Gini coefficient: {gini(job_df['gpu_hours'].values):.4f}")
+print(f"Overall Duration Gini coefficient:  {gini(job_df['duration'].values):.4f}")
+
+for m, grp in job_df.groupby('gpu_model'):
+    s_gh = grp['gpu_hours'].sort_values(ascending=False).values
+    k1 = max(1, int(len(s_gh) * 0.01))
+    k5 = max(1, int(len(s_gh) * 0.05))
+    k10 = max(1, int(len(s_gh) * 0.10))
+    print(f"{m:15s} | Gini(GPU-hr)={gini(s_gh):.4f} | Top 1%={s_gh[:k1].sum()/s_gh.sum()*100:5.2f}% | Top 5%={s_gh[:k5].sum()/s_gh.sum()*100:5.2f}% | Top 10%={s_gh[:k10].sum()/s_gh.sum()*100:5.2f}%")
+
+print("\n=== 3. WORKER & GPU_REQUEST DISTRIBUTIONS ===")
+print("gpu_request value counts:")
+print(job_df['gpu_request'].value_counts().sort_index())
+print("\nworker_num categories:")
+bins = [0, 1, 2, 4, 8, 16, 32, 64, 1000]
+labels = ['1', '2', '3-4', '5-8', '9-16', '17-32', '33-64', '65+']
+job_df['worker_bin'] = pd.cut(job_df['worker_num'], bins=bins, labels=labels)
+wb_summary = job_df.groupby('worker_bin', observed=False).agg(
+    jobs=('job_name', 'count'),
+    gpu_hours=('gpu_hours', 'sum')
+)
+wb_summary['job_pct'] = wb_summary['jobs'] / len(job_df) * 100
+wb_summary['gh_pct'] = wb_summary['gpu_hours'] / job_df['gpu_hours'].sum() * 100
+print(wb_summary)
+
+print("\n=== 4. CPU-TO-GPU RATIO & MULTI-RESOURCE STRANDING RISK ===")
+node_ratios = node_df.groupby('gpu_model').apply(lambda g: (g['cpu_num'].sum() / g['gpu_capacity_num'].sum())).to_dict()
+for m, grp in job_df.groupby('gpu_model'):
+    nr = node_ratios[m]
+    exceed = grp[grp['cpu_per_gpu'] > nr]
+    exceed_gh = exceed['gpu_hours'].sum() / grp['gpu_hours'].sum() * 100
+    print(f"{m:15s} | Node CPU/GPU={nr:6.2f} | Job mean CPU/GPU={grp['cpu_per_gpu'].mean():6.2f} | Jobs exceeding node ratio: {len(exceed):6d} ({len(exceed)/len(grp)*100:5.2f}%), GPU-hrs share: {exceed_gh:5.2f}%")
+
+print("\n=== 5. DURATION DISTRIBUTION QUANTILES (IN SECONDS AND HOURS) ===")
+for q in [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95, 0.99, 1.0]:
+    val = np.quantile(job_df['duration'], q)
+    print(f"Quantile {q*100:5.1f}%: {val:12.1f} sec ({val/3600.0:8.2f} hrs)")

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --primary: #1b4f72;
+      --accent: #c0392b;
+      --text: #1f2937;
+      --bg: #ffffff;
+    }
+
+    @page {
+      size: A4;
+      margin: 16mm 16mm;
+      background: var(--bg);
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Noto Sans CJK SC', sans-serif;
+        font-size: 8.5pt;
+        color: var(--text);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: transparent;
+    }
+    body {
+      font-family: 'Noto Sans CJK SC', sans-serif;
+      font-size: 9.8pt;
+      line-height: 1.56;
+      color: var(--text);
+    }
+
+    main.document-flow { width: 100%; margin: 0; padding: 0; }
+
+    * { border: none; border-radius: 0; box-shadow: none; background: transparent; outline: none; }
+
+    h1 { font-size: 18pt; line-height: 1.3; margin: 0 0 10px 0; color: var(--primary); font-weight: 700; }
+    h2 { font-size: 13pt; line-height: 1.35; margin: 14px 0 6px 0; color: var(--primary); font-weight: 700; break-after: avoid; page-break-after: avoid; }
+    h3 { font-size: 11pt; line-height: 1.35; margin: 14px 0 6px 0; color: var(--accent); font-weight: 600; break-after: avoid; page-break-after: avoid; }
+    p { margin: 0 0 12px 0; text-align: justify; }
+    ul, ol { margin: 0 0 14px 0; padding-left: 20px; }
+    li { margin-bottom: 6px; }
+
+    section { margin-bottom: 14px; }
+
+    table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    th, td { text-align: left; padding: 8px 9px; font-size: 9.0pt; }
+    th { border-bottom: 2px solid var(--primary); font-weight: 700; color: var(--primary); }
+    td { border-bottom: 1px solid rgba(0,0,0,0.09); }
+    hr { border-bottom: 1px solid rgba(0,0,0,0.18); margin: 16px 0; }
+
+    img { max-width: 88%; max-height: 112mm; width: auto; height: auto; display: block; margin: 0 auto; }
+    figure { margin: 12px 0; }
+    figcaption { font-size: 8.8pt; color: var(--text); opacity: 0.8; margin-top: 8px; text-align: justify; }
+
+    tr, figure { break-inside: avoid; page-break-inside: avoid; }
+    .math { font-family: 'DejaVu Serif', serif; font-style: italic; }
+  </style>
+</head>
+<body>
+  <main class="document-flow">
+    <section>
+      <h1>异构 GPU 集群调度优化与跨资源池失衡治理：多维回填、比例匹配放置与技经协同机制研究</h1>
+      <p><strong>2026 MCM Senior Group Problem B（Scheduling a GPU Cluster）全流程数学建模分析报告</strong> &nbsp;|&nbsp; 参赛队伍：Member A, Member B, Member C &nbsp;|&nbsp; 2026年10月</p>
+      <hr>
+      <p><strong>摘要：</strong>针对大规模人工智能计算中心异构 GPU 集群面临的“重尾作业拥塞、多维资源搁浅与跨型号负载极端失衡”三大核心痛点，本文基于阿里巴巴开源集群 90 天真实轨迹数据（包含 4,278 台服务器、10,412 张物理 GPU、632,636 个 vCPU 核心以及 224,112 个非抢占式 Gang-Scheduling 分布式计算作业），开展了从探索性数据诊断、连续时间混合整数规划建模、低复杂度事件驱动调度算法设计到软硬件/金融协同均衡治理的全流程研究。核心研究结论如下：</p>
+      <ul>
+        <li><strong>问题一（数据特征与供需失衡机理诊断）：</strong>集群算力需求呈现极端帕累托重尾特征（全体作业 GPU-Hours 的基尼系数高达 <strong>Gini = 0.9522</strong>，前 1% 的大作业消耗了 43.30% 的总算力时，前 5% 的作业消耗了 87.68% 的总算力时），并伴随显著的日内周期性波动（16:00 峰值到达率为 04:00 谷值的 <strong>2.29 倍</strong>）及 <span class="math">t = 0</span> 时刻 3,512 个初始积压长作业冲击。跨 GPU 型号供需严重错配：单卡推理/微调池 <code>A10</code> 仅占全集群 GPU 数量的 23.95%（2,494 张），却承载了 49.66% 的作业数与 45.19% 的算力需求（1,111.9 万 GPU-Hours），90 天名义负载率高达 <strong>2.064</strong>（日均无约束活跃需求达 3,664.0 张 GPU，长期存在约 1,170 张 GPU 的刚性缺口）；而高端 8 卡训练池（<code>A100-SXM4-80GB</code>、<code>H800</code>、<code>GPU-series-2</code>、<code>A800-SXM4-80GB</code>）90 天名义负载率仅为 <strong>0.580–0.795</strong>，平均超过 2,500 张高端 GPU 处于闲置状态。此外，异构池 <code>GPU-series-1</code> 存在严重的 CPU/GPU 比例失配风险（6.53% 的高 CPU 作业占 19.79% 算力时，若错放至 8 卡 192 核节点将导致单节点 7 张 GPU 被搁浅）。</li>
+        <li><strong>问题二（动态老化多维回填与比例匹配放置算法 <code>AMBF-RM</code>）：</strong>在先到先服务基准（<code>FCFS-FF</code>）下，长作业队头阻塞（HoL Blocking）导致全集群平均等待时间高达 <strong>447.37 小时</strong>（<code>A10</code> 池达 900.13 小时，中位数等待 46.7 天），90 天内仅完成 73.57% 的作业；而负载均衡分散放置策略（<code>EASY-WF</code>）因打碎 8 卡整机节点，导致 <code>A100-SXM4-80GB</code> 平均等待时间从 0.00 小时恶化至 <strong>16.92 小时</strong>（P95 达 84.82 小时）。本文提出双阶段 <strong><code>AMBF-RM</code> 算法</strong>：（1）在节点放置阶段，提出<strong>多维资源比例匹配最佳适应准则（Ratio-Matched Best-Fit, RM-BF）</strong>，将 <code>GPU-series-1</code>（9,643 个作业）与 <code>A100-SXM4-80GB</code>（80,877 个作业）的平均、P95 及最大等待时间全部降至 <strong>0.00 秒</strong>；（2）在队列调度阶段，建立带饥饿上限保护 <span class="math">T<sub>cap</sub></span> 的双堆老化最小算力体积优先（SAF）与影子窗口 EASY 回填机制。当 <span class="math">T<sub>cap</sub> = 1080</span> 小时（<code>AMBF-1080</code>）时，算法在平均等待时间（<strong>105.33h vs. 447.37h，下降 76.5%</strong>）、<code>A10</code> 中位等待时间（<strong>149.0 秒 vs. 1,120.1 小时</strong>）、P95 等待时间、最大等待时间（1414.0h &lt; 1423.3h）、90 天完工数及总完工跨度（Makespan = 242.9 天）六大指标上<strong>严格帕累托支配（Strictly Pareto-Dominates）</strong> <code>FCFS-FF</code>；在帕累托拐点 <span class="math">T<sub>cap</sub> = 1500</span> 小时（<code>AMBF-1500</code>）下，全集群平均等待时间骤降 <strong>95.03%</strong> 至 <strong>22.25 小时</strong>（90 天完工率提升至 <strong>96.98%</strong>），同时将纯短作业优先（<code>SAF-BF</code>）的最大饥饿等待时间腰斩（1,573.4h vs. 3,017.3h）。全量 224,112 个作业仿真耗时仅 <strong>12.2 秒</strong>。</li>
+        <li><strong>问题三（技术与金融跨池均衡机制评估）：</strong>针对 <code>A10</code> 池的物理容量赤字，本文构建并仿真验证了三类跨池治理方案：（1）<strong>带原生保护阈值的跨池弹性溢出（Elastic Overflow）</strong>：利用高端池闲置容量吸收单卡 <code>A10</code> 作业，将 <code>A10</code> 平均等待时间降至 <strong>4.99 小时</strong>（720 张共享卡）及 <strong>0.43 小时</strong>（1,120 张共享卡）；（2）<strong>NVIDIA MIG 硬件虚拟化切分（MIG Partitioning）</strong>：从 432 台 <code>A100-SXM4-80GB</code> 节点中划拨 <span class="math">M = 72</span> 台（576 张物理 A100）配置为 <code>3g.40gb</code>（<span class="math">m = 2</span>，新增 1,152 张 40GB 虚拟 A10）或 <code>2g.20gb</code>（<span class="math">m = 3</span>，新增 1,728 张虚拟 A10），在<strong>保证剩余 360 台原生 A100 节点零排队延迟（平均等待 0.000 小时，利用率从 62.76% 提升至 75.31%）</strong>的前提下，将 <code>A10</code> 平均等待时间分别降至 <strong>4.27 小时</strong>（中位数 8.0 秒）与 <strong>2.55 小时</strong>（中位数 0.0 秒）；（3）<strong>基于多项 Logit（MNL）离散选择模型的动态拥塞定价机制</strong>：对闲置高端池提供 <span class="math">&delta; = 50%</span> 弹性折扣并对峰值 <code>A10</code> 征收 <span class="math">s = 10%</span> 拥塞附加费，可引导 42.1% 的 <code>A10</code> 作业主动迁移，使 <code>A10</code> 综合平均等待时间降至 <strong>1.86 小时</strong>，同时盘活闲置高端算力使运营商总营收增长 <strong>+13.04%</strong>（从 $11.12M 增至 $12.57M）。技术与金融协同设计使全集群 6 大资源池利用率的 Jain 公平性指数从 <strong>0.941 跃升至 0.992</strong>。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>一、 问题一：集群供给结构与多维工作负载特征深度剖析</h2>
+      <h3>1.1 异构硬件供给与各型号算力需求宏观对比</h3>
+      <p>数据集涵盖 <span class="math">H = 7,775,878</span> 秒（即标准 90.00 天，<span class="math">T<sub>H</sub> = 2,160</span> 小时）的作业提交记录。对每个作业 <span class="math">j &isin; J</span>，设其包含 <span class="math">W<sub>j</sub></span> 个同构 Worker，每个 Worker 请求 <span class="math">g<sub>j</sub> &isin; Z<sub>+</sub></span> 张指定型号 <span class="math">m<sub>j</sub></span> 的物理 GPU 与 <span class="math">c<sub>j</sub> &isin; R<sub>+</sub></span> 个 vCPU，持续运行时间为 <span class="math">d<sub>j</sub></span> 秒。作业 <span class="math">j</span> 的总算力需求体积定义为 <span class="math">A<sub>j</sub> = W<sub>j</sub> g<sub>j</sub> d<sub>j</sub> / 3600</span>（单位：GPU-Hours）。对于任意 GPU 型号资源池 <span class="math">m &isin; M</span>，定义其在 90 天周期内的名义 GPU 负载率 <span class="math">&rho;<sub>m</sub><sup>GPU</sup></span> 与名义 CPU 负载率 <span class="math">&rho;<sub>m</sub><sup>CPU</sup></span> 如下：</p>
+      <p style="text-align: center;"><span class="math">&rho;<sub>m</sub><sup>GPU</sup> = (&sum;<sub>j &isin; J<sub>m</sub></sub> W<sub>j</sub> g<sub>j</sub> d<sub>j</sub>) / (3600 &middot; T<sub>H</sub> &sum;<sub>i &isin; I<sub>m</sub></sub> G<sub>i</sub><sup>cap</sup>), &emsp;&emsp; &rho;<sub>m</sub><sup>CPU</sup> = (&sum;<sub>j &isin; J<sub>m</sub></sub> W<sub>j</sub> c<sub>j</sub> d<sub>j</sub>) / (3600 &middot; T<sub>H</sub> &sum;<sub>i &isin; I<sub>m</sub></sub> C<sub>i</sub><sup>cap</sup>)</span></p>
+      <p>表 1 汇总了全集群 6 种 GPU 型号的节点硬件配置、作业规模特征及 90 天供需负载比。</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>GPU 型号</th>
+            <th>节点数与硬件配置 (GPU/vCPU)</th>
+            <th>总 GPU 数 (占比)</th>
+            <th>总 vCPU 数</th>
+            <th>提交作业数 (占比)</th>
+            <th>总需求 (万 GPU-h / 占比)</th>
+            <th>平均/最大 Worker</th>
+            <th>平均/最大单 Worker GPU</th>
+            <th>中位 / 平均时长</th>
+            <th>名义负载比 &rho;<sub>GPU</sub> / &rho;<sub>CPU</sub></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A10</strong></td>
+            <td>2,494 (2台1/126; 2492台1/128)</td>
+            <td>2,494 (23.95%)</td>
+            <td>319,228</td>
+            <td>111,284 (49.66%)</td>
+            <td>1,111.90 (45.19%)</td>
+            <td>1.04 / 60</td>
+            <td>1.00 / 1</td>
+            <td>701s / 99.8h</td>
+            <td><strong>2.064</strong> / 0.391</td>
+          </tr>
+          <tr>
+            <td><strong>A100-SXM4-80GB</strong></td>
+            <td>432 (全部 8 GPU / 128 vCPU)</td>
+            <td>3,456 (33.19%)</td>
+            <td>55,296</td>
+            <td>80,877 (36.09%)</td>
+            <td>593.59 (24.12%)</td>
+            <td>1.52 / 108</td>
+            <td>2.80 / 8</td>
+            <td>1711s / 27.2h</td>
+            <td>0.795 / 0.534</td>
+          </tr>
+          <tr>
+            <td><strong>GPU-series-1</strong></td>
+            <td>989 (902台1卡; 10台4卡; 77台8卡)</td>
+            <td>1,558 (14.96%)</td>
+            <td>189,824</td>
+            <td>9,643 (4.30%)</td>
+            <td>389.16 (15.82%)</td>
+            <td>1.72 / 249</td>
+            <td>1.00 / 8</td>
+            <td>5857s / 396.3h</td>
+            <td><strong>1.156</strong> / 0.590</td>
+          </tr>
+          <tr>
+            <td><strong>H800</strong></td>
+            <td>219 (全部 8 GPU / 192 vCPU)</td>
+            <td>1,752 (16.83%)</td>
+            <td>42,048</td>
+            <td>4,716 (2.10%)</td>
+            <td>220.32 (8.95%)</td>
+            <td>8.98 / 182</td>
+            <td>7.88 / 8</td>
+            <td>881s / 4.6h</td>
+            <td>0.582 / 0.540</td>
+          </tr>
+          <tr>
+            <td><strong>GPU-series-2</strong></td>
+            <td>122 (全部 8 GPU / 192 vCPU)</td>
+            <td>976 (9.37%)</td>
+            <td>23,424</td>
+            <td>13,633 (6.08%)</td>
+            <td>122.38 (4.97%)</td>
+            <td>2.90 / 238</td>
+            <td>3.58 / 8</td>
+            <td>1739s / 5.3h</td>
+            <td>0.580 / 0.382</td>
+          </tr>
+          <tr>
+            <td><strong>A800-SXM4-80GB</strong></td>
+            <td>22 (全部 8 GPU / 128 vCPU)</td>
+            <td>176 (1.69%)</td>
+            <td>2,816</td>
+            <td>3,959 (1.77%)</td>
+            <td>23.24 (0.94%)</td>
+            <td>2.12 / 39</td>
+            <td>3.91 / 8</td>
+            <td>1637s / 8.2h</td>
+            <td>0.611 / 0.526</td>
+          </tr>
+          <tr>
+            <td><strong>全集群合计</strong></td>
+            <td><strong>4,278 台服务器</strong></td>
+            <td><strong>10,412 (100%)</strong></td>
+            <td><strong>632,636</strong></td>
+            <td><strong>224,112 (100%)</strong></td>
+            <td><strong>2,460.59 (100%)</strong></td>
+            <td><strong>1.40 / 249</strong></td>
+            <td><strong>1.97 / 8</strong></td>
+            <td><strong>1330s / 77.0h</strong></td>
+            <td><strong>1.094 / 0.461</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>1.2 四大核心统计规律与管理洞察</h3>
+      <ol>
+        <li><strong>跨型号结构性冷热失衡（图 1a）：</strong><code>A10</code> 作为高性价比单卡服务器（2,494 台节点均为 1 张 GPU），其总算力需求达 1,111.90 万 GPU-Hours，为 90 天物理可提供上限（538.70 万 GPU-Hours）的 <strong>206.4%</strong>。即便剔除跨越 90 天边界的尾部剩余时长，<code>A10</code> 在 90 天内的无约束平均并发需求仍达 <strong>3,664.0 张 GPU（负载率 146.9%，峰值 4,118 张）</strong>，存在持续约 1,170 张 GPU 的硬缺口。反观 <code>A100-SXM4-80GB</code>（无约束平均活跃需求 2,318.6 / 3,456 张，占 67.1%，95% 分位需求仅 2,860 张）、<code>H800</code>（平均活跃 1,124.0 / 1,752 张，占 64.2%）、<code>GPU-series-2</code>（64.6%）与 <code>A800-SXM4-80GB</code>（64.3%），四大高端训练池长期保有 30%–40% 的闲置算力余量。</li>
+        <li><strong>算力需求的极端帕累托重尾分布与初始积压效应（图 1b, 1d）：</strong>全体作业运行时长横跨 <span class="math">1</span> 秒至 <span class="math">15,897,599</span> 秒（184 天）。虽然 50% 的作业运行时长不超过 1,330 秒（22.2 分钟）、75% 不超过 4,887 秒（1.36 小时），但 95% 分位时长跃升至 309.09 小时（12.9 天）。洛伦兹曲线分析表明，全集群作业 GPU-Hours 的基尼系数高达 <strong>0.9522</strong>（时长基尼系数 0.9580）：<strong>前 0.1% 的巨型作业（224 个）消耗了 14.66% 的总 GPU-Hours，前 1.0%（2,241 个）消耗了 43.30%，前 5.0%（11,205 个）消耗了 87.68%，前 10.0% 消耗了 97.11%</strong>。此外，在 <span class="math">t = 0</span> 时刻有 3,512 个初始积压/常驻作业同时到达（其中 <code>A10</code> 占 2,102 个，合计 347.09 万 GPU-Hours，占 <code>A10</code> 总需求量的 31.22%）。在传统 FCFS 策略下，这些长达数周的初始大作业将瞬间占满 <code>A10</code> 节点，导致后续成千上万个分钟级短作业陷入长达数十天的排队停滞。</li>
+        <li><strong>日内潮汐效应与阶段性到达规律（图 1c）：</strong>动态到达作业（<span class="math">t &gt; 0</span>）呈现显著的 24 小时周期性：每日第 16 小时达到提交峰值（累计 13,596 个作业，平均 151.1 个/小时），凌晨第 4 小时降至波谷（累计 5,946 个作业，平均 66.1 个/小时），<strong>峰谷比达 2.29 倍</strong>。按月度统计，第 1 个月（D0–D29，含初始积压）提交 82,902 个作业（1,267.2 万 GPU-Hours），第 2 个月（D30–D59）与第 3 个月（D60–D89）分别平稳提交 71,184 个（552.9 万 GPU-Hours）与 70,026 个（640.5 万 GPU-Hours）。</li>
+        <li><strong>作业粒度分化与多维资源（CPU-GPU）搁浅机理：</strong>全集群 90.95% 的作业为单 Worker（<span class="math">W<sub>j</sub> = 1</span>），78.42% 的作业请求单卡（<span class="math">g<sub>j</sub> = 1</span>），而 <code>H800</code> 则以大规模分布式整机训练为主（97.75% 请求 8 卡整机，平均 8.98 个 Worker，最大单作业同时请求 182 个 8 卡节点共 <strong>1,456 张 H800</strong>，占该池总容量的 83.1%）。更为关键的是，<code>GPU-series-1</code> 虽然总无约束峰值 GPU 需求（1,504 张）小于物理 GPU 总数（1,558 张），但其节点由 901 台 1卡/192核（核卡比 192）、10 台 4卡/192核（核卡比 48）与 77 台 8卡/192核（核卡比 24）混编而成。若放置算法未能识别核卡比，将低 CPU 作业（<span class="math">c<sub>j</sub> &le; 24</span>，占该池 74.3%）优先放入 1 卡节点，则后续 630 个高核卡比作业（<span class="math">c<sub>j</sub> / g<sub>j</sub> &gt; 24</span>，最高达 1 卡配 192 核，占该池 19.79% 算力时）被迫放入 8 卡节点时，<strong>单个 1 卡 Worker 即可耗尽整台 8 卡节点的 192 个 vCPU，直接导致该节点剩余 7 张物理 GPU 被完全搁浅（Resource Stranding）</strong>！</li>
+      </ol>
+
+      <figure>
+        <img src="fig1_data_patterns.png" alt="问题一数据模式与供需失衡分析四联图">
+        <figcaption><strong>图 1：90 天集群工作负载特征与跨型号结构性失衡诊断。</strong> (a) 六类 GPU 型号的硬件容量占比、作业数占比、算力时需求占比及 90 天名义负载率对比；(b) 作业 GPU-Hours 的洛伦兹曲线（Gini = 0.9522）；(c) 24 小时日内到达潮汐曲线（峰谷比 2.29x）；(d) 作业运行时长的双对数互补累积分布函数（CCDF），展示显著的幂律重尾特征。</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>二、 问题二：多维非抢占式 Gang 调度数学模型与高效算法设计</h2>
+      <h3>2.1 连续时间多维资源约束调度规划模型</h3>
+      <p>由于每个 Worker 只能放置在与其请求型号 <span class="math">m<sub>j</sub></span> 完全匹配的节点上，问题二的集群调度在数学上严格解耦为 6 个独立的子集群优化问题。对任意型号子集 <span class="math">m &isin; M</span>，决策变量包括每个作业 <span class="math">j &isin; J<sub>m</sub></span> 的启动时刻 <span class="math">s<sub>j</sub> &ge; r<sub>j</sub></span>（对应等待时间 <span class="math">w<sub>j</sub> = s<sub>j</sub> - r<sub>j</sub></span>，完工时刻 <span class="math">e<sub>j</sub> = s<sub>j</sub> + d<sub>j</sub></span>）以及节点分配整数变量 <span class="math">x<sub>j,i</sub> &isin; {0, 1, &dots;, W<sub>j</sub>}</span>（表示作业 <span class="math">j</span> 放置在节点 <span class="math">i &isin; I<sub>m</sub></span> 上的 Worker 数量）。记时刻 <span class="math">t</span> 正在运行的活跃作业集为 <span class="math">A(t) = {j &isin; J<sub>m</sub> : s<sub>j</sub> &le; t &lt; s<sub>j</sub> + d<sub>j</sub>}</span>，系统必须满足以下 Gang 同步启动、同节点资源耦合与非抢占容量约束：</p>
+      <p style="text-align: center;"><span class="math">s<sub>j</sub> &ge; r<sub>j</sub>, &emsp; &sum;<sub>i &isin; I<sub>m</sub></sub> x<sub>j,i</sub> = W<sub>j</sub>, &emsp; x<sub>j,i</sub> &isin; Z<sub>&ge;0</sub>, &emsp; &forall; j &isin; J<sub>m</sub>, i &isin; I<sub>m</sub></span></p>
+      <p style="text-align: center;"><span class="math">&sum;<sub>j &isin; A(t)</sub> g<sub>j</sub> x<sub>j,i</sub> &le; G<sub>i</sub><sup>cap</sup>, &emsp; &sum;<sub>j &isin; A(t)</sub> c<sub>j</sub> x<sub>j,i</sub> &le; C<sub>i</sub><sup>cap</sup>, &emsp; &forall; i &isin; I<sub>m</sub>, &forall; t &ge; 0</span></p>
+      <p><strong>多目标评价体系：</strong>为全面权衡效率、尾部延迟、吞吐量与公平性，我们同时考察六项核心指标：（1）平均等待时间 <span class="math">W&#772;</span>；（2）中位等待时间 <span class="math">W<sub>50</sub></span> 与 95% 分位长尾等待时间 <span class="math">W<sub>95</sub></span>；（3）最大等待时间（饥饿上界）<span class="math">W<sub>max</sub></span>；（4）平均有界减速比 <span class="math">BSLD = E[(w<sub>j</sub> + d<sub>j</sub>) / max(d<sub>j</sub>, 60)]</span>；（5）90 天窗口内完工作业总数 <span class="math">N<sub>comp</sub>(T<sub>H</sub>)</span> 及有效 GPU 利用率 <span class="math">&eta;<sub>GPU</sub></span>；（6）单次调度决策的计算耗时。</p>
+
+      <h3>2.2 双阶段核心算法：老化感知多维回填与核卡比匹配放置（<code>AMBF-RM</code>）</h3>
+      <p>根据非抢占式 M/G/1 排队论 Pollaczek–Khinchine 公式，FIFO 策略下的平均排队延迟正比于服务时间的二阶矩 <span class="math">E[S<sup>2</sup>]</span>。在重尾工作负载（<span class="math">Gini = 0.9522</span>）下，纯 FCFS 会因极少数超长作业占据服务器而引发灾难性的队头阻塞；反之，纯最小算力体积优先（<code>SAF</code>，按 <span class="math">V<sub>j</sub> = W<sub>j</sub> g<sub>j</sub> d<sub>j</sub></span> 升序）虽能最大化短作业吞吐率，却会导致大作业无限期饥饿。为此，我们设计了兼具<strong><span class="math">O(log |Q| + |I<sub>m</sub>|)</span> 极低计算复杂度</strong>与<strong>严格防饥饿保证</strong>的双阶段算法 <strong><code>AMBF-RM</code></strong>：</p>
+      <ul>
+        <li><strong>第一阶段（队列调度）：双堆协同的老化感知最小算力体积优先 + EASY 影子窗口回填。</strong>对等待队列 <span class="math">Q(t)</span> 中的作业 <span class="math">j</span>，定义动态优先级键值：当累计等待时间达到防饥饿阈值 <span class="math">w<sub>j</sub>(t) = t - r<sub>j</sub> &ge; T<sub>cap</sub></span> 时，立即触发紧急防饥饿晋升（按到达时间 <span class="math">r<sub>j</sub></span> 优先调度）；当 <span class="math">w<sub>j</sub>(t) &lt; T<sub>cap</sub></span> 时，优先级键值为 <span class="math">&Psi;<sub>j</sub> = (W<sub>j</sub> g<sub>j</sub> d<sub>j</sub>)<sup>&alpha;</sup> - &lambda; r<sub>j</sub></span>（取 <span class="math">&alpha; = 0.7, &lambda; = 0.01</span>）。在数据结构实现上，我们维护两个共享布尔状态数组 <code>in_queue[j]</code> 的惰性二叉堆——<code>normal_heap</code>（按 <span class="math">&Psi;<sub>j</sub></span> 排序）与 <code>arrival_heap</code>（按 <span class="math">r<sub>j</sub></span> 排序），无需在每个事件时刻遍历更新全队列即可在 <span class="math">O(1)</span> 时间内精确检测并晋升超时老作业！当队头高优多节点大作业 <span class="math">j<sup>*</sup></span> 因当前空闲 GPU 不足而受阻时，算法扫描运行作业最小堆计算其最早影子启动时刻 <span class="math">t<sub>shadow</sub>(j<sup>*</sup>)</span>，并允许后续最多 <span class="math">K<sub>scan</sub> = 30</span> 个小作业在不推迟 <span class="math">t<sub>shadow</sub>(j<sup>*</sup>)</span> 的前提下立即回填执行。</li>
+        <li><strong>第二阶段（节点放置）：核卡比匹配与反碎片紧致装箱（Ratio-Matched Best-Fit, <code>RM-BF</code>）。</strong>对于请求单 Worker 核卡比为 <span class="math">r<sub>j</sub> = c<sub>j</sub> / g<sub>j</sub></span> 的作业 <span class="math">j</span>，设节点 <span class="math">i</span> 当前可容纳的 Worker 数为 <span class="math">k<sub>i</sub>(j) = min(&lfloor;G<sub>i</sub><sup>free</sup> / g<sub>j</sub>&rfloor;, &lfloor;C<sub>i</sub><sup>free</sup> / c<sub>j</sub>&rfloor;)</span>。若 <span class="math">&sum;<sub>i</sub> k<sub>i</sub>(j) &ge; W<sub>j</sub></span>，我们对所有可用节点按以下<strong>核卡比匹配与紧致装箱代价函数</strong>升序排列并依次分配 Worker：
+        <p style="text-align: center;"><span class="math">S<sub>place</sub>(i, j) = &gamma;<sub>ratio</sub> &middot; &phi;(R<sub>i</sub><sup>node</sup>, r<sub>j</sub>) + G<sub>i</sub><sup>free</sup>(t), &emsp;&emsp; &phi;(R<sub>i</sub><sup>node</sup>, r<sub>j</sub>) = (R<sub>i</sub><sup>node</sup> - r<sub>j</sub>) &middot; I(R<sub>i</sub><sup>node</sup> &ge; r<sub>j</sub>) + [M<sub>pen</sub> + (r<sub>j</sub> - R<sub>i</sub><sup>node</sup>)] &middot; I(R<sub>i</sub><sup>node</sup> &lt; r<sub>j</sub>)</span></p>
+        其中 <span class="math">R<sub>i</sub><sup>node</sup> = C<sub>i</sub><sup>cap</sup> / G<sub>i</sub><sup>cap</sup></span> 为节点固有硬件核卡比（<span class="math">&gamma;<sub>ratio</sub> = 10, M<sub>pen</sub> = 500</span>）。该放置准则同时解决了两大物理瓶颈：（1）在异构池 <code>GPU-series-1</code> 中，自动引导低 CPU 作业（<span class="math">r<sub>j</sub> &le; 24</span>）优先填入 8 卡节点（<span class="math">R<sub>i</sub><sup>node</sup> = 24</span>），将 1 卡 192 核节点（<span class="math">R<sub>i</sub><sup>node</sup> = 192</span>）保留给高 CPU 作业，彻底根除高 CPU 作业搁浅 8 卡节点的现象；（2）在 8 卡同构池（<code>A100</code>、<code>A800</code>、<code>GPU-series-2</code>、<code>H800</code>）中，利用 <span class="math">+G<sub>i</sub><sup>free</sup>(t)</span> 项将 1 卡/2 卡/4 卡零散作业优先紧致打包在已部分占用的节点上，完整保留空闲 8 卡整机供 <span class="math">g<sub>j</sub> = 8</span> 的整机训练作业使用。</li>
+      </ul>
+
+      <h3>2.3 全量 224,112 作业仿真基准对比与帕累托前沿分析</h3>
+      <p>表 2 与图 2 展示了在全部 224,112 个真实作业与 4,278 台节点上运行精确事件驱动仿真的结果：</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>调度与放置策略</th>
+            <th>全集群平均等待</th>
+            <th>全集群中位等待</th>
+            <th>全集群 P95 等待</th>
+            <th>最大等待 (饥饿界)</th>
+            <th>A10 平均等待</th>
+            <th>A100 平均/P95 等待</th>
+            <th>GPU-s1 平均/最大等待</th>
+            <th>90天内完工数 (完工率)</th>
+            <th>总跨度 / 仿真耗时</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>FCFS-FF</strong> (基准先到先服务)</td>
+            <td>447.37 h</td>
+            <td>0.0 s</td>
+            <td>1356.50 h</td>
+            <td>1423.3 h</td>
+            <td>900.13 h</td>
+            <td>0.00 h / 0.00 h</td>
+            <td>9.38 h / 122.2 h</td>
+            <td>164,868 (73.57%)</td>
+            <td>243.3 d / 6.3 s</td>
+          </tr>
+          <tr>
+            <td><strong>EASY-WF</strong> (最差适应分散放置)</td>
+            <td>452.28 h</td>
+            <td>228,193.5 s</td>
+            <td>1355.40 h</td>
+            <td>1709.1 h</td>
+            <td>898.48 h</td>
+            <td><strong>16.92 h / 84.82 h</strong></td>
+            <td>0.31 h / 1709.1 h</td>
+            <td>164,607 (73.45%)</td>
+            <td>255.2 d / 479.6 s</td>
+          </tr>
+          <tr>
+            <td><strong>EASY-BF</strong> (比例匹配回填)</td>
+            <td>446.15 h</td>
+            <td>0.0 s</td>
+            <td>1355.12 h</td>
+            <td>1422.1 h</td>
+            <td>898.48 h</td>
+            <td><strong>0.00 h / 0.00 h</strong></td>
+            <td><strong>0.00 h / 0.00 h</strong></td>
+            <td>165,114 (73.67%)</td>
+            <td>243.2 d / 22.9 s</td>
+          </tr>
+          <tr>
+            <td><strong>AMBF-1080</strong> (本文，帕累托支配点)</td>
+            <td><strong>105.33 h</strong></td>
+            <td><strong>0.0 s</strong></td>
+            <td><strong>1114.65 h</strong></td>
+            <td><strong>1414.0 h</strong></td>
+            <td><strong>212.12 h</strong></td>
+            <td><strong>0.00 h / 0.00 h</strong></td>
+            <td><strong>0.00 h / 0.00 h</strong></td>
+            <td><strong>203,110 (90.63%)</strong></td>
+            <td><strong>242.9 d / 12.2 s</strong></td>
+          </tr>
+          <tr>
+            <td><strong>AMBF-1350</strong> (本文，均衡推荐点)</td>
+            <td><strong>30.96 h</strong></td>
+            <td><strong>0.0 s</strong></td>
+            <td><strong>123.70 h</strong></td>
+            <td>1520.2 h</td>
+            <td><strong>62.35 h</strong></td>
+            <td><strong>0.00 h / 0.00 h</strong></td>
+            <td><strong>0.00 h / 0.00 h</strong></td>
+            <td><strong>217,057 (96.85%)</strong></td>
+            <td>247.3 d / 12.3 s</td>
+          </tr>
+          <tr>
+            <td><strong>AMBF-1500</strong> (本文，高吞吐拐点)</td>
+            <td><strong>22.25 h</strong></td>
+            <td><strong>0.0 s</strong></td>
+            <td><strong>46.86 h</strong></td>
+            <td>1573.4 h</td>
+            <td><strong>44.81 h</strong></td>
+            <td><strong>0.00 h / 0.00 h</strong></td>
+            <td><strong>0.00 h / 0.00 h</strong></td>
+            <td><strong>217,337 (96.98%)</strong></td>
+            <td>249.5 d / 12.2 s</td>
+          </tr>
+          <tr>
+            <td><strong>SAF-BF</strong> (纯最小算力体积优先)</td>
+            <td>16.55 h</td>
+            <td>0.0 s</td>
+            <td>0.46 h</td>
+            <td><strong>3017.3 h</strong></td>
+            <td>33.32 h</td>
+            <td>0.00 h / 0.00 h</td>
+            <td>0.00 h / 0.00 h</td>
+            <td>217,529 (97.06%)</td>
+            <td>309.7 d / 10.9 s</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <figure>
+        <img src="fig2_q2_scheduling.png" alt="问题二调度与放置算法基准对比三联图">
+        <figcaption><strong>图 2：问题二全集群 224,112 个作业调度与放置算法仿真评估。</strong> (a) 七种策略下的全集群平均、P95 与最大等待时间对比（对数坐标）；(b) 放置算法消融实验：比例匹配最佳适应（RM-BF）彻底消除了 A100 整机碎片化延迟（16.92h &rarr; 0.00h）与 GPU-series-1 核卡失配搁浅延迟（9.38h &rarr; 0.00h）；(c) A10 池老化阈值 T<sub>cap</sub> 从 0h (FCFS) 至 &infin; (SAF) 演进时的效率-公平性帕累托前沿。</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>三、 问题三：消除跨 GPU 型号失衡的技术与金融协同治理方案</h2>
+      <h3>3.1 技术路径：跨型号弹性溢出（Elastic Overflow）与 NVIDIA MIG 硬件切分</h3>
+      <p>问题二的仿真证明：通过 <code>AMBF-RM</code> 调度与放置优化，除 <code>A10</code> 外的其余 5 个 GPU 池已实现近乎零排队运行（其中 <code>A100-SXM4-80GB</code>、<code>GPU-series-1</code>、<code>GPU-series-2</code>、<code>H800</code> 平均等待均为 0.00 小时，<code>A800</code> 仅 0.13 小时），但 <code>A10</code> 在 90 天内有效利用率高达 <strong>99.95%</strong>，仍存在平均 44.81–62.35 小时的排队延迟。其根本原因在于 <code>A10</code> 面临日均 1,170 张 GPU 的物理算力赤字（图 3a）。为此，我们设计并量化评估两项硬件与系统级技术方案：</p>
+      <ol>
+        <li><strong>方案 3A（带原生保护阈值的跨池向上兼容弹性溢出）：</strong>由于全部 111,284 个 <code>A10</code> 作业均请求单卡（<span class="math">g<sub>j</sub> = 1</span>，显存需求 &le; 24GB），它们在架构上完全向上兼容空闲的高端 80GB GPU（<code>A100</code>、<code>A800</code>、<code>GPU-series-2</code>、<code>H800</code>）。为确保高端池原生多卡大作业不受干扰，我们设立 <strong>15% 原生安全预留阈值</strong>：仅当捐赠池空闲 GPU 比例超过 15% 时，才动态借出闲置 GPU 承载排队中的 <code>A10</code> 作业。我们同时评估了保守无加速场景（<span class="math">&kappa; = 1.00</span>）与基于 FP16 算力/显存带宽及 Amdahl 定律标定的硬件加速场景（<span class="math">&kappa; = 1.45</span>）。</li>
+        <li><strong>方案 3B（基于 NVIDIA MIG 硬件虚拟化的节点重构）：</strong>将整张 80GB <code>A100</code> 物理卡分配给单个 <code>A10</code> Worker（平均仅需 7.13 个 vCPU）会造成显存与算力的浪费。利用 <strong>NVIDIA Multi-Instance GPU (MIG)</strong> 硬件分区技术，我们将 <span class="math">M &isin; {48, 64, 72}</span> 台长期闲置的 <code>A100-SXM4-80GB</code> 节点（占 432 台总数的 11.1%–16.7%）重构为虚拟 A10 节点：（a）<strong><code>MIG-2x</code> 模式（<code>3g.40gb</code>）</strong>：每张物理 A100 切分为 2 个独立 40GB 硬件实例（单节点提供 16 张虚拟 GPU 与 128 个 vCPU）；（b）<strong><code>MIG-3x</code> 模式（<code>2g.20gb</code>）</strong>：每张物理 A100 切分为 3 个独立实例（单节点提供 24 张虚拟 GPU 与 128 个 vCPU）。仿真引擎严格执行每台物理服务器 128 个 vCPU 的总上限约束。</li>
+      </ol>
+
+      <table>
+        <thead>
+          <tr>
+            <th>问题三技术与混合治理方案</th>
+            <th>A10 有效 vGPU 数</th>
+            <th>A10 平均等待</th>
+            <th>A10 中位等待</th>
+            <th>A10 P95 等待</th>
+            <th>A10 最大等待</th>
+            <th>A10 90天利用率</th>
+            <th>A10 90天完工数</th>
+            <th>捐赠池 A100 平均等待</th>
+            <th>捐赠池 A100 利用率</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>基准隔离池 + FCFS-FF</td>
+            <td>2,494</td>
+            <td>900.13 h</td>
+            <td>4,032,319.5 s</td>
+            <td>1408.48 h</td>
+            <td>1423.3 h</td>
+            <td>99.93%</td>
+            <td>54,531</td>
+            <td>0.000 h</td>
+            <td>62.76%</td>
+          </tr>
+          <tr>
+            <td>仅算法优化：隔离池 + AMBF-1350</td>
+            <td>2,494</td>
+            <td>62.35 h</td>
+            <td>102.0 s</td>
+            <td>427.47 h</td>
+            <td>1520.2 h</td>
+            <td>99.95%</td>
+            <td>106,480</td>
+            <td>0.000 h</td>
+            <td>62.76%</td>
+          </tr>
+          <tr>
+            <td>3A-1：跨池弹性溢出 (720 GPU, &kappa;=1.00)</td>
+            <td>3,214</td>
+            <td>9.85 h</td>
+            <td>73.0 s</td>
+            <td>3.64 h</td>
+            <td>1356.1 h</td>
+            <td>99.68%</td>
+            <td>107,576</td>
+            <td>0.000 h</td>
+            <td>75.40%</td>
+          </tr>
+          <tr>
+            <td>3A-2：跨池弹性溢出 (720 GPU, &kappa;=1.45)</td>
+            <td>3,214</td>
+            <td>4.99 h</td>
+            <td>65.0 s</td>
+            <td>1.62 h</td>
+            <td>1359.5 h</td>
+            <td>99.56%</td>
+            <td>108,053</td>
+            <td>0.000 h</td>
+            <td>73.80%</td>
+          </tr>
+          <tr>
+            <td>3A-3：多池联合溢出 (1,120 GPU, &kappa;=1.45)</td>
+            <td>3,614</td>
+            <td><strong>0.43 h</strong></td>
+            <td><strong>0.0 s</strong></td>
+            <td><strong>0.16 h</strong></td>
+            <td><strong>280.9 h</strong></td>
+            <td>92.44%</td>
+            <td><strong>108,167</strong></td>
+            <td>0.000 h</td>
+            <td>76.10%</td>
+          </tr>
+          <tr>
+            <td>3B-1：MIG-2x (3g.40gb) 划拨 M=48 台 A100</td>
+            <td>3,262</td>
+            <td>10.30 h</td>
+            <td>58.0 s</td>
+            <td>4.28 h</td>
+            <td>1357.0 h</td>
+            <td>97.96%</td>
+            <td>107,584</td>
+            <td><strong>0.000 h</strong></td>
+            <td>70.60%</td>
+          </tr>
+          <tr>
+            <td>3B-2：MIG-2x (3g.40gb) 划拨 M=64 台 A100</td>
+            <td>3,518</td>
+            <td>5.79 h</td>
+            <td>29.0 s</td>
+            <td>2.53 h</td>
+            <td>1358.7 h</td>
+            <td>96.26%</td>
+            <td>107,703</td>
+            <td><strong>0.000 h</strong></td>
+            <td>73.67%</td>
+          </tr>
+          <tr>
+            <td>3B-3：MIG-2x (3g.40gb) 划拨 M=72 台 A100</td>
+            <td>3,646</td>
+            <td><strong>4.27 h</strong></td>
+            <td><strong>8.0 s</strong></td>
+            <td><strong>1.46 h</strong></td>
+            <td>1357.8 h</td>
+            <td>94.50%</td>
+            <td>107,759</td>
+            <td><strong>0.000 h</strong></td>
+            <td>75.31%</td>
+          </tr>
+          <tr>
+            <td>3B-5：MIG-3x (2g.20gb) 划拨 M=72 台 A100</td>
+            <td>4,222</td>
+            <td><strong>2.55 h</strong></td>
+            <td><strong>0.0 s</strong></td>
+            <td><strong>0.68 h</strong></td>
+            <td>1238.6 h</td>
+            <td>83.42%</td>
+            <td>107,809</td>
+            <td><strong>0.000 h</strong></td>
+            <td>75.31%</td>
+          </tr>
+          <tr>
+            <td><strong>3D：混合协同 (64台 MIG-2x + 60台弹性溢出)</strong></td>
+            <td><strong>3,998</strong></td>
+            <td><strong>0.47 h</strong></td>
+            <td><strong>0.0 s</strong></td>
+            <td><strong>0.14 h</strong></td>
+            <td><strong>332.9 h</strong></td>
+            <td><strong>86.64%</strong></td>
+            <td><strong>108,079</strong></td>
+            <td><strong>0.000 h</strong></td>
+            <td><strong>78.45%</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.2 金融定价路径：动态拥塞折扣与多项 Logit 用户迁移均衡模型</h3>
+      <p>在商业云平台场景下，管理者还可通过价格杠杆引导弹性用户主动切换 GPU 型号。参照阿里云/AWS 公开目录价格（<code>A10</code> 为 $1.00/GPU-h，<code>GPU-series-1</code> 为 $1.20，<code>GPU-series-2</code> 为 $2.20，<code>A800</code> 为 $3.20，<code>A100</code> 为 $3.50，<code>H800</code> 为 $4.80；折算加速比或 MIG 实例后的替代池基准等效单价为 <span class="math">p<sub>alt</sub> = $2.40/h</span>），当运营商对闲置高端池提供折扣率 <span class="math">&delta; &isin; [0, 60%]</span> 并对拥塞 <code>A10</code> 池征收峰值附加费 <span class="math">s &isin; [0, 15%]</span> 时，基于随机效用理论的多项 Logit（MNL）模型给出作业 <span class="math">j</span> 的自愿迁移概率为：</p>
+      <p style="text-align: center;"><span class="math">P<sub>switch</sub>(j | &delta;, s) = f<sub>flex</sub> / { 1 + exp( -[ v<sub>0</sub> / (1 + d<sub>j</sub> / &tau;<sub>d</sub>) - &beta;<sub>p</sub> ((1 - &delta;) p<sub>alt</sub> - (1 + s) p<sub>A10</sub>) ] ) }</span></p>
+      <p>其中硬件灵活作业比例 <span class="math">f<sub>flex</sub> = 65%</span>，价格敏感系数 <span class="math">&beta;<sub>p</sub> = 2.2</span>，排队厌恶项参数 <span class="math">v<sub>0</sub> = 0.90, &tau;<sub>d</sub> = 120</span> 小时。表 4 展示了不同定价策略下的市场均衡与排队改善效果：</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>金融拥塞定价策略 (&delta; 折扣率, s 拥塞附加费)</th>
+            <th>A10 有效单价</th>
+            <th>替代池折后单价</th>
+            <th>主动迁移作业比例</th>
+            <th>迁移算力时比例</th>
+            <th>A10 综合平均等待</th>
+            <th>留存作业 P95 等待</th>
+            <th>A10 90天利用率</th>
+            <th>工作负载总营收 (增幅)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>无价格激励基准 (&delta;=0%, s=0%)</td>
+            <td>$1.00 / h</td>
+            <td>$2.40 / h</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>62.35 h</td>
+            <td>427.47 h</td>
+            <td>99.95%</td>
+            <td>$11.12M (基准)</td>
+          </tr>
+          <tr>
+            <td>温和跨池折扣 (&delta;=25%, s=0%)</td>
+            <td>$1.00 / h</td>
+            <td>$1.80 / h</td>
+            <td>18.5%</td>
+            <td>10.6%</td>
+            <td>26.24 h</td>
+            <td>111.27 h</td>
+            <td>99.86%</td>
+            <td>$12.06M (+8.45%)</td>
+          </tr>
+          <tr>
+            <td>中度跨池折扣 (&delta;=40%, s=0%)</td>
+            <td>$1.00 / h</td>
+            <td>$1.44 / h</td>
+            <td>30.3%</td>
+            <td>18.4%</td>
+            <td>10.86 h</td>
+            <td>8.79 h</td>
+            <td>99.74%</td>
+            <td>$12.02M (+8.09%)</td>
+          </tr>
+          <tr>
+            <td><strong>削峰填谷最优定价 (&delta;=50%, s=10%)</strong></td>
+            <td><strong>$1.10 / h</strong></td>
+            <td><strong>$1.20 / h</strong></td>
+            <td><strong>42.1%</strong></td>
+            <td><strong>30.7%</strong></td>
+            <td><strong>1.86 h</strong></td>
+            <td><strong>0.75 h</strong></td>
+            <td><strong>96.97%</strong></td>
+            <td><strong>$12.57M (+13.04%)</strong></td>
+          </tr>
+          <tr>
+            <td>激进拥塞定价 (&delta;=60%, s=15%)</td>
+            <td>$1.15 / h</td>
+            <td>$0.96 / h</td>
+            <td>50.2%</td>
+            <td>40.9%</td>
+            <td><strong>0.00 h</strong></td>
+            <td><strong>0.00 h</strong></td>
+            <td>85.14%</td>
+            <td>$11.92M (+7.19%)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <figure>
+        <img src="fig3_q3_imbalance.png" alt="问题三技术与金融失衡治理效果四联图">
+        <figcaption><strong>图 3：问题三跨型号负载均衡治理的技术与金融方案综合评估。</strong> (a) 90 天内 A10 持续算力赤字与 A100 闲置算力余量时序对比；(b) NVIDIA MIG 硬件切分在不同节点划拨规模 M 下的 A10 降延效果与 A100 零延迟保持特性；(c) 金融拥塞定价下的作业迁移率、平均等待时间与总营收曲线（在 &delta;=50%, s=10% 处实现营收峰值 $12.57M）；(d) 技经协同治理前后全集群六大资源池有效利用率分布对比（Jain 均衡指数从 0.941 提升至 0.992）。</figcaption>
+      </figure>
+
+      <h3>3.3 综合管理建议与 AI 工具使用声明（Use of AI Tools Disclosure）</h3>
+      <p><strong>落地实施路线图：</strong>建议计算中心采取“三步走”策略：（1）<strong>零硬件成本即刻部署 <code>AMBF-RM</code> 调度器</strong>：上线核卡比匹配放置（<code>RM-BF</code>）与双堆老化回填（<span class="math">T<sub>cap</sub> &isin; [1080, 1500]</span> 小时），立即清零 <code>GPU-series-1</code> 与 <code>A100</code> 的排队延迟并将全集群平均等待时间压缩 93%–95%；（2）<strong>开启静态 + 动态混合 MIG 池化</strong>：将 64–72 台 <code>A100-SXM4-80GB</code> 节点配置为 <code>3g.40gb</code> MIG 实例并辅以 15% 预留保护下的跨池弹性溢出，在不影响高端训练任务（0.000h 延迟）的前提下将 <code>A10</code> 平均等待时间压降至 30 分钟以内；（3）<strong>上线双边削峰填谷动态定价</strong>：在日内高峰（10:00–22:00）对闲置高端/MIG 实例提供 50% 弹性升级补贴，实现用户体验（排队降低 97%）与平台营收（+13.04%）的双赢。</p>
+      <p><strong>AI 工具使用声明（Use of AI Tools）：</strong>根据竞赛规则要求，特此声明：在本报告撰写与研究过程中，团队使用了人工智能助手（Gemini）辅助编写 Python 事件驱动仿真代码、处理 224,112 条作业统计数据、生成 Matplotlib 可视化图表以及优化文档排版。所有数学规划模型、<code>AMBF-RM</code> 调度与放置算法设计、MIG 切分与金融定价模型假设及全部数值结论均经过严格验证与交叉核对，确保真实、准确、可复现。</p>
+    </section>
+  </main>
+</body>
+</html>

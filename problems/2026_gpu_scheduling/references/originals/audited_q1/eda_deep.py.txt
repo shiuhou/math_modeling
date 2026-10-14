@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+"""Q1 deep-EDA entry point, using the single audited computation in eda_analysis.
+
+The original concentration, initial-batch, duration, and resource-ratio analyses
+are retained in concentration.csv, pool_summary.csv, duration_quantiles.csv,
+and resource_shape.csv. This avoids two drifting formula implementations.
+"""
+from eda_analysis import main
+if __name__ == '__main__':
+    main()

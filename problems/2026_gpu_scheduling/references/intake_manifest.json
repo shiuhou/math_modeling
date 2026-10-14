@@ -1,0 +1,400 @@
+{
+  "kind": "selective_intake_manifest",
+  "source_base_commit": "dc5e5f28e0bc861248cb13d379ef67342bbc9694",
+  "status": "SELECTIVELY_INTEGRATED",
+  "archives": [
+    {
+      "filename": "2026_MCM_Problem_B_Source_Code.zip",
+      "kind": "source",
+      "sha256": "bc2b8aef699bb5a08565b3b1ef48e2e93436054de205761e97e1497c5c82bb7e",
+      "original_preserved": "Local supplied ZIP (ignored; no binary upload)",
+      "members": [
+        {
+          "member": "eda_analysis.py",
+          "bytes": 4263,
+          "sha256": "894161f871a60fa6e58e78997d14f7d4dd43781407e60111129b3b1abf2bb1fc",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/experiments/eda_analysis.py",
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py"
+          ],
+          "reason": "Q1 logic replaced by audited handoff; figure style retained; Q2/Q3 original figures remain archive-only",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/source/eda_analysis.py.txt"
+        },
+        {
+          "member": "eda_deep.py",
+          "bytes": 3687,
+          "sha256": "1b61aca0f5249b8ae45110a5880be0e8981d0ebb3cc8b5a375ca8352563b0a1b",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/experiments/eda_deep.py",
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py"
+          ],
+          "reason": "Q1 logic replaced by audited handoff; figure style retained; Q2/Q3 original figures remain archive-only",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/source/eda_deep.py.txt"
+        },
+        {
+          "member": "run_complete_q2_q3_experiments.py",
+          "bytes": 15151,
+          "sha256": "31ab2f2aeda99c26e916693fcc8255f0ef327e8819d6fcae4e5a51d551913e27",
+          "disposition": "git_archive_only",
+          "targets": [],
+          "reason": "Original retained byte-for-byte as inert .py.txt; known defects, not a second runnable simulator",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/source/run_complete_q2_q3_experiments.py.txt"
+        },
+        {
+          "member": "run_q3_all.py",
+          "bytes": 12142,
+          "sha256": "7d0fe2b04aac07c98053fcbef7fb3444763d496d1b166e0c6ab0602e4f581cd5",
+          "disposition": "git_archive_only",
+          "targets": [],
+          "reason": "Original retained byte-for-byte as inert .py.txt; known defects, not a second runnable simulator",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/source/run_q3_all.py.txt"
+        },
+        {
+          "member": "run_q3_donor_and_financial.py",
+          "bytes": 9739,
+          "sha256": "3df4de1ef99f0ffbbd091e8ccfb985df7022450472629f817a0ffd48044d46a2",
+          "disposition": "git_archive_only",
+          "targets": [],
+          "reason": "Original retained byte-for-byte as inert .py.txt; known defects, not a second runnable simulator",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/source/run_q3_donor_and_financial.py.txt"
+        },
+        {
+          "member": "run_q3_financial_only.py",
+          "bytes": 2691,
+          "sha256": "8da1066fe9722df02e499cf078575fc7ba3108cf829a93cbc67248d29596b495",
+          "disposition": "git_archive_only",
+          "targets": [],
+          "reason": "Original retained byte-for-byte as inert .py.txt; known defects, not a second runnable simulator",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/source/run_q3_financial_only.py.txt"
+        },
+        {
+          "member": "generate_figures.py",
+          "bytes": 18108,
+          "sha256": "ee94b3d3149fd3cf1c4db56788b8f1f130b72ff70594b7d6946f5cf637e94ab2",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/experiments/generate_figures.py"
+          ],
+          "reason": "Q1 logic replaced by audited handoff; figure style retained; Q2/Q3 original figures remain archive-only",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/source/generate_figures.py.txt"
+        },
+        {
+          "member": "document_en.tex",
+          "bytes": 39976,
+          "sha256": "7662808a9c3399d440ebfabf114471ff661954ea3ba288c5e496a833b48d014f",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/paper/document_en.tex"
+          ],
+          "reason": "Q1 revised; cross-chapter Q1 semantics/formulas/disclosure aligned; archived performance values retained as NOT_RUN",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/source/document_en.tex.txt"
+        },
+        {
+          "member": "document_zh.html",
+          "bytes": 44991,
+          "sha256": "43fba45871cabb29979226b6573a120d16fc0e10fcf797f94d39c7a64d4d10fe",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/paper/document_zh.html"
+          ],
+          "reason": "Imported unchanged as reference draft",
+          "original_git_path": "problems/2026_gpu_scheduling/paper/document_zh.html"
+        }
+      ]
+    },
+    {
+      "filename": "B題_GPU調度_研究報告與計算包.zip",
+      "kind": "independent_research",
+      "sha256": "b2220bb77c80a49b56e458380868a7d871ca482e3d338d2abfbf62aca5c5b088",
+      "original_preserved": "Local supplied ZIP (ignored; no binary upload)",
+      "members": [
+        {
+          "member": "B_GPU_Research/B題_GPU集群調度_完整研究報告.md",
+          "bytes": 46673,
+          "sha256": "00e34c6c57e35a73e25a5bcc13eeb3c970540780f16b67126f55f8b4be5c0606",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/docs/research_report.md"
+          ],
+          "reason": "Imported reference/evidence; historical claims not automatically accepted"
+        },
+        {
+          "member": "B_GPU_Research/calculations/FCFS_job_times.csv.gz",
+          "bytes": 3498263,
+          "sha256": "0cb7b0423760bd335a286b486d41ed452f663ff67e29fdb8840d2e67906459a3",
+          "disposition": "archive_only",
+          "targets": [],
+          "reason": "Large job timing tables or reproducible charts excluded from Git; checked directly in archive"
+        },
+        {
+          "member": "B_GPU_Research/calculations/SJF-HOL_job_times.csv.gz",
+          "bytes": 3501352,
+          "sha256": "3ed2742a29d528559fa83efe809c77b743a09adf816d4e7ec53ec0c7eaa0cf5a",
+          "disposition": "archive_only",
+          "targets": [],
+          "reason": "Large job timing tables or reproducible charts excluded from Git; checked directly in archive"
+        },
+        {
+          "member": "B_GPU_Research/calculations/baseline_metrics.json",
+          "bytes": 11919,
+          "sha256": "8aa234418c40b94a445a0b2c4d85ddec69ef11352482c867534fca52c0547eca",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/references/baseline_metrics.reference.json"
+          ],
+          "reason": "Imported reference/evidence; historical claims not automatically accepted"
+        },
+        {
+          "member": "B_GPU_Research/calculations/data_audit.json",
+          "bytes": 14954,
+          "sha256": "b346c28a4baff6280939bcbcaf402b397e20e978c82a8b5bd90595a61a384269",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/references/data_audit.reference.json"
+          ],
+          "reason": "Imported reference/evidence; historical claims not automatically accepted"
+        },
+        {
+          "member": "B_GPU_Research/figures/01_work_capacity.png",
+          "bytes": 67595,
+          "sha256": "89c0a1e1a7594d02152e77a995b36da3dd95452ccbe17dd05b6e96c91d3c2298",
+          "disposition": "archive_only",
+          "targets": [],
+          "reason": "Large job timing tables or reproducible charts excluded from Git; checked directly in archive"
+        },
+        {
+          "member": "B_GPU_Research/figures/02_work_concentration.png",
+          "bytes": 81538,
+          "sha256": "798157cce3b88cb2aa4dd8acd2f74c2085d6a8a6b8ce5de89eb201500ac78408",
+          "disposition": "archive_only",
+          "targets": [],
+          "reason": "Large job timing tables or reproducible charts excluded from Git; checked directly in archive"
+        },
+        {
+          "member": "B_GPU_Research/figures/03_a10_wait_cdf.png",
+          "bytes": 77186,
+          "sha256": "b06d9bdd51f34f5c7c000143900b33300de124b8b91ad0db8f5d5e3628d33341",
+          "disposition": "archive_only",
+          "targets": [],
+          "reason": "Large job timing tables or reproducible charts excluded from Git; checked directly in archive"
+        },
+        {
+          "member": "B_GPU_Research/figures/04_completion_timeline.png",
+          "bytes": 89285,
+          "sha256": "fb453738710a173c404a1f0747f348964b6f7cb22afdc9912591ab4eaba268ab",
+          "disposition": "archive_only",
+          "targets": [],
+          "reason": "Large job timing tables or reproducible charts excluded from Git; checked directly in archive"
+        },
+        {
+          "member": "B_GPU_Research/make_figures.py",
+          "bytes": 3358,
+          "sha256": "fe1225caf03e3321e4d4d9b1b564fc3ccaa4eb4f7b2f174060f266a64db92966",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/experiments/make_figures.py"
+          ],
+          "reason": "Imported reference/evidence; historical claims not automatically accepted",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/independent_research/make_figures.py.txt"
+        },
+        {
+          "member": "B_GPU_Research/requirements.txt",
+          "bytes": 46,
+          "sha256": "4a3b8f655b2cbaa5e7a06fea1584c7553e94ef3ff58161798cb4c120fd627c3a",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/requirements.txt"
+          ],
+          "reason": "Imported reference/evidence; historical claims not automatically accepted"
+        },
+        {
+          "member": "B_GPU_Research/research_calculations.py",
+          "bytes": 20231,
+          "sha256": "f8a4c55f51679e37f233f0355b3d6fcf9fc0a975214324321af371dbfc01d08b",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py",
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/audit.py",
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py",
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py",
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py",
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py",
+            "problems/2026_gpu_scheduling/experiments/run_baselines.py",
+            "problems/2026_gpu_scheduling/tests/test_baseline.py"
+          ],
+          "reason": "Sole active DES/evaluator extracted; independent checks retained; full-trace FCFS/SJF-HOL verified",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/independent_research/research_calculations.py.txt"
+        }
+      ]
+    },
+    {
+      "filename": "Q1_final_handoff.zip",
+      "kind": "audited_q1",
+      "sha256": "4a8f8f2b92feaefa86b9af580ab9132295933171ed765ae063bd14bc9f963485",
+      "original_preserved": "Local supplied ZIP (ignored; no binary upload)",
+      "members": [
+        {
+          "member": "Q1_final/eda_analysis.py",
+          "bytes": 15601,
+          "sha256": "71dfa450c06dd397c52a73bd8f86b358316e9f8b8796d7495a6121f8681b5e37",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py",
+            "problems/2026_gpu_scheduling/experiments/eda_analysis.py"
+          ],
+          "reason": "Audited formulas shared through one module; use existing checked loader and fresh output directories",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/audited_q1/eda_analysis.py.txt"
+        },
+        {
+          "member": "Q1_final/results/concentration.csv",
+          "bytes": 2191,
+          "sha256": "a3898b0c4a1ee685c10be8a6b8e819a3eefc39f25e96b2446e65658f754d7cfd",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/concentration.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/q1_results.json",
+          "bytes": 1710,
+          "sha256": "aaf1ec657b04922f5ab3c2742057597a60b14d4151de72c8829d6723cc606eba",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/q1_results.json"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/duration_quantiles.csv",
+          "bytes": 412,
+          "sha256": "d43c0caf60e68591a47a1758de5a887cc0194411025425782fd487107d17bac0",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/duration_quantiles.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/relative_24h_phase.csv",
+          "bytes": 5667,
+          "sha256": "0a77ea2c5ac5be640a8dd940e608163c6734709c21b13bbf3517d1228332174f",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/relative_24h_phase.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/immediate_start_demand.csv",
+          "bytes": 1147,
+          "sha256": "1820ca9eba10ba484874ea40629eec3c01f3eb62eeb0741af8db46f48ab9a2bf",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/immediate_start_demand.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/thirty_day_blocks.csv",
+          "bytes": 947,
+          "sha256": "5d2c950939334bd42e5373da3b97210c33e82cc6ef931caf6bc10b67986bb9cd",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/thirty_day_blocks.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/resource_shape.csv",
+          "bytes": 641,
+          "sha256": "2d7f9a04485c39c648d8fa2f2ff7c58954fdc93ebe5a749afda98102c58cb26e",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/resource_shape.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/daily_arrivals.csv",
+          "bytes": 26562,
+          "sha256": "9c86d4920953bab83bbee889bd9fb9ebb41e581a7e861bc5d9966e7c63fe6387",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/daily_arrivals.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/pool_summary.csv",
+          "bytes": 2242,
+          "sha256": "00699b13c32de2d46667709b4ba6b88c7dea2caf0e76c7c35ef98899f5c96a1d",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/pool_summary.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/results/node_configurations.csv",
+          "bytes": 246,
+          "sha256": "5312d24cebc50b674af06d98033063b9f33566ee6fa5610c667ff7bc45c079f7",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/../../results/20261014-b-q1-intake-4a8f8f2b/node_configurations.csv"
+          ],
+          "reason": "Recomputed from current raw CSVs; all nine CSVs byte-identical, JSON input provenance difference disclosed"
+        },
+        {
+          "member": "Q1_final/eda_deep.py",
+          "bytes": 410,
+          "sha256": "54a41a9b33b0d2c0c138094d1d2358104cdc6e0dacdd8b87649a687c547a2666",
+          "disposition": "selective_import",
+          "targets": [
+            "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py",
+            "problems/2026_gpu_scheduling/experiments/eda_deep.py"
+          ],
+          "reason": "Audited formulas shared through one module; use existing checked loader and fresh output directories",
+          "original_git_path": "problems/2026_gpu_scheduling/references/originals/audited_q1/eda_deep.py.txt"
+        }
+      ]
+    }
+  ],
+  "loose_documents": [
+    {
+      "original": "B題_GPU調度_研究計劃.md",
+      "target": "problems/2026_gpu_scheduling/docs/research_plan.md",
+      "sha256": "2e37f2cbc28c3cd77f678ab301eac5885251fdbabb32f431fb6188144d0bd88e",
+      "transformation": "None"
+    },
+    {
+      "original": "B題_GPU集群調度_完整研究報告.md",
+      "target": "problems/2026_gpu_scheduling/docs/research_report.md",
+      "transformation": "Reference-status banner and four image captions; original identical to archive member retained in ZIP"
+    }
+  ],
+  "data": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "not_run": [
+    "Q2 improved-policy source paper benchmark",
+    "Q3 technical/financial experiments"
+  ],
+  "blocked": [
+    "Historical capacity replay: no node ledger",
+    "Historical original job bytes unavailable",
+    "Missing /tmp/q3_helper.py"
+  ],
+  "branch_scope": "Integrated on top of feat/b-q1; Q1 computation unchanged. One active DES; old engines archived as inert text.",
+  "q1_delivery": {
+    "branch": "feat/b-q1",
+    "commit": "5c933187d3d82d3a3ad8d6225946f32657fcbeff",
+    "pushed": true,
+    "url": "https://github.com/shiuhou/math_modeling/tree/feat/b-q1",
+    "remaining_intake": "Integrated on chore/b-intake-ready; Q2/Q3 research branches share the final accepted integration commit; main unchanged"
+  },
+  "acceptance": "results/20261014-b-intake-ready/acceptance.json"
+}

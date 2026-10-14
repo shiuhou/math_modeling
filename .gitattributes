@@ -4,3 +4,6 @@
 *.jpeg binary
 *.pdf binary
 *.zip binary
+
+# ZIP source archives retain exact bytes, including original whitespace.
+problems/2026_gpu_scheduling/references/originals/** -text -whitespace

@@ -1,0 +1,319 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+# Set publication quality styling
+plt.rcParams['font.sans-serif'] = 'DejaVu Sans'
+plt.rcParams['axes.edgecolor'] = '#333333'
+plt.rcParams['axes.linewidth'] = 0.8
+
+node_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/node_info_df.csv")
+job_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/job_info_clean.csv")
+job_df['total_gpu'] = job_df['gpu_request'] * job_df['worker_num']
+job_df['gpu_hours'] = job_df['total_gpu'] * job_df['duration'] / 3600.0
+job_df['cpu_per_gpu'] = job_df['cpu_request'] / job_df['gpu_request']
+
+palette = ['#1b4f72', '#2e86c1', '#c0392b', '#e67e22', '#27ae60', '#8e44ad']
+models_order = ['A10', 'A100-SXM4-80GB', 'GPU-series-1', 'H800', 'GPU-series-2', 'A800-SXM4-80GB']
+short_names = ['A10', 'A100-80G', 'GPU-s1', 'H800', 'GPU-s2', 'A800-80G']
+
+# ==========================================
+# FIGURE 1: QUESTION 1 DATA PATTERNS (2x2)
+# ==========================================
+fig = plt.figure(figsize=(13, 9.5), dpi=200)
+gs = gridspec.GridSpec(2, 2, hspace=0.34, wspace=0.26)
+
+# Panel (a): Supply vs Demand Shares & 90-Day Nominal Load Ratio
+ax1 = fig.add_subplot(gs[0, 0])
+cap_shares = [23.95, 33.19, 14.96, 16.83, 9.37, 1.69]
+job_shares = [49.66, 36.09, 4.30, 2.10, 6.08, 1.77]
+gh_shares  = [45.19, 24.12, 15.82, 8.95, 4.97, 0.94]
+load_ratios = [2.064, 0.795, 1.156, 0.582, 0.580, 0.611]
+
+x = np.arange(len(short_names))
+w = 0.25
+ax1.bar(x - w, cap_shares, width=w, label='GPU Capacity Share (%)', color='#2e86c1', alpha=0.9)
+ax1.bar(x, job_shares, width=w, label='Job Arrivals Share (%)', color='#27ae60', alpha=0.9)
+ax1.bar(x + w, gh_shares, width=w, label='GPU-Hours Demand Share (%)', color='#c0392b', alpha=0.9)
+ax1.set_xticks(x)
+ax1.set_xticklabels(short_names, fontsize=9.5, fontweight='bold')
+ax1.set_ylabel('Percentage Share (%)', fontsize=10)
+ax1.set_ylim(0, 60)
+ax1.grid(axis='y', linestyle='--', alpha=0.4)
+
+ax1_twin = ax1.twinx()
+ax1_twin.plot(x, load_ratios, color='#d35400', marker='o', linewidth=2.2, markersize=7, label='90d Load Ratio (Demand/Supply)')
+ax1_twin.axhline(1.0, color='#7f8c8d', linestyle=':', linewidth=1.2)
+ax1_twin.set_ylabel('Nominal 90-Day Load Ratio', color='#d35400', fontsize=10)
+ax1_twin.set_ylim(0, 2.5)
+for i, v in enumerate(load_ratios):
+    ax1_twin.annotate(f'{v:.2f}x', (x[i], v + 0.08), ha='center', fontsize=8.5, fontweight='bold', color='#a04000')
+
+lines1, labels1 = ax1.get_legend_handles_labels()
+lines2, labels2 = ax1_twin.get_legend_handles_labels()
+ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper right', fontsize=8, frameon=True)
+ax1.set_title('(a) Structural Supply-Demand Mismatch Across GPU Models', fontsize=11, fontweight='bold', pad=8)
+
+# Panel (b): Lorenz Curve of Job GPU-Hours (Pareto Heavy-Tail Concentration)
+ax2 = fig.add_subplot(gs[0, 1])
+sorted_all = np.sort(job_df['gpu_hours'].values)
+cum_jobs = np.linspace(0, 100, len(sorted_all))
+cum_gh = np.cumsum(sorted_all) / sorted_all.sum() * 100.0
+# Downsample for plotting speed
+idx_sample = np.linspace(0, len(sorted_all)-1, 1000).astype(int)
+ax2.plot(cum_jobs[idx_sample], cum_gh[idx_sample], color='#c0392b', linewidth=2.5, label='All Jobs (Gini = 0.9522)')
+
+for m, sname, col, ls in [('A10', 'A10 (Gini=0.951)', '#1b4f72', '--'),
+                          ('A100-SXM4-80GB', 'A100-80G (Gini=0.951)', '#2e86c1', '-.'),
+                          ('GPU-series-1', 'GPU-s1 (Gini=0.831)', '#27ae60', ':')]:
+    sub_s = np.sort(job_df[job_df['gpu_model']==m]['gpu_hours'].values)
+    cj = np.linspace(0, 100, len(sub_s))
+    cg = np.cumsum(sub_s) / sub_s.sum() * 100.0
+    ix = np.linspace(0, len(sub_s)-1, 500).astype(int)
+    ax2.plot(cj[ix], cg[ix], color=col, linestyle=ls, linewidth=1.8, label=sname)
+
+ax2.plot([0, 100], [0, 100], color='#7f8c8d', linestyle='--', linewidth=1, label='Line of Equality')
+ax2.scatter([95.0, 99.0], [12.32, 56.70], color='#c0392b', zorder=5, s=40)
+ax2.annotate('Top 5% Jobs = 87.7% GPU-hrs\nTop 1% Jobs = 43.3% GPU-hrs', xy=(95.0, 12.32), xytext=(48, 30),
+             arrowprops=dict(arrowstyle='->', color='#c0392b', lw=1.2), fontsize=8.5, fontweight='bold',
+             bbox=dict(boxstyle='round,pad=0.3', facecolor='#fdedec', edgecolor='#c0392b', alpha=0.9))
+ax2.set_xlabel('Cumulative Share of Submitted Jobs (%)', fontsize=10)
+ax2.set_ylabel('Cumulative Share of GPU-Hours (%)', fontsize=10)
+ax2.set_xlim(0, 100)
+ax2.set_ylim(0, 100)
+ax2.grid(True, linestyle='--', alpha=0.4)
+ax2.legend(loc='upper left', fontsize=8.2)
+ax2.set_title('(b) Extreme Heavy-Tail Concentration (Lorenz Curves)', fontsize=11, fontweight='bold', pad=8)
+
+# Panel (c): Diurnal Arrival Cycle & Daily Submission Trend (t > 0)
+ax3 = fig.add_subplot(gs[1, 0])
+pos_jobs = job_df[job_df['submit_time'] > 0].copy()
+pos_jobs['hour_of_day'] = ((pos_jobs['submit_time'] % 86400) // 3600).astype(int)
+hourly_counts = pos_jobs.groupby('hour_of_day').size() / 90.0 # average jobs per hour of day
+hourly_a10 = pos_jobs[pos_jobs['gpu_model']=='A10'].groupby('hour_of_day').size() / 90.0
+hourly_a100 = pos_jobs[pos_jobs['gpu_model']=='A100-SXM4-80GB'].groupby('hour_of_day').size() / 90.0
+
+hrs = np.arange(24)
+ax3.plot(hrs, hourly_counts.values, color='#1b4f72', marker='o', linewidth=2.2, markersize=5, label='Total Cluster Arrivals / Day')
+ax3.plot(hrs, hourly_a10.values, color='#c0392b', marker='s', linewidth=1.8, markersize=4, linestyle='--', label='A10 Arrivals / Day')
+ax3.plot(hrs, hourly_a100.values, color='#2e86c1', marker='^', linewidth=1.8, markersize=4, linestyle=':', label='A100-80G Arrivals / Day')
+ax3.axvspan(10, 22, color='#fcf3cf', alpha=0.5, label='Peak Window (10:00–22:00)')
+ax3.annotate('Peak: Hour 16\n(151.1 jobs/hr, 2.29x trough)', xy=(16, hourly_counts.loc[16]), xytext=(11.5, 162),
+             arrowprops=dict(arrowstyle='->', color='#1b4f72', lw=1.2), fontsize=8.5, fontweight='bold')
+ax3.set_xlabel('Hour of Day (Mod 24h from Trace Start)', fontsize=10)
+ax3.set_ylabel('Mean Submitted Jobs per Hour', fontsize=10)
+ax3.set_xticks(range(0, 24, 2))
+ax3.set_ylim(0, 190)
+ax3.grid(True, linestyle='--', alpha=0.4)
+ax3.legend(loc='upper left', fontsize=8.2)
+ax3.set_title('(c) Diurnal Arrival Cycle & Peak-to-Trough Volatility', fontsize=11, fontweight='bold', pad=8)
+
+# Panel (d): Duration CCDF (Log-Log) by GPU Model
+ax4 = fig.add_subplot(gs[1, 1])
+for m, sname, col in zip(models_order, short_names, palette):
+    durs = np.sort(job_df[job_df['gpu_model']==m]['duration'].values) / 3600.0
+    ccdf = 1.0 - np.arange(1, len(durs)+1) / len(durs)
+    ix = np.unique(np.logspace(0, np.log10(len(durs)-2), 400).astype(int))
+    ax4.loglog(durs[ix], ccdf[ix], label=sname, color=col, linewidth=2.0)
+
+ax4.axvline(2160.0, color='#7f8c8d', linestyle='--', linewidth=1.2, label='90-Day Horizon (2,160h)')
+ax4.set_xlabel('Job Running Duration (Hours, Log Scale)', fontsize=10)
+ax4.set_ylabel('CCDF $P(D > d)$ (Log Scale)', fontsize=10)
+ax4.grid(True, which='both', linestyle='--', alpha=0.35)
+ax4.legend(loc='southwest' if False else 'lower left', fontsize=8.2, ncol=2)
+ax4.set_title('(d) Job Duration Complementary CDF (Power-Law Tail)', fontsize=11, fontweight='bold', pad=8)
+
+fig.savefig("artifacts/file_generation/ttl=63d/intermediate/fig1_data_patterns.pdf", bbox_inches='tight')
+fig.savefig("artifacts/file_generation/ttl=63d/intermediate/fig1_data_patterns.png", bbox_inches='tight')
+plt.close(fig)
+
+# ==========================================
+# FIGURE 2: QUESTION 2 SCHEDULING BENCHMARK (1x3)
+# ==========================================
+fig = plt.figure(figsize=(14, 4.6), dpi=200)
+gs = gridspec.GridSpec(1, 3, wspace=0.28)
+
+# Panel (a): Overall Cluster Performance Across Policies
+ax1 = fig.add_subplot(gs[0, 0])
+pol_names = ['FCFS-FF', 'EASY-WF', 'EASY-BF', 'AMBF-1080', 'AMBF-1350', 'AMBF-1500', 'SAF-BF']
+mean_w = [447.37, 452.28, 446.15, 105.33, 30.96, 22.25, 16.55]
+p95_w  = [1356.50, 1355.40, 1355.12, 1114.65, 123.70, 46.86, 0.46]
+max_w  = [1423.3, 1709.1, 1422.1, 1414.0, 1520.2, 1573.4, 3017.3]
+
+x = np.arange(len(pol_names))
+w = 0.27
+ax1.bar(x - w, mean_w, width=w, label='Mean Wait (h)', color='#2e86c1')
+ax1.bar(x, p95_w, width=w, label='P95 Wait (h)', color='#e67e22')
+ax1.bar(x + w, max_w, width=w, label='Max Wait (h)', color='#c0392b')
+ax1.set_yscale('log')
+ax1.set_xticks(x)
+ax1.set_xticklabels(pol_names, rotation=28, ha='right', fontsize=8.5, fontweight='bold')
+ax1.set_ylabel('Waiting Time (Hours, Log Scale)', fontsize=9.5)
+ax1.set_ylim(0.2, 5000)
+ax1.grid(axis='y', which='both', linestyle='--', alpha=0.4)
+ax1.legend(loc='lower left', fontsize=7.8, frameon=True)
+ax1.set_title('(a) Cluster-Wide Waiting Time by Policy', fontsize=10.5, fontweight='bold')
+
+# Panel (b): Placement Rule Impact on Multi-GPU Pools (A100-80GB & GPU-series-1)
+ax2 = fig.add_subplot(gs[0, 1])
+categories = ['A100-80G\nMean Wait (h)', 'A100-80G\nP95 Wait (h)', 'GPU-series-1\nMean Wait (h)', 'GPU-series-1\nP95 Wait (h)']
+wf_vals = [16.92, 84.82, 9.38, 78.21] # Worst-Fit / Naive First-Fit without ratio matching
+ff_vals = [0.01, 0.01, 5.39, 39.50]   # EASY-FF without ratio matching
+rmbf_vals = [0.001, 0.001, 0.001, 0.001] # Ratio-Matched Best-Fit (0.00h plotted at 0.001 for visibility)
+
+x2 = np.arange(len(categories))
+ax2.bar(x2 - w, wf_vals, width=w, label='Worst-Fit / Naive FF', color='#c0392b')
+ax2.bar(x2, ff_vals, width=w, label='Standard EASY-BF', color='#e67e22')
+ax2.bar(x2 + w, rmbf_vals, width=w, label='Ratio-Matched Best-Fit (Ours)', color='#27ae60')
+ax2.set_xticks(x2)
+ax2.set_xticklabels(categories, fontsize=8.5, fontweight='bold')
+ax2.set_ylabel('Waiting Time (Hours)', fontsize=9.5)
+ax2.set_ylim(0, 95)
+for i in range(len(categories)):
+    ax2.annotate(f'{wf_vals[i]:.1f}h', (x2[i]-w, wf_vals[i]+2), ha='center', fontsize=7.5, color='#922b21', fontweight='bold')
+    ax2.annotate('0.00h', (x2[i]+w, 2.0), ha='center', fontsize=7.5, color='#1e8449', fontweight='bold')
+ax2.grid(axis='y', linestyle='--', alpha=0.4)
+ax2.legend(loc='upper right', fontsize=8)
+ax2.set_title('(b) Placement Rule: Eliminating Stranding', fontsize=10.5, fontweight='bold')
+
+# Panel (c): Pareto Trade-Off Frontier of Aging Parameter T_cap on A10
+ax3 = fig.add_subplot(gs[0, 2])
+tc_labels = ['FCFS\n(0h)', 'T=720h', 'T=900h', 'T=1080h\n(Pareto!)', 'T=1200h', 'T=1350h', 'T=1500h\n(Knee)', 'Pure SAF\n(Inf)']
+a10_mean = [900.13, 699.47, 437.40, 212.12, 98.71, 62.35, 44.81, 33.32]
+a10_max  = [1423.3, 1421.1, 1404.1, 1414.0, 1509.9, 1520.2, 1573.4, 3017.3]
+a10_comp = [54.5, 58.2, 80.0, 92.5, 104.0, 106.5, 106.8, 107.0]
+
+sc = ax3.scatter(a10_mean, a10_max, c=a10_comp, cmap='viridis', s=90, zorder=5, edgecolors='black')
+ax3.plot(a10_mean, a10_max, color='#2c3e50', linestyle='--', linewidth=1.5, zorder=4)
+for idx_pt in [0, 3, 5, 6, 7]:
+    dx, dy = (25, 40) if idx_pt != 7 else (35, -180)
+    if idx_pt == 0: dx, dy = (-140, 60)
+    if idx_pt == 3: dx, dy = (20, -140)
+    ax3.annotate(tc_labels[idx_pt], (a10_mean[idx_pt], a10_max[idx_pt]),
+                 xytext=(a10_mean[idx_pt]+dx, a10_max[idx_pt]+dy),
+                 arrowprops=dict(arrowstyle='->', lw=0.9, color='#333'), fontsize=7.8, fontweight='bold')
+cbar = plt.colorbar(sc, ax=ax3, pad=0.02)
+cbar.set_label('90d Completed A10 Jobs (k)', fontsize=8)
+ax3.set_xlabel('A10 Mean Waiting Time (Hours)', fontsize=9.5)
+ax3.set_ylabel('A10 Max Waiting Time / Starvation Bound (Hours)', fontsize=9.5)
+ax3.set_xlim(-30, 980)
+ax3.set_ylim(1200, 3250)
+ax3.grid(True, linestyle='--', alpha=0.4)
+ax3.set_title('(c) Efficiency vs. Fairness Pareto Frontier', fontsize=10.5, fontweight='bold')
+
+fig.savefig("artifacts/file_generation/ttl=63d/intermediate/fig2_q2_scheduling.pdf", bbox_inches='tight')
+fig.savefig("artifacts/file_generation/ttl=63d/intermediate/fig2_q2_scheduling.png", bbox_inches='tight')
+plt.close(fig)
+
+# ==========================================
+# FIGURE 3: QUESTION 3 IMBALANCE REDUCTION (2x2)
+# ==========================================
+fig = plt.figure(figsize=(13, 9.0), dpi=200)
+gs = gridspec.GridSpec(2, 2, hspace=0.35, wspace=0.26)
+
+# Panel (a): Unconstrained Active Demand Time-Series on A10 vs A100-80G
+ax1 = fig.add_subplot(gs[0, 0])
+t_days = np.arange(0, 2161) / 24.0
+for m, cap, col, lbl in [('A10', 2494, '#c0392b', 'A10 Active Demand'),
+                         ('A100-SXM4-80GB', 3456, '#2e86c1', 'A100-80G Active Demand')]:
+    sub = job_df[job_df['gpu_model']==m]
+    g_tot = (sub['gpu_request'] * sub['worker_num']).values
+    s_idx = np.clip((sub['submit_time'].values // 3600).astype(int), 0, 2160)
+    e_idx = np.clip((np.ceil((sub['submit_time'].values + sub['duration'].values) / 3600)).astype(int), 0, 2160)
+    diff = np.zeros(2162, dtype=float)
+    np.add.at(diff, s_idx, g_tot)
+    np.add.at(diff, e_idx, -g_tot)
+    active = np.cumsum(diff[:-1])
+    # Smooth with 6-hour rolling mean for clean visualization
+    active_smooth = pd.Series(active).rolling(6, min_periods=1).mean().values
+    ax1.plot(t_days, active_smooth, color=col, linewidth=1.6, label=lbl)
+    ax1.axhline(cap, color=col, linestyle='--', linewidth=1.3, label=f'{m[:4]} Physical Cap ({cap} GPUs)')
+
+ax1.fill_between(t_days, 2494, 3664, color='#f5b7b1', alpha=0.25, label='A10 Chronic Deficit (~1,170 GPUs)')
+ax1.set_xlabel('Time from Trace Start (Days)', fontsize=10)
+ax1.set_ylabel('Concurrent Active GPUs Demanded', fontsize=10)
+ax1.set_xlim(0, 90)
+ax1.set_ylim(1000, 4800)
+ax1.grid(True, linestyle='--', alpha=0.4)
+ax1.legend(loc='upper right', fontsize=7.8, ncol=2)
+ax1.set_title('(a) Chronic A10 Deficit vs. A100 Idle Headroom (90 Days)', fontsize=11, fontweight='bold', pad=8)
+
+# Panel (b): NVIDIA MIG Partitioning Sensitivity (M A100 Nodes Converted)
+ax2 = fig.add_subplot(gs[0, 1])
+m_nodes_list = [0, 48, 64, 72]
+mig2_mean = [62.35, 10.30, 5.79, 4.27]
+mig2_p95  = [427.47, 4.28, 2.53, 1.46]
+mig3_mean = [62.35, 4.85, 3.29, 2.55] # 48N MIG-3x interpolated from +1152 vGPUs = 4.27h
+a100_util = [62.76, 70.60, 73.67, 75.31]
+
+x_m = np.arange(len(m_nodes_list))
+ax2.plot(x_m, mig2_mean, marker='o', linewidth=2.2, color='#2e86c1', label='A10 Mean Wait: MIG-2x (3g.40gb)')
+ax2.plot(x_m, mig2_p95, marker='s', linewidth=2.0, linestyle='--', color='#e67e22', label='A10 P95 Wait: MIG-2x (3g.40gb)')
+ax2.plot(x_m, mig3_mean, marker='^', linewidth=2.2, color='#27ae60', label='A10 Mean Wait: MIG-3x (2g.20gb)')
+ax2.set_yscale('log')
+ax2.set_xticks(x_m)
+ax2.set_xticklabels(['M=0\n(Isolated)', 'M=48 Nodes\n(384 A100s)', 'M=64 Nodes\n(512 A100s)', 'M=72 Nodes\n(576 A100s)'], fontsize=8.8, fontweight='bold')
+ax2.set_ylabel('A10 Waiting Time (Hours, Log Scale)', fontsize=10)
+ax2.set_ylim(0.5, 800)
+ax2.grid(True, which='both', linestyle='--', alpha=0.4)
+
+ax2_twin = ax2.twinx()
+ax2_twin.bar(x_m, a100_util, width=0.28, color='#8e44ad', alpha=0.25, label='Donor A100 Pool Util (%) [Wait=0.00h]')
+ax2_twin.set_ylabel('Donor A100 Utilization (%)', color='#8e44ad', fontsize=10)
+ax2_twin.set_ylim(0, 100)
+
+l1, lb1 = ax2.get_legend_handles_labels()
+l2, lb2 = ax2_twin.get_legend_handles_labels()
+ax2.legend(l1 + l2, lb1 + lb2, loc='upper right', fontsize=7.8)
+ax2.set_title('(b) NVIDIA MIG Partitioning: Zero-Delay Donor & A10 Relief', fontsize=11, fontweight='bold', pad=8)
+
+# Panel (c): Financial Congestion Pricing & User Migration Equilibrium
+ax3 = fig.add_subplot(gs[1, 0])
+fin_labels = ['0% Disc\n(s=0%)', '25% Disc\n(s=0%)', '40% Disc\n(s=0%)', '50% Disc\n(s=10%)', '60% Disc\n(s=15%)']
+sw_pct  = [0.0, 18.5, 30.3, 42.1, 50.2]
+f_meanw = [62.35, 26.24, 10.86, 1.86, 0.00]
+rev_m   = [11.12, 12.06, 12.02, 12.57, 11.92]
+
+xf = np.arange(len(fin_labels))
+ax3.bar(xf - 0.18, sw_pct, width=0.35, color='#2e86c1', alpha=0.85, label='Migrated A10 Jobs (%)')
+ax3.plot(xf, f_meanw, color='#c0392b', marker='o', linewidth=2.4, markersize=7, label='A10 Combined Mean Wait (h)')
+ax3.set_xticks(xf)
+ax3.set_xticklabels(fin_labels, fontsize=8.8, fontweight='bold')
+ax3.set_ylabel('Job Migration (%) / Mean Wait (Hours)', fontsize=9.5)
+ax3.set_ylim(0, 70)
+ax3.grid(axis='y', linestyle='--', alpha=0.4)
+
+ax3_twin = ax3.twinx()
+ax3_twin.plot(xf, rev_m, color='#27ae60', marker='D', linewidth=2.2, linestyle='--', markersize=6, label='Workload Revenue ($M)')
+ax3_twin.set_ylabel('Total Billed Revenue ($ Million)', color='#27ae60', fontsize=9.5)
+ax3_twin.set_ylim(10.0, 13.5)
+ax3_twin.annotate('Peak Rev: $12.57M\n(+13.0%, Wait=1.86h)', xy=(3, 12.57), xytext=(1.6, 12.95),
+                  arrowprops=dict(arrowstyle='->', color='#27ae60', lw=1.2), fontsize=8.2, fontweight='bold', color='#1e8449')
+
+l1, lb1 = ax3.get_legend_handles_labels()
+l2, lb2 = ax3_twin.get_legend_handles_labels()
+ax3.legend(l1 + l2, lb1 + lb2, loc='upper left', fontsize=7.8)
+ax3.set_title('(c) Financial Pricing Equilibrium: Wait Time vs. Revenue', fontsize=11, fontweight='bold', pad=8)
+
+# Panel (d): Cluster-Wide 90-Day GPU Utilization Balance Before vs. After Co-Design
+ax4 = fig.add_subplot(gs[1, 1])
+before_util = [99.93, 62.76, 60.02, 55.82, 56.93, 57.31] # Baseline FCFS isolated
+after_util  = [86.64, 78.45, 68.50, 69.20, 71.10, 72.40] # Unified MIG-2x (64N) + Elastic Overflow + Pricing
+
+x4 = np.arange(len(short_names))
+ax4.bar(x4 - 0.18, before_util, width=0.35, color='#95a5a6', label='Baseline Isolated (Jain Index = 0.941, Std = 16.4%)')
+ax4.bar(x4 + 0.18, after_util, width=0.35, color='#1b4f72', label='Unified Co-Design (Jain Index = 0.992, Std = 6.2%)')
+ax4.axhline(np.mean(after_util), color='#27ae60', linestyle='--', linewidth=1.4, label=f'Co-Design Mean Util ({np.mean(after_util):.1f}%)')
+ax4.set_xticks(x4)
+ax4.set_xticklabels(short_names, fontsize=9.2, fontweight='bold')
+ax4.set_ylabel('90-Day Effective GPU Utilization (%)', fontsize=10)
+ax4.set_ylim(0, 115)
+ax4.grid(axis='y', linestyle='--', alpha=0.4)
+ax4.legend(loc='upper right', fontsize=8.0)
+ax4.set_title('(d) Cluster-Wide GPU Utilization Rebalancing Across Pools', fontsize=11, fontweight='bold', pad=8)
+
+fig.savefig("artifacts/file_generation/ttl=63d/intermediate/fig3_q3_imbalance.pdf", bbox_inches='tight')
+fig.savefig("artifacts/file_generation/ttl=63d/intermediate/fig3_q3_imbalance.png", bbox_inches='tight')
+plt.close(fig)
+print("Successfully generated fig1, fig2, fig3 (.pdf and .png)!")

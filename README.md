@@ -2,7 +2,7 @@
 
 `shiuhou/math_modeling` 由隊員各自在自己的電腦 clone，按任務分支與 GitHub PR 協作。目標是讓題目、推導、程式、實驗證據與論文可以互相核對。
 
-目前階段：**Problem B Q1 修正版整合**。原題與兩個 CSV 已核對，Q1 已重算；此分支未整合或驗證 Q2/Q3 演算法。題目程式、狀態與重現命令見 [B 題唯一入口](problems/2026_gpu_scheduling/README.md)。隊員分工、資料公開範圍與正式環境待確認。
+目前階段：**Problem B 共用研究基礎**。Q1 與唯一 FCFS／SJF-HOL 基線可重現；Q2/Q3 從 `chore/b-intake-ready` 整合基礎獨立研究，舊性能表未重驗。初次 clone 的 B 題隊員請使用 [B 題唯一入口](problems/2026_gpu_scheduling/README.md) 的分支、環境、測試與基線命令；目前 main 尚未包含這些整合。分工、公開資料範圍與正式環境待確認。
 
 ## 從這裡開始
 

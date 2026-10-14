@@ -1,0 +1,711 @@
+{
+  "hashes": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1"
+  },
+  "records": {
+    "nodes": 4278,
+    "jobs": 224112,
+    "gpu_types": 6,
+    "gpus": 10412,
+    "vcpus": 632636
+  },
+  "audit": {
+    "missing": 0,
+    "duplicate_job_ids": 0,
+    "duplicate_node_ids": 0,
+    "empty_cluster_infeasible_jobs": 0,
+    "fractional_cpu_jobs": 73,
+    "zero_cpu_jobs": 1,
+    "cpu_scale": 100,
+    "minimum_duration_seconds": 1
+  },
+  "times": {
+    "first_submit_seconds": 0,
+    "last_submit_seconds": 7775878,
+    "span_seconds": 7775878,
+    "span_days": 89.99858796296296,
+    "jobs_at_time_zero": 3512,
+    "jobs_longer_than_arrival_span": 2340,
+    "maximum_earliest_finish_seconds": 15902477
+  },
+  "aggregate": {
+    "gpu_hours": 24605876.430555556,
+    "cpu_hours": 646986320.4942333,
+    "nominal_gpu_load_ratio": 1.0941018236436455,
+    "nominal_cpu_load_ratio": 0.4734719545417013,
+    "duration_mean_seconds": 277166.4319759763,
+    "duration_quantiles_seconds": {
+      "0.0": 1.0,
+      "0.25": 365.0,
+      "0.5": 1330.0,
+      "0.75": 4887.0,
+      "0.9": 64745.0,
+      "0.95": 1112726.4999999995,
+      "0.99": 8121599.0,
+      "1.0": 15897599.0
+    },
+    "single_worker_fraction": 0.9095273791675591,
+    "maximum_job_gpus": 1456,
+    "concentration_top_job_fraction": {
+      "0.001": 0.1468388912063087,
+      "0.01": 0.43312909838475955,
+      "0.05": 0.8767703675063216,
+      "0.1": 0.9711434957506309
+    }
+  },
+  "per_gpu_type": [
+    {
+      "gpu_model": "A10",
+      "nodes": 2494,
+      "gpus": 2494,
+      "vcpus": 319228,
+      "jobs": 111284,
+      "gpu_hours": 11118976.353333334,
+      "cpu_hours": 269503345.6294444,
+      "gpu_load_ratio": 2.0640557346948665,
+      "cpu_load_ratio": 0.3908555170812785,
+      "gpu_work_bound_days": 185.7621015993941,
+      "arrival_service_bound_days": 183.99998842592592,
+      "combined_makespan_bound_days": 185.7621015993941,
+      "duration_median_seconds": 701.0,
+      "duration_p95_seconds": 2195449.49999999,
+      "multiworker_fraction": 0.0070719959742640455,
+      "max_workers": 60,
+      "gpu_per_worker_max": 1,
+      "cpu_per_worker_max": 128.0
+    },
+    {
+      "gpu_model": "A100-SXM4-80GB",
+      "nodes": 432,
+      "gpus": 3456,
+      "vcpus": 55296,
+      "jobs": 80877,
+      "gpu_hours": 5935901.8375,
+      "cpu_hours": 63821763.009788886,
+      "gpu_load_ratio": 0.795181081895725,
+      "cpu_load_ratio": 0.5343528661264744,
+      "gpu_work_bound_days": 71.56517454547647,
+      "arrival_service_bound_days": 183.99998842592592,
+      "combined_makespan_bound_days": 183.99998842592592,
+      "duration_median_seconds": 1711.0,
+      "duration_p95_seconds": 139558.5999999984,
+      "multiworker_fraction": 0.12683457596102723,
+      "max_workers": 108,
+      "gpu_per_worker_max": 8,
+      "cpu_per_worker_max": 128.0
+    },
+    {
+      "gpu_model": "A800-SXM4-80GB",
+      "nodes": 22,
+      "gpus": 176,
+      "vcpus": 2816,
+      "jobs": 3959,
+      "gpu_hours": 232378.23166666666,
+      "cpu_hours": 3202424.827222222,
+      "gpu_load_ratio": 0.6112738783032253,
+      "cpu_load_ratio": 0.5265011889427617,
+      "gpu_work_bound_days": 55.01378590593435,
+      "arrival_service_bound_days": 120.66741898148148,
+      "combined_makespan_bound_days": 120.66741898148148,
+      "duration_median_seconds": 1637.0,
+      "duration_p95_seconds": 96586.39999999998,
+      "multiworker_fraction": 0.3412477898459207,
+      "max_workers": 39,
+      "gpu_per_worker_max": 8,
+      "cpu_per_worker_max": 112.0
+    },
+    {
+      "gpu_model": "GPU-series-1",
+      "nodes": 989,
+      "gpus": 1558,
+      "vcpus": 189824,
+      "jobs": 9643,
+      "gpu_hours": 3891640.3630555556,
+      "cpu_hours": 242069961.74333334,
+      "gpu_load_ratio": 1.156427227787365,
+      "cpu_load_ratio": 0.5903952348044211,
+      "gpu_work_bound_days": 104.07681758278657,
+      "arrival_service_bound_days": 184.05644675925927,
+      "combined_makespan_bound_days": 184.05644675925927,
+      "duration_median_seconds": 5857.0,
+      "duration_p95_seconds": 9445324.0,
+      "multiworker_fraction": 0.111998340765322,
+      "max_workers": 249,
+      "gpu_per_worker_max": 8,
+      "cpu_per_worker_max": 192.0
+    },
+    {
+      "gpu_model": "GPU-series-2",
+      "nodes": 122,
+      "gpus": 976,
+      "vcpus": 23424,
+      "jobs": 13633,
+      "gpu_hours": 1223765.1530555557,
+      "cpu_hours": 19320368.53361111,
+      "gpu_load_ratio": 0.5804988015026917,
+      "cpu_load_ratio": 0.3818628500175698,
+      "gpu_work_bound_days": 52.244072449434576,
+      "arrival_service_bound_days": 132.53391203703703,
+      "combined_makespan_bound_days": 132.53391203703703,
+      "duration_median_seconds": 1739.0,
+      "duration_p95_seconds": 37713.99999999993,
+      "multiworker_fraction": 0.28467688696545146,
+      "max_workers": 238,
+      "gpu_per_worker_max": 8,
+      "cpu_per_worker_max": 192.0
+    },
+    {
+      "gpu_model": "H800",
+      "nodes": 219,
+      "gpus": 1752,
+      "vcpus": 42048,
+      "jobs": 4716,
+      "gpu_hours": 2203214.4919444444,
+      "cpu_hours": 49068456.75083333,
+      "gpu_load_ratio": 0.5822047446782562,
+      "cpu_load_ratio": 0.5402690863513857,
+      "gpu_work_bound_days": 52.39760492638043,
+      "arrival_service_bound_days": 130.8835185185185,
+      "combined_makespan_bound_days": 130.8835185185185,
+      "duration_median_seconds": 881.0,
+      "duration_p95_seconds": 36512.25,
+      "multiworker_fraction": 0.6189567430025446,
+      "max_workers": 182,
+      "gpu_per_worker_max": 8,
+      "cpu_per_worker_max": 184.0
+    }
+  ],
+  "node_configurations": [
+    {
+      "gpu_model": "A10",
+      "gpu_capacity_num": 1,
+      "cpu_num": 126,
+      "nodes": 2
+    },
+    {
+      "gpu_model": "A10",
+      "gpu_capacity_num": 1,
+      "cpu_num": 128,
+      "nodes": 2492
+    },
+    {
+      "gpu_model": "A100-SXM4-80GB",
+      "gpu_capacity_num": 8,
+      "cpu_num": 128,
+      "nodes": 432
+    },
+    {
+      "gpu_model": "A800-SXM4-80GB",
+      "gpu_capacity_num": 8,
+      "cpu_num": 128,
+      "nodes": 22
+    },
+    {
+      "gpu_model": "GPU-series-1",
+      "gpu_capacity_num": 1,
+      "cpu_num": 128,
+      "nodes": 1
+    },
+    {
+      "gpu_model": "GPU-series-1",
+      "gpu_capacity_num": 1,
+      "cpu_num": 192,
+      "nodes": 901
+    },
+    {
+      "gpu_model": "GPU-series-1",
+      "gpu_capacity_num": 4,
+      "cpu_num": 192,
+      "nodes": 10
+    },
+    {
+      "gpu_model": "GPU-series-1",
+      "gpu_capacity_num": 8,
+      "cpu_num": 192,
+      "nodes": 77
+    },
+    {
+      "gpu_model": "GPU-series-2",
+      "gpu_capacity_num": 8,
+      "cpu_num": 192,
+      "nodes": 122
+    },
+    {
+      "gpu_model": "H800",
+      "gpu_capacity_num": 8,
+      "cpu_num": 192,
+      "nodes": 219
+    }
+  ],
+  "daily": [
+    {
+      "day": 0,
+      "jobs": 8509,
+      "gpu_seconds": 21945326337
+    },
+    {
+      "day": 1,
+      "jobs": 5525,
+      "gpu_seconds": 1343566540
+    },
+    {
+      "day": 2,
+      "jobs": 4663,
+      "gpu_seconds": 857805891
+    },
+    {
+      "day": 3,
+      "jobs": 5541,
+      "gpu_seconds": 1085389933
+    },
+    {
+      "day": 4,
+      "jobs": 4321,
+      "gpu_seconds": 1213423160
+    },
+    {
+      "day": 5,
+      "jobs": 3457,
+      "gpu_seconds": 1283058805
+    },
+    {
+      "day": 6,
+      "jobs": 3131,
+      "gpu_seconds": 1176105844
+    },
+    {
+      "day": 7,
+      "jobs": 2381,
+      "gpu_seconds": 667475330
+    },
+    {
+      "day": 8,
+      "jobs": 2034,
+      "gpu_seconds": 420468633
+    },
+    {
+      "day": 9,
+      "jobs": 1823,
+      "gpu_seconds": 432426514
+    },
+    {
+      "day": 10,
+      "jobs": 2486,
+      "gpu_seconds": 841357091
+    },
+    {
+      "day": 11,
+      "jobs": 2909,
+      "gpu_seconds": 837021884
+    },
+    {
+      "day": 12,
+      "jobs": 2136,
+      "gpu_seconds": 1060988153
+    },
+    {
+      "day": 13,
+      "jobs": 2644,
+      "gpu_seconds": 799520547
+    },
+    {
+      "day": 14,
+      "jobs": 2535,
+      "gpu_seconds": 1316180188
+    },
+    {
+      "day": 15,
+      "jobs": 1447,
+      "gpu_seconds": 483047437
+    },
+    {
+      "day": 16,
+      "jobs": 1450,
+      "gpu_seconds": 392789792
+    },
+    {
+      "day": 17,
+      "jobs": 2237,
+      "gpu_seconds": 614712388
+    },
+    {
+      "day": 18,
+      "jobs": 2048,
+      "gpu_seconds": 1021598841
+    },
+    {
+      "day": 19,
+      "jobs": 2241,
+      "gpu_seconds": 658496378
+    },
+    {
+      "day": 20,
+      "jobs": 2318,
+      "gpu_seconds": 812282640
+    },
+    {
+      "day": 21,
+      "jobs": 2236,
+      "gpu_seconds": 880281234
+    },
+    {
+      "day": 22,
+      "jobs": 1844,
+      "gpu_seconds": 482584973
+    },
+    {
+      "day": 23,
+      "jobs": 1880,
+      "gpu_seconds": 678626662
+    },
+    {
+      "day": 24,
+      "jobs": 2446,
+      "gpu_seconds": 704788263
+    },
+    {
+      "day": 25,
+      "jobs": 2108,
+      "gpu_seconds": 1096118039
+    },
+    {
+      "day": 26,
+      "jobs": 2106,
+      "gpu_seconds": 1074966469
+    },
+    {
+      "day": 27,
+      "jobs": 1694,
+      "gpu_seconds": 486382518
+    },
+    {
+      "day": 28,
+      "jobs": 1398,
+      "gpu_seconds": 643003289
+    },
+    {
+      "day": 29,
+      "jobs": 1354,
+      "gpu_seconds": 309292842
+    },
+    {
+      "day": 30,
+      "jobs": 1799,
+      "gpu_seconds": 338178996
+    },
+    {
+      "day": 31,
+      "jobs": 2168,
+      "gpu_seconds": 852447950
+    },
+    {
+      "day": 32,
+      "jobs": 2237,
+      "gpu_seconds": 745562113
+    },
+    {
+      "day": 33,
+      "jobs": 2380,
+      "gpu_seconds": 814573493
+    },
+    {
+      "day": 34,
+      "jobs": 1488,
+      "gpu_seconds": 290797804
+    },
+    {
+      "day": 35,
+      "jobs": 1474,
+      "gpu_seconds": 244355350
+    },
+    {
+      "day": 36,
+      "jobs": 2337,
+      "gpu_seconds": 200834029
+    },
+    {
+      "day": 37,
+      "jobs": 2464,
+      "gpu_seconds": 317473616
+    },
+    {
+      "day": 38,
+      "jobs": 2487,
+      "gpu_seconds": 663569818
+    },
+    {
+      "day": 39,
+      "jobs": 2130,
+      "gpu_seconds": 719942377
+    },
+    {
+      "day": 40,
+      "jobs": 1763,
+      "gpu_seconds": 646927439
+    },
+    {
+      "day": 41,
+      "jobs": 1543,
+      "gpu_seconds": 567513007
+    },
+    {
+      "day": 42,
+      "jobs": 2305,
+      "gpu_seconds": 1003279279
+    },
+    {
+      "day": 43,
+      "jobs": 3129,
+      "gpu_seconds": 488744154
+    },
+    {
+      "day": 44,
+      "jobs": 2696,
+      "gpu_seconds": 421128215
+    },
+    {
+      "day": 45,
+      "jobs": 3041,
+      "gpu_seconds": 766594166
+    },
+    {
+      "day": 46,
+      "jobs": 3009,
+      "gpu_seconds": 1035838084
+    },
+    {
+      "day": 47,
+      "jobs": 2959,
+      "gpu_seconds": 901008528
+    },
+    {
+      "day": 48,
+      "jobs": 3139,
+      "gpu_seconds": 1153715646
+    },
+    {
+      "day": 49,
+      "jobs": 2790,
+      "gpu_seconds": 1121879966
+    },
+    {
+      "day": 50,
+      "jobs": 2567,
+      "gpu_seconds": 553704633
+    },
+    {
+      "day": 51,
+      "jobs": 2562,
+      "gpu_seconds": 414105300
+    },
+    {
+      "day": 52,
+      "jobs": 3033,
+      "gpu_seconds": 1001813930
+    },
+    {
+      "day": 53,
+      "jobs": 2594,
+      "gpu_seconds": 644034778
+    },
+    {
+      "day": 54,
+      "jobs": 2390,
+      "gpu_seconds": 606337498
+    },
+    {
+      "day": 55,
+      "jobs": 2771,
+      "gpu_seconds": 776327042
+    },
+    {
+      "day": 56,
+      "jobs": 2258,
+      "gpu_seconds": 781268499
+    },
+    {
+      "day": 57,
+      "jobs": 1707,
+      "gpu_seconds": 548912808
+    },
+    {
+      "day": 58,
+      "jobs": 2240,
+      "gpu_seconds": 692580156
+    },
+    {
+      "day": 59,
+      "jobs": 1724,
+      "gpu_seconds": 589921446
+    },
+    {
+      "day": 60,
+      "jobs": 2522,
+      "gpu_seconds": 296276785
+    },
+    {
+      "day": 61,
+      "jobs": 1819,
+      "gpu_seconds": 225035375
+    },
+    {
+      "day": 62,
+      "jobs": 1294,
+      "gpu_seconds": 469799281
+    },
+    {
+      "day": 63,
+      "jobs": 965,
+      "gpu_seconds": 337221424
+    },
+    {
+      "day": 64,
+      "jobs": 1010,
+      "gpu_seconds": 89275050
+    },
+    {
+      "day": 65,
+      "jobs": 1000,
+      "gpu_seconds": 118447854
+    },
+    {
+      "day": 66,
+      "jobs": 1691,
+      "gpu_seconds": 447042310
+    },
+    {
+      "day": 67,
+      "jobs": 2842,
+      "gpu_seconds": 924157748
+    },
+    {
+      "day": 68,
+      "jobs": 2844,
+      "gpu_seconds": 910741641
+    },
+    {
+      "day": 69,
+      "jobs": 2908,
+      "gpu_seconds": 1778458670
+    },
+    {
+      "day": 70,
+      "jobs": 2649,
+      "gpu_seconds": 1780131466
+    },
+    {
+      "day": 71,
+      "jobs": 2518,
+      "gpu_seconds": 547231253
+    },
+    {
+      "day": 72,
+      "jobs": 2439,
+      "gpu_seconds": 440216885
+    },
+    {
+      "day": 73,
+      "jobs": 3277,
+      "gpu_seconds": 1670603870
+    },
+    {
+      "day": 74,
+      "jobs": 3135,
+      "gpu_seconds": 800339335
+    },
+    {
+      "day": 75,
+      "jobs": 2929,
+      "gpu_seconds": 721386819
+    },
+    {
+      "day": 76,
+      "jobs": 3048,
+      "gpu_seconds": 901421206
+    },
+    {
+      "day": 77,
+      "jobs": 2792,
+      "gpu_seconds": 983797828
+    },
+    {
+      "day": 78,
+      "jobs": 2544,
+      "gpu_seconds": 671393898
+    },
+    {
+      "day": 79,
+      "jobs": 2131,
+      "gpu_seconds": 756560317
+    },
+    {
+      "day": 80,
+      "jobs": 2603,
+      "gpu_seconds": 596953823
+    },
+    {
+      "day": 81,
+      "jobs": 2611,
+      "gpu_seconds": 749154616
+    },
+    {
+      "day": 82,
+      "jobs": 2528,
+      "gpu_seconds": 1222443308
+    },
+    {
+      "day": 83,
+      "jobs": 2427,
+      "gpu_seconds": 883457099
+    },
+    {
+      "day": 84,
+      "jobs": 2353,
+      "gpu_seconds": 871142103
+    },
+    {
+      "day": 85,
+      "jobs": 1924,
+      "gpu_seconds": 745983997
+    },
+    {
+      "day": 86,
+      "jobs": 1800,
+      "gpu_seconds": 470509907
+    },
+    {
+      "day": 87,
+      "jobs": 2626,
+      "gpu_seconds": 1056646730
+    },
+    {
+      "day": 88,
+      "jobs": 2402,
+      "gpu_seconds": 785567584
+    },
+    {
+      "day": 89,
+      "jobs": 2395,
+      "gpu_seconds": 807300233
+    }
+  ],
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "cpu_scale": 100,
+    "test_results": [
+      "30 seeded small instances x two policies match independent scalar time-step reference PASS",
+      "FCFS hand-calculated timing PASS",
+      "SJF-HOL hand-calculated timing PASS",
+      "gang all-or-nothing and node-local worker demand PASS",
+      "zero CPU demand PASS",
+      "fractional CPU, same-time release/arrival, co-location PASS",
+      "deterministic tie-break PASS"
+    ],
+    "script_sha256": "f8a4c55f51679e37f233f0355b3d6fcf9fc0a975214324321af371dbfc01d08b",
+    "location_note": "Executed in the ChatGPT analysis container, NOT the user server."
+  }
+}

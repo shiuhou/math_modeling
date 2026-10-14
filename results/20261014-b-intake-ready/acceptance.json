@@ -1,0 +1,25 @@
+{
+  "status": "IN_PROGRESS",
+  "baseline": "PASS",
+  "baseline_scope": "full trace, two policies, 224112 jobs each; independent persisted node/metric replay",
+  "fresh_clone": "NOT_RUN",
+  "paper_compile": "PASS",
+  "q2_improved_policies": "NOT_RUN",
+  "q3_experiments": "NOT_RUN",
+  "large_outputs": "Ignored outputs/b-intake-full-final; reproduce with README command. All required data and code are Git-contained.",
+  "source_resolution": "baseline_run code was dirty; source byte hashes are checked against committed source. Final source commit is recorded after clone acceptance.",
+  "repo_checks": "PASS",
+  "root_tests": {
+    "status": "PASS",
+    "count": 12
+  },
+  "problem_tests": {
+    "status": "PASS",
+    "count": 14
+  },
+  "source_traceability": "PASS",
+  "raw_unchanged": "PASS",
+  "paper_pages": 9,
+  "paper_page_limit": "PASS",
+  "paper_submission_format": "NOT_RUN; archived wide tables below 11pt, names/disclosure pending"
+}

@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Generate four research plots from an explicit candidate run; never on import."""
+from pathlib import Path
+import argparse
+import json
+import numpy as np
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--run", type=Path, required=True)
+    parser.add_argument("--out", type=Path, required=True, help="New figure directory")
+    args = parser.parse_args()
+    if args.out.exists():
+        parser.error("Output exists; choose a new directory")
+    figures = args.out
+    figures.mkdir(parents=True, exist_ok=False)
+    audit = json.loads((args.run / "data_audit.json").read_text())
+    per_type = pd.DataFrame(audit["per_gpu_type"])
+    schedules = {
+        policy: pd.read_csv(args.run / f"{policy}_job_times.csv.gz")
+        for policy in ("FCFS", "SJF-HOL")
+    }
+
+    # 1. Full-lifetime requested work, not measured GPU utilization.
+    fig, ax = plt.subplots(figsize=(9, 4.8))
+    ax.barh(per_type["gpu_model"], per_type["gpu_load_ratio"])
+    ax.axvline(1, linestyle="--", label="Work equals arrival-window capacity")
+    ax.set_xlabel("Full-lifetime GPU work / arrival-window GPU capacity")
+    ax.set_title("Requested work versus capacity by GPU type")
+    ax.invert_yaxis()
+    ax.legend(loc="lower right", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(figures / "01_work_capacity.png", dpi=180)
+    plt.close(fig)
+
+    # 2. Concentration of requested GPU work.
+    base = schedules["FCFS"]
+    work = np.sort(
+        (base["gpu_request"] * base["worker_num"] * base["duration"]).to_numpy()
+    )
+    x = np.arange(1, len(work) + 1) / len(work)
+    y = np.cumsum(work) / work.sum()
+    sample = np.unique(np.r_[0, np.linspace(0, len(work) - 1, 2500).astype(int)])
+    fig, ax = plt.subplots(figsize=(7.5, 5))
+    ax.plot(np.r_[0, x[sample]], np.r_[0, y[sample]], label="Requested GPU work")
+    ax.plot([0, 1], [0, 1], linestyle="--", label="Equal contribution")
+    ax.set_xlabel("Cumulative fraction of jobs, smallest work first")
+    ax.set_ylabel("Cumulative fraction of GPU work")
+    ax.set_title("A small fraction of jobs accounts for most GPU work")
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(figures / "02_work_concentration.png", dpi=180)
+    plt.close(fig)
+
+    # 3. A10 waiting-time distributions, including the zero-wait mass.
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for policy, frame in schedules.items():
+        a10 = frame[frame["gpu_model"] == "A10"]
+        waits = np.sort((a10["start"] - a10["submit_time"]).to_numpy() / 3600)
+        idx = np.unique(np.linspace(0, len(waits) - 1, 2500).astype(int))
+        ax.plot(waits[idx], (idx + 1) / len(waits), label=policy)
+    ax.set_xscale("symlog", linthresh=0.01)
+    ax.set_xlabel("A10 waiting time (hours; symmetric-log scale)")
+    ax.set_ylabel("Empirical cumulative probability")
+    ax.set_title("A10: shorter typical waits do not eliminate the extreme tail")
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(figures / "03_a10_wait_cdf.png", dpi=180)
+    plt.close(fig)
+
+    # 4. Completion counts during arrivals and through the final drain.
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for policy, frame in schedules.items():
+        finish = np.sort(frame["finish"].to_numpy()) / 86400
+        idx = np.unique(np.linspace(0, len(finish) - 1, 3000).astype(int))
+        ax.plot(finish[idx], idx + 1, label=policy)
+    ax.axvline(
+        audit["times"]["last_submit_seconds"] / 86400,
+        linestyle="--",
+        label="Last arrival (~90 days)",
+    )
+    ax.set_xlabel("Simulation day from trace origin")
+    ax.set_ylabel("Number of completed jobs")
+    ax.set_title("More early completions can coexist with a later final completion")
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(figures / "04_completion_timeline.png", dpi=180)
+    plt.close(fig)
+
+    print("Generated four candidate research figures from the specified run; conclusions remain subject to validation.")
+
+if __name__ == "__main__":
+    main()

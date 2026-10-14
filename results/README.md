@@ -1,6 +1,6 @@
 # 正式研究證據
 
-依 [modeling.md](../modeling.md) 第 7、9、10 章，這裡保留可受版本追蹤的正式實驗清單、小型指標及重算所需明細。目前保存 [Q1 重算清單](20261014-b-q1-intake-4a8f8f2b/manifest.json) 與九張小型核算表；PASS 限於清單列明的 Q1 計算／圖表檢查，未驗證完整論文或 Q2/Q3 性能。[manifest.example.json](manifest.example.json) 仍是未運行的格式示例。
+依 [modeling.md](../modeling.md) 第 7、9、10 章，這裡保留可受版本追蹤的正式實驗清單、小型指標及重算所需明細。目前保存 [Q1 重算清單](20261014-b-q1-intake-4a8f8f2b/manifest.json) 與九張小型核算表；PASS 限於清單列明的 Q1 計算／圖表檢查，未驗證 Q2 改進器或 Q3 性能。另見 [共用工程驗收](20261014-b-intake-ready/acceptance.json)，包含完整 FCFS／SJF-HOL 基線與 clone 驗收；基線與論文草稿的驗證狀態分開。[manifest.example.json](manifest.example.json) 仍是未運行的格式示例。
 
 ## 保留位置
 
