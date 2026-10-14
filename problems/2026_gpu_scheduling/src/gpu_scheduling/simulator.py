@@ -118,6 +118,7 @@ def simulate_pool(
     arrivals = finished = decisions = peak_queue = bypass_checks_total = 0
     order_builds = 0
     crossing_accepted = crossing_rejected = certificate_updates = reservation_rejects = 0
+    protected_hol_blocked = protected_hol_fastpath = protected_hol_commits = 0
     state_version = 0
     reservation: dict | None = None
     reservations: list[dict] = []
@@ -366,6 +367,7 @@ def simulate_pool(
 
     def dispatch(now: int) -> None:
         nonlocal decisions, bypass_checks_total, peak_queue, order_builds
+        nonlocal protected_hol_blocked, protected_hol_fastpath, protected_hol_commits
         if policy in ("FCFS-HOL", "SPT-HOL"):
             while waiting:
                 j = waiting[0] if policy == "FCFS-HOL" else waiting[0][3]
@@ -379,6 +381,22 @@ def simulate_pool(
         attempts = 0
         bypass_mode = False
         seen: set[int] = set()
+        # In urgent HOL, a pending promise makes the protected job the only
+        # admissible head.  If its placement is still unavailable, the old
+        # path sorted the complete waiting queue before immediately returning.
+        # Return before building that ordered view; arrivals and timer events
+        # cannot make a placement available without a resource release.
+        if policy == "SPT-URGENT-HOL" and reservation is not None:
+            protected = int(reservation["protected_job"])
+            if protected in waiting:
+                protected_hol_fastpath += 1
+                plan = current_plan(protected)
+                if plan is None:
+                    protected_hol_blocked += 1
+                    return
+                protected_hol_commits += 1
+                commit(protected, now, {"plan": plan, "mode": "protected", "crossing": False,
+                                        "state_version": int(state_version)}, protected=True)
         # Within one dispatch epoch only removals occur.  A sorted order is
         # therefore stable; rebuilding it after every successful start was a
         # dominant cost on large queues.  ``waiting_members`` is maintained by
@@ -513,6 +531,9 @@ def simulate_pool(
         "cost": {"planner_calls": int(decisions), "candidate_checks": int(decisions),
                  "order_builds": int(order_builds),
                  "bypass_candidate_checks": int(bypass_checks_total),
+                 "protected_hol_blocked": int(protected_hol_blocked),
+                 "protected_hol_fastpath": int(protected_hol_fastpath),
+                 "protected_hol_commits": int(protected_hol_commits),
                  "reservation_calls": len(reservations),
                  "crossing_accepted": int(crossing_accepted),
                  "crossing_rejected": int(crossing_rejected),
