@@ -21,6 +21,17 @@ import time
 PROBLEM = Path(__file__).resolve().parents[1]
 
 
+def process_rss_kib(pid: int) -> int | None:
+    """Read Linux child RSS without adding a runtime dependency."""
+    try:
+        for line in Path(f"/proc/{pid}/status").read_text().splitlines():
+            if line.startswith("VmRSS:"):
+                return int(line.split()[1])
+    except (FileNotFoundError, PermissionError, ValueError):
+        return None
+    return None
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=PROBLEM / "data/raw")
@@ -31,6 +42,10 @@ def main() -> None:
     parser.add_argument("--short-theta-seconds", type=int, default=4)
     parser.add_argument("--reservation-k", type=int, default=200)
     parser.add_argument("--event-mode", choices=("shared-timer", "arrival-completion-only"), default="shared-timer")
+    parser.add_argument("--timeout-seconds", type=float, default=None,
+                        help="per-policy child wall timeout; omitted means no parent timeout")
+    parser.add_argument("--max-rss-kib", type=int, default=None,
+                        help="per-policy child RSS limit sampled from /proc; omitted means no RSS limit")
     parser.add_argument("--policies", nargs="+",
                         default=["SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX", "EASY-NR"])
     args = parser.parse_args()
@@ -38,6 +53,10 @@ def main() -> None:
         parser.error("Output exists; choose a new directory")
     if any(n <= 0 for n in args.jobs) or any(t < 0 for t in args.theta_seconds) or args.short_theta_seconds < 0:
         parser.error("jobs and thresholds must be nonnegative (jobs strictly positive)")
+    if args.timeout_seconds is not None and args.timeout_seconds <= 0:
+        parser.error("--timeout-seconds must be positive")
+    if args.max_rss_kib is not None and args.max_rss_kib <= 0:
+        parser.error("--max-rss-kib must be positive")
     args.out.mkdir(parents=True)
     records = []
     probe_specs = [(int(n), int(theta), "historical-anchor")
@@ -55,10 +74,36 @@ def main() -> None:
                        "--jobs", str(jobs), "--theta-seconds", str(theta),
                        "--reservation-k", str(args.reservation_k), "--event-mode", args.event_mode,
                        "--policies", policy]
-            completed = subprocess.run(command, text=True, capture_output=True)
+            child = subprocess.Popen(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            observed_peak_rss = 0
+            stop_reason = None
+            while child.poll() is None:
+                rss = process_rss_kib(child.pid)
+                if rss is not None:
+                    observed_peak_rss = max(observed_peak_rss, rss)
+                    if args.max_rss_kib is not None and rss > args.max_rss_kib:
+                        stop_reason = "RSS_LIMIT"
+                        child.kill()
+                        break
+                if args.timeout_seconds is not None and time.perf_counter() - started > args.timeout_seconds:
+                    stop_reason = "TIMEOUT"
+                    child.kill()
+                    break
+                time.sleep(0.05)
+            stdout, stderr = child.communicate()
             wall = time.perf_counter() - started
-            if completed.returncode != 0:
-                raise RuntimeError(f"child failed ({tag})\n{completed.stdout}\n{completed.stderr}")
+            if child.returncode != 0 or stop_reason is not None:
+                status = stop_reason or "FAILED"
+                failure = {
+                    "status": status, "tag": tag, "jobs": jobs, "theta_seconds": theta,
+                    "policy": policy, "elapsed_seconds": wall,
+                    "observed_peak_rss_kib": observed_peak_rss,
+                    "returncode": child.returncode, "command": command,
+                    "stdout_tail": stdout[-4000:], "stderr_tail": stderr[-4000:],
+                }
+                (args.out / f"{tag}-status.json").write_text(json.dumps(failure, indent=2) + "\n")
+                records.append(failure)
+                continue
             summary_path = child_out / "summary.json"
             summary = json.loads(summary_path.read_text())
             child = summary["results"][0]
@@ -77,11 +122,13 @@ def main() -> None:
             })
     output = {
         "schema_version": 1, "kind": "m2b_bounded_cost_probe",
+        "status": "PASS" if all(r.get("status", "PASS") == "PASS" for r in records) else "INCOMPLETE",
         "configuration": {"model": args.model, "jobs": args.jobs, "theta_seconds": args.theta_seconds,
                           "short_theta_seconds": args.short_theta_seconds,
                           "reservation_k": args.reservation_k, "event_mode": args.event_mode,
                           "policies": args.policies, "placement": "first-fit ascending node_name",
-                          "horizon_seconds": 7_776_000},
+                          "horizon_seconds": 7_776_000,
+                          "timeout_seconds": args.timeout_seconds, "max_rss_kib": args.max_rss_kib},
         "environment": {"python": platform.python_version(), "platform": platform.platform()},
         "records": records,
         "note": "Each record is an independent child process; no performance claim is made for unrun full trace.",
@@ -89,6 +136,8 @@ def main() -> None:
     path = args.out / "benchmark.json"
     path.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n")
     print(json.dumps(output, indent=2, ensure_ascii=False))
+    if output["status"] != "PASS":
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":

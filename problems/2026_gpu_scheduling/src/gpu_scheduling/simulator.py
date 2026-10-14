@@ -7,6 +7,8 @@ share the same node-level planner and event engine.
 from __future__ import annotations
 
 import heapq
+import hashlib
+import json
 import math
 from collections import defaultdict, deque
 from typing import Iterable
@@ -58,6 +60,12 @@ def _release(free_g, free_c, cap_g, cap_c, job, plan, reqg, reqc) -> None:
         raise AssertionError("over-release")
 
 
+def _snapshot_hash(gpu, cpu) -> str:
+    """Stable integrity digest for compact completed reservation evidence."""
+    payload = {"gpu": [int(x) for x in gpu], "cpu": [int(x) for x in cpu]}
+    return hashlib.sha256(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+
+
 def simulate_pool(
     nodes: pd.DataFrame,
     jobs: pd.DataFrame,
@@ -102,9 +110,13 @@ def simulate_pool(
     ends = np.full(n, -1, dtype=np.int64)
     plans: list[list[tuple[int, int]] | None] = [None] * n
     waiting = deque() if policy == "FCFS-HOL" else ([] if policy == "SPT-HOL" else [])
+    # Non-HOL queues are plain job-index lists; this companion set lets an
+    # epoch-local sorted view discard committed jobs without another sort.
+    waiting_members: set[int] | None = None if policy in ("FCFS-HOL", "SPT-HOL") else set()
     running_heap: list[tuple[int, int]] = []
     running: dict[int, tuple[int, list[tuple[int, int]]]] = {}
     arrivals = finished = decisions = peak_queue = bypass_checks_total = 0
+    order_builds = 0
     crossing_accepted = crossing_rejected = certificate_updates = reservation_rejects = 0
     state_version = 0
     reservation: dict | None = None
@@ -142,6 +154,7 @@ def simulate_pool(
             raise AssertionError("a feasible protected job has no reservation horizon")
         state_version += 1
         reservation = {
+            "evidence_schema_version": 2,
             "promise_id": f"promise-{len(reservations)+1}",
             "protected_job": int(protected),
             "protected_job_name": int(jobs.job_name.iloc[protected]),
@@ -150,6 +163,11 @@ def simulate_pool(
             "current_free_initial": {"gpu": free_g.tolist(), "cpu": free_c.tolist()},
             "future_free_initial": {"gpu": projected_g.tolist(), "cpu": projected_c.tolist()},
             "future_free_at_R": {"gpu": projected_g.tolist(), "cpu": projected_c.tolist()},
+            "snapshot_sha256": {
+                "current_free_initial": _snapshot_hash(free_g, free_c),
+                "future_free_initial": _snapshot_hash(projected_g, projected_c),
+                "future_free_at_R": _snapshot_hash(projected_g, projected_c),
+            },
             # This witness is immutable evidence of the placement promised at
             # issuance.  ``placement_witness`` may advance after a FLEX
             # certificate update, so replay must never use that final value
@@ -267,6 +285,8 @@ def simulate_pool(
             heapq.heappop(waiting)
         else:
             waiting.remove(j)
+            if waiting_members is not None:
+                waiting_members.discard(j)
         state_version += 1
         if reservation is not None and j != int(reservation["protected_job"]):
             crossing = int(ends[j]) > int(reservation["promised_R"])
@@ -280,6 +300,7 @@ def simulate_pool(
                 future_c = np.asarray(proposal["future_c"], dtype=np.int64)
                 witness = proposal["witness"]
                 reservation["future_free_at_R"] = {"gpu": future_g.tolist(), "cpu": future_c.tolist()}
+                reservation["snapshot_sha256"]["future_free_at_R"] = _snapshot_hash(future_g, future_c)
                 reservation["placement_witness"] = [[int(m), int(w)] for m, w in
                                                        (witness.nodes if isinstance(witness, PlacementPlan) else witness)]
                 delta_g, delta_c = _resource_delta(j, plan)
@@ -311,6 +332,11 @@ def simulate_pool(
                 raise AssertionError("protected job started after promised R")
             reservation["fulfillment"] = {"status": "FULFILLED", "time": int(now)}
             reservation["certificate_updates"].append({"time": int(now), "event": "fulfillment", "state_version": int(state_version)})
+            # Once the promise is fulfilled, the dense vectors are no longer
+            # needed by the scheduler.  Their exact hashes plus event ledger,
+            # witnesses and sparse deltas remain independently replayable.
+            for key in ("current_free_initial", "future_free_initial", "future_free_at_R"):
+                reservation.pop(key, None)
             event("reservation_fulfilled", now, promise_id=reservation["promise_id"],
                   protected_job=int(j), promised_R=int(reservation["promised_R"]),
                   state_version=int(state_version))
@@ -339,7 +365,7 @@ def simulate_pool(
                 urgent.add(target)
 
     def dispatch(now: int) -> None:
-        nonlocal decisions, bypass_checks_total, peak_queue
+        nonlocal decisions, bypass_checks_total, peak_queue, order_builds
         if policy in ("FCFS-HOL", "SPT-HOL"):
             while waiting:
                 j = waiting[0] if policy == "FCFS-HOL" else waiting[0][3]
@@ -353,13 +379,19 @@ def simulate_pool(
         attempts = 0
         bypass_mode = False
         seen: set[int] = set()
+        # Within one dispatch epoch only removals occur.  A sorted order is
+        # therefore stable; rebuilding it after every successful start was a
+        # dominant cost on large queues.  ``waiting_members`` is maintained by
+        # commit(), so filtering preserves the exact old relative order.
+        ordered_base = _ordered(waiting, policy, arr, dur, workers, reqg)
+        order_builds += 1
         while waiting:
             peak_queue = max(peak_queue, len(waiting))
             if reservation is not None and int(reservation["promised_R"]) == int(now):
                 due_protected(now)
                 seen.clear()
                 continue
-            ordered = _ordered(waiting, policy, arr, dur, workers, reqg)
+            ordered = [j for j in ordered_base if j in waiting_members]
             if policy in URGENT_POLICIES and reservation is None and urgent:
                 oldest = min(urgent, key=lambda j: (int(arr[j]), int(j)))
                 ordered = [oldest] + [j for j in ordered if j != oldest]
@@ -452,6 +484,8 @@ def simulate_pool(
                 heapq.heappush(waiting, (int(dur[j]), int(arr[j]), int(jobs.job_name.iloc[j]), j))
             else:
                 waiting.append(arrivals)
+                if waiting_members is not None:
+                    waiting_members.add(arrivals)
             if use_timers:
                 heapq.heappush(timers, (int(arr[arrivals] + theta_seconds), arrivals))
             arrivals += 1
@@ -474,8 +508,10 @@ def simulate_pool(
         "policy": policy, "policy_input": requested_policy,
         "theta_seconds": int(theta_seconds), "reservation_k": int(reservation_k),
         "event_mode": event_mode,
+        "reservation_evidence_schema_version": 2,
         "reservations": reservations, "events": events,
         "cost": {"planner_calls": int(decisions), "candidate_checks": int(decisions),
+                 "order_builds": int(order_builds),
                  "bypass_candidate_checks": int(bypass_checks_total),
                  "reservation_calls": len(reservations),
                  "crossing_accepted": int(crossing_accepted),

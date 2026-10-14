@@ -112,7 +112,7 @@ class M1Checks(unittest.TestCase):
         self.assertTrue(all(x["promised_R"] >= x["issued_time"] for x in r["reservations"]))
         bad = copy.deepcopy(r)
         if bad["reservations"]:
-            bad["reservations"][0]["future_free_at_R"]["gpu"][0] += 1
+            bad["reservations"][0]["snapshot_sha256"]["future_free_at_R"] = "tampered"
             with self.assertRaises(AssertionError):
                 validate_reservations(nd, bad["jobs"], bad)
 

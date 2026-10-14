@@ -1,7 +1,14 @@
 """Independent node-ledger and reservation replay plus a small scalar oracle."""
+import hashlib
+import json
 import numpy as np
 import pandas as pd
 from .placement import check_plan, slots
+
+
+def _snapshot_hash(gpu, cpu) -> str:
+    payload = {"gpu": [int(x) for x in gpu], "cpu": [int(x) for x in cpu]}
+    return hashlib.sha256(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
 
 def validate(nodes: pd.DataFrame,jobs: pd.DataFrame,s: np.ndarray,e: np.ndarray,plans: list) -> None:
     """Independent node-by-node event replay from the final allocation ledger."""
@@ -27,236 +34,299 @@ def validate(nodes: pd.DataFrame,jobs: pd.DataFrame,s: np.ndarray,e: np.ndarray,
 
 
 def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict) -> None:
-    """Replay M1 promise certificates independently of scheduler decisions.
+    """Replay promise certificates in one event-ordered ledger pass.
 
-    This validator reconstructs the free vectors at issuance and at the
-    original immutable ``R`` from the persisted allocations.  It does not call
-    a scheduler ``safe`` predicate and therefore catches stale or self-
-    reported certificates.
+    The previous implementation rebuilt every snapshot by scanning the prefix
+    of ``events`` for every promise and every crossing.  This implementation
+    keeps one current node ledger and one small context per promise.  Crossing
+    certificates are checked at their event position, before the corresponding
+    start event mutates the ledger, so the independent checks retain the exact
+    FIXED/FLEX semantics without quadratic prefix scans.
     """
     for field in ("reservations", "events"):
         if not isinstance(result.get(field), list) or any(
                 not isinstance(item, dict) for item in result[field]):
             raise AssertionError(f"reservation replay requires explicit {field} list of records")
     reservations = result["reservations"]
+    events = result["events"]
+    evidence_schema = int(result.get("reservation_evidence_schema_version", 1))
+    if reservations and evidence_schema != 2:
+        raise AssertionError("legacy reservation evidence schema is not silently reinterpreted")
     starts = np.asarray(result["starts"], dtype=np.int64)
     ends = np.asarray(result["ends"], dtype=np.int64)
-    plans = result["plans"]
-    if len(starts) != len(jobs) or len(plans) != len(jobs):
+    plans_raw = result["plans"]
+    if len(starts) != len(jobs) or len(ends) != len(jobs) or len(plans_raw) != len(jobs):
         raise AssertionError("reservation replay requires a complete schedule")
     caps_g = nodes.gpu_capacity_num.to_numpy(dtype=np.int64)
     caps_c = nodes.cpu_units.to_numpy(dtype=np.int64)
-    ids = {int(x): i for i, x in enumerate(jobs.job_name)}
-    events = result["events"]
-    if reservations and not events:
-        raise AssertionError("reservation replay requires persisted event order")
-    issued_items = [item for item in events if item.get("kind") == "reservation_issued"]
-    fulfilled_items = [item for item in events if item.get("kind") == "reservation_fulfilled"]
-    issued_by_id = {item.get("promise_id"): item for item in issued_items}
-    fulfilled_by_id = {item.get("promise_id"): item for item in fulfilled_items}
-    recorded_ids = {item.get("promise_id") for item in reservations}
-    if (len(issued_items) != len(issued_by_id) or len(fulfilled_items) != len(fulfilled_by_id)
-            or set(issued_by_id) != recorded_ids or set(fulfilled_by_id) != recorded_ids):
-        raise AssertionError("reservation evidence is missing or has an unrecorded promise")
-    seen_promises = set()
+    job_g = jobs.gpu_request.to_numpy(dtype=np.int64)
+    job_c = jobs.cpu_units.to_numpy(dtype=np.int64)
+    job_w = jobs.worker_num.to_numpy(dtype=np.int64)
+    job_names = jobs.job_name.to_numpy()
+    ids = {int(name): i for i, name in enumerate(job_names)}
+    plans: list[tuple[tuple[int, int], ...]] = []
+    for raw in plans_raw:
+        try:
+            plan = tuple((int(node), int(count)) for node, count in raw)
+        except (TypeError, ValueError):
+            raise AssertionError("invalid placement ledger")
+        plans.append(plan)
+
+    # Validate promise records up front.  Missing/null evidence is an error,
+    # including when issuance events exist but reservations was emptied.
+    contexts: dict[str, dict] = {}
     for promise in reservations:
+        if int(promise.get("evidence_schema_version", 1)) != evidence_schema or evidence_schema != 2:
+            raise AssertionError("unsupported or inconsistent reservation evidence schema")
         pid = promise.get("promise_id")
-        if not pid or pid in seen_promises:
+        if not isinstance(pid, str) or not pid or pid in contexts:
             raise AssertionError("duplicate or missing promise_id")
-        seen_promises.add(pid)
-        protected_name = int(promise["protected_job_name"])
-        if protected_name not in ids:
-            raise AssertionError("unknown protected job")
-        protected = ids[protected_name]
-        issued = int(promise["issued_time"])
-        promised_r = int(promise["promised_R"])
-        issued_event = issued_by_id[pid]
-        if (int(issued_event.get("time")) != issued
-                or int(issued_event.get("protected_job")) != int(promise["protected_job"])
-                or int(issued_event.get("promised_R")) != promised_r):
-            raise AssertionError("reservation issuance does not match its promise record")
-        initial_witness_raw = promise.get("initial_placement_witness")
-        if not isinstance(initial_witness_raw, list):
+        try:
+            protected_name = int(promise["protected_job_name"])
+            protected = ids[protected_name]
+            issued = int(promise["issued_time"])
+            promised_r = int(promise["promised_R"])
+        except (KeyError, TypeError, ValueError):
+            raise AssertionError("incomplete promise record")
+        initial_raw = promise.get("initial_placement_witness")
+        if not isinstance(initial_raw, list):
             raise AssertionError("immutable initial placement witness is missing")
         try:
-            initial_witness = tuple((int(node), int(count))
-                                    for node, count in initial_witness_raw)
+            initial_witness = tuple((int(node), int(count)) for node, count in initial_raw)
         except (TypeError, ValueError):
             raise AssertionError("invalid immutable initial placement witness")
-        if any(node < 0 or count <= 0 or node >= len(nodes) for node, count in initial_witness):
+        if (any(node < 0 or node >= len(nodes) or count <= 0 for node, count in initial_witness)
+                or sum(count for _, count in initial_witness) != int(job_w[protected])):
             raise AssertionError("invalid immutable initial placement witness")
-        fulfilled_event = fulfilled_by_id[pid]
-        if (int(fulfilled_event.get("protected_job")) != int(promise["protected_job"])
-                or int(fulfilled_event.get("promised_R")) != promised_r):
-            raise AssertionError("reservation fulfillment does not match its promise record")
-        if promised_r < issued or starts[protected] < 0 or starts[protected] > promised_r:
-            raise AssertionError("promise timing contract")
-        q = int(jobs.gpu_request.iloc[protected])
-        c = int(jobs.cpu_units.iloc[protected])
-        w = int(jobs.worker_num.iloc[protected])
+        updates = promise.get("certificate_updates")
+        if not isinstance(updates, list) or any(not isinstance(item, dict) for item in updates):
+            raise AssertionError("certificate_updates must be an explicit list")
+        recorded_updates = [item for item in updates if "job" in item]
+        fulfillment_updates = [item for item in updates if item.get("event") == "fulfillment"]
+        if len(fulfillment_updates) != 1:
+            raise AssertionError("fulfillment certificate update is missing or duplicated")
+        accepted_raw = promise.get("accepted_backfill_ids")
+        if not isinstance(accepted_raw, list) or len({int(x) for x in accepted_raw}) != len(accepted_raw):
+            raise AssertionError("accepted backfill evidence is invalid")
+        contexts[pid] = {
+            "promise": promise, "protected": protected, "issued": issued,
+            "R": promised_r, "initial_witness": initial_witness,
+            "updates": recorded_updates, "update_pos": 0,
+            "accepted": {int(x) for x in accepted_raw}, "started": set(),
+            "active_at_issue": set(), "future_g": None, "future_c": None,
+            "witness": initial_witness, "version": None,
+            "fulfilled": None, "issued_seen": False,
+        }
 
-        current_g, current_c = caps_g.copy(), caps_c.copy()
-        issued_events = [idx for idx, item in enumerate(events)
-                         if item.get("kind") == "reservation_issued" and item.get("promise_id") == pid]
-        if len(issued_events) != 1 or int(events[issued_events[0]]["time"]) != issued:
-            raise AssertionError("missing or duplicate promise event")
-        for item in events[:issued_events[0]]:
-            if item.get("kind") not in ("start", "finish"):
-                continue
-            j = int(item["job"])
-            if j < 0 or j >= len(jobs) or int(item["time"]) != int(starts[j] if item["kind"] == "start" else ends[j]):
-                raise AssertionError("event disagrees with timing ledger")
-            sign = -1 if item["kind"] == "start" else 1
-            for node, count in plans[j]:
-                current_g[int(node)] += sign * int(count) * int(jobs.gpu_request.iloc[j])
-                current_c[int(node)] += sign * int(count) * int(jobs.cpu_units.iloc[j])
-        if np.any(current_g < 0) or np.any(current_c < 0):
-            raise AssertionError("negative current snapshot")
-        recorded_current = promise.get("current_free_initial", {})
-        if current_g.tolist() != list(recorded_current.get("gpu", [])) or current_c.tolist() != list(recorded_current.get("cpu", [])):
-            raise AssertionError("current snapshot does not replay from event order")
+    def check_snapshot(promise: dict, key: str, gpu, cpu) -> None:
+        """Accept a live dense snapshot or its compact immutable digest."""
+        recorded = promise.get(key)
+        if isinstance(recorded, dict) and "gpu" in recorded and "cpu" in recorded:
+            if gpu.tolist() != list(recorded.get("gpu", [])) or cpu.tolist() != list(recorded.get("cpu", [])):
+                raise AssertionError(f"{key} does not replay from event order")
+            return
+        digests = promise.get("snapshot_sha256", {})
+        expected = digests.get(key) if isinstance(digests, dict) else None
+        if not isinstance(expected, str) or expected != _snapshot_hash(gpu, cpu):
+            raise AssertionError(f"{key} snapshot evidence is missing or inconsistent")
 
-        # At R the full pool capacity is restored, then only allocations that
-        # cross R remain occupied.  Starting from current_free and subtracting
-        # crossing work would double-count jobs already present at issuance.
-        future_g, future_c = caps_g.copy(), caps_c.copy()
-        active_at_issue = set()
-        for item in events[:issued_events[0]]:
-            if item.get("kind") == "start":
-                active_at_issue.add(int(item["job"]))
-            elif item.get("kind") == "finish":
-                active_at_issue.discard(int(item["job"]))
-        for j in active_at_issue:
-            if ends[j] > promised_r:
-                for node, count in plans[j]:
-                    future_g[int(node)] -= int(count) * int(jobs.gpu_request.iloc[j])
-                    future_c[int(node)] -= int(count) * int(jobs.cpu_units.iloc[j])
-        accepted = {int(x) for x in promise.get("accepted_backfill_ids", [])}
-        if len(accepted) != len(promise.get("accepted_backfill_ids", [])):
-            raise AssertionError("duplicate accepted backfill id")
-        policy = str(result.get("policy", promise.get("policy", "")))
-        crossing_allowed = {"SPT-URGENT-FIXED", "SPT-URGENT-FLEX", "EASY-NR"}
-        for j in range(len(jobs)):
-            if j == protected or not (issued <= starts[j] < promised_r) or j in active_at_issue:
-                continue
-            if ends[j] > promised_r and policy not in crossing_allowed:
-                raise AssertionError("backfill crosses immutable promised R")
-            if j not in accepted:
-                raise AssertionError("post-issuance backfill missing from certificate")
-        for j in accepted:
-            if j < 0 or j >= len(jobs) or j == protected or starts[j] < issued or j in active_at_issue:
-                raise AssertionError("invalid accepted backfill id")
-        recorded = promise.get("future_free_initial", {})
-        if future_g.tolist() != list(recorded.get("gpu", [])) or future_c.tolist() != list(recorded.get("cpu", [])):
-            raise AssertionError("future snapshot does not replay from allocations")
-        # Replay each sparse crossing certificate in event order.  The
-        # current resource state is reconstructed from prior start/finish
-        # events; only the future vector and head witness are stored as deltas.
-        crossing_events = [item for item in events
-                           if item.get("kind") == "certificate_update"
-                           and item.get("promise_id") == pid]
-        recorded_updates = [item for item in promise.get("certificate_updates", []) if "job" in item]
-        if len(crossing_events) != len(recorded_updates):
-            raise AssertionError("certificate update evidence is incomplete")
-        if {int(item.get("job")) for item in crossing_events} != {j for j in accepted if ends[j] > promised_r}:
-            raise AssertionError("crossing backfill certificate ids do not match allocations")
-        # Start from the witness that was issued with the promise.  The final
-        # placement_witness can be different after FLEX updates and therefore
-        # is not a valid substitute for earlier FIXED certificates.
-        witness = initial_witness
-        previous_version = int(promise["state_version"])
-        # The recorded state_version is the final certificate version.  Each
-        # update carries its own predecessor, so replay starts at issuance.
-        initial_version = int(issued_event.get("state_version", promise.get("state_version", 0)))
-        previous_version = initial_version
-        for item, recorded_update in zip(crossing_events, recorded_updates):
+    issued_ids: set[str] = set()
+    fulfilled_ids: set[str] = set()
+    crossing_allowed = {"SPT-URGENT-FIXED", "SPT-URGENT-FLEX", "EASY-NR"}
+    policy = str(result.get("policy", ""))
+    current_g, current_c = caps_g.copy(), caps_c.copy()
+    active: dict[int, tuple[tuple[int, int], ...]] = {}
+    last_time = -1
+
+    def apply_job(j: int, sign: int) -> None:
+        for node, count in plans[j]:
+            current_g[node] += sign * count * int(job_g[j])
+            current_c[node] += sign * count * int(job_c[j])
+        if np.any(current_g < 0) or np.any(current_c < 0) \
+                or np.any(current_g > caps_g) or np.any(current_c > caps_c):
+            raise AssertionError("independent current resource replay failed")
+
+    for item in events:
+        try:
+            t = int(item["time"])
+        except (KeyError, TypeError, ValueError):
+            raise AssertionError("event has no valid time")
+        if t < last_time:
+            raise AssertionError("event order is not monotone")
+        last_time = t
+        kind = item.get("kind")
+        if kind == "reservation_issued":
+            pid = item.get("promise_id")
+            if pid not in contexts or pid in issued_ids:
+                raise AssertionError("reservation issuance is missing or duplicated")
+            ctx = contexts[pid]
+            if (t != ctx["issued"] or int(item.get("protected_job")) != ctx["protected"]
+                    or int(item.get("promised_R")) != ctx["R"]):
+                raise AssertionError("reservation issuance does not match its promise record")
+            ctx["issued_seen"] = True
+            ctx["version"] = int(item.get("state_version"))
+            if ctx["version"] < 0:
+                raise AssertionError("invalid issuance version")
+            ctx["active_at_issue"] = set(active)
+            future_g, future_c = caps_g.copy(), caps_c.copy()
+            for j in active:
+                if int(ends[j]) > ctx["R"]:
+                    for node, count in plans[j]:
+                        future_g[node] -= count * int(job_g[j])
+                        future_c[node] -= count * int(job_c[j])
+            if np.any(future_g < 0) or np.any(future_c < 0):
+                raise AssertionError("negative future snapshot at issuance")
+            check_snapshot(ctx["promise"], "current_free_initial", current_g, current_c)
+            check_snapshot(ctx["promise"], "future_free_initial", future_g, future_c)
+            ctx["future_g"], ctx["future_c"] = future_g, future_c
+            issued_ids.add(pid)
+            continue
+
+        if kind == "certificate_update":
+            pid = item.get("promise_id")
+            if pid not in contexts or pid not in issued_ids:
+                raise AssertionError("certificate has no prior promise issuance")
+            ctx = contexts[pid]
+            pos = ctx["update_pos"]
+            if pos >= len(ctx["updates"]):
+                raise AssertionError("certificate update evidence has extra event")
+            recorded = ctx["updates"][pos]
             for key in ("time", "job", "state_version", "previous_state_version", "planner",
                         "plan", "future_delta", "head_witness"):
-                if item.get(key) != recorded_update.get(key):
+                if item.get(key) != recorded.get(key):
                     raise AssertionError("certificate event and record differ")
-            j = int(item["job"])
-            if policy not in crossing_allowed:
-                raise AssertionError("TIME reservation contains a crossing certificate")
-            plan = tuple((int(node), int(count)) for node, count in plans[j])
+            try:
+                j = int(item["job"])
+                version = int(item["state_version"])
+                previous = int(item["previous_state_version"])
+            except (KeyError, TypeError, ValueError):
+                raise AssertionError("invalid certificate update")
+            if not 0 <= j < len(jobs) or j == ctx["protected"] or policy not in crossing_allowed:
+                raise AssertionError("invalid crossing certificate job or policy")
+            plan = plans[j]
             if tuple(tuple(x) for x in item.get("plan", [])) != plan:
                 raise AssertionError("certificate plan differs from allocation ledger")
-            if int(item.get("time")) != int(starts[j]) or int(ends[j]) <= promised_r:
+            if t != int(starts[j]) or int(ends[j]) <= ctx["R"]:
                 raise AssertionError("invalid crossing certificate timing")
-            version = int(item.get("state_version"))
-            if int(item.get("previous_state_version")) != previous_version or version <= previous_version:
+            if previous != ctx["version"] or version <= previous:
                 raise AssertionError("certificate version chain is broken")
-            current_before_g, current_before_c = caps_g.copy(), caps_c.copy()
-            event_index = events.index(item)
-            for prior in events[:event_index]:
-                if prior.get("kind") not in ("start", "finish"):
-                    continue
-                k = int(prior["job"])
-                if int(prior["time"]) != int(starts[k] if prior["kind"] == "start" else ends[k]):
-                    raise AssertionError("event disagrees with timing ledger")
-                sign = -1 if prior["kind"] == "start" else 1
-                for node, count in plans[k]:
-                    current_before_g[int(node)] += sign * int(count) * int(jobs.gpu_request.iloc[k])
-                    current_before_c[int(node)] += sign * int(count) * int(jobs.cpu_units.iloc[k])
-            check_plan(current_before_g, current_before_c, int(jobs.gpu_request.iloc[j]),
-                       int(jobs.cpu_units.iloc[j]), plan, int(jobs.worker_num.iloc[j]))
-            old_future_g, old_future_c = future_g.copy(), future_c.copy()
-            delta_g = np.zeros_like(future_g); delta_c = np.zeros_like(future_c)
+            check_plan(current_g, current_c, int(job_g[j]), int(job_c[j]), plan, int(job_w[j]))
+            old_future_g, old_future_c = ctx["future_g"].copy(), ctx["future_c"].copy()
+            delta_g = np.zeros_like(old_future_g)
+            delta_c = np.zeros_like(old_future_c)
             for node, count in plan:
-                delta_g[node] += count * int(jobs.gpu_request.iloc[j])
-                delta_c[node] += count * int(jobs.cpu_units.iloc[j])
-            future_g, future_c = future_g - delta_g, future_c - delta_c
+                delta_g[node] += count * int(job_g[j])
+                delta_c[node] += count * int(job_c[j])
+            future_g = old_future_g - delta_g
+            future_c = old_future_c - delta_c
             if np.any(future_g < 0) or np.any(future_c < 0):
                 raise AssertionError("certificate future snapshot is negative")
             mode = str(item.get("planner"))
+            head_witness = tuple((int(node), int(count)) for node, count in item.get("head_witness", []))
             if mode == "fixed":
-                # FIXED cannot silently change the protected witness.  A
-                # genuine FLEX update must be a separate, explicit event.
-                head_witness = tuple((int(node), int(count))
-                                     for node, count in item.get("head_witness", []))
-                if head_witness != witness:
+                if head_witness != ctx["witness"]:
                     raise AssertionError("FIXED certificate changed the protected witness")
                 z_g = np.zeros_like(future_g); z_c = np.zeros_like(future_c)
-                for node, count in witness:
-                    z_g[node] += count * q; z_c[node] += count * c
-                effective_g = np.minimum(current_before_g, old_future_g - z_g)
-                effective_c = np.minimum(current_before_c, old_future_c - z_c)
-                check_plan(effective_g, effective_c, int(jobs.gpu_request.iloc[j]),
-                           int(jobs.cpu_units.iloc[j]), plan, int(jobs.worker_num.iloc[j]))
+                for node, count in ctx["witness"]:
+                    z_g[node] += count * int(job_g[ctx["protected"]])
+                    z_c[node] += count * int(job_c[ctx["protected"]])
+                effective_g = np.minimum(current_g, old_future_g - z_g)
+                effective_c = np.minimum(current_c, old_future_c - z_c)
+                check_plan(effective_g, effective_c, int(job_g[j]), int(job_c[j]), plan, int(job_w[j]))
             elif mode == "flex":
-                head_witness = tuple((int(node), int(count)) for node, count in item.get("head_witness", []))
-                check_plan(future_g, future_c, q, c, head_witness, w)
-                if int(slots(future_g, future_c, q, c).sum()) < w:
+                check_plan(future_g, future_c, int(job_g[ctx["protected"]]),
+                           int(job_c[ctx["protected"]]), head_witness, int(job_w[ctx["protected"]]))
+                if int(slots(future_g, future_c, int(job_g[ctx["protected"]]),
+                             int(job_c[ctx["protected"]])).sum()) < int(job_w[ctx["protected"]]):
                     raise AssertionError("FLEX certificate loses protected head slots")
-                witness = head_witness
+                ctx["witness"] = head_witness
             else:
                 raise AssertionError("unknown crossing planner certificate")
             recorded_delta = item.get("future_delta")
-            if not isinstance(recorded_delta, dict):
-                raise AssertionError("certificate future delta is missing")
-            expected_gpu = {str(int(node)): int(-delta_g[int(node)])
-                            for node in np.flatnonzero(delta_g)}
-            expected_cpu = {str(int(node)): int(-delta_c[int(node)])
-                            for node in np.flatnonzero(delta_c)}
-            if recorded_delta.get("gpu") != expected_gpu or recorded_delta.get("cpu") != expected_cpu:
+            expected_gpu = {str(int(node)): int(-delta_g[int(node)]) for node in np.flatnonzero(delta_g)}
+            expected_cpu = {str(int(node)): int(-delta_c[int(node)]) for node in np.flatnonzero(delta_c)}
+            if (not isinstance(recorded_delta, dict)
+                    or recorded_delta.get("gpu") != expected_gpu
+                    or recorded_delta.get("cpu") != expected_cpu):
                 raise AssertionError("certificate future delta does not match allocation")
-            previous_version = version
-        recorded_at_r = promise.get("future_free_at_R", {})
-        if future_g.tolist() != list(recorded_at_r.get("gpu", [])) or future_c.tolist() != list(recorded_at_r.get("cpu", [])):
-            raise AssertionError("future snapshot was changed without a certificate update")
-        final_witness = tuple((int(node), int(count)) for node, count in promise.get("placement_witness", []))
-        check_plan(future_g, future_c, q, c, final_witness, w)
-        if int(slots(future_g, future_c, q, c).sum()) < w:
+            ctx["future_g"], ctx["future_c"] = future_g, future_c
+            ctx["version"] = version
+            ctx["update_pos"] += 1
+            continue
+
+        if kind == "reservation_fulfilled":
+            pid = item.get("promise_id")
+            if pid not in contexts or pid in fulfilled_ids:
+                raise AssertionError("reservation fulfillment is missing or duplicated")
+            ctx = contexts[pid]
+            if (pid not in issued_ids or t > ctx["R"]
+                    or int(item.get("protected_job")) != ctx["protected"]
+                    or int(item.get("promised_R")) != ctx["R"]):
+                raise AssertionError("reservation fulfillment does not match its promise")
+            fulfillment = ctx["promise"].get("fulfillment", {})
+            update = [u for u in ctx["promise"].get("certificate_updates", [])
+                      if u.get("event") == "fulfillment"]
+            if (fulfillment.get("status") != "FULFILLED" or int(fulfillment.get("time")) != t
+                    or len(update) != 1 or int(update[0].get("time")) != t
+                    or int(item.get("state_version")) != int(update[0].get("state_version"))):
+                raise AssertionError("fulfillment certificate is inconsistent")
+            ctx["fulfilled"] = t
+            fulfilled_ids.add(pid)
+            continue
+
+        if kind == "start":
+            try:
+                j = int(item["job"])
+            except (KeyError, TypeError, ValueError):
+                raise AssertionError("invalid start event")
+            if not 0 <= j < len(jobs) or j in active or t != int(starts[j]):
+                raise AssertionError("start event disagrees with timing ledger")
+            for ctx in contexts.values():
+                if (ctx["issued_seen"] and ctx["fulfilled"] is None
+                        and ctx["issued"] <= t < ctx["R"]
+                        and j != ctx["protected"] and j not in ctx["active_at_issue"]):
+                    ctx["started"].add(j)
+            apply_job(j, -1)
+            active[j] = plans[j]
+            continue
+
+        if kind == "finish":
+            try:
+                j = int(item["job"])
+            except (KeyError, TypeError, ValueError):
+                raise AssertionError("invalid finish event")
+            if not 0 <= j < len(jobs) or j not in active or t != int(ends[j]):
+                raise AssertionError("finish event disagrees with timing ledger")
+            apply_job(j, 1)
+            del active[j]
+
+    if set(contexts) != issued_ids or set(contexts) != fulfilled_ids:
+        raise AssertionError("reservation evidence is missing issuance or fulfillment")
+    for pid, ctx in contexts.items():
+        promise = ctx["promise"]
+        if ctx["update_pos"] != len(ctx["updates"]):
+            raise AssertionError("certificate update evidence is incomplete")
+        accepted = ctx["accepted"]
+        if accepted != ctx["started"]:
+            raise AssertionError("accepted backfill evidence does not match start events")
+        crossing_jobs = {int(u["job"]) for u in ctx["updates"]}
+        if crossing_jobs != {j for j in accepted if int(ends[j]) > ctx["R"]}:
+            raise AssertionError("crossing backfill certificate ids do not match allocations")
+        if int(promise.get("state_version")) != int(ctx["version"]):
+            raise AssertionError("promise final certificate version differs from replay")
+        check_snapshot(promise, "future_free_at_R", ctx["future_g"], ctx["future_c"])
+        final_witness = tuple((int(node), int(count))
+                              for node, count in promise.get("placement_witness", []))
+        check_plan(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
+                   int(job_c[ctx["protected"]]), final_witness, int(job_w[ctx["protected"]]))
+        if int(slots(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
+                     int(job_c[ctx["protected"]])).sum()) < int(job_w[ctx["protected"]]):
             raise AssertionError("future snapshot does not contain protected gang")
-        fulfillment = promise.get("fulfillment", {})
-        if fulfillment.get("status") != "FULFILLED" or int(fulfillment.get("time")) != int(starts[protected]):
-            raise AssertionError("missing or inconsistent fulfillment record")
-        if int(fulfilled_event.get("time")) != int(fulfillment.get("time")):
-            raise AssertionError("fulfillment event time does not match its promise record")
-        fulfillment_updates = [item for item in promise.get("certificate_updates", []) if item.get("event") == "fulfillment"]
-        if len(fulfillment_updates) != 1 or int(fulfillment_updates[0].get("time")) != int(fulfillment.get("time")):
-            raise AssertionError("fulfillment certificate update is missing")
-        if int(fulfilled_event.get("state_version")) != int(fulfillment_updates[0].get("state_version")):
-            raise AssertionError("fulfillment certificate version differs from event")
+        if starts[ctx["protected"]] < 0 or starts[ctx["protected"]] > ctx["R"] \
+                or ctx["fulfilled"] != int(starts[ctx["protected"]]):
+            raise AssertionError("promise timing contract")
+    if active or not np.array_equal(current_g, caps_g) or not np.array_equal(current_c, caps_c):
+        raise AssertionError("final allocation is not fully released")
 
 
 

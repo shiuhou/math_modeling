@@ -58,6 +58,7 @@ def main() -> None:
             "starts": schedule_jobs.start.to_numpy(), "ends": schedule_jobs.finish.to_numpy(),
             "plans": plans, "reservations": payload["reservations"],
             "events": payload["events"], "policy": policy,
+            "reservation_evidence_schema_version": payload.get("reservation_evidence_schema_version", 1),
         })
         checks.append({"policy": policy, "jobs": len(frame), "ledger_rows": len(placement),
                        "capacity_replay": "PASS", "reservation_replay": "PASS"})

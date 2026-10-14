@@ -90,6 +90,7 @@ def main() -> None:
                 writer.writerows((int(jid), int(pool.node_name.iloc[node]), int(workers)) for node, workers in plan)
         write_json(args.out / f"{policy}_reservations.json", {
             "gpu_model": args.model, "policy": policy, "event_mode": args.event_mode,
+            "reservation_evidence_schema_version": result["reservation_evidence_schema_version"],
             "reservations": result["reservations"], "events": result["events"], "cost": result["cost"]})
         schedule_hash = hashlib.sha256(json.dumps({
             "starts": result["starts"].tolist(), "ends": result["ends"].tolist(),

@@ -257,3 +257,16 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - 短門檻機制情景：`theta=4s`、A10 16,384、shared timer。TIME child 在約 141 秒時 observed RSS 約 3.0 GiB，仍未完成，已終止本輪自己啟動的 parent／child；短門檻 FIXED/FLEX、完整 224,112 trace 與九策略比較均標記 `TIMEOUT`／`NOT_RUN`。這是目前 validator／事件證據在高 reservation 頻率下的成本阻塞，不是算法不可行或性能結論。
 - M2-B 工具：`experiments/run_m2b_benchmark.py` 對每策略分進程；`run_m2a_pressure.py` 補記 scheduler／validation／metrics／I/O 時間與 per-process RSS。大型 job times、allocations、events 留在 `outputs/q2-m2b-bounded-20261014/`（Git 忽略，依摘要 hash 與命令重算）；小型正式清單見 `results/20261015-b-q2-m2b-bounded/manifest.json`。
 - 本輪狀態：證書重播修補與定向驗證 `PASS`；錨點前綴 `PASS`；短門檻成本 `TIMEOUT`；完整 trace `NOT_RUN`。下一步應先改善高頻預約／事件重播的時間與記憶體複雜度，再重新做短門檻探針；不啟動 22 格矩陣、Q3 或論文性能改寫。
+
+## 12. M2-C 結果（效能與記憶體擴展性修正，2026-10-15）
+
+- 基準：`ecd46e32ae77eeea065fff5891d5e22eb710fcfd`。只修共享 DES 的等價資料結構、證據保存與獨立 validator；沒有新增調度器、heuristic、RL、MILP 或 Q1/Q3 修改。
+- 瓶頸測量：2048-job `theta=1350h` cProfile 顯示 dispatch 反覆 `_ordered()` 排序與 `plan_first_fit()/slots()` 為主要 scheduler 成本；512-job、501 reservations、2,848 events 的舊 validator 約 9.5s，主要耗在每個 promise/certificate 重掃 events 及 pandas `.iloc`。
+- Scheduler 修正：每個 dispatch epoch 建立一次 ordered view，透過 waiting-members set 惰性移除已啟動作業；完整 SPT／SGW／FCFS key、FF-id、K、urgent FIFO、timer、R 與事件順序不變。4096 A10 錨點三策略 hash 與舊版相同，單策略 runtime 約 1.63s 降至 1.09s。
+- Validator 修正：改為單次事件序列 ledger replay，於 issuance 建立 R future snapshot，於 certificate event 依版本鏈套用 sparse delta；FIXED 使用更新前 witness，FLEX 驗證更新後 witness。512-job／501-reservation 重播約由 9.5s 降至 0.02s；缺失、重排、偽造、legacy schema 仍拒絕。
+- Evidence schema `2`：履約後移除 `current_free_initial`、`future_free_initial`、`future_free_at_R` dense vectors，保留 `snapshot_sha256`、immutable initial/final witness、版本、稀疏 delta、promise／履約與事件 ledger。活動中 reservation 仍保留 scheduler 所需 vectors。舊 schema 不靜默轉讀；需重新產生 schema 2 才可由新 validator 回放。
+- A：A10、`shared-timer`、`K=200`、`theta=1350h`、FF-id，16,384／32,768 jobs，TIME/FIXED/FLEX 六組 schedule hash 全部與 M2-B 相同。scheduler 由約 46–48s 降至 43–45s（16k），由約 115–117s 降至 106–108s（32k）；candidate checks 不變，RSS 約 198–200MiB（16k）及 280–297MiB（32k）。六組 reservation/crossing 均 0，沒有性能收益主張。
+- B：A10、`theta=4s`、4096／8192 jobs，三策略均獨立重播 PASS。4096 hash 與舊版相同；runtime 約 19.35s 降至 2.52–2.58s，RSS 約 539MiB 降至 148–150MiB，241 reservations。8192 完成：TIME 2,530 reservations、0 crossing；FIXED 2,528 reservations、5 crossing；FLEX 2,529 reservations、5 crossing；六次持久化 validator PASS，三者 hash 按策略差異保留，未把 crossing 填成零。
+- 子程序控制：`run_m2b_benchmark.py` 新增 `--timeout-seconds` 與 `--max-rss-kib`，監測 `/proc/<pid>/status`，超限 kill 並保存 `*-status.json`／`benchmark.json` 的 `TIMEOUT` 或 `RSS_LIMIT`。用 16-job、1000KiB 上限實際觸發 `RSS_LIMIT`，退出碼 2，未冒充成功。
+- 正式證據：M2-C manifest、A/B compact summaries、六份獨立 replay 摘要與 source/data/config hash 見 `results/20261015-b-q2-m2c/manifest.json`；大型明細留在 ignored `outputs/q2-m2c-*`，不覆寫 M2-A 證據。
+- 狀態：M2-C validator／queue／evidence 修正 `PASS`；A/B 受控探針 `PASS`；16,384 `theta=4s`、短門檻更大前綴與完整 224,112 trace 仍 `NOT_RUN`／受限。正式 Q2 九策略全 trace 應在後續獨立核准後執行。

@@ -38,8 +38,10 @@ def _fixed_then_flex_fixture():
         "ends": np.array([10, 11, 21, 22], dtype=np.int64),
         "plans": [[(0, 1)], [(0, 1), (2, 1)], [(3, 1)], [(1, 1)]],
         "policy": "SPT-URGENT-FLEX", "theta_seconds": 0,
+        "reservation_evidence_schema_version": 2,
         "reservation_k": 200, "event_mode": "shared-timer",
         "reservations": [{
+            "evidence_schema_version": 2,
             "promise_id": "promise-1", "protected_job": 1,
             "protected_job_name": 1, "issued_time": 1, "promised_R": 10,
             "current_free_initial": {"gpu": [0, 1, 1, 1], "cpu": [0, 100, 100, 100]},
@@ -139,6 +141,11 @@ class M2BCertificateReplay(unittest.TestCase):
         result = simulate_pool(nd, jj, "SPT-URGENT-FLEX", theta_seconds=0)
         promise = result["reservations"][0]
         self.assertIn("initial_placement_witness", promise)
+        self.assertEqual(result["reservation_evidence_schema_version"], 2)
+        self.assertIn("snapshot_sha256", promise)
+        self.assertNotIn("current_free_initial", promise)
+        self.assertNotIn("future_free_initial", promise)
+        self.assertNotIn("future_free_at_R", promise)
         self.assertTrue(all("future_delta" in u for u in promise["certificate_updates"] if "job" in u))
         self.assertTrue(all("future_free_at_R" not in u for u in promise["certificate_updates"] if "job" in u))
         validate_reservations(nd, result["jobs"], result)
@@ -150,6 +157,10 @@ class M2BCertificateReplay(unittest.TestCase):
         bad["reservations"] = None
         with self.assertRaises(AssertionError):
             validate_reservations(nd, jobs, bad)
+        legacy = copy.deepcopy(result)
+        legacy["reservation_evidence_schema_version"] = 1
+        with self.assertRaises(AssertionError):
+            validate_reservations(nd, jobs, legacy)
 
 
 if __name__ == "__main__":

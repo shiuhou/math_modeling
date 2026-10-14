@@ -88,10 +88,13 @@ M2-B 有界成本探針（只比較已明示的 A10 前綴，不能代替完整 
   --jobs 16384 32768 --theta-seconds 4860000 --short-theta-seconds 4 \
   --reservation-k 200 --event-mode shared-timer \
   --policies SPT-URGENT-TIME SPT-URGENT-FIXED SPT-URGENT-FLEX \
+  --timeout-seconds 900 --max-rss-kib 4194304 \
   --out outputs/q2-m2b-bounded-01
 ```
 
-它為每個策略建立獨立 child process，分開記錄 scheduler、獨立 reservation replay、評價、I/O 與 process peak RSS；短門檻只是機制壓力情景。若短門檻造成記憶體或時間失控，應停止並標記完整 trace `NOT_RUN`，不能從錨點前綴推論 FIXED/FLEX 性能收益。
+它為每個策略建立獨立 child process，分開記錄 scheduler、獨立 reservation replay、評價、I/O 與 process peak RSS；可用 timeout／RSS 上限中止子程序，並留下 `TIMEOUT` 或 `RSS_LIMIT` 狀態與診斷。短門檻只是機制壓力情景。若短門檻造成記憶體或時間失控，應停止並標記完整 trace `NOT_RUN`，不能從錨點前綴推論 FIXED/FLEX 性能收益。
+
+reservation evidence schema `2` 在履約後移除 dense CPU/GPU vectors，只保留 snapshot hash、immutable witness、版本、稀疏 crossing delta、履約及事件 ledger；活動中的 reservation 才保留 scheduler 所需 snapshot。validator 不會把缺少 schema 或舊 schema 靜默當作新證據。
 
 ## 驗證狀態與舊程式處置
 
