@@ -1,0 +1,23 @@
+test_supplied_hand_cases_and_scalar_oracle (test_baseline.SuppliedBaselineTests.test_supplied_hand_cases_and_scalar_oracle) ... ok
+test_saved_ledger_roundtrip_and_corruption (test_baseline_cli.BaselineCLI.test_saved_ledger_roundtrip_and_corruption) ... ok
+test_evaluator_does_not_claim_capacity_validation (test_intake_contracts.IntakeContracts.test_evaluator_does_not_claim_capacity_validation) ... ok
+test_fractional_capacity_and_raw_frame_preservation (test_intake_contracts.IntakeContracts.test_fractional_capacity_and_raw_frame_preservation) ... ok
+test_infeasible_job_is_reported_instead_of_default_zero_times (test_intake_contracts.IntakeContracts.test_infeasible_job_is_reported_instead_of_default_zero_times) ... ok
+test_models_cannot_share_a_pool (test_intake_contracts.IntakeContracts.test_models_cannot_share_a_pool) ... ok
+test_precision_rejected_without_rounding (test_intake_contracts.IntakeContracts.test_precision_rejected_without_rounding) ... ok
+test_replay_rejects_overallocation_and_invalid_node_index (test_intake_contracts.IntakeContracts.test_replay_rejects_overallocation_and_invalid_node_index) ... ok
+test_binned_demand_crossing_boundaries_and_partial_day (test_q1.Q1Checks.test_binned_demand_crossing_boundaries_and_partial_day) ... ok
+test_ccdf_groups_tied_durations (test_q1.Q1Checks.test_ccdf_groups_tied_durations) ... ok
+test_daily_integral_matches_independent_overlap_for_every_bin (test_q1.Q1Checks.test_daily_integral_matches_independent_overlap_for_every_bin) ... ok
+test_gini_matches_pairwise_definition (test_q1.Q1Checks.test_gini_matches_pairwise_definition) ... ok
+test_lorenz_includes_origin_and_endpoint (test_q1.Q1Checks.test_lorenz_includes_origin_and_endpoint) ... ok
+test_partial_phase_exposure (test_q1.Q1Checks.test_partial_phase_exposure) ... ok
+test_seconds_integral_and_boundary_release (test_q1.Q1Checks.test_seconds_integral_and_boundary_release) ... ok
+test_top_count_is_floor (test_q1.Q1Checks.test_top_count_is_floor) ... ok
+test_git_reference_and_numeric_corruption (test_q1_delivery.DeliveryChecks.test_git_reference_and_numeric_corruption) ... ok
+test_missing_compiler_reports_blocked_without_creating_output (test_q1_delivery.DeliveryChecks.test_missing_compiler_reports_blocked_without_creating_output) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.601s
+
+OK

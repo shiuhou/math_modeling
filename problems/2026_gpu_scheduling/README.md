@@ -120,7 +120,7 @@ PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discove
 
 `--figures main|supplementary|all` 預設 `main`；Q2/Q3 歷史圖須額外 `--paper-reference`。`eda_deep.py` 與 `eda_analysis.py` 仍共用 Q1 公式及原九表格式。`H_j=W_j*g_j*d_j` 是 GPU-seconds，`rho=sum(H)/(T*capacity)` 不是利用率。A10 exact-window immediate-start 平均 3,614.54040431、峰值 4,103、容量 2,494；平均差 1,120.54040431 不是已證擴容方案。GPU-s1 按四種節點配置分析，超過 24 vCPU/GPU 為 2,478 jobs（25.6974%）。t=0 是提交批次，24 小時是 relative trace phase；Lorenz 含原點、CCDF 使用嚴格大於並合併 ties，Top-k floor。
 
-驗收與未確認事項集中於 [Q1 任務筆記](../../notes/tasks/b-q1.md)。編譯與計算成功不代表人工審閱或整篇競賽提交已完成。整合 Q2/Q3 時須一併採用共用章節、數值及 build／figure 入口；新增 Q1 圖會自然改變後續圖號，應使用 LaTeX label 交叉引用。此分支不直接改動兩個研究分支。
+本輪 Q1 兩頁、全稿九頁；39 統計／九表、180 每日區間、18 項 B 測試與乾淨 clone 重現均 PASS。全稿 Q2/Q3 舊小字／寬表仍有格式缺口。驗收與未確認事項集中於 [Q1 任務筆記](../../notes/tasks/b-q1.md)。編譯與計算成功不代表人工審閱或整篇競賽提交已完成。整合 Q2/Q3 時須一併採用共用章節、數值及 build／figure 入口；新增 Q1 圖會自然改變後續圖號，應使用 LaTeX label 交叉引用。此分支不直接改動兩個研究分支。
 
 ## Q2／Q3 下一步
 

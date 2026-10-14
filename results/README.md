@@ -2,6 +2,8 @@
 
 依 [modeling.md](../modeling.md) 第 7、9、10 章，這裡保留可受版本追蹤的正式實驗清單、小型指標及重算所需明細。目前保存 [Q1 重算清單](20261014-b-q1-intake-4a8f8f2b/manifest.json) 與九張小型核算表；PASS 限於清單列明的 Q1 計算／圖表檢查，未驗證 Q2 改進器或 Q3 性能。另見 [共用工程驗收](20261014-b-intake-ready/acceptance.json)，包含完整 FCFS／SJF-HOL 基線與 clone 驗收；基線與論文草稿的驗證狀態分開。[manifest.example.json](manifest.example.json) 仍是未運行的格式示例。
 
+本輪 [Q1 論文與交付驗收](20261014-b-q1-publication-42b5a896/manifest.json) 保存兩頁英文／繁中／圖表、180 個每日需求區間、乾淨 clone 與解壓來源重現證據。原九表不重複入庫；全稿格式缺口與人工審閱仍分別記錄。
+
 ## 保留位置
 
 - 臨時快取及可再生大型輸出放 [outputs/](../outputs/README.md)，原始資料依 [data 約定](../data/README.md) 管理。

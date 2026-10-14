@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "source": "extracted delivered source outside Git",
+  "data": "raw CSVs from clean clone",
+  "exact_q1_json_and_nine_csv_bytes": "PASS",
+  "publication_values": "PASS",
+  "q1_pages": 2,
+  "q2_q3_assets_required": false,
+  "unexpected_parent_git_attribution": false,
+  "command": [
+    "python",
+    "source/problems/2026_gpu_scheduling/experiments/build_paper.py",
+    "--scope",
+    "q1",
+    "--data",
+    "CLONE/problems/2026_gpu_scheduling/data/raw",
+    "--out",
+    "NEW_BUILD",
+    "--compiler",
+    "tectonic"
+  ],
+  "source_commit": "00f6f57",
+  "final_snapshot_sha256": {
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "a6f982f412fce33cf91fadef305abc2299d0c76df1aec93f2e845aa1beb0da21",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1_publication.py": "444fa7240f6675e7064d4d12ae47c415b3d54f5707218cecca3a46094660496b",
+    "problems/2026_gpu_scheduling/experiments/build_paper.py": "7f9ad69acf0db0f32aaaf195ce4dde774502ea0418d191d60deaaf8aca5ada01",
+    "problems/2026_gpu_scheduling/experiments/generate_figures.py": "c09623da50d96a3eb8bfe60061c81cb8185b1acd17be8b4f40869114664a26e1",
+    "problems/2026_gpu_scheduling/experiments/eda_analysis.py": "0cb89eb7eb9b62ad1249dba5892b1aeeceb9abacd0bbe1ca7d65f8088228d9ab",
+    "problems/2026_gpu_scheduling/experiments/eda_deep.py": "05f0aa3a00ea63fd6f5afb8dd333143e9c730bb18a1c8775de3c6e120bc2a16f",
+    "problems/2026_gpu_scheduling/experiments/verify_q1.py": "7e6c2ee6555d6a847b8a9d0d462a4919a04377c7d87a55d2e4d796cb930e6187",
+    "problems/2026_gpu_scheduling/paper/preamble.tex": "d2cefbf397a784b54d1cabe080d52fc7f2026bb278d203e63b749c2bf89d1f2a",
+    "problems/2026_gpu_scheduling/paper/document_en.tex": "9058153322be91e91d4dcaa0b3d649874d9ea44bc21bd6df1f9f3588b92b50b4",
+    "problems/2026_gpu_scheduling/paper/q1_section.tex": "c579a432ca67011b2e2a9f35e39cf18a10d8f58705b4eb759c889a7b7ee8a823",
+    "problems/2026_gpu_scheduling/paper/q1_summary.tex": "e57935f89ac6f33dcf373df86c08c5cff2dd1edd01aaa7af0e1123665ba43e1f",
+    "problems/2026_gpu_scheduling/paper/q1_zh.html": "ca2dcfee02baeebd71a544cb9d436669a6f820ad21f346a1c43f855c1b27636a",
+    "problems/2026_gpu_scheduling/requirements.txt": "dbe08f50f6124e5037ffc570e9bdf53ec5fef0e80e3506f9ec02b3c5d43f134c",
+    "problems/2026_gpu_scheduling/tests/test_q1.py": "e082fd46a0fc68ee3b9ed8a11d0bcea9e7990e0a5804bd188ea171dde2ca16ec"
+  }
+}

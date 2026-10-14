@@ -1,0 +1,64 @@
+{
+  "status": "PASS",
+  "source": "local Git clone --no-local of committed branch, no attachments",
+  "commit": "00f6f5753b7c6870a524810589c8d190a6892991",
+  "fresh_venv": true,
+  "commands": [
+    {
+      "command": [
+        ".venv/bin/python",
+        "problems/2026_gpu_scheduling/experiments/build_paper.py",
+        "--scope",
+        "q1",
+        "--out",
+        "outputs/q1-run",
+        "--bundle"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "problems/2026_gpu_scheduling/experiments/verify_q1.py",
+        "--reference-dir",
+        "results/20261014-b-q1-intake-4a8f8f2b",
+        "--results",
+        "outputs/q1-run/q1",
+        "--out",
+        "outputs/q1-run-verified.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "problems/2026_gpu_scheduling/tests",
+        "-p",
+        "test_q1*.py",
+        "-v"
+      ],
+      "returncode": 0
+    }
+  ],
+  "python": "3.12.3",
+  "compiler": "tectonic 0.17.0 available via PATH; TeX cache reused",
+  "numeric_comparison": "PASS",
+  "raw_data_from_git": true,
+  "initial_test_commit": "1583034ea30654167619f5f3260c276b6fb88d2f",
+  "final_build_command": [
+    ".venv/bin/python",
+    "problems/2026_gpu_scheduling/experiments/build_paper.py",
+    "--scope",
+    "q1",
+    "--out",
+    "outputs/q1-final",
+    "--bundle"
+  ],
+  "final_build_status": "PASS",
+  "final_build_dirty": false,
+  "final_source_change": "Only a compatibility label since initial clean clone test."
+}

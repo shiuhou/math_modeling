@@ -1,0 +1,100 @@
+{
+  "kind": "q1_handoff_comparison",
+  "status": "PASS",
+  "scope": "All numeric and semantic Q1 outputs; input byte provenance is separate",
+  "reference_kind": "handoff_zip",
+  "handoff_zip_sha256": "4a8f8f2b92feaefa86b9af580ab9132295933171ed765ae063bd14bc9f963485",
+  "checks": {
+    "q1_statistics": {
+      "status": "PASS",
+      "fields_checked": 39,
+      "excluded_field": "input_sha256 (reported separately)"
+    },
+    "concentration.csv": {
+      "status": "PASS",
+      "rows": 42,
+      "columns": 5,
+      "byte_identical": true,
+      "handoff_sha256": "a3898b0c4a1ee685c10be8a6b8e819a3eefc39f25e96b2446e65658f754d7cfd",
+      "recomputed_sha256": "a3898b0c4a1ee685c10be8a6b8e819a3eefc39f25e96b2446e65658f754d7cfd"
+    },
+    "daily_arrivals.csv": {
+      "status": "PASS",
+      "rows": 630,
+      "columns": 7,
+      "byte_identical": true,
+      "handoff_sha256": "9c86d4920953bab83bbee889bd9fb9ebb41e581a7e861bc5d9966e7c63fe6387",
+      "recomputed_sha256": "9c86d4920953bab83bbee889bd9fb9ebb41e581a7e861bc5d9966e7c63fe6387"
+    },
+    "duration_quantiles.csv": {
+      "status": "PASS",
+      "rows": 9,
+      "columns": 4,
+      "byte_identical": true,
+      "handoff_sha256": "d43c0caf60e68591a47a1758de5a887cc0194411025425782fd487107d17bac0",
+      "recomputed_sha256": "d43c0caf60e68591a47a1758de5a887cc0194411025425782fd487107d17bac0"
+    },
+    "immediate_start_demand.csv": {
+      "status": "PASS",
+      "rows": 12,
+      "columns": 9,
+      "byte_identical": true,
+      "handoff_sha256": "1820ca9eba10ba484874ea40629eec3c01f3eb62eeb0741af8db46f48ab9a2bf",
+      "recomputed_sha256": "1820ca9eba10ba484874ea40629eec3c01f3eb62eeb0741af8db46f48ab9a2bf"
+    },
+    "node_configurations.csv": {
+      "status": "PASS",
+      "rows": 10,
+      "columns": 4,
+      "byte_identical": true,
+      "handoff_sha256": "5312d24cebc50b674af06d98033063b9f33566ee6fa5610c667ff7bc45c079f7",
+      "recomputed_sha256": "5312d24cebc50b674af06d98033063b9f33566ee6fa5610c667ff7bc45c079f7"
+    },
+    "pool_summary.csv": {
+      "status": "PASS",
+      "rows": 6,
+      "columns": 28,
+      "byte_identical": true,
+      "handoff_sha256": "00699b13c32de2d46667709b4ba6b88c7dea2caf0e76c7c35ef98899f5c96a1d",
+      "recomputed_sha256": "00699b13c32de2d46667709b4ba6b88c7dea2caf0e76c7c35ef98899f5c96a1d"
+    },
+    "relative_24h_phase.csv": {
+      "status": "PASS",
+      "rows": 168,
+      "columns": 5,
+      "byte_identical": true,
+      "handoff_sha256": "0a77ea2c5ac5be640a8dd940e608163c6734709c21b13bbf3517d1228332174f",
+      "recomputed_sha256": "0a77ea2c5ac5be640a8dd940e608163c6734709c21b13bbf3517d1228332174f"
+    },
+    "resource_shape.csv": {
+      "status": "PASS",
+      "rows": 10,
+      "columns": 8,
+      "byte_identical": true,
+      "handoff_sha256": "2d7f9a04485c39c648d8fa2f2ff7c58954fdc93ebe5a749afda98102c58cb26e",
+      "recomputed_sha256": "2d7f9a04485c39c648d8fa2f2ff7c58954fdc93ebe5a749afda98102c58cb26e"
+    },
+    "thirty_day_blocks.csv": {
+      "status": "PASS",
+      "rows": 21,
+      "columns": 6,
+      "byte_identical": true,
+      "handoff_sha256": "5d2c950939334bd42e5373da3b97210c33e82cc6ef931caf6bc10b67986bb9cd",
+      "recomputed_sha256": "5d2c950939334bd42e5373da3b97210c33e82cc6ef931caf6bc10b67986bb9cd"
+    }
+  },
+  "input_provenance": {
+    "handoff": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1"
+    },
+    "current": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "node_bytes": "PASS",
+    "reference_job_byte_identity": "BLOCKED",
+    "historical_job_byte_identity": "BLOCKED",
+    "reason": "This checks the chosen reference only. Historical original job bytes remain unavailable; agreement with Git results does not resolve the earlier handoff byte discrepancy."
+  }
+}

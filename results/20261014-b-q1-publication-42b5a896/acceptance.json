@@ -1,0 +1,97 @@
+{
+  "scope": "Q1 publication engineering and numerical acceptance; not entire paper submission",
+  "q1_acceptance": "PASS",
+  "submission_ready": false,
+  "checks": [
+    {
+      "item": "raw_recalculation",
+      "status": "PASS",
+      "evidence": "reference_comparison.json: 39 statistics and all nine CSVs; byte-identical to Git reference"
+    },
+    {
+      "item": "historical_handoff_numeric_comparison",
+      "status": "PASS",
+      "evidence": "optional_zip_comparison.json; optional, not required for a clone"
+    },
+    {
+      "item": "original_six_q1_tests",
+      "status": "PASS",
+      "evidence": "engineering_checks.json"
+    },
+    {
+      "item": "daily_aggregation",
+      "status": "PASS",
+      "evidence": "publication_checks.json; all 180 bins independently checked, two new boundary-case tests"
+    },
+    {
+      "item": "bilingual_values_and_table",
+      "status": "PASS",
+      "evidence": "publication_checks.json; same macros and six-model rows"
+    },
+    {
+      "item": "q1_pdf_and_figures",
+      "status": "PASS",
+      "evidence": "presentation_checks.json; two pages, one table, two main and five supplementary figures"
+    },
+    {
+      "item": "offline_html",
+      "status": "PASS",
+      "evidence": "html_checks.json"
+    },
+    {
+      "item": "full_compile_and_page_count",
+      "status": "PASS",
+      "evidence": "build_summary.json; nine pages"
+    },
+    {
+      "item": "full_competition_typography",
+      "status": "FAIL",
+      "evidence": "presentation_checks.json; Q2/Q3 inherited small fonts and overflow remain"
+    },
+    {
+      "item": "repository_and_regression_tests",
+      "status": "PASS",
+      "evidence": "engineering_checks.json; 12 root and 18 B tests"
+    },
+    {
+      "item": "clean_clone",
+      "status": "PASS",
+      "evidence": "clean_clone.json; new venv, Git-contained raw, no attachments"
+    },
+    {
+      "item": "delivery_source_reproduction",
+      "status": "PASS",
+      "evidence": "snapshot_reproduction.json; unpacked source outside Git"
+    },
+    {
+      "item": "q2_q3_algorithms_and_raw_unchanged",
+      "status": "PASS",
+      "evidence": "Compared Q2 onward text, archived plot function, data.py, simulator.py, evaluation.py, document_zh.html and both raw CSVs with abdbc4c"
+    },
+    {
+      "item": "full_scheduling_rerun",
+      "status": "NOT_RUN",
+      "evidence": "No shared scheduling algorithm changed; outside Q1 scope"
+    },
+    {
+      "item": "historical_job_byte_identity",
+      "status": "BLOCKED",
+      "evidence": "Original data ZIP unavailable; Git CSV differs from handoff-recorded SHA; numeric agreement does not resolve it"
+    },
+    {
+      "item": "redistribution_scope",
+      "status": "BLOCKED",
+      "evidence": "Awaiting team confirmation; raw data not duplicated in ZIP"
+    },
+    {
+      "item": "team_names_and_final_disclosure",
+      "status": "BLOCKED",
+      "evidence": "Awaiting team confirmation"
+    },
+    {
+      "item": "human_bilingual_and_full_paper_review",
+      "status": "NOT_RUN",
+      "evidence": "Team review required before competition submission"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "q1_pages": 2,
+  "full_pages": 9,
+  "q1_visual_review": "Both pages inspected; final renders byte-identical to inspected layout. Body, table, legends, captions unclipped; extra demand-legend headroom retained.",
+  "supplementary_visual_review": "All five figures inspected. Final PNG bytes match reviewed figures.",
+  "chinese_visual_review": "Traditional Chinese full-page browser screenshot inspected; no missing glyphs/images; final prose unchanged except aligned subsection numbering.",
+  "full_review": "All nine pages rendered and contact sheet inspected; text unchanged from inspected build. Not a full competition-format approval.",
+  "q1_overfull_boxes": 0,
+  "full_overfull_boxes": 4,
+  "full_format_status": "FAIL",
+  "full_format_reason": "Inherited Q2/Q3 tables and plots use small fonts; wide table/formula overflow remains. Outside Q1 scope.",
+  "math_font_note": "Body/table/captions 11.059 PDF points; TeX main math 10.909 points and conventional smaller scripts; plot horizontal labels 11.213 points.",
+  "human_bilingual_review": "NOT_RUN",
+  "source_labels": [
+    "fig:q1",
+    "eq:load_ratio",
+    "tab:q1_summary",
+    "tab:q1_pool",
+    "fig:q1-demand"
+  ]
+}

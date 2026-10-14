@@ -11,7 +11,23 @@
 
 ## 驗收狀態
 
-本節在最終重現後填入實際證據；目前已有原 CSV 重算／39 統計與九表核對、兩頁 Q1 與九頁全稿編譯、PDF 與中文離線初檢。這些不代表完整交付包驗收已結束。
+正式證據見 [本輪清單](../../results/20261014-b-q1-publication-42b5a896/manifest.json) 與 [逐項驗收](../../results/20261014-b-q1-publication-42b5a896/acceptance.json)。
+
+- PASS：原 CSV 重算，39 項統計／九表與 Git 基準及可選交接 ZIP 均吻合；九表 bytes 相同。歷史 input byte 身份另列 BLOCKED。
+- PASS：既有六項 Q1 數值測試、兩項新聚合邊界測試與兩項交付檢查；完整 B 測試共 18 項，根目錄 12 項。原資料逐區間獨立重疊核算與 180 個每日需求積分一致。
+- PASS：兩頁 Q1，一表兩正文圖、五張補充圖；中英文共享數值／表格、PDF 逐頁檢視與中文離線 HTML／圖像／連結檢查。正文、表格、圖說約 11.059 PDF pt，水平圖中文字約 11.213 pt；數學上下標依慣例較小。
+- PASS：全稿編譯九頁；FAIL：全稿競賽字體／溢出驗收，Q2/Q3 原有小字寬表與四處 overfull 仍待該階段處理，不以九頁即宣稱可提交。
+- PASS：獨立 Git clone、新 venv、README 命令重現，不依賴 ChatGPT 附件；本機 Tectonic 0.17.0／套件快取沿用，未測試完全離線首次安裝。
+- PASS：交付包解壓到 Git 外，僅指定 clone 中 raw CSV 即可重現九表／統計與兩頁 Q1；ZIP 約 1.1 MB，無原始資料、環境、快取、大型逐作業明細及 Q2/Q3 圖。
+- NOT_RUN：團隊人工雙語審閱、全量調度重跑、競賽正式提交。Q1 可以供全文採用與後續人工審閱，整篇仍未達提交狀態。
+
+本機成品在 `outputs/q1-final/`，Git 僅保存原始碼、小型核查證據與重現入口。交付包另含本輪驗收記錄；純 `--bundle` 重算生成的是 build-time 記錄，人工／呈現檢查需重新記錄。
+
+## 整合到 Q2/Q3 時
+
+相對 `abdbc4c` 的來源提交：`1583034`（雙語正文、圖、交付入口）及 `00f6f57`（保留 `tab:q1_summary` 舊標籤），其後為本輪證據／文件提交。整合者查看 `git log abdbc4c..feat/b-q1` 和完整 diff，再按各分支最新進度正常合併或選取，不重寫已推送歷史。
+
+`fig:q1`、`eq:load_ratio`、`tab:q1_summary` 保留；新增需求圖會改變後續圖號，使用 label 引用。`build_paper.py` 預設仍 full；Q1 scope 無須歷史 Q2/Q3 圖資。`q1.py` 只增加區間積分函式，九表及 EDA 介面不變。未改 DES／evaluator／loader、Q2 起正文、歷史中文稿或 raw bytes；未操作兩個研究分支與 main。
 
 ## 未確認事項
 
