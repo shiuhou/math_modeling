@@ -19,6 +19,7 @@ import sys
 import time
 import numpy as np
 import os
+import subprocess
 
 PROBLEM = Path(__file__).resolve().parents[1]
 REPO = PROBLEM.parents[1]
@@ -106,6 +107,10 @@ def main() -> None:
         parser.error("Output exists; choose a new directory")
     if args.jobs <= 0:
         parser.error("--jobs must be positive")
+    code_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip()
+    code_dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=REPO, text=True).strip())
+    source_paths = sorted((PROBLEM / "src/gpu_scheduling").glob("*.py")) + [Path(__file__).resolve()]
+    source_hashes = {str(p.relative_to(REPO)): sha256(p) for p in source_paths}
     input_started = time.perf_counter()
     nodes, raw_jobs, hashes = read_data(args.data)
     jobs = raw_jobs[raw_jobs.gpu_model == args.model].head(args.jobs).copy()
@@ -185,8 +190,8 @@ def main() -> None:
         })
     summary = {
         "schema_version": 1, "kind": "m2a_pressure_run",
-        "code_commit": __import__("subprocess").check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip(),
-        "code_dirty": bool(__import__("subprocess").check_output(["git", "status", "--porcelain"], cwd=REPO, text=True).strip()),
+        "code_commit": code_commit, "code_dirty": code_dirty,
+        "source_sha256": source_hashes,
         "data_sha256": hashes, "model": args.model, "jobs": len(jobs),
         "configuration": {"policies": [r["policy"] for r in results], "theta_seconds": args.theta_seconds,
                           "reservation_k": args.reservation_k, "event_mode": args.event_mode,
