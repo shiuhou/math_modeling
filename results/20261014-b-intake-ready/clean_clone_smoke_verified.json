@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "scope": "smoke_first_64_per_model",
+  "checks": [
+    {
+      "policy": "FCFS",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "metrics": "PASS"
+    },
+    {
+      "policy": "SJF-HOL",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "metrics": "PASS"
+    }
+  ],
+  "run_sha256": "777298ee11ef7f6ac8ded1062d99682dbc4b1aa0e046616d279b81e6a311fe6a"
+}

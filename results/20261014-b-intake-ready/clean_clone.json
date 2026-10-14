@@ -1,0 +1,100 @@
+{
+  "source_commit": "2cbb000e135158ff9436c66b09a54b0f591ac7e6",
+  "transport": "local --no-hardlinks clone; no attachments or prior virtualenv",
+  "steps": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "venv",
+        ".venv"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "duration_seconds": 1.7617704389995197
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "problems/2026_gpu_scheduling/requirements.txt"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "duration_seconds": 8.945584603992756
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_repo.py"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "duration_seconds": 0.046570370002882555
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "duration_seconds": 0.25801540599786676
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "problems/2026_gpu_scheduling/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "duration_seconds": 0.9895578800060321
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "problems/2026_gpu_scheduling/experiments/run_baselines.py",
+        "--smoke",
+        "--out",
+        "outputs/b-smoke-01"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "duration_seconds": 0.5166183429973898
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "problems/2026_gpu_scheduling/experiments/verify_baseline.py",
+        "--run",
+        "outputs/b-smoke-01",
+        "--out",
+        "outputs/b-smoke-01-verified.json"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "duration_seconds": 0.42603825600235723
+    }
+  ],
+  "status": "PASS",
+  "attachment_archives_present": false,
+  "working_tree_clean": true,
+  "source_archive_byte_matches": {
+    "status": "PASS",
+    "count": 13
+  },
+  "baseline_code_byte_matches": "PASS"
+}

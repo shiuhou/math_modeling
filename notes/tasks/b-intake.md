@@ -9,3 +9,5 @@
 跨章修正：Q3 mean demand 改為 Q1 的 3,614.54、mean excess 1,120.54（非已證擴容需求）；Gini 不推導 Cv²／最優；BSLD 最低 1；節點配置例外、zero CPU、需求與利用率語義、披露同步。圖保留可用風格，Q1 原始資料重算，Q2/Q3 只畫帶 NOT_RUN 標記的原稿表值，不補造數字。英文仍為研究草稿，中文歷史參考未改性能結論。
 
 基本 clone／命令與接口見 [唯一 B README](../../problems/2026_gpu_scheduling/README.md)。驗收詳情與編譯狀態保存於 [整合驗收](../../results/20261014-b-intake-ready/acceptance.json)。剩餘：舊 improved policies 與 Q3 不重驗；missing helper、歷史 node ledger、原資料 ZIP、資料公開範圍、正式環境、姓名、reviewer 待確認。Q2／Q3 研究後各自 PR，由整合者處理共用碼與論文衝突。
+
+乾淨 clone 驗收 PASS：新 venv 安裝固定依賴、12 根測試／14 B 題測試、README smoke 與獨立持久化核查均通過；沒有附件 ZIP。全稿編譯 PASS，9 頁；原寬表縮字低於 11pt，提交版排版尚未完成，留待研究定稿，不阻塞 Q2/Q3 開工。
