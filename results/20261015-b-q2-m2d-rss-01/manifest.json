@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261015-b-q2-m2d-rss-01",
+  "question_or_claim": "Q2 M2-D RSS recovery and validator evidence delivery; no full-trace performance claim",
+  "code": {
+    "run_commit": "6caebca50d07c0c3f0886b876332275b6eade4c2",
+    "dirty_at_run": true,
+    "changes": [
+      "release validated reservation replay contexts after protected start",
+      "persist replay phase boundaries and progress counters",
+      "capture source hashes before pressure runs"
+    ],
+    "untracked_preserved": [
+      "notes/tasks/b-q2 _newest.md"
+    ]
+  },
+  "data": {
+    "source": "problems/2026_gpu_scheduling/data/raw",
+    "sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "model": "A10",
+    "nodes": 2494,
+    "jobs_in_pressure_run": 65536,
+    "jobs_in_full_trace": 111284
+  },
+  "configuration": {
+    "theta_seconds": 604800,
+    "theta_label": "exploratory-168h",
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "placement": "FF-id ascending numeric node_name",
+    "horizon_seconds": 7776000,
+    "timeout_seconds": 900,
+    "max_rss_kib": 4194304,
+    "policy": "SPT-URGENT-HOL"
+  },
+  "command": {
+    "benchmark": ".venv/bin/python problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py --out outputs/q2-m2d-rss-65536-20261015 --jobs 65536 --theta-seconds 604800 --short-theta-seconds 604800 --reservation-k 200 --event-mode shared-timer --timeout-seconds 900 --max-rss-kib 4194304 --policies SPT-URGENT-HOL",
+    "independent_verification": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python problems/2026_gpu_scheduling/experiments/verify_m2a_pressure.py --data problems/2026_gpu_scheduling/data/raw --run outputs/q2-m2d-rss-65536-20261015/a10-65536-theta604800-spt-urgent-hol --out results/20261015-b-q2-m2d-rss-01/a10-65536-spt-urgent-hol-verified.json",
+    "checks": [
+      "python3 scripts/check_repo.py",
+      "python3 -m unittest discover -s tests -v",
+      "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v",
+      "git diff --check"
+    ],
+    "working_directory": "."
+  },
+  "environment": {
+    "python": "Python 3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "process_isolation": "one child per policy",
+    "resource_guard": "900 seconds and 4194304 KiB RSS per child"
+  },
+  "pressure_run": {
+    "status": "PASS",
+    "jobs": 65536,
+    "wall_seconds": 654.1302666569973,
+    "scheduler_seconds": 551.5975422799966,
+    "validation_seconds": 98.58452133098035,
+    "metrics_seconds": 0.0051379280048422515,
+    "io_seconds": 3.3270882509823423,
+    "peak_rss_kib_process": 914604,
+    "reservations": 38253,
+    "events": 314306,
+    "candidate_checks": 8520733,
+    "crossing_accepted": 0,
+    "crossing_rejected": 0,
+    "certificate_updates": 0,
+    "schedule_sha256": "42129d2777d68d488cb37469a80275fc16f5c3b140f0846a84a00f2ac5171e18",
+    "completed_at_horizon": 54649,
+    "final_completion_days": 232.44791666666666
+  },
+  "phase_diagnosis": {
+    "status": "PASS",
+    "phase_log": "outputs/q2-m2d-rss-65536-20261015/a10-65536-theta604800-spt-urgent-hol/phase_log.jsonl",
+    "scheduler_and_capacity": {
+      "status": "PASS",
+      "latest_rss_kib": 348608,
+      "latest_peak_rss_kib": 348608
+    },
+    "reservation_validation": {
+      "status": "PASS",
+      "end_rss_kib": 340540,
+      "end_peak_rss_kib": 348608,
+      "promises_completed": 38253
+    },
+    "metrics": {
+      "status": "PASS",
+      "end_rss_kib": 339792,
+      "end_peak_rss_kib": 348608
+    },
+    "persistence": {
+      "status": "PASS",
+      "end_rss_kib": 342008,
+      "process_peak_rss_kib": 914604,
+      "files_written": 3,
+      "interpretation": "The process peak was observed during persistence/write. The phase log does not support attributing it to scheduler or validator."
+    }
+  },
+  "validation": {
+    "status": "PASS",
+    "checks": [
+      {
+        "name": "repo_check",
+        "status": "PASS",
+        "evidence": "checks.log"
+      },
+      {
+        "name": "root_tests",
+        "status": "PASS",
+        "evidence": "checks.log; 12 tests"
+      },
+      {
+        "name": "problem_b_tests",
+        "status": "PASS",
+        "evidence": "problem-tests.log; 43 tests"
+      },
+      {
+        "name": "small_schedule_and_event_regression",
+        "status": "PASS",
+        "evidence": "small-regression.json; TIME/FIXED/FLEX hashes and event hashes match historical outputs"
+      },
+      {
+        "name": "small_independent_persistence_replay",
+        "status": "PASS",
+        "evidence": "a10-4096-* and a10-8192-* verified JSON files"
+      },
+      {
+        "name": "validator_memory_replay_probe",
+        "status": "PASS",
+        "evidence": "replay-memory-curves.json and replay-memory-curves.png"
+      },
+      {
+        "name": "controlled_kill_diagnostic",
+        "status": "TIMEOUT",
+        "evidence": "kill-diagnostic.json; preserved latest phase and RSS"
+      },
+      {
+        "name": "a10_65536_spt_urgent_hol_pressure_run",
+        "status": "PASS",
+        "evidence": "a10-65536-spt-urgent-hol-verified.json and benchmark summary"
+      }
+    ]
+  },
+  "full_m2d": {
+    "status": "INCOMPLETE",
+    "go_no_go": "NO-GO",
+    "reason": "Only the recovered SPT-URGENT-HOL pressure run was completed. The required multi-policy and full-trace comparison was not executed.",
+    "six_or_nine_policy_matrix": "NOT_RUN",
+    "full_111284_job_comparison": "NOT_RUN",
+    "theta_1350h_comparison": "NOT_RUN",
+    "next_minimal_blocker": "Run the remaining frozen policies under the same per-process resource guard, or obtain explicit approval for a staged comparison."
+  },
+  "results": {
+    "pressure_summary": "outputs/q2-m2d-rss-65536-20261015/a10-65536-theta604800-spt-urgent-hol/summary.json",
+    "phase_log": "outputs/q2-m2d-rss-65536-20261015/a10-65536-theta604800-spt-urgent-hol/phase_log.jsonl",
+    "independent_verification": "a10-65536-spt-urgent-hol-verified.json",
+    "small_regression": "small-regression.json",
+    "memory_probe": "replay-memory-curves.json",
+    "large_outputs": "outputs/q2-m2d-rss-65536-20261015/a10-65536-theta604800-spt-urgent-hol (ignored; hashes recorded in summary)",
+    "file_hashes": {
+      "a10-65536-spt-urgent-hol-verified.json": "5a202170da025a2197e66b71b4736d9b2278d10087729e50bf5304f1534ad61c",
+      "small-regression.json": "dfc806fd172ed6a08076005be55fe4b6fe7ee1a4895e200da7fd46a2474abc32",
+      "small-benchmark.json": "c047eae046c4f449e63fdcc190e6c027e1b2f172038c14383d9c1e7db22e6912",
+      "kill-diagnostic.json": "082405e9760a57505b5c64c985bad6b1969068f8103d9e2751f3182b47557709"
+    }
+  },
+  "open_items": [
+    "The previous fast-path RSS_LIMIT evidence remains historical and is not overwritten.",
+    "The pressure run was captured with dirty_at_run=true; source hashes in summary.json are authoritative.",
+    "Full M2-D comparison remains incomplete; no Q1/Q3 or paper performance claim is made."
+  ]
+}

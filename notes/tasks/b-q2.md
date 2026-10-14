@@ -291,3 +291,11 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - A10 4,096／1350h 的 TIME、FIXED、FLEX：三者 schedule hash 均為既有 `ffdc1d15...41fa9df`，獨立 capacity ledger／reservation replay PASS。
 - A10 65,536／168h SPT-URGENT-HOL：fast path 後執行 586.155 s，RSS 達 `4,195,872 KiB`，觸發 4 GiB `RSS_LIMIT`；未產生完整 schedule／metrics，沒有提高上限或把它當作 PASS。這表示主要剩餘瓶頸已從 protected-HOL 重複排序轉為高頻 reservation／event／job evidence 記憶體成長。
 - 正式證據：`results/20261015-b-q2-m2d-fastpath-01/manifest.json`、`profile-comparison.json`、`a10-4096-verified.json`、`hol-65536-benchmark.json`。完整 168h 六策略、1350h 第二門檻與全量 A10 仍 `NOT_RUN`；本輪停止，不再盲目增加 timeout 或啟動大型重構。
+
+## 15. M2-D RSS 恢復與交付（2026-10-15）
+
+- 本輪基準為本地 `6caebca50d07c0c3f0886b876332275b6eade4c2`；保留未追蹤的 `notes/tasks/b-q2 _newest.md`，不納入提交。既有 validator context 釋放、phase boundary 與 source hash 修補均保留。
+- 受控重試為 A10 前綴 65,536 jobs、`theta=604800` 秒（168h）、`SPT-URGENT-HOL`、`shared-timer`、`K=200`、FF-id、90 日 horizon，900 秒／4 GiB RSS 護欄。實際狀態 `PASS`：wall 654.13 秒、scheduler 551.60 秒、獨立 reservation validation 98.58 秒、peak RSS 914,604 KiB、38,253 reservations、314,306 events；schedule hash 為 `42129d2777d68d488cb37469a80275fc16f5c3b140f0846a84a00f2ac5171e18`。
+- phase log 顯示 scheduler/capacity 結束 peak 348,608 KiB，reservation replay 結束 peak 348,608 KiB，metrics 結束 peak 348,608 KiB；process peak 914,604 KiB 出現在 persistence/write 階段。因此不能把本次峰值歸因於 scheduler 或 validator。完整 phase、source/data hash 與命令見 `results/20261015-b-q2-m2d-rss-01/manifest.json`。
+- 獨立持久化驗證 `PASS`：`a10-65536-spt-urgent-hol-verified.json` 的 capacity replay 與 reservation replay 均通過。A10 4,096／8,192、theta=4s 的 TIME/FIXED/FLEX 小型 schedule/event hash 回歸與獨立 replay 均 `PASS`；Problem B 測試 43 個、root tests 12 個、repo check 與 `git diff --check` 均 `PASS`。受控 kill 探針保留為 `TIMEOUT` 診斷，不冒充成功。
+- 本次只完成單一 HOL 壓力恢復，完整 M2-D 仍為 `INCOMPLETE`、GO/NO-GO 為 `NO-GO`：六／九策略矩陣、`theta=1350h`、111,284-job 全量比較與 TIME→FIXED→FLEX 配對尚未執行。下一個最小阻塞是於同一資源護欄下完成其餘凍結策略，或取得分階段執行核准；不在本輪補跑。

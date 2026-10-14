@@ -1,0 +1,20 @@
+[
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --synthetic-promises 256 --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/synthetic-256-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --synthetic-promises 256 --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/synthetic-256-current-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --synthetic-promises 1024 --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/synthetic-1024-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --synthetic-promises 1024 --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/synthetic-1024-current-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --synthetic-promises 4096 --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/synthetic-4096-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --synthetic-promises 4096 --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/synthetic-4096-current-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-4096-theta4-spt-urgent-time --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/a10-4096-time-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-4096-theta4-spt-urgent-time --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/a10-4096-time-current-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-4096-theta4-spt-urgent-fixed --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/a10-4096-fixed-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-4096-theta4-spt-urgent-fixed --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/a10-4096-fixed-current-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-4096-theta4-spt-urgent-flex --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/a10-4096-flex-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-4096-theta4-spt-urgent-flex --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/a10-4096-flex-current-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-8192-theta4-spt-urgent-time --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/a10-8192-time-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-8192-theta4-spt-urgent-time --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/a10-8192-time-current-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-8192-theta4-spt-urgent-fixed --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/a10-8192-fixed-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-8192-theta4-spt-urgent-fixed --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/a10-8192-fixed-current-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-8192-theta4-spt-urgent-flex --revision 36146c2 --out outputs/q2-m2d-rss-diagnostics-20261015/a10-8192-flex-36146c2-v2",
+  ".venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py --run outputs/q2-m2c-short-20261015/a10-8192-theta4-spt-urgent-flex --revision current --out outputs/q2-m2d-rss-diagnostics-20261015/a10-8192-flex-current-v2"
+]
