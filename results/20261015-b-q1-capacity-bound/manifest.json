@@ -1,0 +1,59 @@
+{
+  "kind": "q1_capacity_bound_evidence",
+  "base_commit": "bf2b99881a5f83a57c89db91b0a7689717eda31e",
+  "code": {
+    "commit": "bf2b99881a5f83a57c89db91b0a7689717eda31e",
+    "dirty": true,
+    "sha256": {
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "08ecbf3f84a7c8e5183f1629cca655ababf9c2345125620be38282ce1c564c51",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/q1_publication.py": "eeed466922d995abe3251e25f4c4e583028deae72d2d58473bec21e9b42df942",
+      "problems/2026_gpu_scheduling/experiments/build_paper.py": "489803040431cbc5a0bf1121ec91b9d081b80c92c9836715f9dc04404b6e75e2",
+      "problems/2026_gpu_scheduling/experiments/generate_figures.py": "c09623da50d96a3eb8bfe60061c81cb8185b1acd17be8b4f40869114664a26e1",
+      "problems/2026_gpu_scheduling/experiments/eda_analysis.py": "0cb89eb7eb9b62ad1249dba5892b1aeeceb9abacd0bbe1ca7d65f8088228d9ab",
+      "problems/2026_gpu_scheduling/experiments/eda_deep.py": "05f0aa3a00ea63fd6f5afb8dd333143e9c730bb18a1c8775de3c6e120bc2a16f",
+      "problems/2026_gpu_scheduling/experiments/verify_q1.py": "7e6c2ee6555d6a847b8a9d0d462a4919a04377c7d87a55d2e4d796cb930e6187",
+      "problems/2026_gpu_scheduling/paper/preamble.tex": "d2cefbf397a784b54d1cabe080d52fc7f2026bb278d203e63b749c2bf89d1f2a",
+      "problems/2026_gpu_scheduling/paper/document_en.tex": "9058153322be91e91d4dcaa0b3d649874d9ea44bc21bd6df1f9f3588b92b50b4",
+      "problems/2026_gpu_scheduling/paper/q1_section.tex": "f79e36f06ce136aa6f94f187f8f7c4359b84603875e0d76382266445bc19bb78",
+      "problems/2026_gpu_scheduling/paper/q1_summary.tex": "e57935f89ac6f33dcf373df86c08c5cff2dd1edd01aaa7af0e1123665ba43e1f",
+      "problems/2026_gpu_scheduling/paper/q1_zh.html": "0d52d831425c5befb07bd910b80de98918e57e4c8e6694e9da4e746557dc604e",
+      "problems/2026_gpu_scheduling/paper/q1_capacity_proof.html": "4c6b7582c5e3575e1d362f8f19f1384c0e2e14962802644079b4acdbc7243c3f",
+      "problems/2026_gpu_scheduling/requirements.txt": "dbe08f50f6124e5037ffc570e9bdf53ec5fef0e80e3506f9ec02b3c5d43f134c",
+      "problems/2026_gpu_scheduling/tests/test_q1.py": "afb9f1e04b91d98f3c5721cf696535dd852464b63c2419b48b39d7371ef83d43"
+    },
+    "snapshot": "source/ (all participating Q1 sources, including dirty changes)"
+  },
+  "input_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "matplotlib": "3.10.8",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "compiler": "Tectonic 0.17.0",
+  "delivery": {
+    "file": "Q1_delivery.zip",
+    "bytes": 1089667,
+    "sha256": "c2ee9b1df5aa4e9b2f5113e3f0eda1816ca5dc16130c4a3a19b44d62e30f47ab",
+    "raw_data_included": false
+  },
+  "delivery_artifact_sha256": {
+    "q1_en.pdf": "a76b8ece1626675fa3bebb2565eda8843458786e7452155f6294a2d1252c9507",
+    "q1_zh.html": "a68b15bcf84b79620c1760b7be1cb0f46e669e3a384b0af88c5a327737ae47cd",
+    "supplementary.html": "9da99df1cf9f15e4fd7db9dad00e1ca233d02da9726bc222531e2010863aba53"
+  },
+  "files": {
+    "regression.json": "0b9d4b7217ee4e46f2d327cf49fc62ad9d305fa03dcd2fac2aa60c2da91e8b2a",
+    "acceptance.json": "a098112fd350502a017377bc049166fc1071829602589e2851f6a98b0ca5ef7b",
+    "isolation_replay_checks.json": "b53b779328e7d312ae52a4d919008a7ed0f8c87c8e9f6d37979b439f6473268f",
+    "publication_checks.json": "409907ba17082e55f09a89a60959ed0eb85996d3d292b9c12554b52f713c0f04",
+    "q1_capacity_bounds.json": "e5378af21574b395e2c59336e1559285f73cc58ca13bbe6faf041185652538d2"
+  },
+  "limits": "Q1 lower bound and publication only, no scheduler optimality/ordinary mean wait/Q3 transfer claim"
+}

@@ -3,6 +3,7 @@
 import argparse
 from datetime import datetime, timezone
 import hashlib
+from fractions import Fraction
 from html import escape
 import json
 from pathlib import Path
@@ -35,7 +36,7 @@ def write_json(path,value):
 def source_files():
     modules=['__init__.py','data.py','q1.py','q1_publication.py']
     scripts=['build_paper.py','generate_figures.py','eda_analysis.py','eda_deep.py','verify_q1.py']
-    papers=['preamble.tex','document_en.tex','q1_section.tex','q1_summary.tex','q1_zh.html']
+    papers=['preamble.tex','document_en.tex','q1_section.tex','q1_summary.tex','q1_zh.html','q1_capacity_proof.html']
     return ([PROBLEM/'src/gpu_scheduling'/n for n in modules]+
             [PROBLEM/'experiments'/n for n in scripts]+[PROBLEM/'paper'/n for n in papers]+
             [PROBLEM/'requirements.txt',PROBLEM/'tests/test_q1.py'])
@@ -60,10 +61,28 @@ def supplementary_html(out):
              ('supplement_relative_phase','S4. 排除時間零提交、按實際 exposure 校正的相對 24 小時相位；沒有現實時區含義。'),
              ('supplement_resource_shape','S5. GPU-series-1 作業超過各節點 CPU/GPU 配比的比例。門檻彼此重疊，不可相加為互斥類別；不代表實際擱淺量。')]
     pieces=['<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>Q1 補充圖表</title>',
-            '<style>body{max-width:1100px;margin:32px auto;padding:0 20px;font:17px/1.65 system-ui,sans-serif;color:#203040}img{max-width:100%}table{border-collapse:collapse;font-size:15px}td,th{border:1px solid #ccd5dc;padding:6px}section{overflow:auto}figure{margin:30px 0}</style>',
+            '<style>body{max-width:1100px;margin:32px auto;padding:0 20px;font:17px/1.65 system-ui,sans-serif;color:#203040}img{max-width:100%}table{border-collapse:collapse;font-size:15px}td,th{border:1px solid #ccd5dc;padding:6px}section{overflow:auto}figure{margin:30px 0}.formula{background:#f1f6fa;padding:14px;text-align:center}dd{overflow-wrap:anywhere}</style>',
             '<h1>Q1 補充圖表與核算明細</h1><p><a href="q1_zh.html">中文對照</a> · <a href="q1_en.pdf">英文正文</a>。補充資料不計入兩頁 Q1 預覽；不證明 Q2/Q3 性能。</p>']
     for name,caption in figures:
         pieces.append(f'<figure><img src="figures/{name}.png" alt="{escape(caption)}"><figcaption>{escape(caption)} <a href="figures/{name}.pdf">向量 PDF</a></figcaption></figure>')
+    pieces.append((PROBLEM/'paper/q1_capacity_proof.html').read_text(encoding='utf-8'))
+    bounds = json.loads((out/'q1/q1_capacity_bounds.json').read_text())
+    def exact(value):
+        if not isinstance(value, dict): return str(value)
+        rational = Fraction(value['numerator'], value['denominator'])
+        return f'{rational} (≈ {float(rational):.16g})'
+    columns = ['capacity_gpus', 'total_gpu_seconds', 'last_immediate_finish_seconds',
+               'backlog_at_last_finish_gpu_seconds', 'lower_bound_seconds', 'lower_bound_hours']
+    headers = ['GPU capacity', 'Work (GPU·s)', 't* (s)', 'B(t*) (GPU·s)', 'L (s)', 'L (h)']
+    pieces.append('<section><h2>Six isolated pools / 六池精度結果</h2><p>GPU-work weighted waiting lower bounds, displayed to 16 significant digits. Exact rational quantities follow in expandable rows. Zero is exact only where the numerator is zero. <a href="q1/q1_capacity_bounds.json">完整 JSON：來源、前段／尾段與精確有理數</a></p><table><tr><th>Model</th>'+''.join('<th>'+c+'</th>' for c in headers)+'</tr>')
+    for model, result in bounds['pools'].items():
+        cells = [f"{result[c]['approximate']:.16g}" if isinstance(result[c], dict) else str(result[c]) for c in columns]
+        pieces.append('<tr><td>'+escape(model)+'</td>'+''.join('<td>'+escape(value)+'</td>' for value in cells)+'</tr>')
+    pieces.append('</table></section>')
+    for model, result in bounds['pools'].items():
+        pieces.append('<details><summary>'+escape(model)+' — all exact quantities</summary><dl>'+''.join(
+            '<dt>'+escape(key)+'</dt><dd>'+escape(exact(value))+'</dd>' for key,value in result.items())+'</dl></details>')
+    pieces.append('<h3>A10 short-duration shape check (duration ≤ 3600 s)</h3><p>Short does not imply a small gang; these counts support a research motivation, not a scheduler performance or quality guarantee.</p><pre>'+escape(json.dumps(bounds['a10_short_jobs'], ensure_ascii=False, indent=2))+'</pre>')
     for name in ['node_configurations.csv','resource_shape.csv','pool_summary.csv','immediate_start_demand.csv','concentration.csv','duration_quantiles.csv']:
         frame=pd.read_csv(out/'q1'/name)
         pieces.append(f'<section><h2>{name}</h2><a href="q1/{name}">原始精度 CSV</a>'+frame.to_html(index=False,float_format=lambda x:f'{x:.6g}')+'</section>')

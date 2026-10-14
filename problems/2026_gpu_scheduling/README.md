@@ -122,6 +122,16 @@ PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discove
 
 本輪 Q1 兩頁、全稿九頁；39 統計／九表、180 每日區間、18 項 B 測試與乾淨 clone 重現均 PASS。全稿 Q2/Q3 舊小字／寬表仍有格式缺口。驗收與未確認事項集中於 [Q1 任務筆記](../../notes/tasks/b-q1.md)。編譯與計算成功不代表人工審閱或整篇競賽提交已完成。整合 Q2/Q3 時須一併採用共用章節、數值及 build／figure 入口；新增 Q1 圖會自然改變後續圖號，應使用 LaTeX label 交叉引用。此分支不直接改動兩個研究分支。
 
+### Q1 固定型號池等待下界補充
+
+上述 EDA 與 `build_paper.py --scope q1` 會另生成 `q1/q1_capacity_bounds.json`，不改 39 項統計、九表或 `T=7775878` 秒。新純函式 `q1.capacity_bound(arrival,duration,quantity,capacity)` 使用大整數／有理數事件積分，包含最後立即完成事件之後的流體排空尾段；回傳工作量、積壓、面積、下界及流體排空時間。結果保留精確分子／分母，近似數值僅供顯示。
+
+這是全量原始隔離池的 **GPU 工作量加權等待** `sum(H*waiting)/sum(H)` 下界，放鬆 CPU、節點形狀及 gang 約束；不是普通平均或個別等待下界，不證明最優。A10 前段 560.3121107156859 h，尾段 0.20925717461523632 h，合計 560.5213678903011 h；其他池的小正值沒有捨入成零。完整證明與六池精度結果隨既有 `supplementary.html`／交付 ZIP 生成；正文仍兩頁、一表兩圖，中英文 A10 數字共用生成 macro。
+
+[新增驗收](../../results/20261015-b-q1-capacity-bound/acceptance.json)、[精確結果](../../results/20261015-b-q1-capacity-bound/q1_capacity_bounds.json) 記錄來源、測試與剩餘缺口。Q1 18 項針對性測試、六池獨立高精度核算、39 統計／九表回歸、兩頁呈現及來源快照乾淨目錄重現 PASS；團隊人工審閱 NOT_RUN，歷史 byte 身份／再散布範圍 BLOCKED。本輪未執行 Q2/Q3 或全文編譯。
+
+Q2 日後可將已保存 job ID／start 與原始 worker／GPU／duration 連結，計算同一完整池的加權等待，無須重新排程；本輪不改 evaluator。不得將全量 A10 下界套到作業子集、不同容量／時長或 Q3 跨型號 run。`q1_summary.tex`、全局 preamble、全稿 Q2/Q3、共享 loader／DES／evaluator 及兩個研究 worktree 都未修改。
+
 ## Q2／Q3 下一步
 
 `feat/b-q2`：研究排序與放置，在共用 DES 接入候選，與本基線比較；不要將歷史 AMBF 表視為驗收結果。

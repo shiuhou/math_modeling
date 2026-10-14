@@ -1,5 +1,6 @@
 """Render Q1 prose values and tables from the audited outputs; no new formulas."""
 from html import escape
+from fractions import Fraction
 import json
 from pathlib import Path
 import re
@@ -17,12 +18,15 @@ def publication_values(results, jobs):
     quantiles = pd.read_csv(results/'duration_quantiles.csv')
     concentration = pd.read_csv(results/'concentration.csv')
     configs = pd.read_csv(results/'node_configurations.csv')
+    bounds = json.loads((results/'q1_capacity_bounds.json').read_text())
     aten = demand[(demand.gpu_model=='A10') & (demand.resource=='GPU')].iloc[0]
     ahundred = demand[(demand.gpu_model=='A100-SXM4-80GB') & (demand.resource=='GPU')].iloc[0]
     shape = shapes[(shapes.gpu_model=='GPU-series-1') & (shapes.gpus_per_node==8)].iloc[0]
     values = {}
     def put(name, number, decimals=0):
         values['QOne'+name] = f'{number:,.{decimals}f}'
+    bound = bounds['pools']['A10']['lower_bound_hours']
+    put('AtenWaitBound', float(Fraction(bound['numerator'], bound['denominator'])), 3)
     for name,key in [('Jobs','jobs'),('Nodes','nodes'),('Gpus','physical_gpus'),('Cpus','vcpus'),
                      ('Models','gpu_models'),('Horizon','horizon_seconds'),('WindowDifference','nominal_90day_difference_seconds'),
                      ('OriginJobs','t0_jobs'),('FractionalCpuJobs','fractional_cpu_jobs'),('ZeroCpuJobs','zero_cpu_jobs')]:

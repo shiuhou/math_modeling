@@ -1,0 +1,68 @@
+{
+  "source_snapshot_rebuild": {
+    "status": "PASS",
+    "q1_pages": 2,
+    "nine_csv_and_old_stats": "byte-identical",
+    "capacity_pools": "exact-identical excluding code provenance",
+    "html": "byte-identical",
+    "environment": "Existing pinned Q1 venv and compiler; no install or upgrade"
+  },
+  "protected_files": {
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2"
+    },
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "75b864ce6be98f08de17da5f1403afc812259181f251c7de5790101cc9a077d8"
+    },
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "894a68f2614f3436d471764c048e2e6c6dec345b0efefc35e355aa56aa3a6850"
+    },
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "ec39507f869fbbf63a4d57cb488ad9d63f0e2a4c9d62c51a6d971d437da4f6be"
+    },
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "0196485c89674150b9baccf06c51c210ffedc8df3f26b7274f119523125642da"
+    },
+    "problems/2026_gpu_scheduling/paper/preamble.tex": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "d2cefbf397a784b54d1cabe080d52fc7f2026bb278d203e63b749c2bf89d1f2a"
+    },
+    "problems/2026_gpu_scheduling/paper/document_en.tex": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "9058153322be91e91d4dcaa0b3d649874d9ea44bc21bd6df1f9f3588b92b50b4"
+    },
+    "problems/2026_gpu_scheduling/paper/q1_summary.tex": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "e57935f89ac6f33dcf373df86c08c5cff2dd1edd01aaa7af0e1123665ba43e1f"
+    },
+    "problems/2026_gpu_scheduling/requirements.txt": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "dbe08f50f6124e5037ffc570e9bdf53ec5fef0e80e3506f9ec02b3c5d43f134c"
+    },
+    "problems/2026_gpu_scheduling/data/raw/job_info_clean.csv": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "problems/2026_gpu_scheduling/data/raw/node_info_df.csv": {
+      "status": "PASS",
+      "unchanged_from": "bf2b998",
+      "sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18"
+    }
+  },
+  "q2_q3_worktrees": "Not written, checked out, pulled, merged or run"
+}

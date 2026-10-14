@@ -6,7 +6,11 @@ convention; do not combine the two concentration tables without recomputation.
 """
 from __future__ import annotations
 import json
+import hashlib
+from fractions import Fraction
+from operator import index
 from pathlib import Path
+import subprocess
 import numpy as np
 import pandas as pd
 from .data import CPU_SCALE, read_data
@@ -84,6 +88,112 @@ def demand_timeline(arrival, duration, quantity, horizon):
 def phase_exposure(horizon):
     cycles, remainder = divmod(horizon, SECOND_PER_DAY)
     return cycles + np.clip(remainder - np.arange(24) * SECOND_PER_HOUR, 0, SECOND_PER_HOUR) / SECOND_PER_HOUR
+
+
+def capacity_bound(arrival, duration, quantity, capacity):
+    """Full-lifetime reflected-fluid GPU bound, using exact integer events.
+
+    Return Fractions for GPU-second-squared areas and times in seconds.
+    This relaxes CPU, node shape and gang constraints, NOT a scheduler.
+    Unlike the observation-window demand tool, this must include the drain
+    tail and accept products beyond int64. Empty/zero-work input has L=0.
+    """
+    capacity = index(capacity)
+    if capacity <= 0:
+        raise ValueError('Positive integer GPU capacity required')
+    a, d, g = [list(map(index, v)) for v in (arrival, duration, quantity)]
+    if not len(a) == len(d) == len(g):
+        raise ValueError('Arrival, duration and GPU quantity lengths differ')
+    if any(x < 0 for v in (a, d, g) for x in v):
+        raise ValueError('Nonnegative integer inputs required')
+    events = {0: 0}
+    for r, p, q in zip(a, d, g):
+        events[r] = events.get(r, 0) + q
+        events[r+p] = events.get(r+p, 0) - q
+    work = sum(q*p for q, p in zip(g, d))
+    b = demand = demand_area = 0
+    area = Fraction(0)
+    edges = sorted(events)
+    for left, right in zip(edges, edges[1:]):
+        demand += events[left]
+        if demand < 0:
+            raise AssertionError('Negative immediate-start demand')
+        delta = right-left
+        demand_area += demand*delta
+        slope = demand-capacity
+        end = b+slope*delta
+        if end < 0:
+            # Exact triangle up to the interior zero; the remainder is idle.
+            area += Fraction(b*b, -2*slope)
+            b = 0
+        else:
+            area += Fraction((b+end)*delta, 2)
+            b = end
+    demand += events[edges[-1]]
+    if demand != 0 or demand_area != work:
+        raise AssertionError('Full-lifetime event work accounting failed')
+    tail = Fraction(b*b, 2*capacity)
+    total = area+tail
+    bound = total/work if work else Fraction(0)
+    return dict(jobs=len(a), capacity_gpus=capacity, total_gpu_seconds=work,
+                last_arrival_seconds=max(a, default=0),
+                last_immediate_finish_seconds=edges[-1],
+                backlog_at_last_finish_gpu_seconds=b,
+                fluid_empty_seconds=Fraction(edges[-1])+Fraction(b, capacity),
+                area_before_last_finish_gpu_seconds_squared=area,
+                tail_area_gpu_seconds_squared=tail,
+                full_area_gpu_seconds_squared=total,
+                bound_before_tail_hours=(area/work/3600 if work else Fraction(0)),
+                bound_tail_hours=(tail/work/3600 if work else Fraction(0)),
+                lower_bound_seconds=bound, lower_bound_hours=bound/3600)
+
+
+def exact_record(value):
+    """Rational authority plus a non-rounded approximate display value."""
+    value = Fraction(value)
+    return dict(numerator=value.numerator, denominator=value.denominator,
+                approximate=float(value))
+
+
+def write_capacity_bounds(nodes, jobs, hashes, out):
+    pools = {}
+    for model in MODEL_ORDER + sorted(set(nodes.gpu_model)-set(MODEL_ORDER)):
+        nd = nodes[nodes.gpu_model == model]
+        if nd.empty:
+            continue
+        j = jobs[jobs.gpu_model == model]
+        result = capacity_bound(j.submit_time, j.duration,
+                                [int(w)*int(g) for w, g in zip(j.worker_num, j.gpu_request)],
+                                sum(map(int, nd.gpu_capacity_num)))
+        pools[model] = {key: exact_record(value) if isinstance(value, Fraction) else value
+                        for key, value in result.items()}
+    short = jobs[(jobs.gpu_model == 'A10') & (jobs.duration <= 3600)]
+    aten_nodes = nodes[nodes.gpu_model == 'A10']
+    configs = aten_nodes.groupby(['gpu_capacity_num', 'cpu_num']).size()
+    source = Path(__file__).resolve()
+    repo = source.parents[4]
+    def git(*args):
+        result = subprocess.run(['git', *args], cwd=repo, capture_output=True, text=True)
+        return result.stdout.strip() if result.returncode == 0 else None
+    own_repo = git('rev-parse', '--show-toplevel') == str(repo)
+    record = dict(calculation_version='q1-fixed-pool-fluid-bound-v1',
+                  input_sha256=hashes,
+                  code=dict(base_commit=git('rev-parse', 'HEAD') if own_repo else None,
+                            dirty=bool(git('status', '--porcelain')) if own_repo else None,
+                            q1_py_sha256=hashlib.sha256(source.read_bytes()).hexdigest()),
+                  scope='All supplied jobs, fixed original model-isolated GPU capacities, full lifetimes and drain tail; CPU/node/gang relaxed',
+                  units='Areas: GPU*s^2; work/backlog: GPU*s; internal bound: s; display: h',
+                  zero_work_convention='L=0 when total work is zero (weighted mean undefined)',
+                  precision='numerator/denominator are authoritative; approximate is display only',
+                  validation=dict(event_work_accounting='PASS', unit_tests='NOT_RUN',
+                                  historical_job_byte_identity='BLOCKED', scheduler_optimality='NOT_RUN'),
+                  pools=pools,
+                  a10_short_jobs=dict(duration_threshold_seconds=3600, jobs=len(short),
+                                     multiworker_jobs=int((short.worker_num > 1).sum()),
+                                     max_workers=int(short.worker_num.max()) if len(short) else 0,
+                                     node_configurations=[dict(gpus_per_node=int(gpu), vcpus_per_node=float(cpu), nodes=int(n))
+                                                          for (gpu, cpu), n in configs.items()]))
+    (out/'q1_capacity_bounds.json').write_text(json.dumps(record, indent=2, ensure_ascii=False, allow_nan=False)+'\n', encoding='utf-8')
 
 
 def interval_demand(arrival, duration, quantity, horizon, bin_seconds=SECOND_PER_DAY):
@@ -234,4 +344,5 @@ def analyze(source: Path, out: Path):
         immediate_start_rule='start=submit_time, ignoring resource feasibility; not actual allocation',
         allocation_rate_status='NOT_IDENTIFIABLE_FROM_SUPPLIED_CSVS',input_sha256=hashes)
     (out/'q1_results.json').write_text(json.dumps(stats,indent=2,ensure_ascii=False),encoding='utf-8')
+    write_capacity_bounds(nodes, jobs, hashes, out)
     return nodes,jobs,stats

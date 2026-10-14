@@ -1,0 +1,100 @@
+{
+  "kind": "q1_fixed_pool_capacity_bound_acceptance",
+  "base_commit": "bf2b99881a5f83a57c89db91b0a7689717eda31e",
+  "calculation_version": "q1-fixed-pool-fluid-bound-v1",
+  "scope": "Bounded Q1 supplement only; original isolated pools, fixed demands/durations, complete lifetimes",
+  "checks": {
+    "mathematical_derivation": {
+      "status": "PASS",
+      "scope": "Service-offset/Tonelli identity and cumulative capacity inequality; not independent human review"
+    },
+    "numeric_tests": {
+      "status": "PASS",
+      "count": 18,
+      "scope": "8 existing Q1 checks, 8 capacity-bound checks (including raw six-pool 80-digit Decimal prefix-minimum oracle), 2 delivery checks"
+    },
+    "legacy_regression": {
+      "status": "PASS",
+      "statistics": 39,
+      "csv_tables": 9,
+      "csv_byte_identical": true,
+      "observation_window_seconds": 7775878
+    },
+    "a10_external_clues": {
+      "status": "PASS",
+      "scope": "Current inputs independently reproduce capacity/work/t*/backlog and before/tail/full values; agreement does not establish historic raw byte identity"
+    },
+    "a10_short_jobs": {
+      "status": "PASS",
+      "jobs_duration_le_3600": 87953,
+      "multiworker_jobs": 377,
+      "max_workers": 32,
+      "source": "Raw CSV, not hardcoded outputs"
+    },
+    "bilingual_consistency": {
+      "status": "PASS",
+      "scope": "Shared generated A10 macro; paragraph/formula/unit/limitations checked; previous 46 publication values unchanged"
+    },
+    "publication": {
+      "status": "PASS",
+      "scope": "Q1 two-page PDF rendered and both pages visually inspected, ~11.059pt body unchanged, one table/two main figures; offline CN paragraph and proof visually inspected; HTML links/images and no TeX overfull/undefined warnings"
+    },
+    "source_bundle_replay": {
+      "status": "PASS",
+      "scope": "Fresh directory from ZIP source, existing Q1 environment and compiler, explicit tracked raw path; exact six-pool results, nine CSV, legacy stats and both HTML identical"
+    },
+    "bundle": {
+      "status": "PASS",
+      "bytes": 1089667,
+      "raw_data_included": false
+    },
+    "protected_sources": {
+      "status": "PASS",
+      "scope": "Byte comparison against bf2b998 for loader/DES/placement/evaluation/validation/raw/requirements/global preamble/full draft/Q1 summary"
+    },
+    "root_unit_tests": {
+      "status": "PASS",
+      "count": 12
+    },
+    "repository_links_json": {
+      "status": "PASS"
+    },
+    "git_diff_check": {
+      "status": "PASS"
+    },
+    "q2_q3_experiments": {
+      "status": "NOT_RUN",
+      "scope": "No schedule, baseline, parameter search, evaluator change or Q2/Q3 worktree operation"
+    },
+    "full_paper_compile": {
+      "status": "NOT_RUN",
+      "reason": "Bounded Q1 scope; full draft and global preamble untouched"
+    },
+    "human_review": {
+      "status": "NOT_RUN"
+    },
+    "historical_job_byte_identity": {
+      "status": "BLOCKED",
+      "reason": "Historical original ZIP not available; tracked job SHA differs; no newline explanation inferred"
+    },
+    "data_redistribution_scope": {
+      "status": "BLOCKED"
+    },
+    "team_names_and_final_AI_disclosure": {
+      "status": "BLOCKED"
+    }
+  },
+  "commands": [
+    "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -p \"test_q1*.py\" -v",
+    ".venv/bin/python problems/2026_gpu_scheduling/experiments/eda_analysis.py --out outputs/q1-bound-raw",
+    ".venv/bin/python problems/2026_gpu_scheduling/experiments/build_paper.py --scope q1 --out outputs/q1-capacity-release --compiler /home/shiuhou/math_modeling/.codex/b-intake-tools/tectonic --bundle",
+    ".venv/bin/python problems/2026_gpu_scheduling/experiments/verify_q1.py --reference-dir results/20261014-b-q1-intake-4a8f8f2b --results outputs/q1-capacity-release/q1 --out outputs/q1-capacity-release-regression.json",
+    ".venv/bin/python .codex/q1-capacity-replay/source/problems/2026_gpu_scheduling/experiments/build_paper.py --scope q1 --data problems/2026_gpu_scheduling/data/raw --out outputs/q1-capacity-clean-replay --compiler /home/shiuhou/math_modeling/.codex/b-intake-tools/tectonic",
+    "python3 scripts/check_repo.py",
+    "python3 -m unittest discover -s tests -v",
+    "git diff --check"
+  ],
+  "provenance_note": "Build started from base commit with dirty Q1 changes; exact participating source bytes are in build.json/source_version.json and ZIP source snapshot. Numeric JSON does not invoke tests; its unit_tests NOT_RUN is superseded by this separate executed acceptance record.",
+  "local_delivery": "outputs/q1-capacity-release/",
+  "submission_ready": false
+}
