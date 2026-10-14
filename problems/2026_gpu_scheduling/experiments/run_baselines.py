@@ -24,7 +24,7 @@ import pandas as pd
 from gpu_scheduling.audit import audit
 from gpu_scheduling.data import native, read_data
 from gpu_scheduling.evaluation import metrics
-from gpu_scheduling.simulator import simulate_pool
+from gpu_scheduling.simulator import POLICY_ALIASES, simulate_pool
 
 
 def write_json(path, value):
@@ -41,7 +41,11 @@ def main():
     parser.add_argument("--audit-only", action="store_true")
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--horizon-seconds", type=int, help="Default: last raw submission, occupancy [0,H)")
-    parser.add_argument("--policies", nargs="+", choices=["FCFS", "SJF-HOL"], default=["FCFS", "SJF-HOL"])
+    parser.add_argument("--policies", nargs="+", choices=sorted(POLICY_ALIASES), default=["FCFS", "SJF-HOL"])
+    parser.add_argument("--theta-seconds", type=int, default=4860000,
+                        help="M1 timer threshold (default: 1350 hours)")
+    parser.add_argument("--reservation-k", type=int, default=200,
+                        help="Per-pool, per-timestamp candidate budget")
     args = parser.parse_args()
     if args.out.exists(): parser.error("Output exists; choose a new directory")
     if len(set(args.policies)) != len(args.policies): parser.error("Policies must not be repeated")
@@ -68,6 +72,7 @@ def main():
                  "snapshot": "source/" if dirty else None},
         "data_sha256": hashes, "raw_jobs": len(raw_jobs), "scheduled_jobs": len(jobs),
         "configuration": {"horizon_seconds": horizon, "policies": args.policies, "audit_only": args.audit_only,
+                          "theta_seconds": args.theta_seconds, "reservation_k": args.reservation_k,
                           "cpu_scale": 100, "placement": "first-fit by ascending node_name",
                           "events": "all completions, then arrivals, then scheduling; half-open allocation intervals"},
         "command": ["python", str(Path(__file__).resolve().relative_to(repo)), *sys.argv[1:]],
@@ -88,10 +93,20 @@ def main():
                     ledger.writerow(["job_name", "node_name", "workers"])
                     for model, sub in jobs.groupby("gpu_model", sort=True):
                         pool = nodes[nodes.gpu_model == model].sort_values("node_name").reset_index(drop=True)
-                        result = simulate_pool(pool, sub, policy)
+                        result = simulate_pool(pool, sub, policy,
+                                               theta_seconds=args.theta_seconds,
+                                               reservation_k=args.reservation_k)
                         rows.append({"policy": policy, "gpu_model": model, **metrics(result, pool, horizon)})
                         for jid, plan in zip(result["jobs"].job_name, result["plans"]):
                             ledger.writerows((int(jid), int(pool.node_name.iloc[m]), w) for m, w in plan)
+                        # Keep reservation/certificate evidence separate from the
+                        # dense timing and allocation tables.
+                        write_json(args.out / f"{policy}_{model}_reservations.json", {
+                            "gpu_model": model, "policy": policy,
+                            "reservations": result.get("reservations", []),
+                            "events": result.get("events", []),
+                            "cost": result.get("cost", {}),
+                        })
                         frame = result["jobs"].drop(columns="cpu_units").copy()
                         frame["start"], frame["finish"] = result["starts"], result["ends"]
                         chunks.append(frame)

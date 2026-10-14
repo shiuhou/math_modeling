@@ -1,6 +1,7 @@
-"""Independent node-ledger replay and a small scalar time-step oracle."""
+"""Independent node-ledger and reservation replay plus a small scalar oracle."""
 import numpy as np
 import pandas as pd
+from .placement import check_plan, slots
 
 def validate(nodes: pd.DataFrame,jobs: pd.DataFrame,s: np.ndarray,e: np.ndarray,plans: list) -> None:
     """Independent node-by-node event replay from the final allocation ledger."""
@@ -23,6 +24,108 @@ def validate(nodes: pd.DataFrame,jobs: pd.DataFrame,s: np.ndarray,e: np.ndarray,
             if not(0<=gu<=int(nodes.gpu_capacity_num.iloc[m]) and 0<=cu<=int(nodes.cpu_units.iloc[m])):
                 raise AssertionError(f'Independent capacity replay failed: node {m}')
         if gu!=0 or cu!=0:raise AssertionError('Final allocation is not zero')
+
+
+def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict) -> None:
+    """Replay M1 promise certificates independently of scheduler decisions.
+
+    This validator reconstructs the free vectors at issuance and at the
+    original immutable ``R`` from the persisted allocations.  It does not call
+    a scheduler ``safe`` predicate and therefore catches stale or self-
+    reported certificates.
+    """
+    reservations = result.get("reservations", [])
+    if reservations is None:
+        return
+    starts = np.asarray(result["starts"], dtype=np.int64)
+    ends = np.asarray(result["ends"], dtype=np.int64)
+    plans = result["plans"]
+    if len(starts) != len(jobs) or len(plans) != len(jobs):
+        raise AssertionError("reservation replay requires a complete schedule")
+    caps_g = nodes.gpu_capacity_num.to_numpy(dtype=np.int64)
+    caps_c = nodes.cpu_units.to_numpy(dtype=np.int64)
+    ids = {int(x): i for i, x in enumerate(jobs.job_name)}
+    events = result.get("events", [])
+    if reservations and not events:
+        raise AssertionError("reservation replay requires persisted event order")
+    seen_promises = set()
+    for promise in reservations:
+        pid = promise.get("promise_id")
+        if not pid or pid in seen_promises:
+            raise AssertionError("duplicate or missing promise_id")
+        seen_promises.add(pid)
+        protected_name = int(promise["protected_job_name"])
+        if protected_name not in ids:
+            raise AssertionError("unknown protected job")
+        protected = ids[protected_name]
+        issued = int(promise["issued_time"])
+        promised_r = int(promise["promised_R"])
+        if promised_r < issued or starts[protected] < 0 or starts[protected] > promised_r:
+            raise AssertionError("promise timing contract")
+        q = int(jobs.gpu_request.iloc[protected])
+        c = int(jobs.cpu_units.iloc[protected])
+        w = int(jobs.worker_num.iloc[protected])
+
+        current_g, current_c = caps_g.copy(), caps_c.copy()
+        issued_events = [idx for idx, item in enumerate(events)
+                         if item.get("kind") == "reservation_issued" and item.get("promise_id") == pid]
+        if len(issued_events) != 1 or int(events[issued_events[0]]["time"]) != issued:
+            raise AssertionError("missing or duplicate promise event")
+        for item in events[:issued_events[0]]:
+            if item.get("kind") not in ("start", "finish"):
+                continue
+            j = int(item["job"])
+            if j < 0 or j >= len(jobs) or int(item["time"]) != int(starts[j] if item["kind"] == "start" else ends[j]):
+                raise AssertionError("event disagrees with timing ledger")
+            sign = -1 if item["kind"] == "start" else 1
+            for node, count in plans[j]:
+                current_g[int(node)] += sign * int(count) * int(jobs.gpu_request.iloc[j])
+                current_c[int(node)] += sign * int(count) * int(jobs.cpu_units.iloc[j])
+        if np.any(current_g < 0) or np.any(current_c < 0):
+            raise AssertionError("negative current snapshot")
+        recorded_current = promise.get("current_free_initial", {})
+        if current_g.tolist() != list(recorded_current.get("gpu", [])) or current_c.tolist() != list(recorded_current.get("cpu", [])):
+            raise AssertionError("current snapshot does not replay from event order")
+
+        # At R the full pool capacity is restored, then only allocations that
+        # cross R remain occupied.  Starting from current_free and subtracting
+        # crossing work would double-count jobs already present at issuance.
+        future_g, future_c = caps_g.copy(), caps_c.copy()
+        active_at_issue = set()
+        for item in events[:issued_events[0]]:
+            if item.get("kind") == "start":
+                active_at_issue.add(int(item["job"]))
+            elif item.get("kind") == "finish":
+                active_at_issue.discard(int(item["job"]))
+        for j in active_at_issue:
+            if ends[j] > promised_r:
+                for node, count in plans[j]:
+                    future_g[int(node)] -= int(count) * int(jobs.gpu_request.iloc[j])
+                    future_c[int(node)] -= int(count) * int(jobs.cpu_units.iloc[j])
+        accepted = {int(x) for x in promise.get("accepted_backfill_ids", [])}
+        for j in range(len(jobs)):
+            if j == protected or not (issued <= starts[j] < promised_r) or j in active_at_issue:
+                continue
+            if ends[j] > promised_r:
+                raise AssertionError("backfill crosses immutable promised R")
+            if j not in accepted:
+                raise AssertionError("post-issuance backfill missing from certificate")
+        for j in accepted:
+            if j < 0 or j >= len(jobs) or j == protected or starts[j] < issued or ends[j] > promised_r or j in active_at_issue:
+                raise AssertionError("invalid accepted backfill id")
+        recorded = promise.get("future_free_initial", {})
+        if future_g.tolist() != list(recorded.get("gpu", [])) or future_c.tolist() != list(recorded.get("cpu", [])):
+            raise AssertionError("future snapshot does not replay from allocations")
+        recorded_at_r = promise.get("future_free_at_R", {})
+        if future_g.tolist() != list(recorded_at_r.get("gpu", [])) or future_c.tolist() != list(recorded_at_r.get("cpu", [])):
+            raise AssertionError("future snapshot was changed without a certificate update")
+        witness = tuple((int(node), int(count)) for node, count in promise.get("placement_witness", []))
+        check_plan(future_g, future_c, q, c, witness, w)
+        if int(slots(future_g, future_c, q, c).sum()) < w:
+            raise AssertionError("future snapshot does not contain protected gang")
+        fulfillment = promise.get("fulfillment", {})
+        if fulfillment.get("status") != "FULFILLED" or int(fulfillment.get("time")) != int(starts[protected]):
+            raise AssertionError("missing or inconsistent fulfillment record")
 
 
 

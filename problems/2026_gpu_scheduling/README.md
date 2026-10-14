@@ -60,10 +60,21 @@ tests/                  手算、容量、輸入／指標及持久化核查
 ## 共用實作與接口
 
 - [data.py](src/gpu_scheduling/data.py)：`read_data(source) -> nodes, jobs, hashes`；時間秒、每 worker 欄位、`cpu_units` 為百分之一 vCPU；穩定排序。
-- [simulator.py](src/gpu_scheduling/simulator.py)：唯一活動 DES，`simulate_pool(nodes, jobs, policy)`，支援 `FCFS` 與嚴格 `SJF-HOL`。每池獨立；完成事件先於同時提交，再決策；gang 原子放置；FF 按 `node_name` 升序。不可行作業報錯，不遺漏。
+- [simulator.py](src/gpu_scheduling/simulator.py)：唯一活動 DES，`simulate_pool(nodes, jobs, policy)`。保留 `FCFS`／`SJF-HOL` 相容別名，正式基線名為 `FCFS-HOL`／`SPT-HOL`；M1 另提供 `SPT-FILL`、`SGW-FILL`、`EASY-TIME`、`SPT-URGENT-HOL`、`SPT-URGENT-TIME`。所有策略共用 node-level CPU/GPU gang planner；M1 的 TIME 只接納 `finish <= immutable promised_R`，不代表 FIXED/FLEX 已完成。
 - [evaluation.py](src/gpu_scheduling/evaluation.py)：唯一共享評價器。等待／JCT 包含全部作業直至排空；分位數 linear；BSLD 為 `max(1,JCT/max(duration,60s))`。分配率只積分 `[0,H)`，完成數 `finish <= H`；預設 `H = 最後提交時刻`，名義 90 天需顯式 `--horizon-seconds 7776000`。
 - [validation.py](src/gpu_scheduling/validation.py)：獨立節點 CPU/GPU ledger 回放；微型 scalar oracle 僅供測試，不是第二套正式引擎。
-- [run_baselines.py](experiments/run_baselines.py)：唯一基線流程，記錄 `run.json`、來源 commit／dirty snapshot／雜湊、資料、參數、環境、耗時、全部 metrics、job times 與 node placements；[verify_baseline.py](experiments/verify_baseline.py) 在另一程序從持久化明細核查，不信任 metrics 自報成功。
+- [run_baselines.py](experiments/run_baselines.py)：唯一基線／M1 流程，記錄 `run.json`、來源 commit／dirty snapshot／雜湊、資料、參數、環境、耗時、全部 metrics、job times、node placements 及 reservation/event evidence；[verify_baseline.py](experiments/verify_baseline.py) 在另一程序從持久化明細核查，不信任 metrics 自報成功。M1 可用 `--theta-seconds` 與 `--reservation-k` 明示配置。
+
+Q2 M1 工程 smoke（只做正確性與持久化驗收，不是性能結論）：
+
+```bash
+.venv/bin/python problems/2026_gpu_scheduling/experiments/run_baselines.py \
+  --smoke --theta-seconds 4860000 --reservation-k 200 \
+  --policies FCFS-HOL SPT-HOL SPT-FILL SGW-FILL EASY-TIME \
+             SPT-URGENT-HOL SPT-URGENT-TIME --out outputs/q2-m1-smoke
+.venv/bin/python problems/2026_gpu_scheduling/experiments/verify_baseline.py \
+  --run outputs/q2-m1-smoke --out outputs/q2-m1-smoke-verified.json
+```
 
 Q2 以此引擎擴充排序／放置，勿另建 DES／評分器。Q3 保持此資料與評價口徑，跨池機制需耦合節點容量，不能各池各自許諾相同 donor 資源。改共用接口前於 [docs/brief.md](../../docs/brief.md) 提出並透過 PR 協調；不覆蓋 Q1 或另一題的修改。
 

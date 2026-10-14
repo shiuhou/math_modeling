@@ -7,3 +7,5 @@
 
 # ZIP source archives retain exact bytes, including original whitespace.
 problems/2026_gpu_scheduling/references/originals/** -text -whitespace
+docs/job_info_clean.csv -text -whitespace
+docs/node_info_df.csv -text -whitespace
