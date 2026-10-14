@@ -192,6 +192,91 @@ class M1Checks(unittest.TestCase):
             with self.subTest(field=field, missing=True), self.assertRaises(AssertionError):
                 validate_reservations(nd, bad["jobs"], bad)
 
+    def test_fixed_and_flex_crossing_certificates(self):
+        nd = nodes((1, 1), (8, 1))
+        jj = pd.DataFrame({"job_name": [0, 1, 2], "gpu_model": ["X"] * 3,
+                           "gpu_request": [1, 1, 1], "cpu_units": [800, 800, 100],
+                           "worker_num": [1, 1, 1], "submit_time": [0, 0, 1],
+                           "duration": [10, 10, 20]})
+        time = simulate_pool(nd, jj, "SPT-URGENT-TIME", theta_seconds=0)
+        fixed = simulate_pool(nd, jj, "SPT-URGENT-FIXED", theta_seconds=0)
+        flex = simulate_pool(nd, jj, "SPT-URGENT-FLEX", theta_seconds=0)
+        self.assertEqual(time["starts"].tolist(), [0, 10, 10])
+        self.assertEqual(fixed["starts"].tolist(), [0, 10, 1])
+        self.assertEqual(flex["starts"].tolist(), [0, 10, 1])
+        self.assertEqual(time["cost"]["crossing_accepted"], 0)
+        self.assertEqual(fixed["cost"]["crossing_accepted"], 1)
+        self.assertEqual(flex["cost"]["crossing_accepted"], 1)
+        for result in (time, fixed, flex):
+            validate_reservations(nd, result["jobs"], result)
+        update = fixed["reservations"][0]["certificate_updates"][0]
+        tampered = copy.deepcopy(fixed)
+        tampered["reservations"][0]["certificate_updates"][0]["future_free_at_R"]["gpu"][1] += 1
+        with self.assertRaises(AssertionError):
+            validate_reservations(nd, tampered["jobs"], tampered)
+        tampered_event = copy.deepcopy(fixed)
+        tampered_event["events"] = [e for e in tampered_event["events"] if e["kind"] != "certificate_update"]
+        with self.assertRaises(AssertionError):
+            validate_reservations(nd, tampered_event["jobs"], tampered_event)
+        self.assertEqual(update["planner"], "fixed")
+
+    def test_flex_can_replace_head_witness_and_easy_nr_uses_flex(self):
+        nd = nodes((2, 1, 1), (1, 2, 2))
+        jj = pd.DataFrame({"job_name": [0, 1, 2], "gpu_model": ["X"] * 3,
+                           "gpu_request": [1, 1, 2], "cpu_units": [200, 100, 0],
+                           "worker_num": [2, 2, 1], "submit_time": [0, 0, 1],
+                           "duration": [10, 10, 20]})
+        fixed = simulate_pool(nd, jj, "SPT-URGENT-FIXED", theta_seconds=0)
+        flex = simulate_pool(nd, jj, "SPT-URGENT-FLEX", theta_seconds=0)
+        self.assertEqual(fixed["starts"].tolist(), [0, 10, 20])
+        self.assertEqual(flex["starts"].tolist(), [0, 10, 1])
+        self.assertEqual(flex["reservations"][0]["certificate_updates"][0]["head_witness"],
+                         [[1, 1], [2, 1]])
+        self.assertNotEqual(flex["reservations"][0]["placement_witness"], [[0, 1], [1, 1]])
+        self.assertEqual(flex["reservations"][0]["placement_witness"],
+                         flex["reservations"][0]["certificate_updates"][0]["head_witness"])
+        validate_reservations(nd, flex["jobs"], flex)
+
+        easy_nodes = nodes((1, 1), (8, 1))
+        easy_jobs = pd.DataFrame({"job_name": [0, 1, 2], "gpu_model": ["X"] * 3,
+                                  "gpu_request": [1, 1, 1], "cpu_units": [800, 800, 100],
+                                  "worker_num": [1, 1, 1], "submit_time": [0, 0, 1],
+                                  "duration": [10, 10, 20]})
+        easy = simulate_pool(easy_nodes, easy_jobs, "EASY-NR", theta_seconds=0)
+        self.assertEqual(easy["starts"].tolist(), [0, 10, 1])
+        self.assertEqual(easy["cost"]["crossing_accepted"], 1)
+        validate_reservations(easy_nodes, easy["jobs"], easy)
+
+    def test_crossing_accumulates_and_equal_R_is_allowed(self):
+        nd = nodes((1, 1, 1, 1, 1), (1, 2, 2, 2, 2))
+        jj = pd.DataFrame({"job_name": [0, 1, 2, 3], "gpu_model": ["X"] * 4,
+                           "gpu_request": [1, 1, 1, 1], "cpu_units": [200, 200, 100, 100],
+                           "worker_num": [3, 4, 1, 1], "submit_time": [0, 0, 1, 1],
+                           "duration": [10, 10, 20, 20]})
+        fixed = simulate_pool(nd, jj, "SPT-URGENT-FIXED", theta_seconds=0)
+        self.assertEqual(fixed["starts"].tolist(), [0, 10, 1, 20])
+        self.assertEqual(fixed["cost"]["crossing_accepted"], 1)
+        self.assertGreaterEqual(fixed["cost"]["crossing_rejected"], 1)
+        validate_reservations(nd, fixed["jobs"], fixed)
+
+        equal_jobs = jj.iloc[:3].copy()
+        equal_jobs.loc[2, "duration"] = 9
+        equal = simulate_pool(nd, equal_jobs, "SPT-URGENT-FIXED", theta_seconds=0)
+        self.assertLessEqual(equal["ends"][2], equal["reservations"][0]["promised_R"])
+        validate_reservations(nd, equal["jobs"], equal)
+
+    def test_fixed_flex_protected_head_is_not_K_cropped(self):
+        nd = nodes((1, 1), (8, 1))
+        jj = pd.DataFrame({"job_name": [0, 1, 2], "gpu_model": ["X"] * 3,
+                           "gpu_request": [1, 1, 1], "cpu_units": [800, 800, 100],
+                           "worker_num": [1, 1, 1], "submit_time": [0, 0, 1],
+                           "duration": [10, 10, 20]})
+        for policy in ("SPT-URGENT-FIXED", "SPT-URGENT-FLEX"):
+            result = simulate_pool(nd, jj, policy, theta_seconds=0, reservation_k=1)
+            self.assertEqual(result["starts"].tolist(), [0, 10, 1])
+            self.assertEqual(result["reservations"][0]["fulfillment"]["time"], 10)
+            validate_reservations(nd, result["jobs"], result)
+
     def test_policy_aliases_and_input_order_are_deterministic(self):
         nd = nodes((2, 1), (1, 1))
         jj = jobs([0, 1, 2], [3, 2, 1], workers=[1, 1, 1])

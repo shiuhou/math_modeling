@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the sole FCFS/SJF-HOL DES and persist timings, node ledgers and metrics.
+"""Run the sole Problem B DES and persist timings, ledgers, certificates and metrics.
 
 No experiment runs on import. --smoke uses the first 64 jobs of each GPU model;
 its metrics are engineering checks, not full-trace performance claims.

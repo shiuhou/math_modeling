@@ -75,6 +75,7 @@ def verify(source, run):
                 'plans': sub_plans,
                 'reservations': payload.get('reservations'),
                 'events': payload.get('events'),
+                'policy': policy,
             })
             reservation_checks.append({'gpu_model': model, 'status': 'PASS' if payload.get('reservations') else 'PASS_NO_PROMISE', 'reservations': len(payload.get('reservations', []))})
         rows = [row for row in saved_metrics if row['policy'] == policy]

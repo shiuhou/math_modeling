@@ -20,12 +20,16 @@ from .validation import validate
 POLICY_ALIASES = {
     "FCFS": "FCFS-HOL", "SJF-HOL": "SPT-HOL", "FCFS-HOL": "FCFS-HOL",
     "SPT-HOL": "SPT-HOL", "SPT-FILL": "SPT-FILL", "SGW-FILL": "SGW-FILL",
-    "EASY-TIME": "EASY-TIME", "SPT-URGENT-HOL": "SPT-URGENT-HOL",
-    "SPT-URGENT-TIME": "SPT-URGENT-TIME",
+    "EASY-TIME": "EASY-TIME", "EASY-NR": "EASY-NR",
+    "SPT-URGENT-HOL": "SPT-URGENT-HOL", "SPT-URGENT-TIME": "SPT-URGENT-TIME",
+    "SPT-URGENT-FIXED": "SPT-URGENT-FIXED", "SPT-URGENT-FLEX": "SPT-URGENT-FLEX",
 }
 M1_POLICIES = frozenset(POLICY_ALIASES.values()) - {"FCFS-HOL", "SPT-HOL"}
-FILL_POLICIES = frozenset({"SPT-FILL", "SGW-FILL", "EASY-TIME", "SPT-URGENT-TIME"})
-URGENT_POLICIES = frozenset({"SPT-URGENT-HOL", "SPT-URGENT-TIME"})
+FILL_POLICIES = frozenset({"SPT-FILL", "SGW-FILL", "EASY-TIME", "EASY-NR", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX"})
+URGENT_POLICIES = frozenset({"SPT-URGENT-HOL", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX"})
+FLEX_POLICIES = frozenset({"EASY-NR", "SPT-URGENT-FLEX"})
+FIXED_POLICIES = frozenset({"SPT-URGENT-FIXED"})
+TIME_POLICIES = frozenset({"EASY-TIME", "SPT-URGENT-TIME"})
 EVENT_MODES = frozenset({"arrival-completion-only", "shared-timer"})
 
 
@@ -37,7 +41,7 @@ def canonical_policy(policy: str) -> str:
 
 
 def _priority(j: int, policy: str, arr, dur, workers, reqg) -> tuple:
-    if policy in ("FCFS-HOL", "EASY-TIME"):
+    if policy in ("FCFS-HOL", "EASY-TIME", "EASY-NR"):
         return (int(arr[j]), int(j))
     if policy == "SGW-FILL":
         return (int(workers[j] * reqg[j] * dur[j]), int(dur[j]), int(arr[j]), int(j))
@@ -101,6 +105,7 @@ def simulate_pool(
     running_heap: list[tuple[int, int]] = []
     running: dict[int, tuple[int, list[tuple[int, int]]]] = {}
     arrivals = finished = decisions = peak_queue = bypass_checks_total = 0
+    crossing_accepted = crossing_rejected = certificate_updates = reservation_rejects = 0
     state_version = 0
     reservation: dict | None = None
     reservations: list[dict] = []
@@ -151,13 +156,99 @@ def simulate_pool(
             "accepted_backfill_ids": [],
             "fulfillment": {"status": "PENDING", "time": None},
             "policy": policy,
+            "planner": "flex" if policy in FLEX_POLICIES else ("fixed" if policy in FIXED_POLICIES else "time"),
         }
         reservations.append(reservation)
-        event("reservation_issued", now, promise_id=reservation["promise_id"], protected_job=int(protected), promised_R=int(chosen_r))
+        event("reservation_issued", now, promise_id=reservation["promise_id"], protected_job=int(protected),
+              promised_R=int(chosen_r), state_version=int(state_version))
         return True
 
-    def commit(j: int, now: int, plan: PlacementPlan, protected: bool = False) -> None:
-        nonlocal state_version, reservation
+    def _resource_delta(j: int, plan: PlacementPlan) -> tuple[np.ndarray, np.ndarray]:
+        delta_g = np.zeros_like(free_g)
+        delta_c = np.zeros_like(free_c)
+        for node, count in plan.nodes:
+            delta_g[int(node)] += int(count) * int(reqg[j])
+            delta_c[int(node)] += int(count) * int(reqc[j])
+        return delta_g, delta_c
+
+    def _future_after_crossing(j: int, plan: PlacementPlan) -> tuple[np.ndarray, np.ndarray]:
+        delta_g, delta_c = _resource_delta(j, plan)
+        future_g = np.asarray(reservation["future_free_at_R"]["gpu"], dtype=np.int64).copy()
+        future_c = np.asarray(reservation["future_free_at_R"]["cpu"], dtype=np.int64).copy()
+        future_g -= delta_g
+        future_c -= delta_c
+        return future_g, future_c
+
+    def _head_witness_capacity() -> tuple[np.ndarray, np.ndarray]:
+        head = int(reservation["protected_job"])
+        z_g = np.zeros_like(free_g)
+        z_c = np.zeros_like(free_c)
+        for node, count in reservation["placement_witness"]:
+            z_g[int(node)] += int(count) * int(reqg[head])
+            z_c[int(node)] += int(count) * int(reqc[head])
+        return z_g, z_c
+
+    def safe_plan(j: int, now: int) -> dict | None:
+        """Construct one pure, node-level proposal; never mutate scheduler state."""
+        nonlocal crossing_rejected, reservation_rejects
+        plan = current_plan(j)
+        if reservation is None:
+            if plan is None:
+                return None
+            return {"plan": plan, "mode": "plain", "crossing": False,
+                    "state_version": int(state_version)}
+        if plan is None:
+            reservation_rejects += 1
+            return None
+        promised_r = int(reservation["promised_R"])
+        if int(now + dur[j]) <= promised_r:
+            return {"plan": plan, "mode": "time", "crossing": False,
+                    "state_version": int(state_version)}
+        if policy in TIME_POLICIES:
+            crossing_rejected += 1
+            reservation_rejects += 1
+            return None
+
+        # FLEX first tries the actual current first-fit placement.  If it is
+        # safe through R, the head witness may be rebuilt on the residual pool.
+        if policy in FLEX_POLICIES:
+            future_g, future_c = _future_after_crossing(j, plan)
+            if np.all(future_g >= 0) and np.all(future_c >= 0):
+                head = int(reservation["protected_job"])
+                witness = plan_first_fit(future_g, future_c, int(reqg[head]), int(reqc[head]), int(workers[head]))
+                if witness is not None:
+                    return {"plan": plan, "mode": "flex", "crossing": True,
+                            "future_g": future_g, "future_c": future_c,
+                            "witness": witness, "state_version": int(state_version)}
+
+        # FIXED is the conservative second attempt.  Reserve the existing Z
+        # witness and expose only min(current_free, future_free_at_R-Z).
+        z_g, z_c = _head_witness_capacity()
+        future_g = np.asarray(reservation["future_free_at_R"]["gpu"], dtype=np.int64)
+        future_c = np.asarray(reservation["future_free_at_R"]["cpu"], dtype=np.int64)
+        effective_g = np.minimum(free_g, future_g - z_g)
+        effective_c = np.minimum(free_c, future_c - z_c)
+        fixed_plan = plan_first_fit(effective_g, effective_c, int(reqg[j]), int(reqc[j]), int(workers[j]))
+        if fixed_plan is None:
+            crossing_rejected += 1
+            reservation_rejects += 1
+            return None
+        delta_g, delta_c = _resource_delta(j, fixed_plan)
+        future_after_g, future_after_c = future_g - delta_g, future_c - delta_c
+        if np.any(future_after_g < 0) or np.any(future_after_c < 0):
+            crossing_rejected += 1
+            reservation_rejects += 1
+            return None
+        return {"plan": fixed_plan, "mode": "fixed", "crossing": True,
+                "future_g": future_after_g, "future_c": future_after_c,
+                "witness": reservation["placement_witness"],
+                "state_version": int(state_version)}
+
+    def commit(j: int, now: int, proposal: dict, protected: bool = False) -> None:
+        nonlocal state_version, reservation, crossing_accepted, certificate_updates
+        plan = proposal["plan"]
+        if int(proposal.get("state_version", state_version)) != int(state_version):
+            raise AssertionError("stale placement proposal")
         check_plan(free_g, free_c, int(reqg[j]), int(reqc[j]), plan, int(workers[j]))
         apply_plan(free_g, free_c, int(reqg[j]), int(reqc[j]), plan, sign=-1)
         starts[j], ends[j] = int(now), int(now + dur[j])
@@ -173,10 +264,30 @@ def simulate_pool(
             waiting.remove(j)
         state_version += 1
         if reservation is not None and j != int(reservation["protected_job"]):
-            if int(ends[j]) > int(reservation["promised_R"]):
-                raise AssertionError("M1 TIME accepted a backfill crossing promised R")
+            crossing = int(ends[j]) > int(reservation["promised_R"])
+            if crossing and not proposal.get("crossing", False):
+                raise AssertionError("crossing backfill lacks a safety certificate")
+            if crossing and policy in TIME_POLICIES:
+                raise AssertionError("TIME accepted a backfill crossing promised R")
             reservation["accepted_backfill_ids"].append(int(j))
-            reservation["certificate_updates"].append({"time": int(now), "job": int(j), "state_version": int(state_version)})
+            if crossing:
+                future_g = np.asarray(proposal["future_g"], dtype=np.int64)
+                future_c = np.asarray(proposal["future_c"], dtype=np.int64)
+                witness = proposal["witness"]
+                reservation["future_free_at_R"] = {"gpu": future_g.tolist(), "cpu": future_c.tolist()}
+                reservation["placement_witness"] = [[int(m), int(w)] for m, w in
+                                                       (witness.nodes if isinstance(witness, PlacementPlan) else witness)]
+                update = {"time": int(now), "job": int(j), "state_version": int(state_version),
+                          "previous_state_version": int(reservation["state_version"]),
+                          "planner": str(proposal["mode"]),
+                          "plan": [[int(m), int(w)] for m, w in plan.nodes],
+                          "future_free_at_R": {"gpu": future_g.tolist(), "cpu": future_c.tolist()},
+                          "head_witness": reservation["placement_witness"]}
+                reservation["certificate_updates"].append(update)
+                reservation["state_version"] = int(state_version)
+                crossing_accepted += 1
+                certificate_updates += 1
+                event("certificate_update", now, promise_id=reservation["promise_id"], **update)
         if protected:
             if reservation is None or j != int(reservation["protected_job"]):
                 raise AssertionError("invalid protected commit")
@@ -185,7 +296,8 @@ def simulate_pool(
             reservation["fulfillment"] = {"status": "FULFILLED", "time": int(now)}
             reservation["certificate_updates"].append({"time": int(now), "event": "fulfillment", "state_version": int(state_version)})
             event("reservation_fulfilled", now, promise_id=reservation["promise_id"],
-                  protected_job=int(j), promised_R=int(reservation["promised_R"]))
+                  protected_job=int(j), promised_R=int(reservation["promised_R"]),
+                  state_version=int(state_version))
             reservation = None
         urgent.discard(j)
         event("start", now, job=int(j), protected=bool(protected))
@@ -199,7 +311,8 @@ def simulate_pool(
         plan = current_plan(protected)
         if plan is None:
             raise AssertionError("promised reservation could not be fulfilled")
-        commit(protected, now, plan, protected=True)
+        commit(protected, now, {"plan": plan, "mode": "protected", "crossing": False,
+                                "state_version": int(state_version)}, protected=True)
         return True
 
     def trigger_timer(now: int) -> None:
@@ -215,10 +328,11 @@ def simulate_pool(
             while waiting:
                 j = waiting[0] if policy == "FCFS-HOL" else waiting[0][3]
                 decisions += 1
-                plan = current_plan(j)
+                proposal = safe_plan(j, now)
+                plan = proposal["plan"] if proposal is not None else None
                 if plan is None:
                     return
-                commit(j, now, plan)
+                commit(j, now, proposal)
             return
         attempts = 0
         bypass_mode = False
@@ -245,7 +359,8 @@ def simulate_pool(
                 if reservation is not None and j == int(reservation["protected_job"]):
                     plan = current_plan(j)
                     if plan is not None:
-                        commit(j, now, plan, protected=True)
+                        commit(j, now, {"plan": plan, "mode": "protected", "crossing": False,
+                                        "state_version": int(state_version)}, protected=True)
                         made = True
                     else:
                         # TIME policies may inspect safe candidates while the
@@ -267,13 +382,14 @@ def simulate_pool(
                     bypass_checks_total += 1
                 decisions += 1
                 seen.add(j)
-                plan = current_plan(j)
+                proposal = safe_plan(j, now)
+                plan = proposal["plan"] if proposal is not None else None
                 if plan is None:
                     bypass_mode = True
                     if policy in ("FCFS-HOL", "SPT-HOL"):
                         blocked = True
                         break
-                    if policy == "EASY-TIME" and j == ordered[0] and reservation is None:
+                    if policy in ("EASY-TIME", "EASY-NR") and j == ordered[0] and reservation is None:
                         build_reservation(j, now)
                         # EASY-TIME continues the same timestamp scan; the
                         # newly protected head is exempt from K.
@@ -286,11 +402,7 @@ def simulate_pool(
                         if blocked:
                             break
                     continue
-                if reservation is not None and policy in FILL_POLICIES and int(now + dur[j]) > int(reservation["promised_R"]):
-                    blocked = True
-                    bypass_mode = True
-                    continue
-                commit(j, now, plan)
+                commit(j, now, proposal)
                 made = True
                 break
             if made:
@@ -349,5 +461,9 @@ def simulate_pool(
         "reservations": reservations, "events": events,
         "cost": {"planner_calls": int(decisions), "candidate_checks": int(decisions),
                  "bypass_candidate_checks": int(bypass_checks_total),
-                 "reservation_calls": len(reservations)},
+                 "reservation_calls": len(reservations),
+                 "crossing_accepted": int(crossing_accepted),
+                 "crossing_rejected": int(crossing_rejected),
+                 "certificate_updates": int(certificate_updates),
+                 "reservation_rejects": int(reservation_rejects)},
     }

@@ -236,3 +236,14 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - 與審查基準的 FCFS-HOL／SPT-HOL 回歸 PASS：兩種模式、六池、前 64 jobs、兩個 horizon 共 24 組比較，時刻、放置、事件、預約及 metrics 均一致；證據見 `regression.json`。
 - 新正式 manifest：`results/20261014-b-q2-m1-age-evidence-01/manifest.json`。
 - 本輪未重跑完整 FCFS/SPT trace；先前完整基線與獨立驗證保留。M2 FIXED/FLEX、22 格矩陣、Q3 及論文性能修改仍未執行。
+
+## 10. M2-A 結果（FIXED／FLEX／EASY-NR，2026-10-14）
+
+- 起點：`960176cc5c45c59553183ac5d1637120d3475ecb`。三份 Pro 規格與三份 JSON 已存在於 `docs/`、`references/q2_pro_review/`，未建立重複規格。
+- 新增 policy：`SPT-URGENT-FIXED`、`SPT-URGENT-FLEX`、FIFO-head `EASY-NR`。仍使用同一 DES、FF-id、K=200、單一 pending reservation 及兩種顯式 event mode。
+- FIXED 對 crossing 候選使用 `min(current_free, future_free_at_R - Z*demand_h)`；FLEX 先試 current placement、失敗後試 FIXED，更新 head witness 但不延後原 R。證書以稀疏 `certificate_update` 事件記錄 plan、planner、版本鏈、future 增量及 head witness。
+- 合成驗收 PASS：TIME 拒絕而 FIXED 可接受；FIXED 拒絕而 FLEX 換 head witness 可接受；累積候選由安全變不安全；`finish=R`；protected head 不受 K；偽造／刪除 certificate update 被獨立 validator 拒絕。
+- Problem B 測試 PASS（30 tests）；shared-timer 與 arrival-completion-only 各 10 policy、6 pool、64 jobs/pool smoke 及持久化獨立驗證 PASS。
+- A10 中型壓力：4096 jobs、theta=1350h 與 theta=4s 均獨立重播 PASS；summary 記錄 runtime、peak RSS、reservation 數、crossing accepted/rejected、certificate updates 及 hash。theta=4s 前綴沒有 accepted crossing，不能解讀為 crossing 性能結論；crossing 正確性由合成案例驗收。
+- 正式證據：`results/20261014-b-q2-m2a-20261014/manifest.json`；大型明細仍在 ignored `outputs/`，沒有每筆 reservation 的密集整池快照。
+- 未執行：22 格全因子矩陣、大量調參、完整 trace 的 M2 性能比較、Q3 與論文性能改寫。

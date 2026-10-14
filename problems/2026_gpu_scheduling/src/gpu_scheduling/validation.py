@@ -122,24 +122,104 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                     future_g[int(node)] -= int(count) * int(jobs.gpu_request.iloc[j])
                     future_c[int(node)] -= int(count) * int(jobs.cpu_units.iloc[j])
         accepted = {int(x) for x in promise.get("accepted_backfill_ids", [])}
+        if len(accepted) != len(promise.get("accepted_backfill_ids", [])):
+            raise AssertionError("duplicate accepted backfill id")
+        policy = str(result.get("policy", promise.get("policy", "")))
+        crossing_allowed = {"SPT-URGENT-FIXED", "SPT-URGENT-FLEX", "EASY-NR"}
         for j in range(len(jobs)):
             if j == protected or not (issued <= starts[j] < promised_r) or j in active_at_issue:
                 continue
-            if ends[j] > promised_r:
+            if ends[j] > promised_r and policy not in crossing_allowed:
                 raise AssertionError("backfill crosses immutable promised R")
             if j not in accepted:
                 raise AssertionError("post-issuance backfill missing from certificate")
         for j in accepted:
-            if j < 0 or j >= len(jobs) or j == protected or starts[j] < issued or ends[j] > promised_r or j in active_at_issue:
+            if j < 0 or j >= len(jobs) or j == protected or starts[j] < issued or j in active_at_issue:
                 raise AssertionError("invalid accepted backfill id")
         recorded = promise.get("future_free_initial", {})
         if future_g.tolist() != list(recorded.get("gpu", [])) or future_c.tolist() != list(recorded.get("cpu", [])):
             raise AssertionError("future snapshot does not replay from allocations")
+        # Replay each sparse crossing certificate in event order.  The
+        # current resource state is reconstructed from prior start/finish
+        # events; only the future vector and head witness are stored as deltas.
+        crossing_events = [item for item in events
+                           if item.get("kind") == "certificate_update"
+                           and item.get("promise_id") == pid]
+        recorded_updates = [item for item in promise.get("certificate_updates", []) if "job" in item]
+        if len(crossing_events) != len(recorded_updates):
+            raise AssertionError("certificate update evidence is incomplete")
+        if {int(item.get("job")) for item in crossing_events} != {j for j in accepted if ends[j] > promised_r}:
+            raise AssertionError("crossing backfill certificate ids do not match allocations")
+        witness = tuple((int(node), int(count)) for node, count in promise.get("placement_witness", []))
+        previous_version = int(promise["state_version"])
+        # The recorded state_version is the final certificate version.  Each
+        # update carries its own predecessor, so replay starts at issuance.
+        initial_version = int(issued_event.get("state_version", promise.get("state_version", 0)))
+        previous_version = initial_version
+        for item, recorded_update in zip(crossing_events, recorded_updates):
+            for key in ("time", "job", "state_version", "previous_state_version", "planner",
+                        "plan", "future_free_at_R", "head_witness"):
+                if item.get(key) != recorded_update.get(key):
+                    raise AssertionError("certificate event and record differ")
+            j = int(item["job"])
+            if policy not in crossing_allowed:
+                raise AssertionError("TIME reservation contains a crossing certificate")
+            plan = tuple((int(node), int(count)) for node, count in plans[j])
+            if tuple(tuple(x) for x in item.get("plan", [])) != plan:
+                raise AssertionError("certificate plan differs from allocation ledger")
+            if int(item.get("time")) != int(starts[j]) or int(ends[j]) <= promised_r:
+                raise AssertionError("invalid crossing certificate timing")
+            version = int(item.get("state_version"))
+            if int(item.get("previous_state_version")) != previous_version or version <= previous_version:
+                raise AssertionError("certificate version chain is broken")
+            current_before_g, current_before_c = caps_g.copy(), caps_c.copy()
+            event_index = events.index(item)
+            for prior in events[:event_index]:
+                if prior.get("kind") not in ("start", "finish"):
+                    continue
+                k = int(prior["job"])
+                if int(prior["time"]) != int(starts[k] if prior["kind"] == "start" else ends[k]):
+                    raise AssertionError("event disagrees with timing ledger")
+                sign = -1 if prior["kind"] == "start" else 1
+                for node, count in plans[k]:
+                    current_before_g[int(node)] += sign * int(count) * int(jobs.gpu_request.iloc[k])
+                    current_before_c[int(node)] += sign * int(count) * int(jobs.cpu_units.iloc[k])
+            check_plan(current_before_g, current_before_c, int(jobs.gpu_request.iloc[j]),
+                       int(jobs.cpu_units.iloc[j]), plan, int(jobs.worker_num.iloc[j]))
+            old_future_g, old_future_c = future_g.copy(), future_c.copy()
+            delta_g = np.zeros_like(future_g); delta_c = np.zeros_like(future_c)
+            for node, count in plan:
+                delta_g[node] += count * int(jobs.gpu_request.iloc[j])
+                delta_c[node] += count * int(jobs.cpu_units.iloc[j])
+            future_g, future_c = future_g - delta_g, future_c - delta_c
+            if np.any(future_g < 0) or np.any(future_c < 0):
+                raise AssertionError("certificate future snapshot is negative")
+            mode = str(item.get("planner"))
+            if mode == "fixed":
+                z_g = np.zeros_like(future_g); z_c = np.zeros_like(future_c)
+                for node, count in witness:
+                    z_g[node] += count * q; z_c[node] += count * c
+                effective_g = np.minimum(current_before_g, old_future_g - z_g)
+                effective_c = np.minimum(current_before_c, old_future_c - z_c)
+                check_plan(effective_g, effective_c, int(jobs.gpu_request.iloc[j]),
+                           int(jobs.cpu_units.iloc[j]), plan, int(jobs.worker_num.iloc[j]))
+            elif mode == "flex":
+                head_witness = tuple((int(node), int(count)) for node, count in item.get("head_witness", []))
+                check_plan(future_g, future_c, q, c, head_witness, w)
+                if int(slots(future_g, future_c, q, c).sum()) < w:
+                    raise AssertionError("FLEX certificate loses protected head slots")
+                witness = head_witness
+            else:
+                raise AssertionError("unknown crossing planner certificate")
+            recorded_future = item.get("future_free_at_R", {})
+            if future_g.tolist() != list(recorded_future.get("gpu", [])) or future_c.tolist() != list(recorded_future.get("cpu", [])):
+                raise AssertionError("certificate future delta does not replay")
+            previous_version = version
         recorded_at_r = promise.get("future_free_at_R", {})
         if future_g.tolist() != list(recorded_at_r.get("gpu", [])) or future_c.tolist() != list(recorded_at_r.get("cpu", [])):
             raise AssertionError("future snapshot was changed without a certificate update")
-        witness = tuple((int(node), int(count)) for node, count in promise.get("placement_witness", []))
-        check_plan(future_g, future_c, q, c, witness, w)
+        final_witness = tuple((int(node), int(count)) for node, count in promise.get("placement_witness", []))
+        check_plan(future_g, future_c, q, c, final_witness, w)
         if int(slots(future_g, future_c, q, c).sum()) < w:
             raise AssertionError("future snapshot does not contain protected gang")
         fulfillment = promise.get("fulfillment", {})
@@ -147,6 +227,11 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             raise AssertionError("missing or inconsistent fulfillment record")
         if int(fulfilled_event.get("time")) != int(fulfillment.get("time")):
             raise AssertionError("fulfillment event time does not match its promise record")
+        fulfillment_updates = [item for item in promise.get("certificate_updates", []) if item.get("event") == "fulfillment"]
+        if len(fulfillment_updates) != 1 or int(fulfillment_updates[0].get("time")) != int(fulfillment.get("time")):
+            raise AssertionError("fulfillment certificate update is missing")
+        if int(fulfilled_event.get("state_version")) != int(fulfillment_updates[0].get("state_version")):
+            raise AssertionError("fulfillment certificate version differs from event")
 
 
 

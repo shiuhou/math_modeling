@@ -60,10 +60,10 @@ tests/                  手算、容量、輸入／指標及持久化核查
 ## 共用實作與接口
 
 - [data.py](src/gpu_scheduling/data.py)：`read_data(source) -> nodes, jobs, hashes`；時間秒、每 worker 欄位、`cpu_units` 為百分之一 vCPU；穩定排序。
-- [simulator.py](src/gpu_scheduling/simulator.py)：唯一活動 DES，`simulate_pool(nodes, jobs, policy)`。保留 `FCFS`／`SJF-HOL` 相容別名，正式基線名為 `FCFS-HOL`／`SPT-HOL`；M1 另提供 `SPT-FILL`、`SGW-FILL`、`EASY-TIME`、`SPT-URGENT-HOL`、`SPT-URGENT-TIME`。所有策略共用 node-level CPU/GPU gang planner；M1 的 TIME 只接納 `finish <= immutable promised_R`，不代表 FIXED/FLEX 已完成。
+- [simulator.py](src/gpu_scheduling/simulator.py)：唯一活動 DES，`simulate_pool(nodes, jobs, policy)`。保留 `FCFS`／`SJF-HOL` 相容別名，正式基線名為 `FCFS-HOL`／`SPT-HOL`；M1 提供 `SPT-FILL`、`SGW-FILL`、`EASY-TIME`、`SPT-URGENT-HOL`、`SPT-URGENT-TIME`；M2-A 新增 `SPT-URGENT-FIXED`、`SPT-URGENT-FLEX`、`EASY-NR`。所有策略共用 node-level CPU/GPU gang planner；TIME 只接納 `finish <= immutable promised_R`，FIXED/FLEX/EASY-NR 以可重播證書安全地接受 crossing。
 - [evaluation.py](src/gpu_scheduling/evaluation.py)：唯一共享評價器。等待／JCT 包含全部作業直至排空；分位數 linear；BSLD 為 `max(1,JCT/max(duration,60s))`。分配率只積分 `[0,H)`，完成數 `finish <= H`；預設 `H = 最後提交時刻`，名義 90 天需顯式 `--horizon-seconds 7776000`。
 - [validation.py](src/gpu_scheduling/validation.py)：獨立節點 CPU/GPU ledger 回放；微型 scalar oracle 僅供測試，不是第二套正式引擎。
-- [run_baselines.py](experiments/run_baselines.py)：唯一基線／M1 流程，記錄 `run.json`、來源 commit／dirty snapshot／雜湊、資料、參數、環境、耗時、全部 metrics、job times、node placements 及 reservation/event evidence；[verify_baseline.py](experiments/verify_baseline.py) 在另一程序從持久化明細核查，不信任 metrics 自報成功。M1 可用 `--theta-seconds` 與 `--reservation-k` 明示配置。
+- [run_baselines.py](experiments/run_baselines.py)：唯一基線／M1／M2-A 流程，記錄 `run.json`、來源 commit／dirty snapshot／雜湊、資料、參數、環境、耗時、全部 metrics、job times、node placements 及 reservation/event/certificate evidence；[verify_baseline.py](experiments/verify_baseline.py) 在另一程序從持久化明細核查，不信任 metrics 自報成功。`--theta-seconds`、`--reservation-k` 與 `--event-mode` 均明示配置。
 
 Q2 M1 工程 smoke（只做正確性與持久化驗收，不是性能結論）：
 
