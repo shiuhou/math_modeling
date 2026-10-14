@@ -224,16 +224,15 @@ Pro 應只更正有證據的問題，不另生一套主方案。M1 之後交給 
 
 Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗證、資料橋接結論、產物位置、最小阻塞項。維護本文件的狀態與簡短結果區，不另建 summary/handoff/status 多份稿。未獲另行授權，不自動 commit/push/merge、force-push 或操作 main；不覆蓋隊友、不改公開權限或硬體環境。
 
-## 9. 結果區（M1 契約補修，2026-10-14）
+## 9. 結果區（M1 契約補修後的靜態審查修正，2026-10-14）
 
-- 基線提交：`e867c46bf60bd722ad4bb11782b579fc3b494444`；補修後尚未改寫 M0 證據，原 `results/20261014-b-q2-m1/manifest.json` 保留。
-- 本輪補修內容：修正 K 只計後方 bypass candidate、不重置同一 timestamp 預算；EASY-TIME 發出 reservation 後在同刻繼續掃描，接受 `finish <= R`；reservation validator 綁定原始 issuance／promise／protected job／issued time／R／fulfillment，拒絕變更 R、事件存在但記錄清空、以及缺少必要 policy/model 證據；新增明確 `arrival-completion-only` 與 `shared-timer` event mode，寫入 run/config。
-- 修前反例已重現：K=1 兩個空閒單 GPU 作業為 `[0,10]`；K=200、201 個空閒節點的普通前綴出現延遲；theta=0 urgent 路徑同樣受 K 誤計影響；EASY 同刻 A/H/B（B duration=2）為 `[0,10,2]`。
-- 修後反例：上述 K=1、K=200/201、theta=0 urgent 均為全 `[0,0,...]`；EASY 同刻為 `[0,10,1]`，`finish=R` 案例也為 `[0,10,1]` 且列入 accepted backfill。
-- Problem B 測試：PASS（23 tests）；root tests PASS（12 tests）；`scripts/check_repo.py` PASS；`git diff --check` PASS。
-- 共享 timer smoke：七個 policy、六個 GPU model、每池前 64 jobs，`outputs/q2-m1-contract-repair-final-20261014-verified.json` PASS。
-- 歷史 arrival/completion-only smoke：FCFS-HOL、SPT-HOL、SPT-URGENT-TIME，`outputs/q2-m1-contract-repair-history-final-20261014-verified.json` PASS。兩種模式均保留可取得的 job_times、node placements、reservation evidence；大型明細仍在 ignored `outputs/`，run.json 保存 hash 與配置。
-- 新正式 machine-readable manifest：`results/20261014-b-q2-m1-contract-repair/manifest.json`。其中記錄 M0 data bridge、source patch hash、修前／修後反例、兩種 event mode、命令與驗證產物。
-- M0 資料結論未變：官方與 repo node/PDF bytes 相同；job CSV bytes 不同但行數、欄位、ID 集合及每個輸入欄位逐 ID 相等，判定 `DIFFERENT_SERIALIZATION / SEMANTICALLY_EQUAL`，未覆寫 raw。
-- 未執行：M2 FIXED/FLEX、全量參數搜索、22 格矩陣、Q3 與論文性能改寫；不把本輪 smoke 當成正式性能比較。
-- 最小剩餘問題：正式 Q2 性能研究仍待 M2；大型持久化明細需團隊確認共享保存位置；官方資料再散布授權仍待確認。
+- 審查基準：`0add5f1b56caad43048c93b38218b7f0bb1bfe84`；原 M0 與 M1 manifest 保留，未覆寫。
+- M1 狀態：COMPLETE（契約補修、定向反例、持久化證據與必要回歸驗收均完成）；可進入 M2 規格審查，不代表 M2 性能實驗已完成。
+- arrival-completion-only 已修正為只在到達／完成 epoch 檢查 `t-a >= theta`；shared-timer 仍在精確 `a+theta` tick 提升。兩者共用 urgent FIFO、immutable-R 與既有 K／EASY 同刻語義。
+- 反例結果：theta=100 的 R/H/B 在歷史模式由修前 `[0,10,11]` 改為 `[0,10,1]`，H 在 t=1 不會提前取得 urgent。跨過 theta 的案例在歷史模式於下一個 epoch t=7 提升，共享 timer 於精確 t=5 提升。
+- `validate_reservations()` 現在要求 `reservations`、`events` 都是顯式 list-of-records；null、缺欄位、錯誤型別、事件與記錄不一致均拒絕。修前 null 會錯誤接受，修後已拒絕。
+- Problem B 測試 PASS（26 tests，原 23 個保留並新增 3 個定向測試）；root tests PASS（12）；`scripts/check_repo.py` PASS；`git diff --check` PASS。
+- 兩種 event mode 的七 policy／六 GPU pool smoke 及獨立持久化驗證 PASS：`results/20261014-b-q2-m1-age-evidence-01/`，可重取明細在 `smoke-evidence.tar.gz`。
+- 與審查基準的 FCFS-HOL／SPT-HOL 回歸 PASS：兩種模式、六池、前 64 jobs、兩個 horizon 共 24 組比較，時刻、放置、事件、預約及 metrics 均一致；證據見 `regression.json`。
+- 新正式 manifest：`results/20261014-b-q2-m1-age-evidence-01/manifest.json`。
+- 本輪未重跑完整 FCFS/SPT trace；先前完整基線與獨立驗證保留。M2 FIXED/FLEX、22 格矩陣、Q3 及論文性能修改仍未執行。

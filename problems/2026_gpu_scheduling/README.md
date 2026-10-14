@@ -77,7 +77,7 @@ Q2 M1 工程 smoke（只做正確性與持久化驗收，不是性能結論）�
   --run outputs/q2-m1-smoke --out outputs/q2-m1-smoke-verified.json
 ```
 
-`--event-mode shared-timer` 讓同一 theta 組的所有 policy 收到相同池內 ticks；沒有 urgent 的 policy 只把 tick 當調度機會。歷史 arrival/completion-only 對照使用 `--event-mode arrival-completion-only`，不能用 policy 名稱暗中選擇比較模式。
+`--event-mode shared-timer` 讓同一 theta 組的所有 policy 收到相同池內 ticks；沒有 urgent 的 policy 只把 tick 當調度機會。歷史 arrival/completion-only 對照使用 `--event-mode arrival-completion-only`，不能用 policy 名稱暗中選擇比較模式。 兩種模式均要求等待年齡 `t-a >= theta` 才有 urgent 資格：shared-timer 在精確 `a+theta` 提升；arrival-completion-only 在下一個到達／完成 epoch 檢查並提升，沿用相同 urgent FIFO 及原 promise 保護。預約驗證要求顯式 `reservations`／`events` 清單（無預約可為空清單）；缺失、null 或錯誤型別均驗證失敗。
 
 Q2 以此引擎擴充排序／放置，勿另建 DES／評分器。Q3 保持此資料與評價口徑，跨池機制需耦合節點容量，不能各池各自許諾相同 donor 資源。改共用接口前於 [docs/brief.md](../../docs/brief.md) 提出並透過 PR 協調；不覆蓋 Q1 或另一題的修改。
 

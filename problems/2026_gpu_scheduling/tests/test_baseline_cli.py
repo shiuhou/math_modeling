@@ -25,6 +25,26 @@ class BaselineCLI(unittest.TestCase):
             command=[sys.executable,str(PROBLEM/'experiments/run_baselines.py'),'--data',str(data),'--out',str(run)]
             subprocess.run(command,check=True,capture_output=True)
             self.assertEqual(verify(data,run)['status'],'PASS')
+            # Missing/null fields must fail even in a pool with no promises.
+            evidence = run/'FCFS_X_reservations.json'
+            original = evidence.read_bytes()
+            original_meta = (run/'run.json').read_bytes()
+            for field in ('reservations', 'events'):
+                for missing_field in (False, True):
+                    payload = json.loads(original)
+                    if missing_field:
+                        del payload[field]
+                    else:
+                        payload[field] = None
+                    evidence.write_text(json.dumps(payload))
+                    meta = json.loads(original_meta)
+                    meta['outputs'][evidence.name] = hashlib.sha256(evidence.read_bytes()).hexdigest()
+                    (run/'run.json').write_text(json.dumps(meta))
+                    with self.subTest(field=field, missing=missing_field), self.assertRaisesRegex(
+                            AssertionError, 'requires explicit'):
+                        verify(data,run)
+            evidence.write_bytes(original)
+            (run/'run.json').write_bytes(original_meta)
             # A policy/pool evidence file is required even when that pool has
             # no promises; it cannot silently become NOT_APPLICABLE.
             missing = run/'FCFS_X_reservations.json'

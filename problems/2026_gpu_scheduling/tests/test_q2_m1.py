@@ -144,6 +144,54 @@ class M1Checks(unittest.TestCase):
         self.assertTrue(any(x["kind"] == "timer_threshold" for x in shared["events"]))
         self.assertFalse(any(x["kind"] == "timer_threshold" for x in historical["events"]))
 
+    def test_history_mode_does_not_promote_young_blocked_job(self):
+        nd = nodes((1, 1), (8, 8))
+        jj = jobs([0, 1, 2], [10, 1, 2], workers=[1, 2, 1], submits=[0, 1, 1])
+        for policy in ("SPT-URGENT-HOL", "SPT-URGENT-TIME"):
+            result = simulate_pool(nd, jj, policy, theta_seconds=100,
+                                   event_mode="arrival-completion-only")
+            self.assertEqual(result["starts"].tolist(), [0, 10, 1])
+            self.assertEqual(result["reservations"], [])
+
+    def test_history_promotes_at_next_epoch_in_urgent_fifo_order(self):
+        nd = nodes((1, 1), (8, 8))
+        # Older H is longer than J: after both age, urgent FIFO must beat SPT.
+        cases = (
+            jobs([0, 1, 2, 3], [20, 5, 1, 1], workers=[1, 2, 2, 1],
+                 submits=[0, 1, 2, 7]),  # next epoch is an arrival
+            jobs([0, 3, 1, 2], [20, 7, 5, 1], workers=[1, 1, 2, 2],
+                 submits=[0, 0, 1, 2]),  # next epoch is a completion
+        )
+        for jj in cases:
+            for policy in ("SPT-URGENT-HOL", "SPT-URGENT-TIME"):
+                for mode, issued in (("arrival-completion-only", 7), ("shared-timer", 5)):
+                    with self.subTest(policy=policy, mode=mode, arrivals=jj.submit_time.tolist()):
+                        result = simulate_pool(nd, jj, policy, theta_seconds=4, event_mode=mode)
+                        promise = result["reservations"][0]
+                        self.assertEqual(promise["protected_job_name"], 1)
+                        self.assertEqual(promise["issued_time"], issued)
+                        self.assertEqual(promise["promised_R"], 20)
+                        self.assertEqual(promise["fulfillment"]["time"], 20)
+                        validate_reservations(nd, result["jobs"], result)
+
+    def test_reservation_evidence_requires_explicit_lists(self):
+        nd = nodes((1, 1), (8, 8))
+        jj = jobs([0, 1, 2], [10, 1, 2], workers=[1, 2, 1], submits=[0, 1, 1])
+        result = simulate_pool(nd, jj, "EASY-TIME")
+        self.assertTrue(result["reservations"])
+        self.assertTrue(any(e["kind"] == "reservation_issued" for e in result["events"]))
+        self.assertTrue(any(e["kind"] == "reservation_fulfilled" for e in result["events"]))
+        for field in ("reservations", "events"):
+            for value in (None, {}, "", 0, [None]):
+                bad = copy.deepcopy(result)
+                bad[field] = value
+                with self.subTest(field=field, value=value), self.assertRaises(AssertionError):
+                    validate_reservations(nd, bad["jobs"], bad)
+            bad = copy.deepcopy(result)
+            del bad[field]
+            with self.subTest(field=field, missing=True), self.assertRaises(AssertionError):
+                validate_reservations(nd, bad["jobs"], bad)
+
     def test_policy_aliases_and_input_order_are_deterministic(self):
         nd = nodes((2, 1), (1, 1))
         jj = jobs([0, 1, 2], [3, 2, 1], workers=[1, 1, 1])

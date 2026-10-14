@@ -1,0 +1,287 @@
+{
+  "status": "PASS",
+  "scope": "smoke_first_64_per_model",
+  "checks": [
+    {
+      "policy": "FCFS-HOL",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "reservation_replay": [
+        {
+          "gpu_model": "A10",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "H800",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        }
+      ],
+      "metrics": "PASS"
+    },
+    {
+      "policy": "SPT-HOL",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "reservation_replay": [
+        {
+          "gpu_model": "A10",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "H800",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        }
+      ],
+      "metrics": "PASS"
+    },
+    {
+      "policy": "SPT-FILL",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "reservation_replay": [
+        {
+          "gpu_model": "A10",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "H800",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        }
+      ],
+      "metrics": "PASS"
+    },
+    {
+      "policy": "SGW-FILL",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "reservation_replay": [
+        {
+          "gpu_model": "A10",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "H800",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        }
+      ],
+      "metrics": "PASS"
+    },
+    {
+      "policy": "EASY-TIME",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "reservation_replay": [
+        {
+          "gpu_model": "A10",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "status": "PASS",
+          "reservations": 1
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "H800",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        }
+      ],
+      "metrics": "PASS"
+    },
+    {
+      "policy": "SPT-URGENT-HOL",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "reservation_replay": [
+        {
+          "gpu_model": "A10",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "status": "PASS",
+          "reservations": 1
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "H800",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        }
+      ],
+      "metrics": "PASS"
+    },
+    {
+      "policy": "SPT-URGENT-TIME",
+      "jobs": 384,
+      "ledger_rows": 813,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "reservation_replay": [
+        {
+          "gpu_model": "A10",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "status": "PASS",
+          "reservations": 1
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        },
+        {
+          "gpu_model": "H800",
+          "status": "PASS_NO_PROMISE",
+          "reservations": 0
+        }
+      ],
+      "metrics": "PASS"
+    }
+  ],
+  "run_sha256": "019ec0e96fd4b4373bbc92a55a752eefca6ec80d7c569b95c4278bcee05e9b3d"
+}

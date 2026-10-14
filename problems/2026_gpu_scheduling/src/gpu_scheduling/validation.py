@@ -34,9 +34,11 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
     a scheduler ``safe`` predicate and therefore catches stale or self-
     reported certificates.
     """
-    reservations = result.get("reservations", [])
-    if reservations is None:
-        return
+    for field in ("reservations", "events"):
+        if not isinstance(result.get(field), list) or any(
+                not isinstance(item, dict) for item in result[field]):
+            raise AssertionError(f"reservation replay requires explicit {field} list of records")
+    reservations = result["reservations"]
     starts = np.asarray(result["starts"], dtype=np.int64)
     ends = np.asarray(result["ends"], dtype=np.int64)
     plans = result["plans"]
@@ -45,7 +47,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
     caps_g = nodes.gpu_capacity_num.to_numpy(dtype=np.int64)
     caps_c = nodes.cpu_units.to_numpy(dtype=np.int64)
     ids = {int(x): i for i, x in enumerate(jobs.job_name)}
-    events = result.get("events", [])
+    events = result["events"]
     if reservations and not events:
         raise AssertionError("reservation replay requires persisted event order")
     issued_items = [item for item in events if item.get("kind") == "reservation_issued"]

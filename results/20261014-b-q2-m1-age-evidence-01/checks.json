@@ -1,0 +1,26 @@
+[
+  {
+    "command": "python3 scripts/check_repo.py",
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "repo.log"
+  },
+  {
+    "command": "python3 -m unittest discover -s tests -v",
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "root-tests.log"
+  },
+  {
+    "command": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v",
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "problem-tests.log"
+  },
+  {
+    "command": "git diff --check",
+    "exit_code": 0,
+    "status": "PASS",
+    "log": "diff-check.log"
+  }
+]

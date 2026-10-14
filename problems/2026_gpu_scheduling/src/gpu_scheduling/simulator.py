@@ -279,9 +279,7 @@ def simulate_pool(
                         # newly protected head is exempt from K.
                         blocked = False
                         continue
-                    urgent_head = j in urgent or (
-                        event_mode == "arrival-completion-only" and policy in URGENT_POLICIES
-                    )
+                    urgent_head = j in urgent
                     if policy in URGENT_POLICIES and urgent_head and reservation is None:
                         build_reservation(j, now)
                         blocked = policy == "SPT-URGENT-HOL"
@@ -331,6 +329,10 @@ def simulate_pool(
             arrivals += 1
         peak_queue = max(peak_queue, len(waiting))
         trigger_timer(t)
+        if event_mode == "arrival-completion-only" and policy in URGENT_POLICIES:
+            # This mode samples the same age qualification only at external
+            # arrival/completion epochs; it does not create threshold ticks.
+            urgent.update(j for j in waiting if t - int(arr[j]) >= theta_seconds)
         if reservation is not None and int(reservation["promised_R"]) == t:
             due_protected(t)
         dispatch(t)
