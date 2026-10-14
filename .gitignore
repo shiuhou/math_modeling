@@ -18,12 +18,11 @@ __pycache__/
 .cache/
 .DS_Store
 
-# Local data and generated runs; selected figures belong in figures/.
+# Local raw data and disposable runs; formal evidence belongs in results/.
 /data/*
 !/data/README.md
 /outputs/*
 !/outputs/README.md
-*.log
 
 # Temporary document build files
 *.aux

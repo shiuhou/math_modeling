@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "example",
+  "experiment_id": "example-not-run",
+  "question_or_claim": null,
+  "code": {
+    "commit": null,
+    "dirty": null,
+    "changes": null
+  },
+  "data": [],
+  "configuration": null,
+  "seeds": null,
+  "command": null,
+  "working_directory": null,
+  "environment": null,
+  "duration_seconds": null,
+  "validation": {
+    "status": "NOT_RUN",
+    "checks": [],
+    "reason": "Format example only; no experiment has been run."
+  },
+  "solver": null,
+  "results": [],
+  "not_applicable": {},
+  "open_items": [
+    "Problem, claims, data authorization, configuration and runtime are unconfirmed.",
+    "Null values and empty collections are unfilled example fields, not measured results."
+  ]
+}

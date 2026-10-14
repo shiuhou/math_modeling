@@ -1,122 +1,52 @@
 # Astra Modeling Team
 
-一台主機，多個任務 worktree，多個 Codex 終端。隊員可觀看、接手同一個 session；模型方法保持開放，實驗預設由人執行。
+`shiuhou/math_modeling` 是按任務分支與獨立 worktree 協作的數學建模研究倉庫。目標是讓題目、推導、程式、實驗證據與論文可以互相核對。
 
-## 先放上 GitHub
+目前階段：**倉庫初始化**。選題、隊員分工、資料授權及正式運行環境待確認；題目原文尚未取得核對。模型、正式實驗、指標重算及論文建置入口均未建立。手冊中的 A／B 題附錄不表示團隊已選題。
 
-解壓後進入此目錄，在 GitHub 建立**空白倉庫**，不要先加入 README。再執行：
+## 從這裡開始
 
-```bash
-git init -b main
-git add .
-git commit -m "Initial modeling team workspace"
-git remote add origin git@github.com:YOUR_NAME/YOUR_REPO.git
-git push -u origin main
-```
+1. 閱讀唯一數模規範正文 [modeling.md](modeling.md)；Agent 入口是 [AGENTS.md](AGENTS.md)。
+2. 查看 [專案現況、題目覆蓋與共用介面](docs/brief.md)，以及相關的 [任務筆記](notes/tasks/)。
+3. 按 [CONTRIBUTING.md](CONTRIBUTING.md) 認領短期任務、建立獨立工作目錄、驗證並準備 PR。
 
-把 `YOUR_NAME/YOUR_REPO` 換成你的倉庫。壓縮包沒有 `.git` 或帳號憑證；commit 需要你自己的 Git 姓名／信箱，push 需要已設定的 GitHub SSH key。比賽用專案可先建為 Private。
+[初始化委託原文](codex_repo_bootstrap_prompt.md) 保留作本輪範圍依據，不是另一套日常研究規範。
 
-## 在主機開工
+## 現在可執行的檢查
 
-目標環境：Linux、Python 3.10+、Git、tmux、已安裝且完成授權的 Codex CLI。此模板不安裝套件、不登入帳號、不修改系統權限。[安裝與共用方式](docs/host.md)
+倉庫工具使用 **Python 3.10+ 標準函式庫與 Git**，無需安裝研究套件。現有 `team.py` 的 worktree／tmux 功能面向 Linux；開啟共用終端另需 tmux 與已授權的 Codex CLI，設定見 [主機說明](docs/host.md)。這些工具不代表研究環境已配置。
+
+在倉庫根目錄執行：
 
 ```bash
-git clone git@github.com:YOUR_NAME/YOUR_REPO.git
-cd YOUR_REPO
-
-# 先在主分支補題目、資料位置與共用接口；有內容才填。
-# 編輯 docs/brief.md 後 commit，再分出任務。
-
-python3 scripts/team.py new data  --goal "資料與圖表"
-python3 scripts/team.py new model --goal "模型推導與實作"
-python3 scripts/team.py new paper --goal "論文與敘事"
-
-python3 scripts/team.py start model
-python3 scripts/team.py take model
-```
-
-每個任務會得到 `task/<名稱>` 分支、相鄰的獨立工作目錄，以及一份簡短任務筆記。`new` 預設從 `main` 的已提交版本建立；未提交檔案、資料、虛擬環境不會自動複製。
-
-進入 Codex 後直接給任務即可，例如：
-
-> 讀題目與現有內容，先找出值得推進的建模方向，再把主要方案推導並實作。方法由你選；實驗留給我執行，給我命令即可。
-
-腳本不寫死模型名稱。使用共用執行身分既有的 Codex 模型與權限設定；需要切模型時，在 Codex 內自行選擇。
-
-## 觀看、接手、交接
-
-在另一個 SSH 終端、相同倉庫內執行：
-
-```bash
+python3 scripts/check_repo.py
+python3 -m unittest discover -s tests -v
+git diff --check
 python3 scripts/team.py list
-python3 scripts/team.py watch model             # 唯讀觀看
-python3 scripts/team.py take model              # 接手輸入
-python3 scripts/team.py note model "推導已完成；下一步接求解器" --by Alice
 ```
 
-`take` 使用 tmux 的 `attach -d`：會斷開該 session 的**所有其他連線，包括觀眾**，但不會終止裡面的 Codex 或運算。其他人重新 `watch` 即可。這是簡單的交接約定，不是無法繞過的操作者鎖；接手前打聲招呼。
+`check_repo.py` 檢查 Git 已追蹤及尚未被忽略的新檔案：行內 Markdown 連結的本地路徑，以及 JSON 語法（拒絕重複鍵與非有限數值）。它不查外部網址、頁內錨點、reference-style 連結、題目內容或實驗清單的研究語義。倉庫文件請使用可檢查的行內相對連結。
 
-`Ctrl-b`，放開，再按 `d`：離開畫面，保留終端。從 SSH shell 執行 `watch / take`，不要套在另一層 tmux 裡。Codex 結束後會留下 shell，可在原目錄執行 `codex resume` 選取對話；主機重開機則不會保留 tmux 進程。
+測試涵蓋檢查器的有效／無效輸入、CLI 失敗回傳、Git 忽略效果及既有協作工具的基本行為；不啟動 Codex、tmux 或建模實驗。[GitHub Actions](.github/workflows/repository-checks.yml) 執行相同倉庫檢查與測試；本地通過不代表遠端 CI 已執行。實際驗證狀態見 [專案摘要](docs/brief.md)。
 
-**預設只在同一 Linux 執行身分下共用。** 不同 UID 不會因為 SSH 到同一台機器就自動共享；跨帳號設定見 [host.md](docs/host.md)。tmux 的 `watch` 只是避免誤輸入，不是秘密資訊的隔離邊界。
+## 目錄職責
 
-## 這個骨架包含什麼
+| 位置 | 用途 |
+| --- | --- |
+| [docs/brief.md](docs/brief.md) | 唯一專案入口：選題、覆蓋、介面、依賴與驗證摘要 |
+| [CONTRIBUTING.md](CONTRIBUTING.md)、[任務模板](.github/ISSUE_TEMPLATE/research_task.md)、[PR 模板](.github/pull_request_template.md) | 認領、審閱與整合 |
+| [scripts/](scripts/)、[tests/](tests/) | 倉庫檢查及既有團隊工具；工程行為測試 |
+| [src/](src/)、[experiments/](experiments/)、[notebooks/](notebooks/) | 可重用研究程式、實驗執行入口、探索；目前未實作模型 |
+| [data/](data/README.md)、[outputs/](outputs/README.md) | 本機原始資料與可再生暫存；內容預設不進 Git |
+| [results/](results/README.md) | 可追蹤的正式清單、指標及必要明細；目前只有格式示例 |
+| [paper/](paper/draft.md)、[figures/](figures/) | 論文工作稿與選用圖表；寫作工具待確認 |
+| [notes/tasks/](notes/tasks/) | 隨 Git 保存的任務交付摘要；已有 Issue 時引用其狀態 |
+| [.agents/skills/](.agents/skills/) | 按需要選用的工具，不固定成員角色 |
 
-```text
-AGENTS.md                    少量共用工作約定
-.agents/skills/              modeling / data-analysis / paper-writing / handoff
-scripts/team.py              worktree、tmux、共用留言
-docs/                        題目簡報、主機說明、工具參考
-notes/tasks/                 各任務交接摘要，由 new 建立
-src/                         可重用程式
-experiments/                 你要執行的實驗入口
-notebooks/                   探索性工作
-paper/                       論文原稿
-figures/                     選用圖表
-outputs/                     各 worktree 本機輸出，不進 Git
-data/                        本機資料，不進 Git
-```
+## 既有共用終端工具
 
-四個 Skills 按需要使用，不必全部載入。Codex 支援根目錄的 `AGENTS.md` 與 `.agents/skills/<名稱>/SKILL.md`；可直接在 Codex 對話中輸入 `$modeling` 等名稱選用。[官方依據](docs/references.md)
+`python3 scripts/team.py --help` 可看完整操作。`new` 建立按任務命名的 `task/<任務>` 分支與相鄰 worktree，預設從本機 `main` 的**已提交版本**分出；未提交文件、資料和虛擬環境不會自動複製。`task/` 保留為既有工具的相容命名，手動 Git 任務使用 `feat/`、`fix/`、`docs/`、`chore/` 即可。
 
-沒有固定模型、預設實驗結果、強制完整測試、CI、Git hooks 或自動 push。
+`list`／`note` 共用留言存在 Git metadata 中，不會上傳 GitHub，也不取代 Issue 或長期成果。`watch` 唯讀觀看，`take` 接手並斷開同 session 其他連線；先和操作者打招呼。主機配置與限制見 [docs/host.md](docs/host.md)，工具參考見 [docs/references.md](docs/references.md)。
 
-## 狀態與成果不要混在一起
-
-`team.py list / note` 的資料放在 Git 共用 metadata 的 `astra-team/` 下，所有 worktree 讀同一份，不需要等 merge。留言是最近一次人工摘要，不表示誰持有控制權。
-
-程式與 `notes/tasks/<任務>.md` 則跟著各自分支；完成後正常 commit / merge。GitHub 不會收到即時看板、Codex 對話或本機輸出。值得保存的結論請放進程式、筆記或論文。
-
-例如合併模型成果：
-
-```bash
-# 任務 worktree 中，由有授權的隊員提交相關檔案。
-cd "$(python3 scripts/team.py path model)"
-git status
-# git add <要提交的檔案>
-# git commit -m "Implement model"
-```
-
-接著在**另一個主要倉庫終端**整合：
-
-```bash
-git switch main
-git merge task/model
-git push origin main
-```
-
-`AGENTS.md`、Skills 和 `docs/brief.md` 也透過 Git 整合，不會跨分支即時更新。需要新內容的任務可在自己的 worktree 中合併 `main`；更新 `AGENTS.md` 後重啟 Codex 載入新規則，原有對話可用 `codex resume` 接回。
-
-## 其他常用操作
-
-```bash
-python3 scripts/team.py info
-python3 scripts/team.py path model
-python3 scripts/team.py new alternative --base task/model --goal "另一條模型路線"
-python3 scripts/team.py start data
-python3 scripts/team.py start paper
-```
-
-`start <任務> -- <Codex 參數>` 會原樣轉交參數；已存在的終端不重複啟動。新終端要接回特定對話可用 `start <任務> -- resume <SESSION_ID>`。沒有自動停止、刪分支或清理 worktree 的命令，避免誤刪尚未整合的工作。
-
-倉庫預設不附開源授權；要公開讓他人重用時再加入你選擇的 LICENSE。
+研究方法保持開放，實驗預設由隊員執行。Git 提交、推送、PR 與合併依任務授權進行；各步驟分別記錄實際執行狀態。
