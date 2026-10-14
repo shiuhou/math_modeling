@@ -299,3 +299,12 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - phase log 顯示 scheduler/capacity 結束 peak 348,608 KiB，reservation replay 結束 peak 348,608 KiB，metrics 結束 peak 348,608 KiB；process peak 914,604 KiB 出現在 persistence/write 階段。因此不能把本次峰值歸因於 scheduler 或 validator。完整 phase、source/data hash 與命令見 `results/20261015-b-q2-m2d-rss-01/manifest.json`。
 - 獨立持久化驗證 `PASS`：`a10-65536-spt-urgent-hol-verified.json` 的 capacity replay 與 reservation replay 均通過。A10 4,096／8,192、theta=4s 的 TIME/FIXED/FLEX 小型 schedule/event hash 回歸與獨立 replay 均 `PASS`；Problem B 測試 43 個、root tests 12 個、repo check 與 `git diff --check` 均 `PASS`。受控 kill 探針保留為 `TIMEOUT` 診斷，不冒充成功。
 - 本次只完成單一 HOL 壓力恢復，完整 M2-D 仍為 `INCOMPLETE`、GO/NO-GO 為 `NO-GO`：六／九策略矩陣、`theta=1350h`、111,284-job 全量比較與 TIME→FIXED→FLEX 配對尚未執行。下一個最小阻塞是於同一資源護欄下完成其餘凍結策略，或取得分階段執行核准；不在本輪補跑。
+
+## 16. M2-D 65,536 前綴策略比較（2026-10-15）
+
+- 本輪基準：`5cb1827520cdee30fe41ea5d3a0d5f8bb4fa8116`。固定 A10 前 65,536 jobs、`theta=604800s`（探索性 168h）、`shared-timer`、FF-id、K=200、90 日 horizon；每個策略獨立子程序，900 秒／4 GiB RSS 護欄，沒有並行昂貴程序。
+- SPT-FILL 與 SPT-URGENT-HOL 的已完成證據保留：前者來自 `c7c99f7`、schedule hash `7cc447d9...2a5067`、363.70s／557,120 KiB、0 reservation，獨立 ledger/replay PASS；後者來自 `6caebca`、schedule hash `42129d27...5171e18`、653.53s／914,604 KiB、38,253 reservations、crossing accepted=0，獨立 capacity/reservation replay PASS。兩者版本不同，未宣稱同 commit 嚴格配對。
+- 本輪新跑的 SPT-URGENT-TIME、SPT-URGENT-FIXED、SPT-URGENT-FLEX 全部在 scheduler 階段 `TIMEOUT`，不是 RSS_LIMIT：分別約 900.05s／230,732 KiB、900.02s／228,100 KiB、900.02s／226,612 KiB；停止時已到達全部 65,536 jobs，但約完成 45,723／45,740／45,336 jobs，未產生完整 job_times、allocations 或 reservations 可供獨立重播，因此 verification=`NOT_RUN`，不填主指標。
+- 額外 gang-starvation 診斷已加入 `experiments/analyze_gang_starvation.py`，只讀完成的 job-times。SPT-FILL 的短單 worker（n=51,141）mean/p99/max wait=0.043/0.348/2.804h；短多 worker（n=283）=58.652/453.539/915.247h；長多 worker（n=122）=361.813/1509.567/1547.932h。URGENT-HOL 對應為 548.020/1163.483/1172.242h、1042.813/1167.675/1170.860h、905.167/1172.092/1172.427h。跨版本 pair 僅作診斷，未作嚴格策略性能結論。
+- TIME→FIXED→FLEX 配對與 crossing 接納比較 `NOT_AVAILABLE`；沒有兩份完整、同配置 job timing。1350h、完整 111,284-job trace、其餘九策略矩陣均 `NOT_RUN`。正式 manifest：`results/20261015-b-q2-m2d-65536/manifest.json`；三份 timeout benchmark 與 phase log 位於對應 `outputs/q2-m2d-formal-65536-20261015-spt-urgent-*`。
+- 停止判定：M2-D 仍 `INCOMPLETE`，下一步完整 A10 比較 `NO-GO`。最小阻塞是降低已實測 scheduler 成本或取得明確不同的資源護欄；不能把部分完成數據推算成全量結果，也不在本輪啟動新型 scheduler、Q3 或論文改寫。
