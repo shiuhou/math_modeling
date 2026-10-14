@@ -26,6 +26,7 @@ POLICY_ALIASES = {
 M1_POLICIES = frozenset(POLICY_ALIASES.values()) - {"FCFS-HOL", "SPT-HOL"}
 FILL_POLICIES = frozenset({"SPT-FILL", "SGW-FILL", "EASY-TIME", "SPT-URGENT-TIME"})
 URGENT_POLICIES = frozenset({"SPT-URGENT-HOL", "SPT-URGENT-TIME"})
+EVENT_MODES = frozenset({"arrival-completion-only", "shared-timer"})
 
 
 def canonical_policy(policy: str) -> str:
@@ -60,6 +61,7 @@ def simulate_pool(
     *,
     theta_seconds: int = 4_860_000,
     reservation_k: int = 200,
+    event_mode: str = "shared-timer",
 ) -> dict:
     """Simulate one GPU-model pool with node-local gang placement.
 
@@ -71,6 +73,8 @@ def simulate_pool(
     policy = canonical_policy(requested_policy)
     if theta_seconds < 0 or reservation_k <= 0:
         raise ValueError("theta_seconds must be nonnegative and K must be positive")
+    if event_mode not in EVENT_MODES:
+        raise ValueError(f"unknown event_mode: {event_mode}")
     nodes = nodes.sort_values("node_name", kind="stable").reset_index(drop=True)
     jobs = jobs.sort_values(["submit_time", "job_name"], kind="stable").reset_index(drop=True)
     if nodes.empty or jobs.empty:
@@ -96,14 +100,14 @@ def simulate_pool(
     waiting = deque() if policy == "FCFS-HOL" else ([] if policy == "SPT-HOL" else [])
     running_heap: list[tuple[int, int]] = []
     running: dict[int, tuple[int, list[tuple[int, int]]]] = {}
-    arrivals = finished = decisions = peak_queue = 0
+    arrivals = finished = decisions = peak_queue = bypass_checks_total = 0
     state_version = 0
     reservation: dict | None = None
     reservations: list[dict] = []
     events: list[dict] = []
     timers: list[tuple[int, int]] = []
     urgent: set[int] = set()
-    m1 = policy in M1_POLICIES
+    use_timers = event_mode == "shared-timer"
 
     def event(kind: str, t: int, **extra) -> None:
         events.append({"time": int(t), "kind": kind, **extra})
@@ -180,7 +184,8 @@ def simulate_pool(
                 raise AssertionError("protected job started after promised R")
             reservation["fulfillment"] = {"status": "FULFILLED", "time": int(now)}
             reservation["certificate_updates"].append({"time": int(now), "event": "fulfillment", "state_version": int(state_version)})
-            event("reservation_fulfilled", now, promise_id=reservation["promise_id"], protected_job=int(j))
+            event("reservation_fulfilled", now, promise_id=reservation["promise_id"],
+                  protected_job=int(j), promised_R=int(reservation["promised_R"]))
             reservation = None
         urgent.discard(j)
         event("start", now, job=int(j), protected=bool(protected))
@@ -205,7 +210,7 @@ def simulate_pool(
                 urgent.add(target)
 
     def dispatch(now: int) -> None:
-        nonlocal decisions, peak_queue
+        nonlocal decisions, bypass_checks_total, peak_queue
         if policy in ("FCFS-HOL", "SPT-HOL"):
             while waiting:
                 j = waiting[0] if policy == "FCFS-HOL" else waiting[0][3]
@@ -216,6 +221,7 @@ def simulate_pool(
                 commit(j, now, plan)
             return
         attempts = 0
+        bypass_mode = False
         seen: set[int] = set()
         while waiting:
             peak_queue = max(peak_queue, len(waiting))
@@ -246,25 +252,37 @@ def simulate_pool(
                         # protected gang is waiting; HOL stops at the head.
                         seen.add(j)
                         blocked = policy not in FILL_POLICIES
+                        bypass_mode = True
                     if blocked:
                         break
                     continue
-                if attempts >= reservation_k:
+                # A feasible prefix is work-conserving and is free of the K
+                # budget. K starts only after a blocked head creates a bypass
+                # scan. Protected heads are handled above and are never here.
+                if bypass_mode and attempts >= reservation_k:
                     event("budget_exhausted", now, K=int(reservation_k))
                     return
-                attempts += 1
+                if bypass_mode:
+                    attempts += 1
+                    bypass_checks_total += 1
                 decisions += 1
                 seen.add(j)
                 plan = current_plan(j)
                 if plan is None:
+                    bypass_mode = True
                     if policy in ("FCFS-HOL", "SPT-HOL"):
                         blocked = True
                         break
                     if policy == "EASY-TIME" and j == ordered[0] and reservation is None:
                         build_reservation(j, now)
-                        blocked = True
-                        break
-                    if policy in URGENT_POLICIES and j in urgent and reservation is None:
+                        # EASY-TIME continues the same timestamp scan; the
+                        # newly protected head is exempt from K.
+                        blocked = False
+                        continue
+                    urgent_head = j in urgent or (
+                        event_mode == "arrival-completion-only" and policy in URGENT_POLICIES
+                    )
+                    if policy in URGENT_POLICIES and urgent_head and reservation is None:
                         build_reservation(j, now)
                         blocked = policy == "SPT-URGENT-HOL"
                         if blocked:
@@ -272,6 +290,7 @@ def simulate_pool(
                     continue
                 if reservation is not None and policy in FILL_POLICIES and int(now + dur[j]) > int(reservation["promised_R"]):
                     blocked = True
+                    bypass_mode = True
                     continue
                 commit(j, now, plan)
                 made = True
@@ -307,7 +326,7 @@ def simulate_pool(
                 heapq.heappush(waiting, (int(dur[j]), int(arr[j]), int(jobs.job_name.iloc[j]), j))
             else:
                 waiting.append(arrivals)
-            if m1:
+            if use_timers:
                 heapq.heappush(timers, (int(arr[arrivals] + theta_seconds), arrivals))
             arrivals += 1
         peak_queue = max(peak_queue, len(waiting))
@@ -324,6 +343,9 @@ def simulate_pool(
         "feasibility_checks": int(decisions), "peak_queue": int(peak_queue),
         "policy": policy, "policy_input": requested_policy,
         "theta_seconds": int(theta_seconds), "reservation_k": int(reservation_k),
+        "event_mode": event_mode,
         "reservations": reservations, "events": events,
-        "cost": {"planner_calls": int(decisions), "candidate_checks": int(decisions), "reservation_calls": len(reservations)},
+        "cost": {"planner_calls": int(decisions), "candidate_checks": int(decisions),
+                 "bypass_candidate_checks": int(bypass_checks_total),
+                 "reservation_calls": len(reservations)},
     }

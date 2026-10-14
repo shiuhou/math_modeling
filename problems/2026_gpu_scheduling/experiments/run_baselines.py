@@ -24,7 +24,7 @@ import pandas as pd
 from gpu_scheduling.audit import audit
 from gpu_scheduling.data import native, read_data
 from gpu_scheduling.evaluation import metrics
-from gpu_scheduling.simulator import POLICY_ALIASES, simulate_pool
+from gpu_scheduling.simulator import EVENT_MODES, POLICY_ALIASES, simulate_pool
 
 
 def write_json(path, value):
@@ -46,6 +46,8 @@ def main():
                         help="M1 timer threshold (default: 1350 hours)")
     parser.add_argument("--reservation-k", type=int, default=200,
                         help="Per-pool, per-timestamp candidate budget")
+    parser.add_argument("--event-mode", choices=sorted(EVENT_MODES), default="shared-timer",
+                        help="Explicit event comparison mode")
     args = parser.parse_args()
     if args.out.exists(): parser.error("Output exists; choose a new directory")
     if len(set(args.policies)) != len(args.policies): parser.error("Policies must not be repeated")
@@ -73,6 +75,7 @@ def main():
         "data_sha256": hashes, "raw_jobs": len(raw_jobs), "scheduled_jobs": len(jobs),
         "configuration": {"horizon_seconds": horizon, "policies": args.policies, "audit_only": args.audit_only,
                           "theta_seconds": args.theta_seconds, "reservation_k": args.reservation_k,
+                          "event_mode": args.event_mode,
                           "cpu_scale": 100, "placement": "first-fit by ascending node_name",
                           "events": "all completions, then arrivals, then scheduling; half-open allocation intervals"},
         "command": ["python", str(Path(__file__).resolve().relative_to(repo)), *sys.argv[1:]],
@@ -95,7 +98,8 @@ def main():
                         pool = nodes[nodes.gpu_model == model].sort_values("node_name").reset_index(drop=True)
                         result = simulate_pool(pool, sub, policy,
                                                theta_seconds=args.theta_seconds,
-                                               reservation_k=args.reservation_k)
+                                               reservation_k=args.reservation_k,
+                                               event_mode=args.event_mode)
                         rows.append({"policy": policy, "gpu_model": model, **metrics(result, pool, horizon)})
                         for jid, plan in zip(result["jobs"].job_name, result["plans"]):
                             ledger.writerows((int(jid), int(pool.node_name.iloc[m]), w) for m, w in plan)
@@ -103,6 +107,7 @@ def main():
                         # dense timing and allocation tables.
                         write_json(args.out / f"{policy}_{model}_reservations.json", {
                             "gpu_model": model, "policy": policy,
+                            "event_mode": args.event_mode,
                             "reservations": result.get("reservations", []),
                             "events": result.get("events", []),
                             "cost": result.get("cost", {}),

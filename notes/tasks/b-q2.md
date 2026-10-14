@@ -224,19 +224,16 @@ Pro 應只更正有證據的問題，不另生一套主方案。M1 之後交給 
 
 Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗證、資料橋接結論、產物位置、最小阻塞項。維護本文件的狀態與簡短結果區，不另建 summary/handoff/status 多份稿。未獲另行授權，不自動 commit/push/merge、force-push 或操作 main；不覆蓋隊友、不改公開權限或硬體環境。
 
-## 9. 結果區（本輪執行後更新）
+## 9. 結果區（M1 契約補修，2026-10-14）
 
-- 工作 HEAD／基線：`feat/b-q2`，開工 `abdbc4c`；本輪未 commit，工作樹含本次 M0/M1 修改與原有未追蹤導入材料。
-- M0：PASS（官方 `docs/` 與 repo raw 只讀比對）。node CSV 及題目 PDF bytes 相同；job CSV bytes 不同但 224,112 行、欄位順序、ID 集合與全部輸入欄位逐 ID Decimal 比較完全相同，判定 `DIFFERENT_SERIALIZATION / SEMANTICALLY_EQUAL`，未覆寫 raw。證據集中於 `results/20261014-b-q2-m1/manifest.json`。
-- M1：PASS（20 個 Problem B 測試、七個 policy smoke、獨立持久化重播）。單一 DES 已接入純 planner、原子 commit、node-level CPU/GPU/gang、精確 timer、K=200、單一 immutable-R reservation、雙快照與到期履約；TIME 只接受 `finish <= R`。
-- M2／M3：未授權本輪自動執行。
-- 規格審查：2026-10-14 Pro 文件審查完成，**未發現阻塞性矛盾**；第 5.5 與 5.6 節已補上邊界與證明前提。僅代表文件審查通過，並非 M0/M1 的程式驗證。
-- 實際命令與運行 ID：
-  - `python3 scripts/check_repo.py`：PASS。
-  - `python3 -m unittest discover -s tests -v`：PASS（12 tests）。
-  - `PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v`：PASS（20 tests）。
-  - `git diff --check`：PASS。
-  - M1 smoke：`outputs/q2-m1-smoke-20261014d`；`verify_baseline.py`：PASS。
-  - 既有完整基線，明示 `horizon_seconds=7776000`：`outputs/q2-m1-full-20261014d`；FCFS-HOL / SPT-HOL 各 224,112 jobs；獨立持久化核查 PASS。
-  - 正式 machine-readable manifest：`results/20261014-b-q2-m1/manifest.json`。
-- 剩餘風險：Q2 正式性能比較、FIXED/FLEX、22 格矩陣尚未執行；Q3 與論文性能敘述未改；大型明細仍在被忽略的 `outputs/`，發表前需團隊確認共享保存位置；官方資料再散布授權仍待確認。
+- 基線提交：`e867c46bf60bd722ad4bb11782b579fc3b494444`；補修後尚未改寫 M0 證據，原 `results/20261014-b-q2-m1/manifest.json` 保留。
+- 本輪補修內容：修正 K 只計後方 bypass candidate、不重置同一 timestamp 預算；EASY-TIME 發出 reservation 後在同刻繼續掃描，接受 `finish <= R`；reservation validator 綁定原始 issuance／promise／protected job／issued time／R／fulfillment，拒絕變更 R、事件存在但記錄清空、以及缺少必要 policy/model 證據；新增明確 `arrival-completion-only` 與 `shared-timer` event mode，寫入 run/config。
+- 修前反例已重現：K=1 兩個空閒單 GPU 作業為 `[0,10]`；K=200、201 個空閒節點的普通前綴出現延遲；theta=0 urgent 路徑同樣受 K 誤計影響；EASY 同刻 A/H/B（B duration=2）為 `[0,10,2]`。
+- 修後反例：上述 K=1、K=200/201、theta=0 urgent 均為全 `[0,0,...]`；EASY 同刻為 `[0,10,1]`，`finish=R` 案例也為 `[0,10,1]` 且列入 accepted backfill。
+- Problem B 測試：PASS（23 tests）；root tests PASS（12 tests）；`scripts/check_repo.py` PASS；`git diff --check` PASS。
+- 共享 timer smoke：七個 policy、六個 GPU model、每池前 64 jobs，`outputs/q2-m1-contract-repair-final-20261014-verified.json` PASS。
+- 歷史 arrival/completion-only smoke：FCFS-HOL、SPT-HOL、SPT-URGENT-TIME，`outputs/q2-m1-contract-repair-history-final-20261014-verified.json` PASS。兩種模式均保留可取得的 job_times、node placements、reservation evidence；大型明細仍在 ignored `outputs/`，run.json 保存 hash 與配置。
+- 新正式 machine-readable manifest：`results/20261014-b-q2-m1-contract-repair/manifest.json`。其中記錄 M0 data bridge、source patch hash、修前／修後反例、兩種 event mode、命令與驗證產物。
+- M0 資料結論未變：官方與 repo node/PDF bytes 相同；job CSV bytes 不同但行數、欄位、ID 集合及每個輸入欄位逐 ID 相等，判定 `DIFFERENT_SERIALIZATION / SEMANTICALLY_EQUAL`，未覆寫 raw。
+- 未執行：M2 FIXED/FLEX、全量參數搜索、22 格矩陣、Q3 與論文性能改寫；不把本輪 smoke 當成正式性能比較。
+- 最小剩餘問題：正式 Q2 性能研究仍待 M2；大型持久化明細需團隊確認共享保存位置；官方資料再散布授權仍待確認。

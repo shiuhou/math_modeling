@@ -60,6 +60,38 @@ class M1Checks(unittest.TestCase):
         self.assertEqual(promise["fulfillment"]["status"], "FULFILLED")
         validate_reservations(nd, r["jobs"], r)
 
+    def test_k_only_counts_bypass_candidates(self):
+        for policy in ("SPT-FILL", "SGW-FILL", "EASY-TIME", "SPT-URGENT-TIME"):
+            nd = nodes((1, 1), (1, 1))
+            result = simulate_pool(nd, jobs([0, 1], [10, 10]), policy,
+                                   reservation_k=1, theta_seconds=0)
+            self.assertEqual(result["starts"].tolist(), [0, 0], policy)
+        nd = nodes((1, 1), (1, 1))
+        urgent = simulate_pool(nd, jobs([0, 1], [10, 10]), "SPT-URGENT-TIME",
+                               reservation_k=1, theta_seconds=0)
+        self.assertFalse(any(x["kind"] == "budget_exhausted" for x in urgent["events"]))
+
+        # With 201 idle nodes, K=200 must not stop the 201-job feasible prefix;
+        # K=200/201 are both covered explicitly.
+        nd = nodes(tuple([1] * 201), tuple([1] * 201))
+        for k in (200, 201):
+            result = simulate_pool(nd, jobs(list(range(201)), [10] * 201),
+                                   "SPT-FILL", reservation_k=k)
+            self.assertTrue(np.all(result["starts"] == 0))
+
+    def test_easy_time_scans_same_timestamp_and_accepts_finish_equal_r(self):
+        nd = nodes((1, 1), (1, 1))
+        jj = pd.DataFrame({"job_name": [0, 1, 2], "gpu_model": ["X"] * 3,
+                           "gpu_request": [1, 1, 1], "cpu_units": [100, 100, 100],
+                           "worker_num": [1, 2, 1], "submit_time": [0, 1, 1],
+                           "duration": [10, 1, 2]})
+        result = simulate_pool(nd, jj, "EASY-TIME")
+        self.assertEqual(result["starts"].tolist(), [0, 10, 1])
+        jj.loc[2, "duration"] = 9
+        equal = simulate_pool(nd, jj, "EASY-TIME")
+        self.assertEqual(equal["starts"].tolist(), [0, 10, 1])
+        self.assertIn(2, equal["reservations"][0]["accepted_backfill_ids"])
+
     def test_urgent_timer_is_exact_and_protected_not_k_cropped(self):
         nd = nodes((1,), (1,))
         # SPT starts the six-second job. The ten-second head is still blocked
@@ -83,6 +115,34 @@ class M1Checks(unittest.TestCase):
             bad["reservations"][0]["future_free_at_R"]["gpu"][0] += 1
             with self.assertRaises(AssertionError):
                 validate_reservations(nd, bad["jobs"], bad)
+
+        issued_mismatch = copy.deepcopy(r)
+        if issued_mismatch["reservations"]:
+            promise = issued_mismatch["reservations"][0]
+            protected = int(promise["protected_job"])
+            promise["promised_R"] += 1
+            issued_mismatch["starts"][protected] += 1
+            issued_mismatch["ends"][protected] += 1
+            with self.assertRaises(AssertionError):
+                validate_reservations(nd, issued_mismatch["jobs"], issued_mismatch)
+
+        missing_record = copy.deepcopy(r)
+        if missing_record["reservations"]:
+            missing_record["reservations"] = []
+            with self.assertRaises(AssertionError):
+                validate_reservations(nd, missing_record["jobs"], missing_record)
+
+    def test_event_mode_is_explicit_and_shared_ticks_are_not_policy_implicit(self):
+        nd = nodes((1,), (1,))
+        jj = jobs([0, 1], [3, 2])
+        shared = simulate_pool(nd, jj, "SPT-FILL", theta_seconds=1,
+                               event_mode="shared-timer")
+        historical = simulate_pool(nd, jj, "SPT-FILL", theta_seconds=1,
+                                   event_mode="arrival-completion-only")
+        self.assertEqual(shared["event_mode"], "shared-timer")
+        self.assertEqual(historical["event_mode"], "arrival-completion-only")
+        self.assertTrue(any(x["kind"] == "timer_threshold" for x in shared["events"]))
+        self.assertFalse(any(x["kind"] == "timer_threshold" for x in historical["events"]))
 
     def test_policy_aliases_and_input_order_are_deterministic(self):
         nd = nodes((2, 1), (1, 1))

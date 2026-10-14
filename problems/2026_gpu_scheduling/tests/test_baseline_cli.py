@@ -25,6 +25,20 @@ class BaselineCLI(unittest.TestCase):
             command=[sys.executable,str(PROBLEM/'experiments/run_baselines.py'),'--data',str(data),'--out',str(run)]
             subprocess.run(command,check=True,capture_output=True)
             self.assertEqual(verify(data,run)['status'],'PASS')
+            # A policy/pool evidence file is required even when that pool has
+            # no promises; it cannot silently become NOT_APPLICABLE.
+            missing = run/'FCFS_X_reservations.json'
+            meta=json.loads((run/'run.json').read_text())
+            meta['outputs'].pop(missing.name)
+            (run/'run.json').write_text(json.dumps(meta))
+            missing.unlink()
+            with self.assertRaisesRegex(ValueError,'Missing reservation evidence'):
+                verify(data,run)
+            # Use a fresh run for the remaining corruption assertion because
+            # the CLI deliberately refuses to overwrite an existing run.
+            run=base/'run-corruption'
+            command=[sys.executable,str(PROBLEM/'experiments/run_baselines.py'),'--data',str(data),'--out',str(run)]
+            subprocess.run(command,check=True,capture_output=True)
             refusal=subprocess.run(command,capture_output=True)
             self.assertNotEqual(refusal.returncode,0)
             # Change a placement and update its file hash to reach the independent

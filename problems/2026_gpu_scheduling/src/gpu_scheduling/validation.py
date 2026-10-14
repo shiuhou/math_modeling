@@ -48,6 +48,14 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
     events = result.get("events", [])
     if reservations and not events:
         raise AssertionError("reservation replay requires persisted event order")
+    issued_items = [item for item in events if item.get("kind") == "reservation_issued"]
+    fulfilled_items = [item for item in events if item.get("kind") == "reservation_fulfilled"]
+    issued_by_id = {item.get("promise_id"): item for item in issued_items}
+    fulfilled_by_id = {item.get("promise_id"): item for item in fulfilled_items}
+    recorded_ids = {item.get("promise_id") for item in reservations}
+    if (len(issued_items) != len(issued_by_id) or len(fulfilled_items) != len(fulfilled_by_id)
+            or set(issued_by_id) != recorded_ids or set(fulfilled_by_id) != recorded_ids):
+        raise AssertionError("reservation evidence is missing or has an unrecorded promise")
     seen_promises = set()
     for promise in reservations:
         pid = promise.get("promise_id")
@@ -60,6 +68,15 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
         protected = ids[protected_name]
         issued = int(promise["issued_time"])
         promised_r = int(promise["promised_R"])
+        issued_event = issued_by_id[pid]
+        if (int(issued_event.get("time")) != issued
+                or int(issued_event.get("protected_job")) != int(promise["protected_job"])
+                or int(issued_event.get("promised_R")) != promised_r):
+            raise AssertionError("reservation issuance does not match its promise record")
+        fulfilled_event = fulfilled_by_id[pid]
+        if (int(fulfilled_event.get("protected_job")) != int(promise["protected_job"])
+                or int(fulfilled_event.get("promised_R")) != promised_r):
+            raise AssertionError("reservation fulfillment does not match its promise record")
         if promised_r < issued or starts[protected] < 0 or starts[protected] > promised_r:
             raise AssertionError("promise timing contract")
         q = int(jobs.gpu_request.iloc[protected])
@@ -126,6 +143,8 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
         fulfillment = promise.get("fulfillment", {})
         if fulfillment.get("status") != "FULFILLED" or int(fulfillment.get("time")) != int(starts[protected]):
             raise AssertionError("missing or inconsistent fulfillment record")
+        if int(fulfilled_event.get("time")) != int(fulfillment.get("time")):
+            raise AssertionError("fulfillment event time does not match its promise record")
 
 
 
