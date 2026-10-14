@@ -22,6 +22,7 @@ PROBLEM = Path(__file__).resolve().parents[1]
 REPO = PROBLEM.parents[1]
 sys.path.insert(0, str(PROBLEM / "src"))
 from gpu_scheduling.data import native, read_data
+from gpu_scheduling.evaluation import metrics
 from gpu_scheduling.simulator import POLICY_ALIASES, simulate_pool
 from gpu_scheduling.validation import validate_reservations
 
@@ -50,19 +51,29 @@ def main() -> None:
         parser.error("Output exists; choose a new directory")
     if args.jobs <= 0:
         parser.error("--jobs must be positive")
+    input_started = time.perf_counter()
     nodes, raw_jobs, hashes = read_data(args.data)
     jobs = raw_jobs[raw_jobs.gpu_model == args.model].head(args.jobs).copy()
     pool = nodes[nodes.gpu_model == args.model].sort_values("node_name").reset_index(drop=True)
     if len(jobs) < args.jobs:
         parser.error(f"only {len(jobs)} jobs available for {args.model}")
     args.out.mkdir(parents=True)
+    input_seconds = time.perf_counter() - input_started
     run_started = time.perf_counter()
     results = []
     for requested in args.policies:
         policy_started = time.perf_counter()
+        scheduler_started = time.perf_counter()
         result = simulate_pool(pool, jobs, requested, theta_seconds=args.theta_seconds,
                                reservation_k=args.reservation_k, event_mode=args.event_mode)
+        scheduler_seconds = time.perf_counter() - scheduler_started
+        validation_started = time.perf_counter()
         validate_reservations(pool, result["jobs"], result)
+        validation_seconds = time.perf_counter() - validation_started
+        metrics_started = time.perf_counter()
+        metric_values = metrics(result, pool, 7_776_000)
+        metrics_seconds = time.perf_counter() - metrics_started
+        output_started = time.perf_counter()
         policy = result["policy"]
         with gzip.open(args.out / f"{policy}_job_times.csv.gz", "wt", newline="") as handle:
             writer = csv.writer(handle)
@@ -86,7 +97,17 @@ def main() -> None:
         results.append({
             "policy": policy, "requested_policy": requested, "jobs": len(jobs),
             "runtime_seconds": time.perf_counter() - policy_started,
+            # This value is per process when the runner is invoked with one
+            # policy (the M2-B benchmark does exactly that).  The multi-policy
+            # mode remains useful for quick local smoke runs, but its RSS is
+            # explicitly labelled process-level rather than per-policy.
             "peak_rss_kib_process": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+            "scheduler_seconds": scheduler_seconds,
+            "validation_seconds": validation_seconds,
+            "metrics_seconds": metrics_seconds,
+            "io_seconds": time.perf_counter() - output_started,
+            "input_seconds": input_seconds,
+            "metrics": metric_values,
             "schedule_sha256": schedule_hash,
             "reservations": len(result["reservations"]),
             "event_count": len(result["events"]),

@@ -75,6 +75,16 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 or int(issued_event.get("protected_job")) != int(promise["protected_job"])
                 or int(issued_event.get("promised_R")) != promised_r):
             raise AssertionError("reservation issuance does not match its promise record")
+        initial_witness_raw = promise.get("initial_placement_witness")
+        if not isinstance(initial_witness_raw, list):
+            raise AssertionError("immutable initial placement witness is missing")
+        try:
+            initial_witness = tuple((int(node), int(count))
+                                    for node, count in initial_witness_raw)
+        except (TypeError, ValueError):
+            raise AssertionError("invalid immutable initial placement witness")
+        if any(node < 0 or count <= 0 or node >= len(nodes) for node, count in initial_witness):
+            raise AssertionError("invalid immutable initial placement witness")
         fulfilled_event = fulfilled_by_id[pid]
         if (int(fulfilled_event.get("protected_job")) != int(promise["protected_job"])
                 or int(fulfilled_event.get("promised_R")) != promised_r):
@@ -150,7 +160,10 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             raise AssertionError("certificate update evidence is incomplete")
         if {int(item.get("job")) for item in crossing_events} != {j for j in accepted if ends[j] > promised_r}:
             raise AssertionError("crossing backfill certificate ids do not match allocations")
-        witness = tuple((int(node), int(count)) for node, count in promise.get("placement_witness", []))
+        # Start from the witness that was issued with the promise.  The final
+        # placement_witness can be different after FLEX updates and therefore
+        # is not a valid substitute for earlier FIXED certificates.
+        witness = initial_witness
         previous_version = int(promise["state_version"])
         # The recorded state_version is the final certificate version.  Each
         # update carries its own predecessor, so replay starts at issuance.
@@ -158,7 +171,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
         previous_version = initial_version
         for item, recorded_update in zip(crossing_events, recorded_updates):
             for key in ("time", "job", "state_version", "previous_state_version", "planner",
-                        "plan", "future_free_at_R", "head_witness"):
+                        "plan", "future_delta", "head_witness"):
                 if item.get(key) != recorded_update.get(key):
                     raise AssertionError("certificate event and record differ")
             j = int(item["job"])
@@ -196,6 +209,12 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 raise AssertionError("certificate future snapshot is negative")
             mode = str(item.get("planner"))
             if mode == "fixed":
+                # FIXED cannot silently change the protected witness.  A
+                # genuine FLEX update must be a separate, explicit event.
+                head_witness = tuple((int(node), int(count))
+                                     for node, count in item.get("head_witness", []))
+                if head_witness != witness:
+                    raise AssertionError("FIXED certificate changed the protected witness")
                 z_g = np.zeros_like(future_g); z_c = np.zeros_like(future_c)
                 for node, count in witness:
                     z_g[node] += count * q; z_c[node] += count * c
@@ -211,9 +230,15 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 witness = head_witness
             else:
                 raise AssertionError("unknown crossing planner certificate")
-            recorded_future = item.get("future_free_at_R", {})
-            if future_g.tolist() != list(recorded_future.get("gpu", [])) or future_c.tolist() != list(recorded_future.get("cpu", [])):
-                raise AssertionError("certificate future delta does not replay")
+            recorded_delta = item.get("future_delta")
+            if not isinstance(recorded_delta, dict):
+                raise AssertionError("certificate future delta is missing")
+            expected_gpu = {str(int(node)): int(-delta_g[int(node)])
+                            for node in np.flatnonzero(delta_g)}
+            expected_cpu = {str(int(node)): int(-delta_c[int(node)])
+                            for node in np.flatnonzero(delta_c)}
+            if recorded_delta.get("gpu") != expected_gpu or recorded_delta.get("cpu") != expected_cpu:
+                raise AssertionError("certificate future delta does not match allocation")
             previous_version = version
         recorded_at_r = promise.get("future_free_at_R", {})
         if future_g.tolist() != list(recorded_at_r.get("gpu", [])) or future_c.tolist() != list(recorded_at_r.get("cpu", [])):

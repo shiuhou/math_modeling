@@ -81,6 +81,18 @@ Q2 M1 工程 smoke（只做正確性與持久化驗收，不是性能結論）�
 
 Q2 以此引擎擴充排序／放置，勿另建 DES／評分器。Q3 保持此資料與評價口徑，跨池機制需耦合節點容量，不能各池各自許諾相同 donor 資源。改共用接口前於 [docs/brief.md](../../docs/brief.md) 提出並透過 PR 協調；不覆蓋 Q1 或另一題的修改。
 
+M2-B 有界成本探針（只比較已明示的 A10 前綴，不能代替完整 trace）可用：
+
+```bash
+.venv/bin/python problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py \
+  --jobs 16384 32768 --theta-seconds 4860000 --short-theta-seconds 4 \
+  --reservation-k 200 --event-mode shared-timer \
+  --policies SPT-URGENT-TIME SPT-URGENT-FIXED SPT-URGENT-FLEX \
+  --out outputs/q2-m2b-bounded-01
+```
+
+它為每個策略建立獨立 child process，分開記錄 scheduler、獨立 reservation replay、評價、I/O 與 process peak RSS；短門檻只是機制壓力情景。若短門檻造成記憶體或時間失控，應停止並標記完整 trace `NOT_RUN`，不能從錨點前綴推論 FIXED/FLEX 性能收益。
+
 ## 驗證狀態與舊程式處置
 
 | 部件 | 狀態與範圍 |

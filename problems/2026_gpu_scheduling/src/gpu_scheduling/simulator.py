@@ -150,6 +150,11 @@ def simulate_pool(
             "current_free_initial": {"gpu": free_g.tolist(), "cpu": free_c.tolist()},
             "future_free_initial": {"gpu": projected_g.tolist(), "cpu": projected_c.tolist()},
             "future_free_at_R": {"gpu": projected_g.tolist(), "cpu": projected_c.tolist()},
+            # This witness is immutable evidence of the placement promised at
+            # issuance.  ``placement_witness`` may advance after a FLEX
+            # certificate update, so replay must never use that final value
+            # as the original FIXED witness.
+            "initial_placement_witness": [[int(m), int(w)] for m, w in witness.nodes],
             "placement_witness": [[int(m), int(w)] for m, w in witness.nodes],
             "state_version": int(state_version),
             "certificate_updates": [],
@@ -277,11 +282,22 @@ def simulate_pool(
                 reservation["future_free_at_R"] = {"gpu": future_g.tolist(), "cpu": future_c.tolist()}
                 reservation["placement_witness"] = [[int(m), int(w)] for m, w in
                                                        (witness.nodes if isinstance(witness, PlacementPlan) else witness)]
+                delta_g, delta_c = _resource_delta(j, plan)
+                # A sparse delta is sufficient to replay the cumulative
+                # future snapshot and avoids repeating a dense pool vector in
+                # every certificate update.  The final vector remains in the
+                # promise record as a compact end-to-end checksum.
+                future_delta = {
+                    "gpu": {str(int(node)): int(-delta_g[int(node)])
+                            for node in np.flatnonzero(delta_g)},
+                    "cpu": {str(int(node)): int(-delta_c[int(node)])
+                            for node in np.flatnonzero(delta_c)},
+                }
                 update = {"time": int(now), "job": int(j), "state_version": int(state_version),
                           "previous_state_version": int(reservation["state_version"]),
                           "planner": str(proposal["mode"]),
                           "plan": [[int(m), int(w)] for m, w in plan.nodes],
-                          "future_free_at_R": {"gpu": future_g.tolist(), "cpu": future_c.tolist()},
+                          "future_delta": future_delta,
                           "head_witness": reservation["placement_witness"]}
                 reservation["certificate_updates"].append(update)
                 reservation["state_version"] = int(state_version)

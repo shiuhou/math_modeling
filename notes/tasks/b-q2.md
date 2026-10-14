@@ -247,3 +247,13 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - A10 中型壓力：4096 jobs、theta=1350h 與 theta=4s 均獨立重播 PASS；summary 記錄 runtime、peak RSS、reservation 數、crossing accepted/rejected、certificate updates 及 hash。theta=4s 前綴沒有 accepted crossing，不能解讀為 crossing 性能結論；crossing 正確性由合成案例驗收。
 - 正式證據：`results/20261014-b-q2-m2a-20261014/manifest.json`；大型明細仍在 ignored `outputs/`，沒有每筆 reservation 的密集整池快照。
 - 未執行：22 格全因子矩陣、大量調參、完整 trace 的 M2 性能比較、Q3 與論文性能改寫。
+
+## 11. M2-B 結果（證書重播修補與有界成本探針，2026-10-15）
+
+- 基準：`83c7e12476c0b34c2bf7420c29fbf55a528e0fbd`。沿用 M2-A 的唯一 DES、planner、evaluator；沒有重建 M1 或新增第二套模擬器。
+- 證書格式修補：每個 promise 保存不可變 `initial_placement_witness`；crossing `certificate_update` 改保存稀疏 `future_delta`，由獨立 validator 按事件／版本鏈累積重播。FIXED 使用更新前 witness，FLEX 才能明確更新 witness；最終 witness 不再被誤當成初始見證。每個更新仍保留 plan、planner、head witness、state version 與 promise 關聯，沒有保存每次完整 future vector。
+- 新增 `test_q2_m2b.py` 定向測試：同一 promise 的 FIXED→FLEX、不可變初始 witness、偽造 FIXED、刪除／重排／偽造 delta、R 不變且按時履約、null reservations evidence；與原 M1 測試合計 20 個定向測試 PASS。M2-A 原有的完整 Problem B 測試亦於最終驗收重跑。
+- 1350 小時錨點有界探針：A10 前綴 16,384 與 32,768，`FF-id`、`K=200`、`shared-timer`，TIME/FIXED/FLEX 各自獨立 child。六組均獨立 ledger／reservation replay PASS；同一前綴三個 schedule hash 相同，crossing accepted/rejected 與 reservation 均為 0，因此不能宣稱 FIXED/FLEX 有性能收益。16,384 scheduler 約 46.3–47.9 秒、peak RSS 約 193–196 MiB；32,768 約 115.0–117.3 秒、peak RSS 約 280–290 MiB。完整指標（Mean/P95/P99/Max wait、完成數、GPU/CPU 分配率）和成本列於正式摘要。
+- 短門檻機制情景：`theta=4s`、A10 16,384、shared timer。TIME child 在約 141 秒時 observed RSS 約 3.0 GiB，仍未完成，已終止本輪自己啟動的 parent／child；短門檻 FIXED/FLEX、完整 224,112 trace 與九策略比較均標記 `TIMEOUT`／`NOT_RUN`。這是目前 validator／事件證據在高 reservation 頻率下的成本阻塞，不是算法不可行或性能結論。
+- M2-B 工具：`experiments/run_m2b_benchmark.py` 對每策略分進程；`run_m2a_pressure.py` 補記 scheduler／validation／metrics／I/O 時間與 per-process RSS。大型 job times、allocations、events 留在 `outputs/q2-m2b-bounded-20261014/`（Git 忽略，依摘要 hash 與命令重算）；小型正式清單見 `results/20261015-b-q2-m2b-bounded/manifest.json`。
+- 本輪狀態：證書重播修補與定向驗證 `PASS`；錨點前綴 `PASS`；短門檻成本 `TIMEOUT`；完整 trace `NOT_RUN`。下一步應先改善高頻預約／事件重播的時間與記憶體複雜度，再重新做短門檻探針；不啟動 22 格矩陣、Q3 或論文性能改寫。

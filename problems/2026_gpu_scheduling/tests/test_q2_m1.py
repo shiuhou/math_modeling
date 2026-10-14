@@ -211,7 +211,7 @@ class M1Checks(unittest.TestCase):
             validate_reservations(nd, result["jobs"], result)
         update = fixed["reservations"][0]["certificate_updates"][0]
         tampered = copy.deepcopy(fixed)
-        tampered["reservations"][0]["certificate_updates"][0]["future_free_at_R"]["gpu"][1] += 1
+        tampered["reservations"][0]["certificate_updates"][0]["future_delta"]["gpu"]["1"] += 1
         with self.assertRaises(AssertionError):
             validate_reservations(nd, tampered["jobs"], tampered)
         tampered_event = copy.deepcopy(fixed)
