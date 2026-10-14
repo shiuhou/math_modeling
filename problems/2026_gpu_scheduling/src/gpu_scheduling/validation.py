@@ -33,12 +33,13 @@ def validate(nodes: pd.DataFrame,jobs: pd.DataFrame,s: np.ndarray,e: np.ndarray,
         if gu!=0 or cu!=0:raise AssertionError('Final allocation is not zero')
 
 
-def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict) -> None:
+def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict, *, progress=None) -> None:
     """Replay promise certificates in one event-ordered ledger pass.
 
     The previous implementation rebuilt every snapshot by scanning the prefix
     of ``events`` for every promise and every crossing.  This implementation
-    keeps one current node ledger and one small context per promise.  Crossing
+    keeps one current node ledger and releases each live context after its
+    fulfillment and matching protected start have both been verified.  Crossing
     certificates are checked at their event position, before the corresponding
     start event mutates the ledger, so the independent checks retain the exact
     FIXED/FLEX semantics without quadratic prefix scans.
@@ -113,7 +114,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             "R": promised_r, "initial_witness": initial_witness,
             "updates": recorded_updates, "update_pos": 0,
             "accepted": {int(x) for x in accepted_raw}, "started": set(),
-            "active_at_issue": set(), "future_g": None, "future_c": None,
+            "future_g": None, "future_c": None,
             "witness": initial_witness, "version": None,
             "fulfilled": None, "issued_seen": False,
         }
@@ -139,8 +140,12 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
     # The scheduler permits at most one pending promise per pool.  Keep that
     # invariant explicit during replay so start events do not rescan every
     # historical context (which made validation quadratic in the number of
-    # promises).  Fulfilled contexts remain in ``contexts`` for final audit.
+    # promises). Completed contexts are audited then released at protected start.
     active_promise_id: str | None = None
+    awaiting_start: str | None = None
+    completed_ids: set[str] = set()
+    seen_starts = np.zeros(len(jobs), dtype=bool)
+    seen_finishes = np.zeros(len(jobs), dtype=bool)
     last_time = -1
 
     def apply_job(j: int, sign: int) -> None:
@@ -151,7 +156,50 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 or np.any(current_g > caps_g) or np.any(current_c > caps_c):
             raise AssertionError("independent current resource replay failed")
 
-    for item in events:
+    def finish_context(pid: str) -> None:
+        ctx = contexts[pid]
+        promise = ctx["promise"]
+        if ctx["update_pos"] != len(ctx["updates"]):
+            raise AssertionError("certificate update evidence is incomplete")
+        accepted = ctx["accepted"]
+        if accepted != ctx["started"]:
+            raise AssertionError("accepted backfill evidence does not match start events")
+        crossing_jobs = {int(u["job"]) for u in ctx["updates"]}
+        if crossing_jobs != {j for j in accepted if int(ends[j]) > ctx["R"]}:
+            raise AssertionError("crossing backfill certificate ids do not match allocations")
+        if int(promise.get("state_version")) != int(ctx["version"]):
+            raise AssertionError("promise final certificate version differs from replay")
+        check_snapshot(promise, "future_free_at_R", ctx["future_g"], ctx["future_c"])
+        final_witness = tuple((int(node), int(count))
+                              for node, count in promise.get("placement_witness", []))
+        if final_witness != ctx["witness"]:
+            raise AssertionError("final witness differs from certificate replay")
+        check_plan(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
+                   int(job_c[ctx["protected"]]), final_witness, int(job_w[ctx["protected"]]))
+        if int(slots(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
+                     int(job_c[ctx["protected"]])).sum()) < int(job_w[ctx["protected"]]):
+            raise AssertionError("future snapshot does not contain protected gang")
+        if starts[ctx["protected"]] < 0 or starts[ctx["protected"]] > ctx["R"] \
+                or ctx["fulfilled"] != int(starts[ctx["protected"]]):
+            raise AssertionError("promise timing contract")
+        completed_ids.add(pid)
+        # The caller also clears its local ctx reference. No historical dense
+        # arrays or copies of the active-job set survive this point.
+        del contexts[pid]
+
+    def report(action: str, count: int) -> None:
+        if progress is not None:
+            progress("reservation_replay", action, events_processed=count,
+                     promises_issued=len(issued_ids), promises_completed=len(completed_ids),
+                     live_dense_contexts=int(active_promise_id is not None or awaiting_start is not None),
+                     live_dense_bytes=(2 * caps_g.nbytes if active_promise_id is not None
+                                       or awaiting_start is not None else 0),
+                     active_jobs=len(active))
+
+    report("begin", 0)
+    for event_index, item in enumerate(events):
+        if event_index and event_index % 4096 == 0:
+            report("progress", event_index)
         try:
             t = int(item["time"])
         except (KeyError, TypeError, ValueError):
@@ -160,6 +208,11 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             raise AssertionError("event order is not monotone")
         last_time = t
         kind = item.get("kind")
+        if awaiting_start is not None:
+            pending = contexts[awaiting_start]
+            if (kind != "start" or item.get("job") != pending["protected"]
+                    or t != pending["fulfilled"]):
+                raise AssertionError("fulfillment must be followed by its protected start")
         if kind == "reservation_issued":
             pid = item.get("promise_id")
             if pid not in contexts or pid in issued_ids:
@@ -174,7 +227,6 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             ctx["version"] = int(item.get("state_version"))
             if ctx["version"] < 0:
                 raise AssertionError("invalid issuance version")
-            ctx["active_at_issue"] = set(active)
             future_g, future_c = caps_g.copy(), caps_c.copy()
             for j in active:
                 if int(ends[j]) > ctx["R"]:
@@ -192,7 +244,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
 
         if kind == "certificate_update":
             pid = item.get("promise_id")
-            if pid not in contexts or pid not in issued_ids:
+            if pid not in contexts or pid not in issued_ids or pid != active_promise_id:
                 raise AssertionError("certificate has no prior promise issuance")
             ctx = contexts[pid]
             pos = ctx["update_pos"]
@@ -242,6 +294,8 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 effective_c = np.minimum(current_c, old_future_c - z_c)
                 check_plan(effective_g, effective_c, int(job_g[j]), int(job_c[j]), plan, int(job_w[j]))
             elif mode == "flex":
+                if policy == "SPT-URGENT-FIXED":
+                    raise AssertionError("FIXED policy cannot use FLEX certificate")
                 check_plan(future_g, future_c, int(job_g[ctx["protected"]]),
                            int(job_c[ctx["protected"]]), head_witness, int(job_w[ctx["protected"]]))
                 if int(slots(future_g, future_c, int(job_g[ctx["protected"]]),
@@ -283,6 +337,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
             if active_promise_id != pid:
                 raise AssertionError("fulfilled promise is not the active pending promise")
             active_promise_id = None
+            awaiting_start = pid
             continue
 
         if kind == "start":
@@ -290,16 +345,23 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 j = int(item["job"])
             except (KeyError, TypeError, ValueError):
                 raise AssertionError("invalid start event")
-            if not 0 <= j < len(jobs) or j in active or t != int(starts[j]):
+            if not 0 <= j < len(jobs) or seen_starts[j] or j in active or t != int(starts[j]):
                 raise AssertionError("start event disagrees with timing ledger")
+            seen_starts[j] = True
             if active_promise_id is not None:
                 ctx = contexts[active_promise_id]
+                if j == ctx["protected"]:
+                    raise AssertionError("protected start has no prior fulfillment")
                 if (ctx["issued_seen"] and ctx["fulfilled"] is None
                         and ctx["issued"] <= t < ctx["R"]
-                        and j != ctx["protected"] and j not in ctx["active_at_issue"]):
+                        and j != ctx["protected"]):
                     ctx["started"].add(j)
             apply_job(j, -1)
             active[j] = plans[j]
+            if awaiting_start is not None:
+                finish_context(awaiting_start)
+                awaiting_start = None
+                ctx = None  # release the final local reference to dense arrays
             continue
 
         if kind == "finish":
@@ -307,38 +369,21 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
                 j = int(item["job"])
             except (KeyError, TypeError, ValueError):
                 raise AssertionError("invalid finish event")
-            if not 0 <= j < len(jobs) or j not in active or t != int(ends[j]):
+            if not 0 <= j < len(jobs) or seen_finishes[j] or j not in active or t != int(ends[j]):
                 raise AssertionError("finish event disagrees with timing ledger")
+            seen_finishes[j] = True
             apply_job(j, 1)
             del active[j]
 
     if active_promise_id is not None:
         raise AssertionError("pending promise has no fulfillment")
-    if set(contexts) != issued_ids or set(contexts) != fulfilled_ids:
+    if awaiting_start is not None:
+        raise AssertionError("fulfillment has no protected start")
+    if contexts or issued_ids != fulfilled_ids or issued_ids != completed_ids:
         raise AssertionError("reservation evidence is missing issuance or fulfillment")
-    for pid, ctx in contexts.items():
-        promise = ctx["promise"]
-        if ctx["update_pos"] != len(ctx["updates"]):
-            raise AssertionError("certificate update evidence is incomplete")
-        accepted = ctx["accepted"]
-        if accepted != ctx["started"]:
-            raise AssertionError("accepted backfill evidence does not match start events")
-        crossing_jobs = {int(u["job"]) for u in ctx["updates"]}
-        if crossing_jobs != {j for j in accepted if int(ends[j]) > ctx["R"]}:
-            raise AssertionError("crossing backfill certificate ids do not match allocations")
-        if int(promise.get("state_version")) != int(ctx["version"]):
-            raise AssertionError("promise final certificate version differs from replay")
-        check_snapshot(promise, "future_free_at_R", ctx["future_g"], ctx["future_c"])
-        final_witness = tuple((int(node), int(count))
-                              for node, count in promise.get("placement_witness", []))
-        check_plan(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
-                   int(job_c[ctx["protected"]]), final_witness, int(job_w[ctx["protected"]]))
-        if int(slots(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
-                     int(job_c[ctx["protected"]])).sum()) < int(job_w[ctx["protected"]]):
-            raise AssertionError("future snapshot does not contain protected gang")
-        if starts[ctx["protected"]] < 0 or starts[ctx["protected"]] > ctx["R"] \
-                or ctx["fulfilled"] != int(starts[ctx["protected"]]):
-            raise AssertionError("promise timing contract")
+    if not seen_starts.all() or not seen_finishes.all():
+        raise AssertionError("start/finish evidence is incomplete")
+    report("end", len(events))
     if active or not np.array_equal(current_g, caps_g) or not np.array_equal(current_c, caps_c):
         raise AssertionError("final allocation is not fully released")
 

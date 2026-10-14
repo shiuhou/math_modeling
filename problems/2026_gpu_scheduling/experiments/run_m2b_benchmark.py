@@ -101,7 +101,18 @@ def main() -> None:
             wall = time.perf_counter() - started
             if child.returncode != 0 or stop_reason is not None:
                 status = stop_reason or "FAILED"
-                failure = {
+                phase_path = child_out / "phase_log.jsonl"
+                latest_phase = None
+                if phase_path.exists():
+                    # Diagnostic log is sparse and bounded; ignore a partial
+                    # final write if the child was killed during append.
+                    for line in phase_path.read_text().splitlines():
+                        try:
+                            latest_phase = json.loads(line)
+                        except json.JSONDecodeError:
+                            pass
+                failure = {"latest_phase": latest_phase,
+                    "phase_log": str(phase_path.relative_to(args.out)),
                     "status": status, "tag": tag, "jobs": jobs, "theta_seconds": theta,
                     "threshold_label": threshold_label,
                     "policy": policy, "elapsed_seconds": wall,

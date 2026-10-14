@@ -74,6 +74,7 @@ def simulate_pool(
     theta_seconds: int = 4_860_000,
     reservation_k: int = 200,
     event_mode: str = "shared-timer",
+    progress=None,
 ) -> dict:
     """Simulate one GPU-model pool with node-local gang placement.
 
@@ -477,7 +478,18 @@ def simulate_pool(
             if blocked or not ordered or not any(j not in seen for j in ordered):
                 return
 
+    epochs = 0
+    def report(phase, action):
+        if progress is not None:
+            progress(phase, action, jobs_arrived=arrivals, jobs_finished=finished,
+                     events=len(events), promises=len(reservations), waiting=len(waiting),
+                     timers=len(timers), running=len(running), epochs=epochs)
+
+    report("scheduling", "begin")
     while arrivals < n or waiting or running:
+        epochs += 1
+        if epochs % 4096 == 0:
+            report("scheduling", "progress")
         next_arrival = int(arr[arrivals]) if arrivals < n else math.inf
         next_finish = int(running_heap[0][0]) if running_heap else math.inf
         next_timer = int(timers[0][0]) if timers else math.inf
@@ -519,7 +531,10 @@ def simulate_pool(
 
     if finished != n or not np.array_equal(free_g, capg) or not np.array_equal(free_c, capc):
         raise AssertionError("resource conservation or completion failure")
+    report("scheduling", "end")
+    report("internal_capacity", "begin")
     validate(nodes, jobs, starts, ends, plans)
+    report("internal_capacity", "end")
     return {
         "jobs": jobs, "starts": starts, "ends": ends, "plans": plans,
         "feasibility_checks": int(decisions), "peak_queue": int(peak_queue),

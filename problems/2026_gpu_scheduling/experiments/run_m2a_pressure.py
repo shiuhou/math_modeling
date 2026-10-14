@@ -18,6 +18,7 @@ import resource
 import sys
 import time
 import numpy as np
+import os
 
 PROBLEM = Path(__file__).resolve().parents[1]
 REPO = PROBLEM.parents[1]
@@ -34,6 +35,32 @@ def sha256(path: Path) -> str:
 
 def write_json(path: Path, value) -> None:
     path.write_text(json.dumps(native(value), ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+
+
+class PhaseLog:
+    """Durable, sparse diagnostics; never added to scheduling evidence."""
+    def __init__(self, path: Path):
+        self.path = path
+        self.started = time.perf_counter()
+        self.policy = None
+
+    def __call__(self, phase, action, **counts):
+        rss = None
+        for line in Path("/proc/self/status").read_text().splitlines():
+            if line.startswith("VmRSS:"):
+                rss = int(line.split()[1])
+                break
+        row = {"elapsed_seconds": time.perf_counter() - self.started,
+               "policy": self.policy, "phase": phase, "action": action,
+               "rss_kib": rss,
+               "peak_rss_kib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+               **counts}
+        # Phase boundaries and one sample per 4096 epochs/events only.
+        # Flush+fsync means SIGKILL cannot discard the last complete record.
+        with self.path.open("a") as handle:
+            handle.write(json.dumps(row, separators=(",", ":")) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
 
 
 def duration_strata(jobs, starts, ends, horizon: int) -> dict:
@@ -89,20 +116,27 @@ def main() -> None:
     input_seconds = time.perf_counter() - input_started
     run_started = time.perf_counter()
     results = []
+    phase = PhaseLog(args.out / "phase_log.jsonl")
     for requested in args.policies:
+        phase.policy = requested
+        phase("simulate_pool", "begin", jobs=len(jobs), nodes=len(pool))
         policy_started = time.perf_counter()
         scheduler_started = time.perf_counter()
         result = simulate_pool(pool, jobs, requested, theta_seconds=args.theta_seconds,
-                               reservation_k=args.reservation_k, event_mode=args.event_mode)
+                               reservation_k=args.reservation_k, event_mode=args.event_mode, progress=phase)
         scheduler_seconds = time.perf_counter() - scheduler_started
+        phase("simulate_pool", "end", jobs=len(jobs), events=len(result["events"]), promises=len(result["reservations"]))
         validation_started = time.perf_counter()
-        validate_reservations(pool, result["jobs"], result)
+        validate_reservations(pool, result["jobs"], result, progress=phase)
         validation_seconds = time.perf_counter() - validation_started
+        phase("metrics", "begin")
         metrics_started = time.perf_counter()
         metric_values = metrics(result, pool, 7_776_000)
         metric_values["duration_strata"] = duration_strata(
             result["jobs"], result["starts"], result["ends"], 7_776_000)
         metrics_seconds = time.perf_counter() - metrics_started
+        phase("metrics", "end")
+        phase("persistence", "begin")
         output_started = time.perf_counter()
         policy = result["policy"]
         with gzip.open(args.out / f"{policy}_job_times.csv.gz", "wt", newline="") as handle:
@@ -122,6 +156,7 @@ def main() -> None:
             "gpu_model": args.model, "policy": policy, "event_mode": args.event_mode,
             "reservation_evidence_schema_version": result["reservation_evidence_schema_version"],
             "reservations": result["reservations"], "events": result["events"], "cost": result["cost"]})
+        phase("persistence", "end", files=3)
         schedule_hash = hashlib.sha256(json.dumps({
             "starts": result["starts"].tolist(), "ends": result["ends"].tolist(),
             "plans": result["plans"]}, sort_keys=True).encode()).hexdigest()
