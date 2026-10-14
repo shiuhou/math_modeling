@@ -281,3 +281,13 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - 成本停止：同一前綴 SPT-URGENT-HOL 在 900 s policy timeout 內未完成，RSS 上限未觸發（observed 216,564 KiB）；診斷保存為 `TIMEOUT`。依資源規範停止父程序，未把其餘 65,536 策略、`theta=1350h` 或 111,284 全量結果填成零或估算。
 - 正式清單：`results/20261015-b-q2-m2d-01/manifest.json`；壓力摘要 `benchmark.json`、獨立重播 `prefix-65536-604800-spt-fill-verified.json`、超時診斷 `timeout-spt-urgent-hol.json`。大型 job times／allocations／events 仍在被忽略的 `outputs/q2-m2d-prefix-20261015/`，以摘要及雜湊追溯。
 - 驗證狀態：repo check PASS、root 12 tests PASS、Problem B 36 tests PASS、git diff check PASS；M2-D 正式比較 `INCOMPLETE`。完整兩門檻六／九策略、TIME→FIXED→FLEX 配對與完整 A10 均 `NOT_RUN`，原因是 65,536 HOL 前綴已顯示目前成本不足以安全展開矩陣。theta=4s 仍僅屬工程壓力情景，不列入主表。
+
+## 14. M2-D protected-HOL fast path（2026-10-15）
+
+- 基準：`91124dfefcd0df68d9d06423b43ccfb60863a00c`；修補提交：`0f2b9b6f`。未重建 DES、未改變 placement／evaluator／Q1/Q3。
+- 瓶頸重現：2,002-job 合成 trace 中，SPT-URGENT-HOL 的 protected head 在 reservation 期間不可行；修補前每次事件仍建立完整 `_ordered(waiting, ...)`。cProfile 顯示排序約 1.61 s、`order_builds=3663`。
+- 最小修補：pending reservation 且 protected head 仍在 waiting、`current_plan` 不可行時，在排序前直接返回；head 可行時先履約，再回到同一 timestamp 的普通 dispatch。arrival、finish、timer、K、urgent FIFO、FF-id、immutable-R 與 schema-2 evidence 未改變。
+- 反例 PASS：大量 waiting／多次 arrival-timer 期間 `protected_hol_blocked=1659`、`protected_hol_fastpath=1659`，`order_builds` 降至 2004、排序約 0.53 s、總模擬 2.85→2.17 s；starts、finishes、plans、promise／events hash 完全一致。另一反例確認 R 履約後同一 timestamp 立即啟動下一個 urgent job。
+- A10 4,096／1350h 的 TIME、FIXED、FLEX：三者 schedule hash 均為既有 `ffdc1d15...41fa9df`，獨立 capacity ledger／reservation replay PASS。
+- A10 65,536／168h SPT-URGENT-HOL：fast path 後執行 586.155 s，RSS 達 `4,195,872 KiB`，觸發 4 GiB `RSS_LIMIT`；未產生完整 schedule／metrics，沒有提高上限或把它當作 PASS。這表示主要剩餘瓶頸已從 protected-HOL 重複排序轉為高頻 reservation／event／job evidence 記憶體成長。
+- 正式證據：`results/20261015-b-q2-m2d-fastpath-01/manifest.json`、`profile-comparison.json`、`a10-4096-verified.json`、`hol-65536-benchmark.json`。完整 168h 六策略、1350h 第二門檻與全量 A10 仍 `NOT_RUN`；本輪停止，不再盲目增加 timeout 或啟動大型重構。

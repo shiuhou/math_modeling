@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "m2d_fastpath_profile_comparison",
+  "fixture": {
+    "jobs": 2002,
+    "theta_seconds": 1,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "old": {
+    "source_commit": "91124dfefcd0df68d9d06423b43ccfb60863a00c",
+    "elapsed_seconds": 2.850248198999907,
+    "order_builds": 3663,
+    "reservations": 2001,
+    "schedule_sha256": "c923080dd44b8b6a77355e483c6c326a9304fccfe6e59020ded0e3504420d99e",
+    "events_sha256": "6e265397b0aa7ee0f80a811c0cce33ebf12ced09429b193e436a71f9bf562a56"
+  },
+  "new": {
+    "source_commit": "0f2b9b6f",
+    "elapsed_seconds": 2.1328655280085513,
+    "order_builds": 2004,
+    "protected_hol_blocked": 1659,
+    "protected_hol_fastpath": 1659,
+    "reservations": 2001,
+    "schedule_sha256": "c923080dd44b8b6a77355e483c6c326a9304fccfe6e59020ded0e3504420d99e",
+    "events_sha256": "6e265397b0aa7ee0f80a811c0cce33ebf12ced09429b193e436a71f9bf562a56"
+  },
+  "equivalence": {
+    "starts_finishes_allocations_schedule_hash": "PASS",
+    "promise_and_event_hash": "PASS",
+    "order_build_reduction_fraction": 0.45290745290745293,
+    "elapsed_reduction_fraction": 0.25169129875884855
+  }
+}
