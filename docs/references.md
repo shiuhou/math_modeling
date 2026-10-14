@@ -12,4 +12,4 @@
 | 多工作目錄、分支與共用 metadata | [Git：git-worktree](https://git-scm.com/docs/git-worktree) |
 | `attach -r`、`attach -d`、socket 和 `server-access` | [tmux：官方手冊](https://man.openbsd.org/tmux) |
 
-部署時以主機已安裝版本的 `codex --help`、`tmux -V`、`man tmux` 為準。模板不綁定特定 Astra 模型 ID，也不宣稱自動建立跨帳號權限或替團隊完成真實 SSH／Codex 實測。
+隊員各自在自己的電腦安裝及使用 Codex。上列 worktree／tmux 參考保留供舊工具查閱，不是目前團隊的必要設定；個人電腦流程見 [docs/host.md](host.md)。
