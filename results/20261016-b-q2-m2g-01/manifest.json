@@ -84,7 +84,8 @@
     "lower_bound_and_decomposition": "PASS",
     "proof_erratum": "PASS_TEXT_ONLY",
     "scheduler_modified": "NO",
-    "history_overwritten": "NO"
+    "history_overwritten": "NO",
+    "source_index_count_and_hash": "PASS"
   },
   "not_run": [
     "full 224112-job cluster",
@@ -97,5 +98,15 @@
     "theta=168h is exploratory, not optimal",
     "full A10 means 111284 A10 jobs only",
     "G1 ordinary SPT-HOL and M2-E five policies have identical core source hashes but different run commits; run provenance is retained"
-  ]
+  ],
+  "source_index_correction": {
+    "status": "PASS",
+    "cause": "full rows previously used sources.get(policy), which resolved the 65k SPT-HOL/FILL keys",
+    "fix": "row() now receives the explicit timing-source object for each result set",
+    "full_source_row_count": 111284,
+    "full_source_job_id_hash": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2",
+    "metrics_groups_pairs_unchanged": true,
+    "scheduler_rerun": "NOT_RUN"
+  },
+  "comparison_sha256": "62a77c575e1eed65b65d7699c6f15e687713aa782bae722e33f483a6e1adee8b"
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the integration draft, with recomputed Q1 and labeled archived Q2/Q3 figures."""
+"""Build the integration draft, with recomputed Q1 and verified M2-G Q2 text."""
 import argparse
 import hashlib
 import json
@@ -50,7 +50,9 @@ def main():
     name = Path(compiler).name
     command = [compiler,'--keep-logs','--keep-intermediates','document_en.tex'] if 'tectonic' in name else [compiler,'-interaction=nonstopmode','-halt-on-error','document_en.tex']
     record = {'status':'NOT_RUN','compiler':version,'command':command,'data_sha256':stats['input_sha256'],
-              'q1_values':values,'q2_q3_claims':'NOT_RUN; archived table figures only','files':{}}
+              'q1_values':values,
+              'q2_q3_claims':'Q2 M2-G A10 baseline evidence verified; archived AMBF and Q3 technical/financial claims NOT_RUN',
+              'files':{}}
     result = subprocess.run(command,cwd=out,capture_output=True,text=True)
     if result.returncode==0 and 'tectonic' not in name:
         result = subprocess.run(command,cwd=out,capture_output=True,text=True)
@@ -66,7 +68,7 @@ def main():
     record['files']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file()}
     (out/'build.json').write_text(json.dumps(record,indent=2)+'\n')
     if result.returncode: raise SystemExit('FAIL: LaTeX compile; see compile.log')
-    print(f'PASS: compiled integration draft; page limit {record["page_limit"]}. Q2/Q3 claims remain NOT_RUN.')
+    print(f'PASS: compiled integration draft; page limit {record["page_limit"]}. Q2 M2-G is verified; Q3 experiments remain NOT_RUN.')
 
 
 if __name__=='__main__': main()

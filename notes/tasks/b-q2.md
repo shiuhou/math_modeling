@@ -429,5 +429,14 @@ SPT-HOL 相對 SPT-FILL 的配對平均差為 `-2.060576h`（改善 55,266、惡
 - 輸入 ID／屬性逐 ID 核對、timing `start>=submit`／`finish=start+duration`、下界事件積分、三項分解 residual=0、Within-window Gap 非負：PASS。M2-F 六個小型 oracle／邊界測試仍 PASS；本輪未重跑不必要的歷史壓力矩陣。
 - G1/G2/G3 benchmark、獨立 capacity replay 與空 reservation replay：PASS；未有 TIMEOUT、RSS_LIMIT 或部分排程冒充成功。大檔案以 `evidence-g1-65536.tar.gz`、`evidence-g2-111284.tar.gz`、`evidence-g3-111284.tar.gz` 保存，archive hash 見 `archives.json`。
 - 方法判斷：在本次已驗證前綴與完整 A10 trace，普通 SPT-HOL 的平均等待低於 SPT-FILL，且多 worker 短作業的等待顯著較低；SPT-FILL 仍可作為偏好單 worker 即時啟動的對照。Urgent-HOL/TIME/FIXED/FLEX 的前綴結果顯示保護機制代價很大；FIXED/FLEX 的 crossing 收益不能抵消其複雜度作為目前平均等待主方案，這不改變其安全正確性。這些不是一般最優性或因果定理。
-- M2-G 狀態：**PASS / 方法收斂**。本輪已取得 65k 六策略及完整 A10 SPT-HOL／SPT-FILL 可獨立驗證證據；完整 224,112-job 叢集、urgent 全量矩陣、1350h、EASY-NR、Q3 與論文性能改寫均 `NOT_RUN`。
-- 正式產物：`results/20261016-b-q2-m2g-01/manifest.json`、`comparison.json`、`archives.json`、`commands.sh`；分析入口為 `experiments/analyze_m2g.py`，下界入口仍為 `experiments/analyze_m2f_bounds.py`。未修改 `simulator.py`、`placement.py`、`validation.py`、既有 evaluator、Q1/Q3 或歷史 M2-E/M2-F 結果。
+- M2-G 狀態：**PASS / 方法收斂**。本輪已取得 65k 六策略及完整 A10 SPT-HOL／SPT-FILL 可獨立驗證證據；完整 224,112-job 叢集、urgent 全量矩陣、1350h、EASY-NR、Q3 與 Q3 性能改寫均 `NOT_RUN`；本節 20 的 Q2 正文已更新為已驗證結果。
+- 正式產物：`results/20261016-b-q2-m2g-01/manifest.json`、`comparison.json`、`archives.json`、`commands.sh`；分析入口為 `experiments/analyze_m2g.py`，下界入口仍為 `experiments/analyze_m2f_bounds.py`。未修改 `simulator.py`、`placement.py`、`validation.py`、既有 evaluator、Q1/Q3 演算法與數據或歷史 M2-E/M2-F 結果；正文狀態勘誤列於第 20 節。
+
+## 20. M2-G 來源鏈勘誤與正文交付（2026-10-16）
+
+- 修正 `experiments/analyze_m2g.py` 的來源索引：`row()` 現在明確接收該結果列的 timing source，不再以 policy 名稱從共用 `sources` 映射猜測。完整 A10 的 `SPT-HOL`／`SPT-FILL` 現在分別指向 G2/G3 111,284-job timing，兩者來源 row count 均為 111,284，ID hash 均為 `502a76d5...f187e2`。
+- 新增 `tests/test_q2_m2g.py`：錯誤 row count／ID hash 會拒絕；正式 comparison 的完整來源不得再指向 65k。Problem B 測試總數 53 PASS。重新生成 comparison 後，所有 metrics、四組分層、decomposition 與配對數值和修正前完全相同；沒有重跑 scheduler。
+- `results/20261016-b-q2-m2g-01/manifest.json` 保存勘誤原因、來源 hash、comparison hash、`source_index_count_and_hash=PASS` 及 `scheduler_rerun=NOT_RUN`。
+- 英文正文 `paper/document_en.tex` 與繁中對照 `paper/document_zh.html` 已改為唯一 Q2 正文：完整 A10 的普通 `SPT-HOL`／`SPT-FILL`、作業計數容量下界、gang 四分組與效率—尾部取捨為主；65k urgent/TIME/FIXED/FLEX 明確標示為保護代價分析。正文說明普通 `SPT-HOL` 不含 168h aging，並保留 HOL 相對 FILL 仍有受損作業及 Max wait 略增的限制。
+- 跨章 Q3 文字只作狀態勘誤：不再把 Q2 A10 證據寫成跨池驗證；Q3 技術／金融數值仍標為 `NOT_RUN`。未修改 Q1、共用 DES、歷史實驗或 Q3 模擬。
+- 執行 `build_paper.py` 時缺少 `tectonic`／`pdflatex`，LaTeX 編譯狀態為 `BLOCKED`；源文件、HTML、數值與分析測試均已檢查，未把編譯未完成寫成 PASS。

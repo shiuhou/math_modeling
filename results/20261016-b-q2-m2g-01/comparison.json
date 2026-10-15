@@ -88,7 +88,13 @@
         "timing_source": {
           "archive": "results/20261015-b-q2-m2e-01/evidence-65536.tar.gz",
           "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
-          "compressed_sha256": "fa01c0c7d8a1204fcae26fca2ad03a1e0215d17b01c4ba2e46668e2e860fd21d"
+          "compressed_sha256": "fa01c0c7d8a1204fcae26fca2ad03a1e0215d17b01c4ba2e46668e2e860fd21d",
+          "row_count": 65536,
+          "job_id_sha256": "a2f01e35f47be42aab3af814cc176ab10329854913224388e64c3966f67f6654"
+        },
+        "source_index_check": {
+          "row_count_match": true,
+          "job_id_hash_match": true
         }
       },
       {
@@ -159,7 +165,13 @@
         },
         "timing_source": {
           "path": "outputs/q2-m2g-g1-65536-20261016-spt-hol/a10-65536-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
-          "sha256": "ff400439b20d1f04eaf035efacb30112039566ca0db69d55b13305f528cfb363"
+          "sha256": "ff400439b20d1f04eaf035efacb30112039566ca0db69d55b13305f528cfb363",
+          "row_count": 65536,
+          "job_id_sha256": "a2f01e35f47be42aab3af814cc176ab10329854913224388e64c3966f67f6654"
+        },
+        "source_index_check": {
+          "row_count_match": true,
+          "job_id_hash_match": true
         }
       },
       {
@@ -231,7 +243,13 @@
         "timing_source": {
           "archive": "results/20261015-b-q2-m2e-01/evidence-65536.tar.gz",
           "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-urgent-hol/SPT-URGENT-HOL_job_times.csv.gz",
-          "compressed_sha256": "103a483ccb1c2913e5005f4d65aa25c5ed1339afac51f777f26ced84cdff9039"
+          "compressed_sha256": "103a483ccb1c2913e5005f4d65aa25c5ed1339afac51f777f26ced84cdff9039",
+          "row_count": 65536,
+          "job_id_sha256": "a2f01e35f47be42aab3af814cc176ab10329854913224388e64c3966f67f6654"
+        },
+        "source_index_check": {
+          "row_count_match": true,
+          "job_id_hash_match": true
         }
       },
       {
@@ -303,7 +321,13 @@
         "timing_source": {
           "archive": "results/20261015-b-q2-m2e-01/evidence-65536.tar.gz",
           "member": "outputs/q2-m2e-recovery-65536-time-20261015/a10-65536-theta604800-spt-urgent-time/SPT-URGENT-TIME_job_times.csv.gz",
-          "compressed_sha256": "058ce4e05129603d8dc51c93a894a5b19f2f539bb144a637f406fa4e68853b7c"
+          "compressed_sha256": "058ce4e05129603d8dc51c93a894a5b19f2f539bb144a637f406fa4e68853b7c",
+          "row_count": 65536,
+          "job_id_sha256": "a2f01e35f47be42aab3af814cc176ab10329854913224388e64c3966f67f6654"
+        },
+        "source_index_check": {
+          "row_count_match": true,
+          "job_id_hash_match": true
         }
       },
       {
@@ -375,7 +399,13 @@
         "timing_source": {
           "archive": "results/20261015-b-q2-m2e-01/evidence-65536.tar.gz",
           "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-urgent-fixed/SPT-URGENT-FIXED_job_times.csv.gz",
-          "compressed_sha256": "fcf20bd731f740a71c7bcdb04ccd8912bb2b5b333469fc2dfef34b6fa48382af"
+          "compressed_sha256": "fcf20bd731f740a71c7bcdb04ccd8912bb2b5b333469fc2dfef34b6fa48382af",
+          "row_count": 65536,
+          "job_id_sha256": "a2f01e35f47be42aab3af814cc176ab10329854913224388e64c3966f67f6654"
+        },
+        "source_index_check": {
+          "row_count_match": true,
+          "job_id_hash_match": true
         }
       },
       {
@@ -447,7 +477,13 @@
         "timing_source": {
           "archive": "results/20261015-b-q2-m2e-01/evidence-65536.tar.gz",
           "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-urgent-flex/SPT-URGENT-FLEX_job_times.csv.gz",
-          "compressed_sha256": "3c07f9eb334b5a90cccb7ea8c495b1f5abdd04a6c02d798aff46ee6fc5fa91e3"
+          "compressed_sha256": "3c07f9eb334b5a90cccb7ea8c495b1f5abdd04a6c02d798aff46ee6fc5fa91e3",
+          "row_count": 65536,
+          "job_id_sha256": "a2f01e35f47be42aab3af814cc176ab10329854913224388e64c3966f67f6654"
+        },
+        "source_index_check": {
+          "row_count_match": true,
+          "job_id_hash_match": true
         }
       }
     ],
@@ -564,8 +600,14 @@
           }
         },
         "timing_source": {
-          "path": "outputs/q2-m2g-g1-65536-20261016-spt-hol/a10-65536-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
-          "sha256": "ff400439b20d1f04eaf035efacb30112039566ca0db69d55b13305f528cfb363"
+          "path": "outputs/q2-m2g-g2-111284-20261016-spt-hol/a10-111284-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
+          "sha256": "40855bb8a6873fd86c462ff3c6196553b2cff3b70b36aeed49f245001fc02b9b",
+          "row_count": 111284,
+          "job_id_sha256": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2"
+        },
+        "source_index_check": {
+          "row_count_match": true,
+          "job_id_hash_match": true
         }
       },
       {
@@ -635,9 +677,14 @@
           }
         },
         "timing_source": {
-          "archive": "results/20261015-b-q2-m2e-01/evidence-65536.tar.gz",
-          "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
-          "compressed_sha256": "fa01c0c7d8a1204fcae26fca2ad03a1e0215d17b01c4ba2e46668e2e860fd21d"
+          "path": "outputs/q2-m2g-g3-111284-20261016-spt-fill/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+          "sha256": "a063a4530df997ca500ae16550483a1d76f1f17ccc0a39bc50123a527bce6203",
+          "row_count": 111284,
+          "job_id_sha256": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2"
+        },
+        "source_index_check": {
+          "row_count_match": true,
+          "job_id_hash_match": true
         }
       }
     ],

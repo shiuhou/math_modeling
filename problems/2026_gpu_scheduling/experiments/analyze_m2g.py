@@ -82,7 +82,9 @@ def parse_csv(blob: bytes, source: str) -> dict[int, dict]:
 def direct_timing(directory: Path, policy: str) -> tuple[dict[int, dict], dict]:
     path = directory / f"{policy}_job_times.csv.gz"
     blob = path.read_bytes()
-    return parse_csv(blob, str(path)), {"path": str(path), "sha256": sha256(path)}
+    rows = parse_csv(blob, str(path))
+    return rows, {"path": str(path), "sha256": sha256(path),
+                  "row_count": len(rows), "job_id_sha256": id_hash(set(rows))}
 
 
 def archived_timing(archive: Path, policy: str) -> tuple[dict[int, dict], dict, dict]:
@@ -95,9 +97,11 @@ def archived_timing(archive: Path, policy: str) -> tuple[dict[int, dict], dict, 
             raise ValueError(f"archive members for {policy} are ambiguous")
         compressed = tar.extractfile(timing[0]).read()
         summary = json.loads(tar.extractfile(summaries[0]).read())
-    return parse_csv(compressed, timing[0].name), {
+    rows = parse_csv(compressed, timing[0].name)
+    return rows, {
         "archive": str(archive), "member": timing[0].name,
         "compressed_sha256": hashlib.sha256(compressed).hexdigest(),
+        "row_count": len(rows), "job_id_sha256": id_hash(set(rows)),
     }, summary
 
 
@@ -118,6 +122,16 @@ def validate_raw(rows: dict[int, dict], raw) -> dict:
             if got != want:
                 raise ValueError(f"job {jid} input mismatch in {name}")
     return {"jobs": len(rows), "job_id_sha256": id_hash(set(rows)), "input_match": True}
+
+
+def validate_source_index(source: dict, rows: dict[int, dict]) -> dict:
+    """Require the timing source index to describe exactly the result rows."""
+    actual = {"row_count": len(rows), "job_id_sha256": id_hash(set(rows))}
+    if source.get("row_count") != actual["row_count"]:
+        raise ValueError("timing source row count does not match result rows")
+    if source.get("job_id_sha256") != actual["job_id_sha256"]:
+        raise ValueError("timing source job ID hash does not match result rows")
+    return {"row_count_match": True, "job_id_hash_match": True}
 
 
 def metrics(rows: dict[int, dict], summary: dict) -> dict:
@@ -226,18 +240,19 @@ def run(args):
         "FULL-SPT-HOL": json.loads(Path(args.g2_decomposition).resolve().read_text())["policies"]["SPT-HOL"],
         "FULL-SPT-FILL": json.loads(Path(args.g3_decomposition).resolve().read_text())["policies"]["SPT-FILL"],
     }
-    def row(policy, rows, summary, decomp):
+    def row(policy, rows, summary, decomp, source):
+        source_check = validate_source_index(source, rows)
         m = metrics(rows, summary)
         d = {k: decomp[k] for k in ("capacity_lower_bound_hours", "within_window_gap_hours", "beyond_duration_wait_hours", "mean_to_capacity_lb", "w_greater_than_p_fraction")}
         return {"policy": policy, "metrics": m, "groups": groups(rows), "decomposition": d,
                 "source": {"code_commit": summary.get("code_commit"), "source_sha256": summary.get("source_sha256")},
-                "timing_source": sources.get(policy)}
+                "timing_source": source, "source_index_check": source_check}
     prefix_rows = []
     for p in ("SPT-FILL", "SPT-HOL", "SPT-URGENT-HOL", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX"):
         d = g1_decomp if p == "SPT-HOL" else old_decomp[p]
-        prefix_rows.append(row(p, old[p], summaries[p], d))
-    full_rows = [row("SPT-HOL", current["FULL-SPT-HOL"], current_summaries["FULL-SPT-HOL"], full_decomp["FULL-SPT-HOL"]),
-                 row("SPT-FILL", current["FULL-SPT-FILL"], current_summaries["FULL-SPT-FILL"], full_decomp["FULL-SPT-FILL"])]
+        prefix_rows.append(row(p, old[p], summaries[p], d, sources[p]))
+    full_rows = [row("SPT-HOL", current["FULL-SPT-HOL"], current_summaries["FULL-SPT-HOL"], full_decomp["FULL-SPT-HOL"], sources["FULL-SPT-HOL"]),
+                 row("SPT-FILL", current["FULL-SPT-FILL"], current_summaries["FULL-SPT-FILL"], full_decomp["FULL-SPT-FILL"], sources["FULL-SPT-FILL"])]
     output = {
         "schema_version": 1, "kind": "q2_m2g_bounded_comparison", "status": "PASS",
         "configuration": {"model": "A10", "theta_seconds": 604800, "event_mode": "shared-timer",
