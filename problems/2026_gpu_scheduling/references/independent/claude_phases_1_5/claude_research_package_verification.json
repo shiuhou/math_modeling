@@ -1,0 +1,277 @@
+{
+  "kind": "independent_local_reproduction_and_targeted_audit",
+  "source_archive": {
+    "name": "mcm_b_independent_research.tar.gz",
+    "sha256": "562e82aaee5df02265fe75946051a713896de4e02571451a9f186fb51af2e6b1",
+    "bytes": 41507,
+    "python_scripts": 33,
+    "members": 100,
+    "uncompressed_bytes": 131219,
+    "contains_official_csv_or_pdf": false,
+    "unsafe_tar_members": []
+  },
+  "data": {
+    "job_info_clean.csv": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1",
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18"
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "sortedcontainers": "2.4.0",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "numeric_threads": 1
+  },
+  "core_runner": {
+    "exit_code": 0,
+    "wall_seconds": 126.13,
+    "peak_rss_kib": 592060,
+    "output_files": 21,
+    "byte_identical_files": 16,
+    "substantive_match_files": 21,
+    "only_differences": "Four simulator elapsed-time lines and one data-file path listing; input hash strings unchanged.",
+    "comparison": [
+      {
+        "file": "00_hashes.txt",
+        "byte_identical": false,
+        "substantive_match": true,
+        "reference_sha256": "39bfb1951795f6ca435ad5c4eac52587f7b549394e11a3abdfbd086066b7e4ed",
+        "rerun_sha256": "515ff2c72b4949d2a1b413438f2f4bf9e42d3cf29cd2583a804ba12e0aebb639"
+      },
+      {
+        "file": "audit_v1.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "b9d69520f9043864b77df1b4a817b6a4dccdd555549c9addd2a1be91306f580f",
+        "rerun_sha256": "b9d69520f9043864b77df1b4a817b6a4dccdd555549c9addd2a1be91306f580f"
+      },
+      {
+        "file": "audit_v3.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "47fa1eee0964885d7a1dc5fd88937a6382e9103449985bf648430d34b236c6be",
+        "rerun_sha256": "47fa1eee0964885d7a1dc5fd88937a6382e9103449985bf648430d34b236c6be"
+      },
+      {
+        "file": "audit_v4.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "ca5aaea4cbb6a0fa77173ae1ddf181faa2835e7dab8867141e8e701cfdadb50a",
+        "rerun_sha256": "ca5aaea4cbb6a0fa77173ae1ddf181faa2835e7dab8867141e8e701cfdadb50a"
+      },
+      {
+        "file": "e1_area_tail.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "af10d08145c05ea531fbd0381575eab09c832ebf169b6fc6a9a9165ab6326d87",
+        "rerun_sha256": "af10d08145c05ea531fbd0381575eab09c832ebf169b6fc6a9a9165ab6326d87"
+      },
+      {
+        "file": "e2_shape_exact.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "262de624d4a3f8be2101f434b70f410c2db9df0fe74f7f07f621c636d7e52ad1",
+        "rerun_sha256": "262de624d4a3f8be2101f434b70f410c2db9df0fe74f7f07f621c636d7e52ad1"
+      },
+      {
+        "file": "e3_toy_counterexamples.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "6b43f3cee12a4d38f115be81e6a42c36fd1c025075741813e8f6ab672bba40e4",
+        "rerun_sha256": "6b43f3cee12a4d38f115be81e6a42c36fd1c025075741813e8f6ab672bba40e4"
+      },
+      {
+        "file": "e4_sigma_fixed.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "47942ccbfd6627de46b09926bae9959ce66ddf0c3955feb21313677dadcb9114",
+        "rerun_sha256": "47942ccbfd6627de46b09926bae9959ce66ddf0c3955feb21313677dadcb9114"
+      },
+      {
+        "file": "lb3.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "6a3f6e7e2cede4002c24f3a3cbf134a7eac41b7e166bc9ed8a987c504f6e840d",
+        "rerun_sha256": "6a3f6e7e2cede4002c24f3a3cbf134a7eac41b7e166bc9ed8a987c504f6e840d"
+      },
+      {
+        "file": "p2_anal.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "c3a4d9ca9f9bffd8587f8b4d56b70077f0a2680af551542130cece0e2fd6ac36",
+        "rerun_sha256": "c3a4d9ca9f9bffd8587f8b4d56b70077f0a2680af551542130cece0e2fd6ac36"
+      },
+      {
+        "file": "p2_countlb_all.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "cef1eb6d0073d94194a63a68480bb568d02b2e665cba5822863471083279feac",
+        "rerun_sha256": "cef1eb6d0073d94194a63a68480bb568d02b2e665cba5822863471083279feac"
+      },
+      {
+        "file": "p2_rehome.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "5f5e0cd6d6d1dbd19303be76a2c2e10d62dea320def6ff04f07f2168825b0e5e",
+        "rerun_sha256": "5f5e0cd6d6d1dbd19303be76a2c2e10d62dea320def6ff04f07f2168825b0e5e"
+      },
+      {
+        "file": "p2_run.py_decouple.txt",
+        "byte_identical": false,
+        "substantive_match": true,
+        "reference_sha256": "ef6eef6ece85e814726a8a32f141e20bf55a9969aaf26c226e1328caebc93d5a",
+        "rerun_sha256": "236a0559451d3b883b142f86f4d1912bbdc834da6b87620550bd4ecc1cba1778"
+      },
+      {
+        "file": "p2_run.py_easy.txt",
+        "byte_identical": false,
+        "substantive_match": true,
+        "reference_sha256": "c954dca3a6668fa82934f666f6927e0fe079e57aaadbfa9b7629d693ce90ed2f",
+        "rerun_sha256": "41698a8b1d941472e8ef24443c9b5bc8b09aeb3cbba1138c9a7c2e1926d59069"
+      },
+      {
+        "file": "p2_run.py_hol.txt",
+        "byte_identical": false,
+        "substantive_match": true,
+        "reference_sha256": "f5c7a0cd578c6a75bad95ae0a161ad8df6fc3ef2d30d7c2f505a090657c78cbd",
+        "rerun_sha256": "3d567860922e7e3520a5ca6682a9ac8f6f74d09129d5bc93b23fd488b5500d64"
+      },
+      {
+        "file": "p2_run.py_skip.txt",
+        "byte_identical": false,
+        "substantive_match": true,
+        "reference_sha256": "d2d9fe15d12cc0a0298a0e178490f1e3e29100a0ffd525fe8635e4b07a3f8b88",
+        "rerun_sha256": "441dbb01f1a01890332886e3aca7d2deec0afd1ac5426450e760e73f8e1cf774"
+      },
+      {
+        "file": "p4_checks.py_gs1cond.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "8ff605bdab990ec560550a47c89f2fef600941a156c45de8b591ea03bbedd376",
+        "rerun_sha256": "8ff605bdab990ec560550a47c89f2fef600941a156c45de8b591ea03bbedd376"
+      },
+      {
+        "file": "p4_checks.py_renewal.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "d59db7441c0dffdab996433c4e57426ad9d4304da6abfbdf8a530bd3c1f279a2",
+        "rerun_sha256": "d59db7441c0dffdab996433c4e57426ad9d4304da6abfbdf8a530bd3c1f279a2"
+      },
+      {
+        "file": "p4_checks.py_truncated.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "bec8cceb0e801508110133fbf7da540a09dda29e71e8cc2984c766c82d54f5d5",
+        "rerun_sha256": "bec8cceb0e801508110133fbf7da540a09dda29e71e8cc2984c766c82d54f5d5"
+      },
+      {
+        "file": "p4_gs1_fallback.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "ea0391bbf1478c0c7cf5a633f3c3862e822bc2eb125afb1ad2c4a80907d329a7",
+        "rerun_sha256": "ea0391bbf1478c0c7cf5a633f3c3862e822bc2eb125afb1ad2c4a80907d329a7"
+      },
+      {
+        "file": "p4_lend60.py.txt",
+        "byte_identical": true,
+        "substantive_match": true,
+        "reference_sha256": "1c6b38bc8a67956f731069885a2915851fb313f08c9a774f73024f907f807e61",
+        "rerun_sha256": "1c6b38bc8a67956f731069885a2915851fb313f08c9a774f73024f907f807e61"
+      }
+    ]
+  },
+  "independent_count_bound_recalculation": {
+    "A10": {
+      "jobs": 111284,
+      "capacity_gpu": 2494,
+      "integral_job_seconds": 8941062908,
+      "mean_wait_lower_bound_hours": 22.317930570033027,
+      "mean_wait_lower_bound_hours_exact": "2235265727/100155600",
+      "peak_q": 1489
+    },
+    "A100-SXM4-80GB": {
+      "jobs": 80877,
+      "capacity_gpu": 3456,
+      "integral_job_seconds": 0,
+      "mean_wait_lower_bound_hours": 0.0,
+      "mean_wait_lower_bound_hours_exact": "0",
+      "peak_q": 0
+    },
+    "A800-SXM4-80GB": {
+      "jobs": 3959,
+      "capacity_gpu": 176,
+      "integral_job_seconds": 108821,
+      "mean_wait_lower_bound_hours": 0.007635275462378266,
+      "mean_wait_lower_bound_hours_exact": "108821/14252400",
+      "peak_q": 3
+    },
+    "GPU-series-1": {
+      "jobs": 9643,
+      "capacity_gpu": 1558,
+      "integral_job_seconds": 0,
+      "mean_wait_lower_bound_hours": 0.0,
+      "mean_wait_lower_bound_hours_exact": "0",
+      "peak_q": 0
+    },
+    "GPU-series-2": {
+      "jobs": 13633,
+      "capacity_gpu": 976,
+      "integral_job_seconds": 47676,
+      "mean_wait_lower_bound_hours": 0.0009714173940683147,
+      "mean_wait_lower_bound_hours_exact": "3973/4089900",
+      "peak_q": 1
+    },
+    "H800": {
+      "jobs": 4716,
+      "capacity_gpu": 1752,
+      "integral_job_seconds": 4432,
+      "mean_wait_lower_bound_hours": 0.000261049853925172,
+      "mean_wait_lower_bound_hours_exact": "277/1061100",
+      "peak_q": 1
+    }
+  },
+  "additional_integer_host_ledger_replay": {
+    "fcfs": {
+      "status": "PASS",
+      "jobs": 80877,
+      "native_nodes": 372,
+      "zero_wait_jobs": 80877,
+      "max_wait_seconds": 0.0,
+      "allocation_sha256": "57a201121c82e26c682f137bb50f8d0472c05d640bee940125ca2606e3901fe4",
+      "ledger_events": 217184,
+      "checks": "unique jobs; original demands; full worker count; start>=arrival; fixed duration; node CPU/GPU; half-open intervals; final resources released",
+      "scope": "additional local audit of the supplied prototype; not the official repository Q3 integration"
+    },
+    "sjf": {
+      "status": "PASS",
+      "jobs": 80877,
+      "native_nodes": 372,
+      "zero_wait_jobs": 80877,
+      "max_wait_seconds": 0.0,
+      "allocation_sha256": "62fc64607c7893ec1415a2e10dc4c4f8f8df77a38575a61f7a3ef1b0a5ac6594",
+      "ledger_events": 216034,
+      "checks": "unique jobs; original demands; full worker count; start>=arrival; fixed duration; node CPU/GPU; half-open intervals; final resources released",
+      "scope": "additional local audit of the supplied prototype; not the official repository Q3 integration"
+    }
+  },
+  "reproduced_key_claims": {
+    "a10_area_weighted_wait_lower_bound_hours": 560.5213678903029,
+    "a10_spt_hol_mean_wait_hours": 32.906454035021504,
+    "gs1_ratio_matching_zero_wait_jobs": 9643,
+    "gs1_integer_ledger_violations": 0,
+    "static60_a10_fixed_population_delay_intercept_hours": 16.510614890730025,
+    "static60_a10_delay_slope_hours": 11.585148366641505,
+    "static60_sigma_count": 2.415246367625465,
+    "static60_sigma_native_area": 1.806762177008876
+  },
+  "dependency_review_scope": "Inspected supplied runner and script file-reading/import/exec paths. No additional team-workspace input or network access found in the executed chain; standard interpreter/package dependencies are separate. Read official CSVs through the stated environment variables. Ran in a separate extracted copy and preserved the original archive.",
+  "limitations": [
+    "Reproducing supplied prototype outputs is not formal integration or acceptance of the team repository Q2/Q3 implementation.",
+    "A10 prototype models 2494 identical unit-GPU machines and does not model the two 126-vCPU nodes separately.",
+    "sim_node.py policy sjf is a feasible-skip policy, not strict SPT-HOL; the reproduced zero-wait A100 runs should retain that exact policy description.",
+    "The core runner writes into results/core_run and must not be run inside the immutable archived source copy.",
+    "Historical lb3.py and withdrawn p4_checks.py shape code remain in the archive. ERRATA.md and e1/e2/e4 outputs supersede corresponding older outputs.",
+    "Q3 sigma thresholds are conditional sample-path arithmetic for a fixed chosen population, original weights, disjoint dedicated nodes, immediate relocated starts and unchanged native-host service. They are not measured cross-GPU speed ratios or globally optimal policies.",
+    "No official repository branch, remote resource, running experiment or dataset was modified."
+  ]
+}
