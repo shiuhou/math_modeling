@@ -52,3 +52,11 @@
 - sigma=2 仍低於 M0 的 mean waiting，但相對 S0 A10 mean finish delta 為 +143.811 h（FCFS）與 +14.506 h（SJF-HOL）；未宣稱 hardware benchmark 或精確 sigma*。
 
 GO 只適用於把這組受控結果納入 Q3 條件性敏感性分析；不能宣稱全域最佳 operating point。下一個最小問題是預先指定公平性門檻，對 30/60/90 與 5/10/20 結果做一次 operating-point 判定，不啟動動態借用或大型搜尋。
+
+## Q3-S3 結論凍結與出版交付（2026-10-16）
+
+本輪沒有新增排程或模擬（`new_scheduling_runs=0`），只從 S1 的 `metrics.json` 與 S2 的 `sensitivity_metrics.json` 生成唯一的 paper-ready JSON/CSV、英文 `q3_section.tex`、繁中 `q3_section_zh.html`、主表、donor-capacity 圖與來源對照。第一輪 M1 在出版文字中統一稱為 S0；既有 S1–S5 名稱與數值不變。
+
+結論已凍結於 [Q3-S3 README](../../results/20261016-b-q3-s3-publication-9ac1d7f2/README.md) 與其 `manifest.json`：60 台／10% 是本 trace 上 native A100 零新增等待的已測候選；20% 不保證優於 10%；90 台出現可量化 native harm；sigma=2 的等待與完成方向可能相反。相容性與 sigma 仍是未經硬體 benchmark 的情景假設，不能宣稱全域最佳或唯一因果貢獻。
+
+出版包保留來源、配置、結果雜湊、生成命令與靜態檢查。LaTeX 編譯器在當前環境不可用，記為 `NOT_RUN`；S1/S2 大型 ZIP 的跨機共享未確認，記為 `BLOCKED`。本輪不修改原始 CSV、Q1 成果、共用模擬器或 S1/S2 歷史清單。

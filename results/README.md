@@ -43,3 +43,7 @@
 ## Q3-S2 固定分流敏感性
 
 [Q3-S2 正式清單](20261015-b-q3-s2-fixed-split-v1/manifest.json) 保存五個預先指定情景（5%/20% routing、30/90 donor nodes、sigma=2）、十組 FCFS／SJF-HOL 全 trace 結果、路由子集核對、逐節點獨立回放與 paired comparisons。表格和 donor-capacity 圖位於同一結果目錄；大型新帳本及交付 ZIP 只保留本機相對路徑，跨機共享仍未確認。GO 僅表示這些已驗證條件可納入敏感性分析，不代表全域最佳或硬體性能證明。
+
+## Q3-S3 結論凍結與論文交付
+
+[Q3-S3 出版交付](20261016-b-q3-s3-publication-9ac1d7f2/README.md) 只讀取 S1/S2 已保存的正式 JSON，將第一輪 M1 統一命名為 S0，生成英文 Q3 章節、繁中正文、主表、圖、CSV/JSON 與 claim-to-source map。`new_scheduling_runs=0`；S1/S2 的原始數值、逐節點驗證、原始 CSV、Q1 成果與共用模擬器均未改寫。LaTeX 編譯器在本環境不可用，出版清單保留 `NOT_RUN`；大型 ZIP 的跨機共享仍為 `BLOCKED`。

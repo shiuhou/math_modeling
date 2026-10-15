@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "kind": "q3_s3_publication_v1",
+  "status": "PASS",
+  "experiment_id": "20261016-b-q3-s3-publication-9ac1d7f2",
+  "purpose": "freeze Q3 conclusions and publish a reproducible paper/data package from persisted S1/S2 evidence",
+  "base_commit": "5fcc291b890abc74d9b0573065de3878ff928dbc",
+  "new_scheduling_runs": 0,
+  "inputs": {
+    "S1_result_dir": "results/20261015-b-q3-fixed-split-c9e8f1a2",
+    "S1_manifest_sha256": "e7faada6dede25eb1712e2c18d8e0d007b24811682caea4093dc4f870fd0a3a5",
+    "S1_metrics_sha256": "bccc58ab91c33b150499062e9c802331692de43ef1382ccde81d55fac58ec10b",
+    "S2_result_dir": "results/20261015-b-q3-s2-fixed-split-v1",
+    "S2_manifest_sha256": "a621ff9efb99438a19eab7b98b0de3aa28a58c20d7e5c5ee5e3add1fa606957f",
+    "S2_sensitivity_metrics_sha256": "f40415f478528878edfa31cc497e92258c54e84e2ce5c3504ee68282007d9d47",
+    "S2_paired_comparisons_sha256": "9de0a26abe1114af1b37d6848dd0c4f6225b2edf9043a46c97a943dcdcf06ad8",
+    "S2_routing_audit_sha256": "398044092f3cfa44a5b08ffb106bb9af919211e4810f109c3eda3a842bff2a32",
+    "model": "problems/2026_gpu_scheduling/docs/q3_model.md",
+    "model_sha256": "8ddf78bf1c0214f76242ba7b3f5a4ad87fcaeedc2a50ee51b5e16fe684a2789e"
+  },
+  "design": {
+    "scenarios": [
+      "M0",
+      "S0",
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5"
+    ],
+    "policies": [
+      "FCFS",
+      "SJF-HOL"
+    ],
+    "S0_definition": "former S1/M1: 60 dedicated A100 nodes, 10% SHA-256 routing, sigma=1",
+    "metric_scope": "complete drain for wait/JCT; H=7776000 seconds for 90-day completion counts; original job IDs paired",
+    "assumptions": [
+      "A10-to-A100 compatibility is assumed",
+      "sigma values are scenario assumptions, not benchmark measurements"
+    ]
+  },
+  "validation": {
+    "existing_model_validation": {
+      "status": "PASS",
+      "evidence": [
+        "results/20261015-b-q3-fixed-split-c9e8f1a2/verified.json",
+        "results/20261015-b-q3-s2-fixed-split-v1/independent_verification.json"
+      ]
+    },
+    "postprocessing_validation": {
+      "status": "PASS",
+      "source_json_loaded": true,
+      "paper_ready_rows": 14,
+      "single_numeric_source": true,
+      "english_chinese_same_rows": true,
+      "no_scheduler_import_or_call": true
+    },
+    "repo_check": {
+      "status": "PASS",
+      "command": "python3 scripts/check_repo.py",
+      "scope": "109 files"
+    },
+    "root_tests": {
+      "status": "PASS",
+      "command": "python3 -m unittest discover -s tests -v",
+      "tests": 12
+    },
+    "problem_b_tests": {
+      "status": "PASS",
+      "command": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v",
+      "tests": 43
+    },
+    "diff_check": {
+      "status": "PASS",
+      "command": "git diff --check"
+    },
+    "latex_compiler": "NOT_RUN: no pdflatex/xelatex/tectonic available in worktree environment"
+  },
+  "evidence_distribution": {
+    "status": "BLOCKED",
+    "reason": "No authorized cross-machine shared storage was available in this turn",
+    "local_artifacts": [
+      {
+        "path": "outputs/Q3_fixed_split_v1_delivery.zip",
+        "bytes": 23132824,
+        "sha256": "714a59c8addeecc47e91c6b40dbd1c3a76e3e0c7eccb45676daedf87b1cf5c3d"
+      },
+      {
+        "path": "outputs/Q3_fixed_split_s2_delivery.zip",
+        "bytes": 57670130,
+        "sha256": "19a0a577fe473a22452311631da54203e6fecc169099d1aa03f813c0c3068279"
+      }
+    ],
+    "raw_csv_included": false
+  },
+  "files": {
+    "results/20261016-b-q3-s3-publication-9ac1d7f2/README.md": "9f3926ca2b292b75eddef8738fe92902de48b3d34cd601fea511db85cbadad6a",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2/paper_ready_metrics.csv": "6d393fd70a0e1a81f3133fb6a3bb6ad08ed9432ab98e78e8cbe1a6778d3cba25",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2/paper_ready_metrics.json": "eb24412f38e85b2f747faac6dc19b0987b71e2268d3db1a40b20bc0c91a28cd8",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2/publication_checks.json": "c4dcbda233730e3738bddd0b3671b329753a316dc0538c135ed65a3459f41822",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2/q3_claim_sources.json": "04c5184f52a6a1f841d913eb14d87472d351d6a7f254c70434b9e3fdfea07366",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2/q3_donor_capacity_wait_tradeoff.png": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2/q3_s3_main_table.tex": "b4ffb3e263bc04870b25ebc9f37a488bc1458d99a2ff215c067ae9d1d46d8f02"
+  },
+  "paper_files": {
+    "problems/2026_gpu_scheduling/paper/q3_section.tex": "bad945a6c82eb7ad29cef40e32aa872fd867efd4baa3aaf509eac5a87eb03bbd",
+    "problems/2026_gpu_scheduling/paper/q3_section_zh.html": "88da010137229b571f561e2f636121fadea5ff1a955207fc63ed3de252ef38a2",
+    "problems/2026_gpu_scheduling/paper/q3_s3_main_table.tex": "b4ffb3e263bc04870b25ebc9f37a488bc1458d99a2ff215c067ae9d1d46d8f02",
+    "problems/2026_gpu_scheduling/paper/figures/q3_donor_capacity_wait_tradeoff.png": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6"
+  },
+  "generator": {
+    "path": "problems/2026_gpu_scheduling/experiments/make_q3_publication.py",
+    "sha256": "91a82396ec4a0b5c5bec8cef409b6e6ebee2cf042793d0a86082211988a22824",
+    "command": "env -u PYTHONHOME -u PYTHONPATH -u LD_LIBRARY_PATH .venv/bin/python problems/2026_gpu_scheduling/experiments/make_q3_publication.py --out results/20261016-b-q3-s3-publication-9ac1d7f2",
+    "new_scheduling_runs": 0
+  },
+  "protected_scope": {
+    "unchanged": [
+      "original CSV",
+      "Q1 research and paper",
+      "Q3 q3_model.md",
+      "Q3 q3.py",
+      "Q3 q3_validation.py",
+      "S1/S2 formal result JSON and manifests",
+      "shared simulator"
+    ],
+    "q2_merged": false,
+    "main_modified": false
+  },
+  "limitations": [
+    "No hardware performance benchmark for K or sigma",
+    "No dynamic sharing/MIG/migration/pricing/RL",
+    "No Q2 x Q3 joint schedule",
+    "No global optimum claim"
+  ],
+  "working_tree_state": "dirty during generation; publication commit is the authoritative clean state after commit"
+}

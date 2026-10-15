@@ -1,0 +1,25 @@
+{
+  "new_scheduling_runs": 0,
+  "source_json_loaded": true,
+  "paper_ready_rows": 14,
+  "policies": [
+    "FCFS",
+    "SJF-HOL"
+  ],
+  "scenarios": [
+    "M0",
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5"
+  ],
+  "numeric_source_single": true,
+  "english_chinese_generated_from_same_rows": true,
+  "tex_required_sections": true,
+  "no_static_relocation_claim": true,
+  "latex_compiler": "NOT_RUN: no pdflatex/xelatex/tectonic available in worktree environment",
+  "cross_machine_evidence": "BLOCKED: no authorized shared storage was available",
+  "elapsed_seconds": 0.0034356110263615847
+}
