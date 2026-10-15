@@ -1,0 +1,12 @@
+{
+  "SPT-FILL": {
+    "jobs": 111284,
+    "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+    "input_match": true,
+    "timing_member": {
+      "path": "/home/shiuhou/mm/math_modeling-b-q2-merge/outputs/q2-m2g-g3-111284-20261016-spt-fill/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+      "compressed_sha256": "a063a4530df997ca500ae16550483a1d76f1f17ccc0a39bc50123a527bce6203",
+      "row_count": 111284
+    }
+  }
+}

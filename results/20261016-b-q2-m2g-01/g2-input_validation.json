@@ -1,0 +1,12 @@
+{
+  "SPT-HOL": {
+    "jobs": 111284,
+    "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+    "input_match": true,
+    "timing_member": {
+      "path": "/home/shiuhou/mm/math_modeling-b-q2-merge/outputs/q2-m2g-g2-111284-20261016-spt-hol/a10-111284-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
+      "compressed_sha256": "40855bb8a6873fd86c462ff3c6196553b2cff3b70b36aeed49f245001fc02b9b",
+      "row_count": 111284
+    }
+  }
+}

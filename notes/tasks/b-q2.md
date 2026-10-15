@@ -355,11 +355,15 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 
 ### 18.1 數學下界
 
-令 `Z(t)={j:r_j<=t<r_j+p_j}`，令 `S(t)` 為實際在服務的作業集合。因為排程合法且同一時刻 GPU 總需求不超過 `C`，`S(t)` 是 `Z(t)` 的一個子集，且其 GPU 寬度總和不超過 `C`。`q(t)` 定義為從 `Z(t)` 刪除最少作業後使剩餘寬度總和不超過 `C` 的刪除數，因此每個 `t` 至少有 `q(t)` 個 `Z(t)` 作業不在服務中。
+令 `Z(t)={j:r_j<=t<r_j+p_j}`，令 `S(t)` 為實際在服務的作業集合，並令 `A(t)=S(t)∩Z(t)`。延後啟動的作業可能已經超過其原始窗口，仍在實際服務中，因此不能直接把 `S(t)` 寫成 `Z(t)` 的子集；只有 `A(t)` 是 `Z(t)` 中正在服務的子集。因為排程合法，同一時刻 `A(t)` 的 GPU 寬度總和不超過 `C`。所以 `Z(t)\A(t)` 是一個把 `Z(t)` 刪除後留下合法 GPU 總量的刪除集合，其大小至少為 `q(t)`，即每個 `t` 至少有 `q(t)` 個 `Z(t)` 作業不在服務中。
+
+例如一個作業 `r=0,p=2`、實際於 `s=4` 啟動，`t=5` 時它仍屬於 `S(t)`，但已不屬於 `Z(t)`，因為 `5>=r+p=2`。這正是需要使用 `A(t)` 的原因。
 
 對非搶占作業，作業 `j` 在 `[r_j,r_j+p_j)` 不在服務的時間長度正好是 `min(W_j,p_j)`：若 `W_j<p_j`，它在提交後等待 `W_j` 秒；若 `W_j>=p_j`，整個原始時長窗口都未服務。因此
 
 `Σ_j min(W_j,p_j) >= ∫q(t)dt`，而 `min(W_j,p_j)<=W_j`，遂得 `Σ_j W_j >= ∫q(t)dt`。除以 `3600N` 即得 `L_count`。這是只放鬆到 GPU 容量的合法下界，沒有處理 CPU 打包、節點形狀、gang 同步、HOL 或保護規則。
+
+**證明勘誤（2026-10-16）。** 原文曾把實際服務集合 `S(t)` 直接寫成 `Z(t)` 的子集；上述 `A(t)=S(t)∩Z(t)` 修正了這個集合關係。分析程式、輸入集合、既有 M2-F JSON、manifest 與封存數值均未修改。
 
 工具以整數秒事件掃描 `[r_j,r_j+p_j)`；同刻先結束上一區間再套用到達／完成事件，使用 GPU 寬度直方圖按寬度升序保留最多作業，不使用網格近似。結果為：`∫q(t)dt = 5,878,938,330` job-seconds，`L_count = 24.9181888580 h`，`peak q=1,483`，`q>0` 持續 `6,151,723 s`，`121,253` 個事件時間戳、`121,252` 個積分區間，積分終點 `15,897,599 s`。
 
@@ -386,3 +390,44 @@ SPT-FILL 最接近這個容量鬆弛下界。HOL、TIME、FIXED、FLEX 的平均
 - 分析耗時約 4.2 s，peak RSS 約 705,096 KiB；沒有重新執行 scheduler。
 - 正式產物：`results/20261015-b-q2-m2f-01/manifest.json`、`lower_bound.json`、`gap_decomposition.json`、`input_validation.json`、`commands.sh`。M2-E `evidence-65536.tar.gz` 與既有結果未覆寫。
 - M2-F 狀態：**PASS / GO**，可作為 Q2 論文的理論標尺與描述性分解；須明確標示它是 GPU 容量鬆弛下界，不是最優排程值或可消除等待份額。未啟動新 scheduler、全量 111,284 trace、1350h、Q3 或參數搜尋。
+
+## 19. M2-G 結果（普通 SPT-HOL、完整 A10 有界驗證與方法收斂，2026-10-16）
+
+- 本輪只修正 M2-F §18.1 的證明文字：以 `A(t)=S(t)∩Z(t)` 取代不正確的 `S(t)⊂Z(t)`，並加入 `r=0,p=2,s=4,t=5` 反例。分析程式、既有 M2-F JSON／manifest、M2-E 封存與調度器均未改動。
+- 正式配置固定為 A10、正式 `read_data()` 排序、FF-id、`shared-timer`、`theta=604800s`（探索性 168h）、`K=200`、`H=7776000s`、精確 duration、完整排空；每個 child 使用 900s／4 GiB 護欄，三個新運行均順序完成並通過獨立 capacity replay。普通政策沒有發出 promise，reservation evidence 為明確空集合／N/A。
+- G1：65,536-job A10 普通 `SPT-HOL`，PASS；wall 16.50s、scheduler 12.66s、validator 1.70s、I/O 1.61s、peak 362.6 MiB，schedule hash `7405acaa...e1559c6`。G2：111,284-job 完整 A10 `SPT-HOL`，PASS；wall 28.38s、scheduler 21.69s、validator 3.30s、I/O 2.68s、peak 540.3 MiB，schedule hash `a975854e...d5435a2`。G3：111,284-job 完整 A10 `SPT-FILL`，PASS；wall 161.55s、scheduler 154.00s、validator 3.42s、I/O 3.59s、peak 853.5 MiB，schedule hash `e1c145cc...f71e718`。三個運行均保存完整 job timing、node placement、空 reservation evidence 與獨立重播摘要。
+- 原始 hash：node `1aba161...7bc9d18`、job `ef14d696...32eedb0`；A10=111,284 jobs、2,494 nodes。G1 與 M2-E 五策略的核心 `src`／loader／placement／evaluator hash 相同，但 run commit 不同；比較保留各自真實 commit、timing member hash 與來源 archive，不把不同 run commit 隱藏成單一版本。
+
+### 19.1 65,536-job 六策略比較
+
+下界由本輪正式前綴重新以整數秒事件積分：`∫q(t)dt=5,878,938,330` job-seconds，`L_count=24.9181888580h`。以下只把普通 SPT-HOL 加入既有 M2-E 五策略；五策略的原 timing／證據未覆寫。
+
+|策略|Mean / P95 / P99 / Max wait h|Mean JCT h|90日完成|GPU / CPU|Capacity LB / Within gap / Beyond h|
+|---|---|---:|---|---|---|
+|SPT-FILL|31.042 / 61.662 / 1254.218 / 1860.190|157.174|63403|0.988490 / 0.180874|24.918 / 5.182 / 0.942|
+|SPT-HOL|30.332 / 48.641 / 1252.840 / 1870.420|156.464|63411|0.988659 / 0.180882|24.918 / 5.370 / 0.043|
+|SPT-URGENT-HOL|556.492 / 1153.620 / 1164.255 / 1172.427|682.625|54649|0.999338 / 0.192659|24.918 / 10.955 / 520.619|
+|SPT-URGENT-TIME|350.528 / 1142.534 / 1160.951 / 1172.021|476.660|59030|0.999568 / 0.192678|24.918 / 10.945 / 314.665|
+|SPT-URGENT-FIXED|350.088 / 1142.474 / 1160.939 / 1172.028|476.221|59046|0.999569 / 0.192678|24.918 / 10.945 / 314.226|
+|SPT-URGENT-FLEX|349.715 / 1142.399 / 1160.881 / 1172.028|475.848|59069|0.999570 / 0.192678|24.918 / 10.944 / 313.852|
+
+普通 SPT-HOL 相對既有 SPT-FILL 的逐 ID 配對平均等待差為 `-0.710085h`（改善 30,659、惡化 29,695、相同 5,182；原零等待新增延遲 840）。這是同一 A10 前綴的診斷；HOL 在本設定下平均等待略低，但最大等待略高，不能宣稱無飢餓保證。相對 urgent 策略，普通 HOL／FILL 的平均等待都顯著較低；urgent 的較低部分尾部指標伴隨很大的 beyond-duration waiting。
+
+### 19.2 完整 A10（111,284 jobs）比較
+
+完整 A10 下界重新計算為 `∫q(t)dt=8,941,062,908` job-seconds、`L_count=22.3179305700h`，沒有套用 65k 數值。兩個策略均以 111,284 個正式 A10 ID 驗證，沒有把 65k 排程延伸成全量。
+
+|策略|Mean / P95 / P99 / Max wait h|Mean JCT h|90日完成|GPU / CPU|Capacity LB / Within gap / Beyond h|
+|---|---|---:|---|---|---|
+|SPT-HOL|32.906 / 11.087 / 1542.181 / 3017.288|132.676|107002|0.999223 / 0.179267|22.318 / 8.336 / 2.252|
+|SPT-FILL|34.967 / 15.130 / 1575.462 / 3015.311|134.737|106802|0.999581 / 0.179322|22.318 / 8.124 / 4.525|
+
+SPT-HOL 相對 SPT-FILL 的配對平均差為 `-2.060576h`（改善 55,266、惡化 50,575、相同 5,443；原零等待新增延遲 1,226）。四個互斥群組的 mean wait（short/long × single/multi worker）分別為：SPT-HOL `0.046/0.443/159.514/3.797h`，SPT-FILL `0.043/68.299/157.983/586.902h`；`P99`／`Max`、n 與配對正新增等待保存在比較 JSON。此結果支持普通 HOL 作為目前平均等待導向的主方案，也顯示 FILL 對部分單 worker 零等待偏好仍是可報告的備選；結論只限本 A10 trace 與 168h 門檻。
+
+### 19.3 驗收、方法取捨與產物
+
+- 輸入 ID／屬性逐 ID 核對、timing `start>=submit`／`finish=start+duration`、下界事件積分、三項分解 residual=0、Within-window Gap 非負：PASS。M2-F 六個小型 oracle／邊界測試仍 PASS；本輪未重跑不必要的歷史壓力矩陣。
+- G1/G2/G3 benchmark、獨立 capacity replay 與空 reservation replay：PASS；未有 TIMEOUT、RSS_LIMIT 或部分排程冒充成功。大檔案以 `evidence-g1-65536.tar.gz`、`evidence-g2-111284.tar.gz`、`evidence-g3-111284.tar.gz` 保存，archive hash 見 `archives.json`。
+- 方法判斷：在本次已驗證前綴與完整 A10 trace，普通 SPT-HOL 的平均等待低於 SPT-FILL，且多 worker 短作業的等待顯著較低；SPT-FILL 仍可作為偏好單 worker 即時啟動的對照。Urgent-HOL/TIME/FIXED/FLEX 的前綴結果顯示保護機制代價很大；FIXED/FLEX 的 crossing 收益不能抵消其複雜度作為目前平均等待主方案，這不改變其安全正確性。這些不是一般最優性或因果定理。
+- M2-G 狀態：**PASS / 方法收斂**。本輪已取得 65k 六策略及完整 A10 SPT-HOL／SPT-FILL 可獨立驗證證據；完整 224,112-job 叢集、urgent 全量矩陣、1350h、EASY-NR、Q3 與論文性能改寫均 `NOT_RUN`。
+- 正式產物：`results/20261016-b-q2-m2g-01/manifest.json`、`comparison.json`、`archives.json`、`commands.sh`；分析入口為 `experiments/analyze_m2g.py`，下界入口仍為 `experiments/analyze_m2f_bounds.py`。未修改 `simulator.py`、`placement.py`、`validation.py`、既有 evaluator、Q1/Q3 或歷史 M2-E/M2-F 結果。

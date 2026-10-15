@@ -208,6 +208,18 @@ def read_archive_timing(archive: Path, policy: str) -> tuple[list[dict], dict]:
     }
 
 
+def read_directory_timing(directory: Path, policy: str) -> tuple[list[dict], dict]:
+    path = directory / f"{policy}_job_times.csv.gz"
+    if not path.is_file():
+        raise ValueError(f"missing timing file: {path}")
+    compressed = path.read_bytes()
+    return _read_csv_bytes(compressed, str(path)), {
+        "path": str(path),
+        "compressed_sha256": sha256_bytes(compressed),
+        "row_count": len(_read_csv_bytes(compressed, str(path))),
+    }
+
+
 def raw_a10_prefix(raw_jobs: pd.DataFrame, count: int) -> pd.DataFrame:
     # This is deliberately the M2-E rule, after the formal loader's stable
     # submit_time/job_name ordering, rather than a re-sorted archive order.
@@ -313,7 +325,8 @@ def git_state(root: Path) -> dict:
 def run(args: argparse.Namespace) -> dict:
     started = time.perf_counter()
     root = Path(args.repo_root).resolve()
-    archive = Path(args.archive).resolve()
+    archive = Path(args.archive).resolve() if args.archive else None
+    timing_dir = Path(args.timing_dir).resolve() if args.timing_dir else None
     comparison_path = Path(args.comparison).resolve()
     m2e_manifest_path = Path(args.m2e_manifest).resolve()
     output = Path(args.out).resolve()
@@ -339,29 +352,38 @@ def run(args: argparse.Namespace) -> dict:
         for row in prefix.itertuples()
     ]
     lower = count_lower_bound(raw_rows, capacity)
-    comparison = json.loads(comparison_path.read_text())
-    if comparison.get("status") != "PASS":
+    comparison = json.loads(comparison_path.read_text()) if comparison_path.is_file() else {}
+    if comparison and comparison.get("status") != "PASS":
         raise ValueError("M2-E comparison is not PASS")
     expected = {
-        item["policy"]: item for item in comparison["strategies"]
-        if item["policy"] in POLICIES
+        item["policy"]: item
+        for item in comparison.get("strategies", [])
+        if item.get("policy") in POLICIES
     }
-    if set(expected) != set(POLICIES):
+    if not args.policies:
+        raise ValueError("at least one policy is required")
+    if archive is not None and set(expected) != set(POLICIES):
         raise ValueError("M2-E comparison does not contain all five policies")
 
     validations = {}
     decompositions = {}
-    for policy in POLICIES:
-        rows, member = read_archive_timing(archive, policy)
+    for policy in args.policies:
+        if archive is not None:
+            rows, member = read_archive_timing(archive, policy)
+        else:
+            rows, member = read_directory_timing(timing_dir, policy)
         if len(rows) != args.jobs:
             raise ValueError(f"{policy}: expected {args.jobs} rows, got {len(rows)}")
         check = validate_against_raw(rows, jobs)
         check["timing_member"] = member
         validations[policy] = check
+        expected_mean = float(expected[policy]["metrics"]["mean_wait_hours"]) if policy in expected else sum(
+            int(row["start"]) - int(row["submit_time"]) for row in rows
+        ) / (3600 * len(rows))
         decompositions[policy] = decompose(
             rows,
             lower["integral_q_job_seconds"],
-            float(expected[policy]["metrics"]["mean_wait_hours"]),
+            expected_mean,
         )
 
     elapsed = time.perf_counter() - started
@@ -386,14 +408,18 @@ def run(args: argparse.Namespace) -> dict:
             "job_id_sha256": stable_id_hash(int(x) for x in prefix.job_name),
             "prefix_rule": "read_data sorted jobs; A10 filter; head(65536)",
         },
-        "archive": {
+        "archive": ({
             "path": str(archive.relative_to(root)),
             "sha256": sha256_bytes(archive.read_bytes()),
-            "comparison_path": str(comparison_path.relative_to(root)),
-            "comparison_sha256": sha256_bytes(comparison_path.read_bytes()),
-            "m2e_manifest": str(m2e_manifest_path.relative_to(root)),
-            "m2e_manifest_sha256": sha256_bytes(m2e_manifest_path.read_bytes()),
-        },
+        } if archive is not None else {"timing_dir": str(timing_dir.relative_to(root))}),
+        "comparison": ({
+            "path": str(comparison_path.relative_to(root)),
+            "sha256": sha256_bytes(comparison_path.read_bytes()),
+        } if comparison_path.is_file() else None),
+        "m2e_manifest": ({
+            "path": str(m2e_manifest_path.relative_to(root)),
+            "sha256": sha256_bytes(m2e_manifest_path.read_bytes()),
+        } if m2e_manifest_path.is_file() else None),
         "analysis_code": {
             "git": git_state(root),
             "source_sha256": source_hashes(root),
@@ -431,8 +457,12 @@ def run(args: argparse.Namespace) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path("."))
-    parser.add_argument("--archive", type=Path, required=True)
-    parser.add_argument("--comparison", type=Path, required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--archive", type=Path)
+    source.add_argument("--timing-dir", type=Path)
+    parser.add_argument("--comparison", type=Path,
+                        default=Path("results/20261015-b-q2-m2e-01/comparison-65536.json"))
+    parser.add_argument("--policies", nargs="+", default=list(POLICIES))
     parser.add_argument(
         "--m2e-manifest", type=Path,
         default=Path("results/20261015-b-q2-m2e-01/manifest.json"),

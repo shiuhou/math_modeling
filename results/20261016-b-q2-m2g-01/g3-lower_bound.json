@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "lower_bound": {
+    "capacity_gpu": 2494,
+    "job_count": 111284,
+    "event_records": 222568,
+    "event_timestamps": 207676,
+    "integration_intervals": 207675,
+    "integral_q_job_seconds": 8941062908,
+    "lower_bound_mean_hours": 22.317930570033027,
+    "peak_q_jobs": 1489,
+    "q_positive_seconds": 8224125,
+    "width_histogram": {
+      "1": 110497,
+      "2": 231,
+      "3": 115,
+      "4": 100,
+      "5": 50,
+      "6": 30,
+      "7": 18,
+      "8": 93,
+      "9": 22,
+      "10": 8,
+      "11": 11,
+      "12": 9,
+      "13": 13,
+      "14": 6,
+      "15": 7,
+      "16": 31,
+      "17": 3,
+      "18": 4,
+      "19": 4,
+      "20": 3,
+      "21": 1,
+      "22": 5,
+      "23": 4,
+      "24": 10,
+      "25": 4,
+      "27": 1,
+      "32": 3,
+      "60": 1
+    },
+    "integral_end_seconds": 15897599
+  },
+  "data": {
+    "source_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+    "prefix_rule": "read_data sorted jobs; A10 filter; head(65536)"
+  }
+}
