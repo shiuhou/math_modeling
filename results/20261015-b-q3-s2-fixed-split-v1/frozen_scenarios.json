@@ -1,0 +1,56 @@
+{
+  "S0": {
+    "donor_nodes": 60,
+    "route_numerator": 1,
+    "route_denominator": 10,
+    "compatibility": true,
+    "sigma": 1,
+    "horizon_seconds": 7776000,
+    "hash_namespace": "q3-fixed-split-v1"
+  },
+  "S1": {
+    "donor_nodes": 60,
+    "route_numerator": 1,
+    "route_denominator": 20,
+    "compatibility": true,
+    "sigma": 1,
+    "horizon_seconds": 7776000,
+    "hash_namespace": "q3-fixed-split-v1"
+  },
+  "S2": {
+    "donor_nodes": 60,
+    "route_numerator": 1,
+    "route_denominator": 5,
+    "compatibility": true,
+    "sigma": 1,
+    "horizon_seconds": 7776000,
+    "hash_namespace": "q3-fixed-split-v1"
+  },
+  "S3": {
+    "donor_nodes": 30,
+    "route_numerator": 1,
+    "route_denominator": 10,
+    "compatibility": true,
+    "sigma": 1,
+    "horizon_seconds": 7776000,
+    "hash_namespace": "q3-fixed-split-v1"
+  },
+  "S4": {
+    "donor_nodes": 90,
+    "route_numerator": 1,
+    "route_denominator": 10,
+    "compatibility": true,
+    "sigma": 1,
+    "horizon_seconds": 7776000,
+    "hash_namespace": "q3-fixed-split-v1"
+  },
+  "S5": {
+    "donor_nodes": 60,
+    "route_numerator": 1,
+    "route_denominator": 10,
+    "compatibility": true,
+    "sigma": 2,
+    "horizon_seconds": 7776000,
+    "hash_namespace": "q3-fixed-split-v1"
+  }
+}

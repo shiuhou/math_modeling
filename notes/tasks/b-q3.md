@@ -40,3 +40,15 @@
 提交前已重新 fetch：遠端 Q3 與本地基礎一致，無分歧；Q2 已有後續遠端提交，但不引入 Q3。檢查提交範圍並沿用既有完整模型驗證，另執行必要 repo／單元／staged diff checks。實驗清單的 code.commit／dirty 與封存 ZIP 保留實際運行當時的版本狀態，不改寫歷史實驗來源。
 
 兩份原始研究報告保留原有 Markdown 行尾雙空白；`.gitattributes` 僅對這兩份來源允許該格式並保留原始位元組，來源 SHA256 不變。
+
+## Q3-S2 固定分流敏感性（2026-10-15）
+
+已在 S1 物理驗證基礎上完成預先凍結的五個單因素情景：S1=60/5%/sigma1、S2=60/20%/sigma1、S3=30/10%/sigma1、S4=90/10%/sigma1、S5=60/10%/sigma2；各自執行 FCFS 與 SJF-HOL，共 10 組。S0/M0 復用 `outputs/b-q3-fixed-split-v1-final`，先核對 data/source/config hash，未重跑基線。結果、配置、表格、圖與獨立回放見 `results/20261015-b-q3-s2-fixed-split-v1/`；大型新證據在本機 `outputs/b-q3-s2-fixed-split-v1/` 與 `outputs/Q3_fixed_split_s2_delivery.zip`。
+
+- 路由子集：5% routed IDs ⊆ 10% S0 IDs ⊆ 20% routed IDs；S5 routed IDs 與 S0 完全相同；30⊂60⊂90 donor node prefix。實際 routed jobs 為 5,565、11,209、22,455（依標稱比例而非精確名額）。
+- 十組全 trace、完整排空、224,112 IDs、逐節點 CPU/GPU replay、effective duration、獨立 metrics 與 paired finish 均 PASS，見 `independent_verification.json`。
+- FCFS 的 30/60/90 台 A10 mean wait 為 916.407/587.875/539.109 h；SJF-HOL 為 25.565/20.534/19.214 h。90 台開始出現 native A100 harm：5,735/2,150 個作業（FCFS/SJF-HOL）。
+- 5%/10%/20% 在 FCFS 對應 A10 mean wait 702.551/587.875/1010.136 h；SJF-HOL 為 25.328/20.534/22.058 h，尾部與 finish fairness 同步保留。
+- sigma=2 仍低於 M0 的 mean waiting，但相對 S0 A10 mean finish delta 為 +143.811 h（FCFS）與 +14.506 h（SJF-HOL）；未宣稱 hardware benchmark 或精確 sigma*。
+
+GO 只適用於把這組受控結果納入 Q3 條件性敏感性分析；不能宣稱全域最佳 operating point。下一個最小問題是預先指定公平性門檻，對 30/60/90 與 5/10/20 結果做一次 operating-point 判定，不啟動動態借用或大型搜尋。

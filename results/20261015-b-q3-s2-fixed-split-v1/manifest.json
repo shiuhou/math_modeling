@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "kind": "q3_fixed_split_sensitivity_v1",
+  "status": "PASS",
+  "base_commit": "7075317883808b1cd7f80cadf3980be291c69cf0",
+  "current_commit": "350ba8c83e5c6763f9f4796254100bfbcabf4b24",
+  "current_dirty": true,
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "jobs": 224112,
+  "nodes": 4278,
+  "horizon_seconds": 7776000,
+  "s0_artifact": "outputs/b-q3-fixed-split-v1-final",
+  "s0_manifest_sha256": "313ce6aea4827910358cb65ee78640c2d028c3d40619b760acd3586136646279",
+  "s0_source_sha256": {
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/audit.py": "2f61b263ed04836fe8e838c610bff36d3b332d1149c6597f2f24f20613978d11",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py": "ec39507f869fbbf63a4d57cb488ad9d63f0e2a4c9d62c51a6d971d437da4f6be",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py": "894a68f2614f3436d471764c048e2e6c6dec345b0efefc35e355aa56aa3a6850",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "08ecbf3f84a7c8e5183f1629cca655ababf9c2345125620be38282ce1c564c51",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1_publication.py": "eeed466922d995abe3251e25f4c4e583028deae72d2d58473bec21e9b42df942",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3.py": "a8b95271b5cc5ac1a2a93be39598d73f979f66116a661a9fd0f196ebb9bb84d2",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3_validation.py": "fb3f9a1d678f06d7a8ae1ef0863b5ecbd85aea3471512ee2bbd4e93a8b3d343b",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "75b864ce6be98f08de17da5f1403afc812259181f251c7de5790101cc9a077d8",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": "0196485c89674150b9baccf06c51c210ffedc8df3f26b7274f119523125642da",
+    "problems/2026_gpu_scheduling/experiments/build_paper.py": "489803040431cbc5a0bf1121ec91b9d081b80c92c9836715f9dc04404b6e75e2",
+    "problems/2026_gpu_scheduling/experiments/eda_analysis.py": "0cb89eb7eb9b62ad1249dba5892b1aeeceb9abacd0bbe1ca7d65f8088228d9ab",
+    "problems/2026_gpu_scheduling/experiments/eda_deep.py": "05f0aa3a00ea63fd6f5afb8dd333143e9c730bb18a1c8775de3c6e120bc2a16f",
+    "problems/2026_gpu_scheduling/experiments/generate_figures.py": "c09623da50d96a3eb8bfe60061c81cb8185b1acd17be8b4f40869114664a26e1",
+    "problems/2026_gpu_scheduling/experiments/make_figures.py": "c235250c0c4a9042571324620d495af44dd014bbc6c0cb342298a7efe4509d44",
+    "problems/2026_gpu_scheduling/experiments/run_baselines.py": "f64ff84ceb5197b50429b3ecaffcc22da61366d783d6f699bce1492aca86af61",
+    "problems/2026_gpu_scheduling/experiments/run_q3_fixed_split.py": "7b93b39f058d498e8121e4c5de84f663b71005044cc3c8dac134754772a92f5a",
+    "problems/2026_gpu_scheduling/experiments/verify_baseline.py": "a722c0528447053e4e3c6e2b856d38edd1aca11aa3777798b4beef3c684341be",
+    "problems/2026_gpu_scheduling/experiments/verify_intake.py": "d3537b5fb67f95507f62f179663538b06a276dd55ba489f9525a68b901491f08",
+    "problems/2026_gpu_scheduling/experiments/verify_q1.py": "7e6c2ee6555d6a847b8a9d0d462a4919a04377c7d87a55d2e4d796cb930e6187",
+    "problems/2026_gpu_scheduling/experiments/verify_q3_fixed_split.py": "ba8a526d31a1ad936146290b648605b2046414bf2c9497a62f083058f2c5aeb4",
+    "problems/2026_gpu_scheduling/tests/test_baseline.py": "5f79a19d8b0f80bb5e4b4740da82945af19050cecfeb2693593be6b11819c1c8",
+    "problems/2026_gpu_scheduling/tests/test_baseline_cli.py": "4f153559907b33176abb5a9732f7e8215de04144b028b92ae438d35a2f3eb062",
+    "problems/2026_gpu_scheduling/tests/test_intake_contracts.py": "2c9565556f586237601ce460cdc1894bcd044ffabe864c00740e4783fe47d254",
+    "problems/2026_gpu_scheduling/tests/test_q1.py": "afb9f1e04b91d98f3c5721cf696535dd852464b63c2419b48b39d7371ef83d43",
+    "problems/2026_gpu_scheduling/tests/test_q1_delivery.py": "ad60668f361a3d392f9c28ace3c9112ace5714130b64abf7d4c5891c6d44ab4c",
+    "problems/2026_gpu_scheduling/tests/test_q3.py": "2b0985ee7c971d43e12e2839c2ed291e217bab1736ee8adc2f34fde6258f901e",
+    "problems/2026_gpu_scheduling/docs/q3_model.md": "8ddf78bf1c0214f76242ba7b3f5a4ad87fcaeedc2a50ee51b5e16fe684a2789e"
+  },
+  "routing_audit": {
+    "routed_job_counts": {
+      "S0": 11209,
+      "S1": 5565,
+      "S2": 22455,
+      "S3": 11209,
+      "S4": 11209,
+      "S5": 11209
+    },
+    "nested_routing": {
+      "S1_subset_S0": true,
+      "S0_subset_S2": true,
+      "S5_equals_S0": true
+    },
+    "donor_node_counts": {
+      "30": 30,
+      "60": 60,
+      "90": 90
+    },
+    "donor_node_prefix_sha256": {
+      "30": "15969b7aa9b57baf87c49756d26fca10d7ccc4247a842c9322c4adf6c1e20b9e",
+      "60": "eb608a0f6f9f2a75385c11f0f63eab41c199191164d344a911bb43319032ca52",
+      "90": "e63fd1b5a6b2d0f71c6040a25eebe6034581a284af93332e70af06100b833094"
+    },
+    "donor_prefix_nested": true
+  },
+  "scenarios": {
+    "S1": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 20,
+      "compatibility": true,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "S2": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 5,
+      "compatibility": true,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "S3": {
+      "donor_nodes": 30,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "S4": {
+      "donor_nodes": 90,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "S5": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 2,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    }
+  },
+  "policies": [
+    "FCFS",
+    "SJF-HOL"
+  ],
+  "assumptions": {
+    "compatibility": "scenario assumption",
+    "sigma": "not hardware benchmark",
+    "no_parameter_search": true
+  },
+  "cost": {
+    "wall_seconds": 183.93005141502363,
+    "peak_rss_mb": 688.5703125,
+    "one_policy_at_a_time": true
+  },
+  "output_root": "outputs/b-q3-s2-fixed-split-v1",
+  "command": [
+    "problems/2026_gpu_scheduling/experiments/run_q3_sensitivity.py",
+    "--out",
+    "results/20261015-b-q3-s2-fixed-split-v1",
+    "--output-root",
+    "outputs/b-q3-s2-fixed-split-v1",
+    "--s0",
+    "outputs/b-q3-fixed-split-v1-final"
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "sensitivity_decision": "GO: all five predeclared scenarios and both policies independently verified; no exact break-even sigma claimed",
+  "independent_verification": {
+    "status": "PASS",
+    "file": "independent_verification.json",
+    "sha256": "f9fb6c0cbdc174deaab5cf8a0cc512a0dffb21c06f113572082edc8fa9a7c19d",
+    "scope": "10 scenario-policy schedules; raw routing, physical replay, metrics and paired finish checks"
+  },
+  "report": {
+    "README.md": "README.md",
+    "table_A": "table_q3_s2_a.md",
+    "table_B": "table_q3_s2_b.md",
+    "paired": "paired_comparisons.json",
+    "figure": "figures/donor_capacity_wait_tradeoff.png"
+  },
+  "delivery": {
+    "new_archive": {
+      "path": "outputs/Q3_fixed_split_s2_delivery.zip",
+      "bytes": 57670130,
+      "sha256": "19a0a577fe473a22452311631da54203e6fecc169099d1aa03f813c0c3068279",
+      "access": "local worktree artifact; relative path in repository root; cross-machine shared storage unconfirmed",
+      "archive_manifest_excluded": true
+    },
+    "s1_archive": {
+      "path": "outputs/Q3_fixed_split_v1_delivery.zip",
+      "bytes": 23132824,
+      "sha256": "714a59c8addeecc47e91c6b40dbd1c3a76e3e0c7eccb45676daedf87b1cf5c3d",
+      "access": "local worktree artifact; relative path in repository root; cross-machine shared storage unconfirmed"
+    },
+    "raw_csv_included": false,
+    "note": "Archive uses repository-relative paths, excludes raw CSV and excludes this manifest to avoid circular self-hash."
+  },
+  "results": {
+    "README.md": "260184a29ffb133b07159611ff57ddb58eda82aff9a5de3f8fb549bf51189c71",
+    "S1_FCFS_metrics.json": "4b8cb5b42a7326e8a6673a806505550d6578aa20dab9b306279b58bb974faba2",
+    "S1_SJF-HOL_metrics.json": "a35d2edae8878d3d57da0b7a23e0237d05b6c2cead0653b7a823f61b90c64c9a",
+    "S2_FCFS_metrics.json": "d005b63598d2d1e637feeaf95225b8dafc5956d0bd4b7cd48ba091399bd05a7a",
+    "S2_SJF-HOL_metrics.json": "b5cf0e1cd4bd59fc9df01cd648a573048c39279c688916b59a4ef71c9f07a027",
+    "S3_FCFS_metrics.json": "b49e5431e4ae7e17f108fe8d9a53fd73ea2dc73572f021d1dfb99d8a3e63c72a",
+    "S3_SJF-HOL_metrics.json": "35a734167a09d611b5397dbff95fb127da401dc60fcdb89621cccb72d97b0cdf",
+    "S4_FCFS_metrics.json": "63d96413203f590084a8b0e46ae5864fae2e1855ec0b3524b96ae694497a0f1e",
+    "S4_SJF-HOL_metrics.json": "b4c9496b300cb617df9e66e3c34bd6d334a24787f1d208c591ec61adf156b529",
+    "S5_FCFS_metrics.json": "50cceb2902d905c3f2c86c49c7a355da484765f1caee59d95429836497c8e37a",
+    "S5_SJF-HOL_metrics.json": "41e811701048891a0554e0977443d7357e25e593091499729964f8b7343d22d0",
+    "figures/donor_capacity_wait_tradeoff.png": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6",
+    "frozen_scenarios.json": "452b80d90871c27363f97afd980fc10c9cd27e9984b8671c58eadb5b27985d2e",
+    "independent_verification.json": "f9fb6c0cbdc174deaab5cf8a0cc512a0dffb21c06f113572082edc8fa9a7c19d",
+    "paired_comparisons.json": "9de0a26abe1114af1b37d6848dd0c4f6225b2edf9043a46c97a943dcdcf06ad8",
+    "routing_audit.json": "398044092f3cfa44a5b08ffb106bb9af919211e4810f109c3eda3a842bff2a32",
+    "scenario_status.json": "5de6347845c3481316bddd4a05a2b4467665dd0d8a0727fae94207a5ebb58ff5",
+    "sensitivity_metrics.json": "f40415f478528878edfa31cc497e92258c54e84e2ce5c3504ee68282007d9d47",
+    "table_q3_s2_a.md": "dda4bbd77c625c76f0926153405ff6391b1f347a1aebe997809b6ae79d505370",
+    "table_q3_s2_b.md": "3e28998e13002aab8346642b2f0b09a06b3e5573b164094581cacb3e9084f8d6"
+  },
+  "validation": {
+    "status": "PASS",
+    "checks": {
+      "all_scenarios_full_trace": "PASS",
+      "independent_physical_replay": "PASS",
+      "paired_comparisons": "PASS",
+      "routing_subset_and_donor_prefix": "PASS",
+      "sigma_duration_and_SJF_semantics": "PASS",
+      "repo_and_tests": "PASS"
+    },
+    "evidence": "independent_verification.json"
+  }
+}
