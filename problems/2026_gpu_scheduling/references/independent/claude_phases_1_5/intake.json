@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "source_id": "claude-p1p5-562e82aa",
+  "status": "PASS_for_archive_intake_only",
+  "input": {
+    "archive": {
+      "path": "/home/shiuhou/mm/mcm_b_independent_research.tar.gz",
+      "bytes": 41507,
+      "sha256": "562e82aaee5df02265fe75946051a713896de4e02571451a9f186fb51af2e6b1"
+    },
+    "verification_json": {
+      "path": "/home/shiuhou/mm/claude_research_package_verification.json",
+      "bytes": 12220,
+      "sha256": "d8fc5afb0f82de349f648b3aa5554c9d6f27b6e64e03c0c0df9cdafc0ea88a77",
+      "json_parse": "PASS"
+    }
+  },
+  "archive_scan": {
+    "members": 100,
+    "files": 94,
+    "directories": 6,
+    "scripts_in_archive": 33,
+    "uncompressed_bytes": 131219,
+    "absolute_paths": 0,
+    "parent_traversal_members": 0,
+    "symlink_members": 0,
+    "hardlink_members": 0,
+    "special_file_members": 0,
+    "official_csv_or_pdf_members": 0,
+    "package_scripts_executed": false,
+    "original_tar_recompressed": false,
+    "sensitive_material_review": {
+      "credentials_or_private_keys_found": false,
+      "private_personal_data_found": false,
+      "action": "No source bytes were deleted or redacted; generic numeric identifiers and metrics were treated as research data."
+    }
+  },
+  "extracted_files": {
+    "mcm_b_independent_research.tar.gz": {
+      "bytes": 41507,
+      "sha256": "562e82aaee5df02265fe75946051a713896de4e02571451a9f186fb51af2e6b1",
+      "copied_byte_identical": true
+    },
+    "MANIFEST.md": {
+      "member": "mcm_b_independent_research/MANIFEST.md",
+      "bytes": 6851,
+      "sha256": "8628fce8d1d6c615cfae1bab53de6ec6cd7f9ad4f432ea0b88a5f7d89e1ed9be",
+      "member_bytes_preserved": true
+    },
+    "ERRATA.md": {
+      "member": "mcm_b_independent_research/ERRATA.md",
+      "bytes": 4224,
+      "sha256": "94ed31a2c79b2fbb17324191791a9451bf471a436295745e857b0b0d63ee386f",
+      "member_bytes_preserved": true
+    },
+    "claude_research_package_verification.json": {
+      "bytes": 12220,
+      "sha256": "d8fc5afb0f82de349f648b3aa5554c9d6f27b6e64e03c0c0df9cdafc0ea88a77",
+      "copied_byte_identical": true
+    }
+  },
+  "external_verification": {
+    "archive_sha256_matches": true,
+    "archive_bytes_matches": true,
+    "source_archive_members_claimed": 100,
+    "source_archive_scripts_claimed": 33,
+    "interpretation": "Supplied prior reproduction and targeted audit; not run by Codex in this intake."
+  },
+  "reviewed_repository_snapshots": {
+    "q1": {
+      "commit": "7075317883808b1cd7f80cadf3980be291c69cf0",
+      "paths": [
+        "results/20261015-b-q1-capacity-bound/q1_capacity_bounds.json"
+      ],
+      "use": "Saved formal Q1 weighted-waiting lower-bound evidence; no second implementation adopted."
+    },
+    "q2": {
+      "commit": "508333e0216a18ef71797947bc670864a39f093d",
+      "paths": [
+        "notes/tasks/b-q2.md",
+        "results/20261015-b-q2-m2e-01/manifest.json",
+        "results/20261015-b-q2-m2e-01/comparison-65536.json"
+      ],
+      "use": "Saved formal Q2 prefix evidence; source adoption is advisory and no Q2 code/results changed."
+    },
+    "q3": {
+      "commit": "632435a0f616af916b7ba5474feb44f37df42817",
+      "paths": [
+        "notes/tasks/b-q3.md",
+        "problems/2026_gpu_scheduling/docs/q3_model.md",
+        "results/20261015-b-q3-fixed-split-c9e8f1a2/README.md",
+        "results/20261015-b-q3-fixed-split-c9e8f1a2/sources.json",
+        "docs/4.md",
+        "docs/貼上的文字 (1)(2).txt",
+        "docs/貼上的文字 (2)(2).txt",
+        "docs/deep-research-report_q3.md"
+      ],
+      "use": "Existing Q3 mainline and four reports remain authoritative for Q3; no files copied or moved."
+    },
+    "q2_q3_merge_base": "abdbc4ce07c3877ac9fdb1e846a5b9c3b803f401",
+    "intake_branch_base": "abdbc4ce07c3877ac9fdb1e846a5b9c3b803f401"
+  },
+  "data_identity": {
+    "claude_job_info_clean_csv": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1",
+    "formal_repository_job_info_clean_csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+    "claude_node_info_df_csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "bridge_scope": "Identity difference retained; no raw modification and no full data bridge performed."
+  },
+  "checks_performed": [
+    "git fetch completed using an SSH URL rewrite for the GitHub remote; remote refs matched the supplied Q1/Q2/Q3 commits",
+    "Q2/Q3 merge-base recomputed as abdbc4ce07c3877ac9fdb1e846a5b9c3b803f401",
+    "input byte size and SHA-256 verification",
+    "tar member path, link, type, official-file, and sensitive-content review",
+    "JSON parse and source archive hash cross-check",
+    "byte-preserving extraction of MANIFEST.md and ERRATA.md",
+    "SHA256SUMS verification",
+    "repository check, diff check, and allowed staged-path check"
+  ],
+  "limitations": [
+    "No package script, Q2 experiment, Q3 experiment, full trace, or large test suite was run in this intake.",
+    "External verification PASS values are not new Codex validation.",
+    "Archive provenance does not establish formal Q2/Q3 adoption or general optimality.",
+    "Q3 complete delivery ZIP remains local-only and is not uploaded here."
+  ]
+}
