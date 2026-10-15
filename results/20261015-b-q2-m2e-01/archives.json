@@ -1,0 +1,20 @@
+[
+  {
+    "path": "evidence-16384.tar.gz",
+    "bytes": 3673141,
+    "sha256": "78259be10cea2409b04a087bba412eca3c850b2581957e024719c15757995a86",
+    "archive_member_byte_check": "PASS"
+  },
+  {
+    "path": "evidence-32768.tar.gz",
+    "bytes": 10371124,
+    "sha256": "830c348eed944b94aeeebc9bd988451cfb0ffe97eaa126e1e314f922bdd656f3",
+    "archive_member_byte_check": "PASS"
+  },
+  {
+    "path": "evidence-65536.tar.gz",
+    "bytes": 32264429,
+    "sha256": "989c875a04ef20dd39731a71fcb789108b58a84cff307cee1a23c59c91f7effa",
+    "archive_member_byte_check": "PASS"
+  }
+]

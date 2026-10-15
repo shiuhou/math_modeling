@@ -1,0 +1,816 @@
+{
+  "kind": "m2e_hotspot_diagnosis",
+  "status": "PASS",
+  "timing_caveat": "cProfile cumulative times overlap; do not add nested categories. Timings are single runs, not calibrated confidence intervals.",
+  "original_16384": [
+    {
+      "policy": "SPT-URGENT-TIME",
+      "profiled_scheduler_seconds": 82.95654910901794,
+      "placement": {
+        "file": "placement.py",
+        "line": 28,
+        "function": "plan_first_fit",
+        "calls": 6517498,
+        "self_seconds": 5.445221729,
+        "cumulative_seconds": 55.778642855
+      },
+      "node_slots": {
+        "file": "placement.py",
+        "line": 18,
+        "function": "slots",
+        "calls": 6517743,
+        "self_seconds": 40.360771188,
+        "cumulative_seconds": 41.6219175
+      },
+      "sorting": {
+        "file": "simulator.py",
+        "line": 53,
+        "function": "_ordered",
+        "calls": 41383,
+        "self_seconds": 0.030375333,
+        "cumulative_seconds": 13.100911515
+      },
+      "queue_remove": {
+        "file": "~",
+        "line": 0,
+        "function": "<method 'remove' of 'list' objects>",
+        "calls": 17628,
+        "self_seconds": 0.048938993,
+        "cumulative_seconds": 0.048938993
+      },
+      "reservation_future_snapshot": {
+        "file": "simulator.py",
+        "line": 137,
+        "function": "build_reservation",
+        "calls": 224,
+        "self_seconds": 0.144355542,
+        "cumulative_seconds": 0.61480924
+      },
+      "snapshot_hash": {
+        "file": "simulator.py",
+        "line": 63,
+        "function": "_snapshot_hash",
+        "calls": 672,
+        "self_seconds": 0.23630703,
+        "cumulative_seconds": 0.357953991
+      },
+      "safe_plan_inclusive": {
+        "file": "simulator.py",
+        "line": 216,
+        "function": "safe_plan",
+        "calls": 6505816,
+        "self_seconds": 1.223407837,
+        "cumulative_seconds": 60.632898768000004
+      },
+      "dispatch": {
+        "file": "simulator.py",
+        "line": 369,
+        "function": "dispatch",
+        "calls": 41383,
+        "self_seconds": 3.984735375,
+        "cumulative_seconds": 79.910460524
+      },
+      "timer": {
+        "file": "simulator.py",
+        "line": 362,
+        "function": "trigger_timer",
+        "calls": 41383,
+        "self_seconds": 0.03396159,
+        "cumulative_seconds": 0.05857139
+      },
+      "event_kinds": {
+        "start": 16384,
+        "finish": 16384,
+        "budget_exhausted": 25599,
+        "timer_threshold": 16384,
+        "reservation_issued": 224,
+        "reservation_fulfilled": 224
+      }
+    },
+    {
+      "policy": "SPT-URGENT-FIXED",
+      "profiled_scheduler_seconds": 85.47996190298,
+      "placement": {
+        "file": "placement.py",
+        "line": 28,
+        "function": "plan_first_fit",
+        "calls": 6517498,
+        "self_seconds": 5.513725531,
+        "cumulative_seconds": 57.294993349
+      },
+      "node_slots": {
+        "file": "placement.py",
+        "line": 18,
+        "function": "slots",
+        "calls": 6517743,
+        "self_seconds": 40.847055835,
+        "cumulative_seconds": 42.129658037000006
+      },
+      "sorting": {
+        "file": "simulator.py",
+        "line": 53,
+        "function": "_ordered",
+        "calls": 41383,
+        "self_seconds": 0.030765530000000003,
+        "cumulative_seconds": 13.275216382
+      },
+      "queue_remove": {
+        "file": "~",
+        "line": 0,
+        "function": "<method 'remove' of 'list' objects>",
+        "calls": 17628,
+        "self_seconds": 0.048612687,
+        "cumulative_seconds": 0.048612687
+      },
+      "reservation_future_snapshot": {
+        "file": "simulator.py",
+        "line": 137,
+        "function": "build_reservation",
+        "calls": 224,
+        "self_seconds": 0.15177927900000002,
+        "cumulative_seconds": 0.6361325050000001
+      },
+      "snapshot_hash": {
+        "file": "simulator.py",
+        "line": 63,
+        "function": "_snapshot_hash",
+        "calls": 672,
+        "self_seconds": 0.241734037,
+        "cumulative_seconds": 0.36612310600000003
+      },
+      "safe_plan_inclusive": {
+        "file": "simulator.py",
+        "line": 216,
+        "function": "safe_plan",
+        "calls": 6505816,
+        "self_seconds": 1.464816992,
+        "cumulative_seconds": 62.50277899900001
+      },
+      "dispatch": {
+        "file": "simulator.py",
+        "line": 369,
+        "function": "dispatch",
+        "calls": 41383,
+        "self_seconds": 4.894303959,
+        "cumulative_seconds": 82.95210900100001
+      },
+      "timer": {
+        "file": "simulator.py",
+        "line": 362,
+        "function": "trigger_timer",
+        "calls": 41383,
+        "self_seconds": 0.036030463000000006,
+        "cumulative_seconds": 0.06264016
+      },
+      "event_kinds": {
+        "start": 16384,
+        "finish": 16384,
+        "budget_exhausted": 25599,
+        "timer_threshold": 16384,
+        "reservation_issued": 224,
+        "reservation_fulfilled": 224
+      }
+    },
+    {
+      "policy": "SPT-URGENT-FLEX",
+      "profiled_scheduler_seconds": 81.4129744930251,
+      "placement": {
+        "file": "placement.py",
+        "line": 28,
+        "function": "plan_first_fit",
+        "calls": 6517498,
+        "self_seconds": 5.4739951200000005,
+        "cumulative_seconds": 55.051640679
+      },
+      "node_slots": {
+        "file": "placement.py",
+        "line": 18,
+        "function": "slots",
+        "calls": 6517743,
+        "self_seconds": 39.844796385,
+        "cumulative_seconds": 41.117721683
+      },
+      "sorting": {
+        "file": "simulator.py",
+        "line": 53,
+        "function": "_ordered",
+        "calls": 41383,
+        "self_seconds": 0.029453666000000003,
+        "cumulative_seconds": 12.950753379
+      },
+      "queue_remove": {
+        "file": "~",
+        "line": 0,
+        "function": "<method 'remove' of 'list' objects>",
+        "calls": 17628,
+        "self_seconds": 0.048037411,
+        "cumulative_seconds": 0.048037411
+      },
+      "reservation_future_snapshot": {
+        "file": "simulator.py",
+        "line": 137,
+        "function": "build_reservation",
+        "calls": 224,
+        "self_seconds": 0.147831975,
+        "cumulative_seconds": 0.6225182180000001
+      },
+      "snapshot_hash": {
+        "file": "simulator.py",
+        "line": 63,
+        "function": "_snapshot_hash",
+        "calls": 672,
+        "self_seconds": 0.237051071,
+        "cumulative_seconds": 0.35940766100000004
+      },
+      "safe_plan_inclusive": {
+        "file": "simulator.py",
+        "line": 216,
+        "function": "safe_plan",
+        "calls": 6505816,
+        "self_seconds": 1.211999081,
+        "cumulative_seconds": 59.883549602
+      },
+      "dispatch": {
+        "file": "simulator.py",
+        "line": 369,
+        "function": "dispatch",
+        "calls": 41383,
+        "self_seconds": 3.9998661710000003,
+        "cumulative_seconds": 79.04370927800001
+      },
+      "timer": {
+        "file": "simulator.py",
+        "line": 362,
+        "function": "trigger_timer",
+        "calls": 41383,
+        "self_seconds": 0.034361497000000005,
+        "cumulative_seconds": 0.060389357000000005
+      },
+      "event_kinds": {
+        "start": 16384,
+        "finish": 16384,
+        "budget_exhausted": 25599,
+        "timer_threshold": 16384,
+        "reservation_issued": 224,
+        "reservation_fulfilled": 224
+      }
+    }
+  ],
+  "optimized_32768_flex": {
+    "kind": "m2e_scheduler_profile",
+    "simulator_revision": null,
+    "current_commit": "7d5d26b1ecd79303ca482a35377e7d5817c9c532",
+    "simulator_sha256": "c6cdbcec26722fb395ec2fc877d2dc1f8bad2388e10b18b363df3c1ad453a873",
+    "data_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "configuration": {
+      "jobs": 32768,
+      "policy": "SPT-URGENT-FLEX",
+      "theta_seconds": 604800,
+      "event_mode": "shared-timer",
+      "reservation_k": 200,
+      "placement": "FF-id"
+    },
+    "scheduler_profiled_seconds": 98.0241329309938,
+    "validation_seconds": 7.6484089590085205,
+    "peak_rss_kib": 186164,
+    "cost": {
+      "planner_calls": 16657789,
+      "candidate_checks": 16657789,
+      "current_plan_cache_hits": 16451099,
+      "current_plan_evaluations": 254764,
+      "current_plan_cache_peak_entries": 15,
+      "order_builds": 88376,
+      "bypass_candidate_checks": 16588686,
+      "protected_hol_blocked": 0,
+      "protected_hol_fastpath": 0,
+      "protected_hol_commits": 0,
+      "reservation_calls": 2576,
+      "crossing_accepted": 49,
+      "crossing_rejected": 46694,
+      "certificate_updates": 49,
+      "reservation_rejects": 8169824
+    },
+    "reservations": 2576,
+    "event_count": 185463,
+    "timer_events": 32768,
+    "distinct_decision_times": 88376,
+    "schedule_sha256": "b99dd382822fcda65858dc19857c4a4aab5c8ad40f286daeea44223155d3adea",
+    "events_sha256": "782635ab7ad422ad5ef96466a6a07ffb293170a36012143c35dbc56e0b15f19a",
+    "reservations_sha256": "3b1311a830f49c2f6c02c743ad41a6f7fdf6667d4a926def0e00ab2ec5ad8413",
+    "independent_validation": "PASS",
+    "functions": [
+      {
+        "file": "simulator.py",
+        "line": 98,
+        "function": "simulate_pool",
+        "calls": 1,
+        "self_seconds": 0.9216593040000001,
+        "cumulative_seconds": 98.023119197
+      },
+      {
+        "file": "simulator.py",
+        "line": 402,
+        "function": "dispatch",
+        "calls": 88376,
+        "self_seconds": 15.421329123000001,
+        "cumulative_seconds": 91.854692903
+      },
+      {
+        "file": "simulator.py",
+        "line": 248,
+        "function": "safe_plan",
+        "calls": 16657789,
+        "self_seconds": 3.224419932,
+        "cumulative_seconds": 33.383611153000004
+      },
+      {
+        "file": "simulator.py",
+        "line": 53,
+        "function": "_ordered",
+        "calls": 88376,
+        "self_seconds": 0.051713495000000005,
+        "cumulative_seconds": 30.866594456
+      },
+      {
+        "file": "simulator.py",
+        "line": 166,
+        "function": "current_plan",
+        "calls": 16705863,
+        "self_seconds": 7.809138194000001,
+        "cumulative_seconds": 19.270869753
+      },
+      {
+        "file": "simulator.py",
+        "line": 83,
+        "function": "get",
+        "calls": 16705863,
+        "self_seconds": 3.4915246100000004,
+        "cumulative_seconds": 11.461731559
+      },
+      {
+        "file": "placement.py",
+        "line": 28,
+        "function": "plan_first_fit",
+        "calls": 351012,
+        "self_seconds": 5.90762331,
+        "cumulative_seconds": 9.137123707
+      },
+      {
+        "file": "simulator.py",
+        "line": 169,
+        "function": "build_reservation",
+        "calls": 2576,
+        "self_seconds": 1.9635438470000002,
+        "cumulative_seconds": 7.656014880000001
+      },
+      {
+        "file": "simulator.py",
+        "line": 231,
+        "function": "_future_after_crossing",
+        "calls": 46743,
+        "self_seconds": 0.127369184,
+        "cumulative_seconds": 5.1211147740000005
+      },
+      {
+        "file": "simulator.py",
+        "line": 64,
+        "function": "_snapshot_hash",
+        "calls": 7777,
+        "self_seconds": 2.8527597580000004,
+        "cumulative_seconds": 4.339494517
+      },
+      {
+        "file": "placement.py",
+        "line": 18,
+        "function": "slots",
+        "calls": 351035,
+        "self_seconds": 2.462694559,
+        "cumulative_seconds": 2.566443719
+      },
+      {
+        "file": "simulator.py",
+        "line": 304,
+        "function": "commit",
+        "calls": 32768,
+        "self_seconds": 0.305724086,
+        "cumulative_seconds": 1.4614538650000002
+      },
+      {
+        "file": "placement.py",
+        "line": 80,
+        "function": "apply_plan",
+        "calls": 68752,
+        "self_seconds": 0.798860301,
+        "cumulative_seconds": 1.355812044
+      },
+      {
+        "file": "simulator.py",
+        "line": 58,
+        "function": "_release",
+        "calls": 35984,
+        "self_seconds": 0.19384562600000002,
+        "cumulative_seconds": 1.01798614
+      },
+      {
+        "file": "simulator.py",
+        "line": 448,
+        "function": "<lambda>",
+        "calls": 4310604,
+        "self_seconds": 0.837692297,
+        "cumulative_seconds": 0.837692297
+      },
+      {
+        "file": "simulator.py",
+        "line": 239,
+        "function": "_head_witness_capacity",
+        "calls": 46694,
+        "self_seconds": 0.49702446800000005,
+        "cumulative_seconds": 0.669671475
+      },
+      {
+        "file": "simulator.py",
+        "line": 382,
+        "function": "due_protected",
+        "calls": 2576,
+        "self_seconds": 0.005868779,
+        "cumulative_seconds": 0.6153868730000001
+      },
+      {
+        "file": "simulator.py",
+        "line": 395,
+        "function": "trigger_timer",
+        "calls": 88376,
+        "self_seconds": 0.542357046,
+        "cumulative_seconds": 0.607341196
+      },
+      {
+        "file": "simulator.py",
+        "line": 223,
+        "function": "_resource_delta",
+        "calls": 46792,
+        "self_seconds": 0.092196072,
+        "cumulative_seconds": 0.27017202900000004
+      },
+      {
+        "file": "~",
+        "line": 0,
+        "function": "<method 'remove' of 'list' objects>",
+        "calls": 32768,
+        "self_seconds": 0.145384027,
+        "cumulative_seconds": 0.145384027
+      },
+      {
+        "file": "placement.py",
+        "line": 57,
+        "function": "check_plan",
+        "calls": 32768,
+        "self_seconds": 0.093730227,
+        "cumulative_seconds": 0.13919477500000002
+      },
+      {
+        "file": "simulator.py",
+        "line": 163,
+        "function": "event",
+        "calls": 185463,
+        "self_seconds": 0.093526367,
+        "cumulative_seconds": 0.115646125
+      },
+      {
+        "file": "simulator.py",
+        "line": 94,
+        "function": "invalidate",
+        "calls": 65536,
+        "self_seconds": 0.018560094000000003,
+        "cumulative_seconds": 0.036607115
+      },
+      {
+        "file": "simulator.py",
+        "line": 45,
+        "function": "_priority",
+        "calls": 32768,
+        "self_seconds": 0.012794989000000001,
+        "cumulative_seconds": 0.012794989000000001
+      },
+      {
+        "file": "placement.py",
+        "line": 67,
+        "function": "<genexpr>",
+        "calls": 66166,
+        "self_seconds": 0.012253458,
+        "cumulative_seconds": 0.012253458
+      },
+      {
+        "file": "simulator.py",
+        "line": 511,
+        "function": "<genexpr>",
+        "calls": 200444,
+        "self_seconds": 0.009760956000000001,
+        "cumulative_seconds": 0.009760956000000001
+      },
+      {
+        "file": "missing.py",
+        "line": 718,
+        "function": "remove_na_arraylike",
+        "calls": 2,
+        "self_seconds": 6.844e-06,
+        "cumulative_seconds": 3.5824e-05
+      },
+      {
+        "file": "simulator.py",
+        "line": 515,
+        "function": "report",
+        "calls": 25,
+        "self_seconds": 4.154e-06,
+        "cumulative_seconds": 4.154e-06
+      },
+      {
+        "file": "simulator.py",
+        "line": 38,
+        "function": "canonical_policy",
+        "calls": 1,
+        "self_seconds": 1.057e-06,
+        "cumulative_seconds": 1.057e-06
+      },
+      {
+        "file": "simulator.py",
+        "line": 78,
+        "function": "__init__",
+        "calls": 1,
+        "self_seconds": 1.049e-06,
+        "cumulative_seconds": 1.049e-06
+      }
+    ]
+  },
+  "original_32768_time": {
+    "kind": "m2e_scheduler_profile",
+    "simulator_revision": "8da62ad",
+    "current_commit": "7d5d26b1ecd79303ca482a35377e7d5817c9c532",
+    "simulator_sha256": "ff657bca08110de5835be753eaf705160c865f438d28bf25110f43b7405f3be9",
+    "data_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "configuration": {
+      "jobs": 32768,
+      "policy": "SPT-URGENT-TIME",
+      "theta_seconds": 604800,
+      "event_mode": "shared-timer",
+      "reservation_k": 200,
+      "placement": "FF-id"
+    },
+    "scheduler_profiled_seconds": 344.93793616999756,
+    "validation_seconds": 7.534695178997936,
+    "peak_rss_kib": 160364,
+    "cost": {
+      "planner_calls": 16659638,
+      "candidate_checks": 16659638,
+      "order_builds": 88385,
+      "bypass_candidate_checks": 16590495,
+      "protected_hol_blocked": 0,
+      "protected_hol_fastpath": 0,
+      "protected_hol_commits": 0,
+      "reservation_calls": 2575,
+      "crossing_accepted": 0,
+      "crossing_rejected": 55071,
+      "certificate_updates": 0,
+      "reservation_rejects": 8171673
+    },
+    "reservations": 2575,
+    "event_count": 185421,
+    "timer_events": 32768,
+    "distinct_decision_times": 88385,
+    "schedule_sha256": "5671090c1b95fec76bc6b74e160a3d219640be421f37703db7884eb815e19cb7",
+    "events_sha256": "700e0e1b73c68eb08b13acbdacacd5bce12bd16f34a2e5d7b0c02a07e8195989",
+    "reservations_sha256": "09bab6c712e27b06c6698905f4a0c0e946c948430a9e49e8d52a55371d76bb4e",
+    "independent_validation": "PASS",
+    "functions": [
+      {
+        "file": "simulator.py",
+        "line": 69,
+        "function": "simulate_pool",
+        "calls": 1,
+        "self_seconds": 1.015469191,
+        "cumulative_seconds": 344.937856649
+      },
+      {
+        "file": "simulator.py",
+        "line": 369,
+        "function": "dispatch",
+        "calls": 88385,
+        "self_seconds": 16.884277166,
+        "cumulative_seconds": 338.59075995
+      },
+      {
+        "file": "simulator.py",
+        "line": 216,
+        "function": "safe_plan",
+        "calls": 16659638,
+        "self_seconds": 3.4540162260000002,
+        "cumulative_seconds": 160.050476572
+      },
+      {
+        "file": "simulator.py",
+        "line": 134,
+        "function": "current_plan",
+        "calls": 16707673,
+        "self_seconds": 10.416976612000001,
+        "cumulative_seconds": 157.71015895800002
+      },
+      {
+        "file": "simulator.py",
+        "line": 53,
+        "function": "_ordered",
+        "calls": 88385,
+        "self_seconds": 0.063075042,
+        "cumulative_seconds": 148.80864121500002
+      },
+      {
+        "file": "placement.py",
+        "line": 28,
+        "function": "plan_first_fit",
+        "calls": 16710469,
+        "self_seconds": 15.469977245,
+        "cumulative_seconds": 147.657945567
+      },
+      {
+        "file": "placement.py",
+        "line": 18,
+        "function": "slots",
+        "calls": 16710492,
+        "self_seconds": 105.99264506,
+        "cumulative_seconds": 109.40314444
+      },
+      {
+        "file": "simulator.py",
+        "line": 54,
+        "function": "<lambda>",
+        "calls": 210240860,
+        "self_seconds": 28.386172724,
+        "cumulative_seconds": 101.238597737
+      },
+      {
+        "file": "simulator.py",
+        "line": 45,
+        "function": "_priority",
+        "calls": 210240860,
+        "self_seconds": 72.852425013,
+        "cumulative_seconds": 72.852425013
+      },
+      {
+        "file": "simulator.py",
+        "line": 137,
+        "function": "build_reservation",
+        "calls": 2575,
+        "self_seconds": 1.9454031610000002,
+        "cumulative_seconds": 7.587519342
+      },
+      {
+        "file": "simulator.py",
+        "line": 63,
+        "function": "_snapshot_hash",
+        "calls": 7725,
+        "self_seconds": 2.79918943,
+        "cumulative_seconds": 4.243394627000001
+      },
+      {
+        "file": "simulator.py",
+        "line": 272,
+        "function": "commit",
+        "calls": 32768,
+        "self_seconds": 0.302759755,
+        "cumulative_seconds": 1.4583920400000001
+      },
+      {
+        "file": "placement.py",
+        "line": 80,
+        "function": "apply_plan",
+        "calls": 68736,
+        "self_seconds": 0.808482263,
+        "cumulative_seconds": 1.3954227760000002
+      },
+      {
+        "file": "simulator.py",
+        "line": 57,
+        "function": "_release",
+        "calls": 35968,
+        "self_seconds": 0.195797623,
+        "cumulative_seconds": 1.027010143
+      },
+      {
+        "file": "simulator.py",
+        "line": 415,
+        "function": "<lambda>",
+        "calls": 4343379,
+        "self_seconds": 0.825913611,
+        "cumulative_seconds": 0.825913611
+      },
+      {
+        "file": "simulator.py",
+        "line": 362,
+        "function": "trigger_timer",
+        "calls": 88385,
+        "self_seconds": 0.565135503,
+        "cumulative_seconds": 0.6418731320000001
+      },
+      {
+        "file": "simulator.py",
+        "line": 349,
+        "function": "due_protected",
+        "calls": 2575,
+        "self_seconds": 0.0054852550000000005,
+        "cumulative_seconds": 0.581796251
+      },
+      {
+        "file": "placement.py",
+        "line": 57,
+        "function": "check_plan",
+        "calls": 32768,
+        "self_seconds": 0.10331815700000001,
+        "cumulative_seconds": 0.149939557
+      },
+      {
+        "file": "~",
+        "line": 0,
+        "function": "<method 'remove' of 'list' objects>",
+        "calls": 32768,
+        "self_seconds": 0.145830916,
+        "cumulative_seconds": 0.145830916
+      },
+      {
+        "file": "simulator.py",
+        "line": 131,
+        "function": "event",
+        "calls": 185421,
+        "self_seconds": 0.108725785,
+        "cumulative_seconds": 0.134230667
+      },
+      {
+        "file": "placement.py",
+        "line": 67,
+        "function": "<genexpr>",
+        "calls": 66166,
+        "self_seconds": 0.012410338,
+        "cumulative_seconds": 0.012410338
+      },
+      {
+        "file": "simulator.py",
+        "line": 478,
+        "function": "<genexpr>",
+        "calls": 200564,
+        "self_seconds": 0.010107367,
+        "cumulative_seconds": 0.010107367
+      },
+      {
+        "file": "missing.py",
+        "line": 718,
+        "function": "remove_na_arraylike",
+        "calls": 2,
+        "self_seconds": 6.116e-06,
+        "cumulative_seconds": 3.3525e-05
+      },
+      {
+        "file": "simulator.py",
+        "line": 482,
+        "function": "report",
+        "calls": 25,
+        "self_seconds": 4.643e-06,
+        "cumulative_seconds": 4.643e-06
+      },
+      {
+        "file": "simulator.py",
+        "line": 38,
+        "function": "canonical_policy",
+        "calls": 1,
+        "self_seconds": 1.223e-06,
+        "cumulative_seconds": 1.223e-06
+      }
+    ]
+  },
+  "findings": [
+    "Before: repeated pure current placement dominates all three 16k policies (55.8-57.3s inclusive), ordering ~13s, reservation construction ~0.6s; queue list removal ~0.05s. No crossing on this prefix; no cross-safety cost conclusion from it.",
+    "After: 32k FLEX profile has 49 accepted and 46694 rejected crossings. Ordering 30.9s cumulative remains largest independently named work; safe_plan 33.4s includes cached placement and crossing safety. Reservation construction 7.7s, projected crossing snapshots 5.1s. No additional refactor this round.",
+    "8192/theta4 is mechanism stress ONLY: reservation construction becomes ~6.6-6.9s after optimization. Do not conflate this with theta168h workload.",
+    "Each dispatch corresponds to one event epoch; internal same-timestamp restart after a commit preserves K. Profile counts versus distinct epochs below; no evidence of repeated top-level same-timestamp dispatch."
+  ],
+  "epoch_check": [
+    {
+      "policy": "SPT-URGENT-TIME",
+      "jobs": 32768,
+      "dispatch_calls": 88385,
+      "distinct_decision_times": 88385,
+      "timer_events": 32768,
+      "reservations": 2575
+    },
+    {
+      "policy": "SPT-URGENT-FLEX",
+      "jobs": 32768,
+      "dispatch_calls": 88376,
+      "distinct_decision_times": 88376,
+      "timer_events": 32768,
+      "reservations": 2576
+    }
+  ]
+}

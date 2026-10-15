@@ -1,0 +1,15 @@
+{
+  "status": "GO_SINGLE_TIME_PROBE",
+  "jobs": 65536,
+  "configuration": "Same 7d5d26b core, theta=604800, FF-id, K=200, shared-timer, H=7776000, 900s/4194304KiB",
+  "basis": {
+    "all_10_medium_persisted_replays": "PASS",
+    "official_equivalence": "PASS",
+    "unprofiled_time_16384_before": 64.551199668,
+    "unprofiled_time_16384_after": 10.8,
+    "largest_32768_scheduler_seconds": 74.12,
+    "largest_16384_matching_scheduler_seconds": 11.13
+  },
+  "estimate": "Conservative observed 16k-to-32k FLEX scheduler multiplier 6.66 applied once more: ~494s scheduling; add replay/I/O allowance ~150s. Estimate only, not measured 65k performance.",
+  "stop": "Only one child at a time. Any TIMEOUT/RSS_LIMIT is retained; no raised guardrail or new optimization loop."
+}

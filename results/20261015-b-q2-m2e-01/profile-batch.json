@@ -1,0 +1,162 @@
+[
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/profile_m2e.py",
+      "--jobs",
+      "8192",
+      "--theta-seconds",
+      "4",
+      "--policy",
+      "SPT-URGENT-TIME",
+      "--out",
+      "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-TIME-8da62ad.json",
+      "--revision",
+      "8da62ad"
+    ],
+    "status": "PASS",
+    "elapsed_seconds": 53.88321810399066,
+    "observed_peak_rss_kib": 127124,
+    "stderr": "",
+    "out": "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-TIME-8da62ad.json"
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/profile_m2e.py",
+      "--jobs",
+      "8192",
+      "--theta-seconds",
+      "4",
+      "--policy",
+      "SPT-URGENT-TIME",
+      "--out",
+      "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-TIME-optimized.json"
+    ],
+    "status": "PASS",
+    "elapsed_seconds": 22.744411933002993,
+    "observed_peak_rss_kib": 143136,
+    "stderr": "",
+    "out": "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-TIME-optimized.json"
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/profile_m2e.py",
+      "--jobs",
+      "8192",
+      "--theta-seconds",
+      "4",
+      "--policy",
+      "SPT-URGENT-FIXED",
+      "--out",
+      "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-FIXED-8da62ad.json",
+      "--revision",
+      "8da62ad"
+    ],
+    "status": "PASS",
+    "elapsed_seconds": 54.88808991399128,
+    "observed_peak_rss_kib": 124684,
+    "stderr": "",
+    "out": "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-FIXED-8da62ad.json"
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/profile_m2e.py",
+      "--jobs",
+      "8192",
+      "--theta-seconds",
+      "4",
+      "--policy",
+      "SPT-URGENT-FIXED",
+      "--out",
+      "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-FIXED-optimized.json"
+    ],
+    "status": "PASS",
+    "elapsed_seconds": 24.637113389995648,
+    "observed_peak_rss_kib": 143312,
+    "stderr": "",
+    "out": "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-FIXED-optimized.json"
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/profile_m2e.py",
+      "--jobs",
+      "8192",
+      "--theta-seconds",
+      "4",
+      "--policy",
+      "SPT-URGENT-FLEX",
+      "--out",
+      "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-FLEX-8da62ad.json",
+      "--revision",
+      "8da62ad"
+    ],
+    "status": "PASS",
+    "elapsed_seconds": 53.778181966015836,
+    "observed_peak_rss_kib": 120388,
+    "stderr": "",
+    "out": "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-FLEX-8da62ad.json"
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/profile_m2e.py",
+      "--jobs",
+      "8192",
+      "--theta-seconds",
+      "4",
+      "--policy",
+      "SPT-URGENT-FLEX",
+      "--out",
+      "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-FLEX-optimized.json"
+    ],
+    "status": "PASS",
+    "elapsed_seconds": 26.539909271989018,
+    "observed_peak_rss_kib": 143160,
+    "stderr": "",
+    "out": "results/20261015-b-q2-m2e-01/profile-8192-4-SPT-URGENT-FLEX-optimized.json"
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/profile_m2e.py",
+      "--jobs",
+      "32768",
+      "--theta-seconds",
+      "604800",
+      "--policy",
+      "SPT-URGENT-TIME",
+      "--out",
+      "results/20261015-b-q2-m2e-01/profile-32768-604800-SPT-URGENT-TIME-8da62ad.json",
+      "--revision",
+      "8da62ad"
+    ],
+    "status": "PASS",
+    "elapsed_seconds": 353.156572486012,
+    "observed_peak_rss_kib": 169280,
+    "stderr": "",
+    "out": "results/20261015-b-q2-m2e-01/profile-32768-604800-SPT-URGENT-TIME-8da62ad.json"
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/profile_m2e.py",
+      "--jobs",
+      "32768",
+      "--theta-seconds",
+      "604800",
+      "--policy",
+      "SPT-URGENT-FLEX",
+      "--out",
+      "results/20261015-b-q2-m2e-01/profile-32768-604800-SPT-URGENT-FLEX-optimized.json"
+    ],
+    "status": "PASS",
+    "elapsed_seconds": 106.28220726997824,
+    "observed_peak_rss_kib": 187080,
+    "stderr": "",
+    "out": "results/20261015-b-q2-m2e-01/profile-32768-604800-SPT-URGENT-FLEX-optimized.json"
+  }
+]

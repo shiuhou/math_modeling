@@ -308,3 +308,42 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - 額外 gang-starvation 診斷已加入 `experiments/analyze_gang_starvation.py`，只讀完成的 job-times。SPT-FILL 的短單 worker（n=51,141）mean/p99/max wait=0.043/0.348/2.804h；短多 worker（n=283）=58.652/453.539/915.247h；長多 worker（n=122）=361.813/1509.567/1547.932h。URGENT-HOL 對應為 548.020/1163.483/1172.242h、1042.813/1167.675/1170.860h、905.167/1172.092/1172.427h。跨版本 pair 僅作診斷，未作嚴格策略性能結論。
 - TIME→FIXED→FLEX 配對與 crossing 接納比較 `NOT_AVAILABLE`；沒有兩份完整、同配置 job timing。1350h、完整 111,284-job trace、其餘九策略矩陣均 `NOT_RUN`。正式 manifest：`results/20261015-b-q2-m2d-65536/manifest.json`；三份 timeout benchmark 與 phase log 位於對應 `outputs/q2-m2d-formal-65536-20261015-spt-urgent-*`。
 - 停止判定：M2-D 仍 `INCOMPLETE`，下一步完整 A10 比較 `NO-GO`。最小阻塞是降低已實測 scheduler 成本或取得明確不同的資源護欄；不能把部分完成數據推算成全量結果，也不在本輪啟動新型 scheduler、Q3 或論文改寫。
+
+## 17. M2-E 結果（有界 scheduler 診斷與比較恢復，2026-10-15）
+
+- 基準 `8da62ad4ff5c68d1fb730e04c94cd0492e37614f`；核心等價優化提交 `7d5d26b1ecd79303ca482a35377e7d5817c9c532`。保留第 13–16 節失敗與恢復證據，未覆寫 `_newest`，未修改 Q1/Q3、validator、placement、evaluator 或 protected-HOL fast path。
+- 熱點證據：原 16,384-job、168h 的三個 backfill policy cProfile 顯示 current placement 累計約 55–57s（其中 slots self 約 40–41s），排序約 13s、reservation 建立約 0.6s、list remove 約 0.05s。每次 top-level dispatch 對應一個 event epoch，沒有觀察到同 timestamp 重複呼叫；內部同刻重試仍維持既有 K。完整分類見 `results/20261015-b-q2-m2e-01/hotspots.json`，巢狀 cumulative times 不相加。
+- 最小修補：純 current FF-id plan 依 `(GPU, CPU units, workers)` 快取（含不可行），每次真實 allocation／completion release 均清空；future snapshot／安全檢查／證書不快取。每 job 的完整不可變 priority tuple 只計算一次。沒有改變排序鍵、urgent FIFO、theta、K、R、gang 或 TIME/FIXED/FLEX 接納條件。16k TIME 未插 profiler 的 scheduler 由 64.55s 降至 10.80s（單次量測約 5.98 倍）；不把 profile 與 non-profile 時間混作精確加速比。
+- 等價驗收 PASS：官方 16k 三策略的 starts/finishes/allocations、全部 promises/events 完全相同；官方 32k TIME 與 8192/theta4 三策略的 schedule/event/reservation hash 均相同。8192 機制情景 FIXED/FLEX 各有 5 crossing，不能只用零 crossing 驗等價。45 個 Problem B 測試含九策略、兩種 event mode 的 cached/uncached 完整比較，12 root tests、repo checks 與 diff check PASS。未新增第二套正式 DES。
+- 中等規模主比較：同一 `7d5d26b` core、A10 全原始節點、原始 16,384／32,768 前綴、theta604800、shared-timer、K200、FF-id、H7776000、完整排空；10/10 子程序及持久化 capacity/reservation replay PASS。16k 五策略 schedule 相同，urgent 各 224 promises、crossing=0，不推論 FLEX 無價值。32k FILL/HOL/TIME/FIXED/FLEX mean wait 分別為 15.380/98.054/65.657/65.630/65.588h，reservation=0/6846/2575/2579/2576，crossing=0/0/0/30/49；scheduler=31.13/41.33/62.14/68.95/74.12s，峰值 RSS 約 315–376 MiB。
+- 32k 配對：TIME→FIXED 改善 2481、惡化 140，mean delta=-0.02726h；TIME→FLEX 改善 3269、惡化 107，mean delta=-0.06921h，兩者原零等待新增延遲均 0。但 Max wait 由 TIME587.678h 升至 FIXED588.706h／FLEX591.661h，不能宣稱全面優勢。
+- gang 機制：32k 短單 worker n=25662、短多 worker n=31、長多 worker n=35。FILL 三組 mean=0.030/41.288/118.662h；HOL=91.980/348.231/439.230h；TIME=50.753/305.925/438.310h。FIXED/FLEX 對短多 worker 幾乎無改善，長多 worker 略惡化。僅支持本前綴／探索性168h 的阻塞代價診斷，不作一般因果或最優性結論，不引用 Claude 原型數字。
+- 65,536 恢復：中型正確性與等價成本證據支持先單獨 TIME 探針（`expansion-decision.json`）；TIME 實測 475.77s、peak819220KiB、19415 promises，持久化 replay PASS，故依 `expansion-followup.json` 逐一執行其餘四策略，仍每 child900s／4GiB。其餘四策略均完成，五策略持久化獨立 replay 全 PASS；完整 A10 仍未執行。
+- 正式入口：`results/20261015-b-q2-m2e-01/manifest.json`、`commands.sh`、`comparison-16384.json`／`comparison-32768.json`、`pairs-32768.json`；完整 timing、allocation、schema2 events/promises 與 paired 明細壓縮保存在同目錄 `evidence-*.tar.gz`，`archives.json` 記 SHA256 並逐 archive member byte 驗證，不只留 ignored outputs。
+- 完整111284-job A10／1350h第二門檻／九策略矩陣 NOT_RUN；不提高成本護欄、不實作 Mice Lane/RL/LP、不改論文性能結論。
+
+### 17.1 65,536-job 同版本恢復結果
+
+- 五策略均採相同 `7d5d26b` core 和官方輸入／契約，全部子程序在原900s／4GiB內排空，並由持久化檔案獨立重播 PASS。以下 waiting 單位為小時，allocation 為90天窗口的分配率，非 demand；完成數也固定90天窗口。
+
+|策略|Mean / P95 / P99 / Max wait h|90天完成|GPU / CPU allocation|reservations / crossing / updates|scheduler / validator / I/O s|peak MiB|
+|---|---|---|---|---|---|---|
+|SPT-URGENT-TIME|350.528/1142.534/1160.951/1172.021|59030|0.999568/0.192678|19415/0/0|419.26/53.10/2.86|800.0|
+|SPT-URGENT-FIXED|350.088/1142.474/1160.939/1172.027|59046|0.999569/0.192678|19419/62/62|449.50/53.51/2.96|795.3|
+|SPT-URGENT-FLEX|349.715/1142.399/1160.881/1172.027|59069|0.999570/0.192678|19424/133/133|480.99/51.88/2.83|796.4|
+|SPT-FILL|31.042/61.662/1254.218/1860.190|63403|0.988490/0.180874|0/0/0|71.56/1.78/2.12|545.2|
+|SPT-URGENT-HOL|556.492/1153.620/1164.255/1172.427|54649|0.999338/0.192659|38253/0/0|317.32/99.14/2.98|893.0|
+
+- TIME 配對：SPT-URGENT-FIXED mean delta -0.43923h，改善9504／惡化10096／原零等待新增延遲8；SPT-URGENT-FLEX mean delta -0.81254h，改善14207／惡化8207／原零等待新增延遲11；完整尾部、長作業與各群組配對見 `comparison-65536.json` 和 `pairs-65536.json`，不以平均值取代尾部代價。
+
+|策略|短單 worker n / Mean / P99 / Max h|短多 worker n / Mean / P99 / Max h|長多 worker n / Mean / P99 / Max h|
+|---|---|---|---|
+|SPT-URGENT-TIME|51141/284.482/1159.869/1172.021|283/987.748/1161.407/1170.358|122/904.851/1171.863/1171.913|
+|SPT-URGENT-FIXED|51141/283.919/1159.714/1172.027|283/987.768/1161.436/1170.365|122/904.856/1171.868/1171.913|
+|SPT-URGENT-FLEX|51141/283.408/1159.559/1172.027|283/993.538/1161.429/1170.365|122/904.856/1171.869/1171.913|
+|SPT-FILL|51141/0.043/0.348/2.804|283/58.652/453.539/915.247|122/361.813/1509.567/1547.932|
+|SPT-URGENT-HOL|51141/548.020/1163.483/1172.242|283/1042.813/1167.676/1170.860|122/905.167/1172.092/1172.427|
+
+- 本輪中型與65,536核心五策略比較 COMPLETE/PASS；EASY-NR、其他強基線、第二門檻與111,284-job全量 NOT_RUN，原M2-D完整研究仍 INCOMPLETE。65,536規模 GO 已獲實測支持；下一步完整 A10 多策略矩陣目前 NO-GO（未證明全量900s成本，65k→全量不作線性保證）。下一個最小工作為另行授權的單策略全量成本門檻探針，或先以已驗證65k做方法取捨；本輪不啟動。
+
+- 方法取捨：本設定 TIME 相較 HOL 改善 38,700 個作業且無配對惡化；但相較 FILL 平均等待更高。FIXED/FLEX 雖真實接納62/133個crossing，平均等待只比TIME改善約0.125%/0.232%，新增受損作業10096/8207、原零等待新增延遲8/11，故目前不推薦以性能優勢為由取代TIME作預設。這不否定其安全正確性，也不外推至其他theta或完整trace。
