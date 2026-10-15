@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "kind": "q2_m2f_bounds_and_gap_decomposition",
+  "status": "PASS",
+  "configuration": {
+    "jobs": 65536,
+    "gpu_model": "A10",
+    "capacity_gpu": 2494,
+    "source_schedule_theta_seconds": 604800,
+    "source_schedule_event_mode": "shared-timer",
+    "source_schedule_reservation_k": 200,
+    "source_schedule_placement": "first-fit ascending node_name",
+    "source_schedule_horizon_seconds": 7776000,
+    "lower_bound_time_unit": "integer seconds"
+  },
+  "data": {
+    "source_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+    "prefix_rule": "read_data sorted jobs; A10 filter; head(65536)"
+  },
+  "archive": {
+    "path": "results/20261015-b-q2-m2e-01/evidence-65536.tar.gz",
+    "sha256": "989c875a04ef20dd39731a71fcb789108b58a84cff307cee1a23c59c91f7effa",
+    "comparison_path": "results/20261015-b-q2-m2e-01/comparison-65536.json",
+    "comparison_sha256": "5abd12d4d4e07f25f6bde067013fa1e2d4089de21513138314c4d994a4294123",
+    "m2e_manifest": "results/20261015-b-q2-m2e-01/manifest.json",
+    "m2e_manifest_sha256": "3dec1e61425211b302c5b763bc3032dce41b77f1d27997bc0301e6b74079dcd2"
+  },
+  "analysis_code": {
+    "git": {
+      "commit": "cd9c0398eaff72ee7d9ac905fba39394cebb0f9e",
+      "dirty": true,
+      "status_entries": [
+        "?? problems/2026_gpu_scheduling/experiments/analyze_m2f_bounds.py",
+        "?? problems/2026_gpu_scheduling/tests/test_q2_bounds.py"
+      ]
+    },
+    "source_sha256": {
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "c6cdbcec26722fb395ec2fc877d2dc1f8bad2388e10b18b363df3c1ad453a873",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": "2efefa2ea01f8632d4eeaeae9449918acb751a043e5d9734cef6e81246962af5",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py": "ec39507f869fbbf63a4d57cb488ad9d63f0e2a4c9d62c51a6d971d437da4f6be",
+      "problems/2026_gpu_scheduling/experiments/analyze_m2f_bounds.py": "d543af7575fc3512fde702e67834aee754b7e1c3455557bcd1d7063494679e49"
+    }
+  },
+  "lower_bound": {
+    "capacity_gpu": 2494,
+    "job_count": 65536,
+    "event_records": 131072,
+    "event_timestamps": 121253,
+    "integration_intervals": 121252,
+    "integral_q_job_seconds": 5878938330,
+    "lower_bound_mean_hours": 24.918188858032227,
+    "peak_q_jobs": 1483,
+    "q_positive_seconds": 6151723,
+    "width_histogram": {
+      "1": 65131,
+      "2": 164,
+      "3": 64,
+      "4": 51,
+      "5": 22,
+      "6": 7,
+      "7": 4,
+      "8": 67,
+      "9": 2,
+      "11": 1,
+      "16": 20,
+      "32": 3
+    },
+    "integral_end_seconds": 15897599
+  },
+  "input_validation": {
+    "SPT-FILL": {
+      "jobs": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "input_match": true,
+      "timing_member": {
+        "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "fa01c0c7d8a1204fcae26fca2ad03a1e0215d17b01c4ba2e46668e2e860fd21d",
+        "row_count": 65536
+      }
+    },
+    "SPT-URGENT-HOL": {
+      "jobs": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "input_match": true,
+      "timing_member": {
+        "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-urgent-hol/SPT-URGENT-HOL_job_times.csv.gz",
+        "compressed_sha256": "103a483ccb1c2913e5005f4d65aa25c5ed1339afac51f777f26ced84cdff9039",
+        "row_count": 65536
+      }
+    },
+    "SPT-URGENT-TIME": {
+      "jobs": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "input_match": true,
+      "timing_member": {
+        "member": "outputs/q2-m2e-recovery-65536-time-20261015/a10-65536-theta604800-spt-urgent-time/SPT-URGENT-TIME_job_times.csv.gz",
+        "compressed_sha256": "058ce4e05129603d8dc51c93a894a5b19f2f539bb144a637f406fa4e68853b7c",
+        "row_count": 65536
+      }
+    },
+    "SPT-URGENT-FIXED": {
+      "jobs": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "input_match": true,
+      "timing_member": {
+        "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-urgent-fixed/SPT-URGENT-FIXED_job_times.csv.gz",
+        "compressed_sha256": "fcf20bd731f740a71c7bcdb04ccd8912bb2b5b333469fc2dfef34b6fa48382af",
+        "row_count": 65536
+      }
+    },
+    "SPT-URGENT-FLEX": {
+      "jobs": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "input_match": true,
+      "timing_member": {
+        "member": "outputs/q2-m2e-recovery-65536-remaining-20261015/a10-65536-theta604800-spt-urgent-flex/SPT-URGENT-FLEX_job_times.csv.gz",
+        "compressed_sha256": "3c07f9eb334b5a90cccb7ea8c495b1f5abdd04a6c02d798aff46ee6fc5fa91e3",
+        "row_count": 65536
+      }
+    }
+  },
+  "decomposition": {
+    "SPT-FILL": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 7323657388,
+      "mean_wait_hours": 31.041706458197698,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 7101451527,
+      "within_window_gap_job_seconds": 1222513197,
+      "within_window_gap_hours": 5.18168638865153,
+      "beyond_duration_wait_job_seconds": 222205861,
+      "beyond_duration_wait_hours": 0.9418312115139431,
+      "decomposition_sum_job_seconds": 7323657388,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 1.2457448908126239,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.802732571792994,
+        "within_window_gap": 0.1669265958567531,
+        "beyond_duration_wait": 0.03034083235025303
+      },
+      "w_greater_than_p_count": 13749,
+      "w_greater_than_p_fraction": 0.2097930908203125,
+      "w_equal_p_count": 329,
+      "w_zero_count": 4761,
+      "wait_max_seconds": 6696684
+    },
+    "SPT-URGENT-HOL": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 131292962157,
+      "mean_wait_hours": 556.4921152623494,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 8463534207,
+      "within_window_gap_job_seconds": 2584595877,
+      "within_window_gap_hours": 10.954945360819499,
+      "beyond_duration_wait_job_seconds": 122829427950,
+      "beyond_duration_wait_hours": 520.6189810434977,
+      "decomposition_sum_job_seconds": 131292962157,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 22.33276737859572,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.044777254114885236,
+        "within_window_gap": 0.01968571532348659,
+        "beyond_duration_wait": 0.9355370305616281
+      },
+      "w_greater_than_p_count": 46171,
+      "w_greater_than_p_fraction": 0.7045135498046875,
+      "w_equal_p_count": 268,
+      "w_zero_count": 4395,
+      "wait_max_seconds": 4220738
+    },
+    "SPT-URGENT-TIME": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 82699860521,
+      "mean_wait_hours": 350.5277019966973,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 8461075110,
+      "within_window_gap_job_seconds": 2582136780,
+      "within_window_gap_hours": 10.944522349039714,
+      "beyond_duration_wait_job_seconds": 74238785411,
+      "beyond_duration_wait_hours": 314.6649907896254,
+      "decomposition_sum_job_seconds": 82699860521,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 14.067142038042096,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.07108764504514684,
+        "within_window_gap": 0.031222988330727803,
+        "beyond_duration_wait": 0.8976893666241254
+      },
+      "w_greater_than_p_count": 45501,
+      "w_greater_than_p_fraction": 0.6942901611328125,
+      "w_equal_p_count": 272,
+      "w_zero_count": 4440,
+      "wait_max_seconds": 4219277
+    },
+    "SPT-URGENT-FIXED": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 82596232272,
+      "mean_wait_hours": 350.0884682210286,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 8461072088,
+      "within_window_gap_job_seconds": 2582133758,
+      "within_window_gap_hours": 10.944509540134007,
+      "beyond_duration_wait_job_seconds": 74135160184,
+      "beyond_duration_wait_hours": 314.2257698228624,
+      "decomposition_sum_job_seconds": 82596232272,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 14.04951500350234,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.07117683420037735,
+        "within_window_gap": 0.0312621252443659,
+        "beyond_duration_wait": 0.8975610405552568
+      },
+      "w_greater_than_p_count": 45503,
+      "w_greater_than_p_fraction": 0.6943206787109375,
+      "w_equal_p_count": 271,
+      "w_zero_count": 4437,
+      "wait_max_seconds": 4219299
+    },
+    "SPT-URGENT-FLEX": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 82508158846,
+      "mean_wait_hours": 349.71516437954375,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 8461068958,
+      "within_window_gap_job_seconds": 2582130628,
+      "within_window_gap_hours": 10.944496273464626,
+      "beyond_duration_wait_job_seconds": 74047089888,
+      "beyond_duration_wait_hours": 313.85247924804685,
+      "decomposition_sum_job_seconds": 82508158846,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 14.034533824749273,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.07125281199127147,
+        "within_window_gap": 0.03129545809911357,
+        "beyond_duration_wait": 0.8974517299096149
+      },
+      "w_greater_than_p_count": 45510,
+      "w_greater_than_p_fraction": 0.694427490234375,
+      "w_equal_p_count": 270,
+      "w_zero_count": 4443,
+      "wait_max_seconds": 4219299
+    }
+  },
+  "execution": {
+    "seconds": 4.181726938986685,
+    "peak_rss_kib": 705096,
+    "python": "3.12.3",
+    "dependencies": {
+      "numpy": "2.3.5",
+      "pandas": "2.2.3"
+    }
+  },
+  "interpretation": {
+    "bound_scope": "GPU-capacity relaxation; ignores CPU packing, node shape, gang placement, HOL and policy rules",
+    "decomposition_scope": "exact integer accounting for these non-preemptive persisted timings",
+    "causal_warning": "within-window gap is not an attributable or necessarily eliminable policy loss"
+  },
+  "verification": {
+    "status": "PASS",
+    "checks": "checks.json",
+    "small_oracle_tests": "PASS (6; m2f-oracle-tests.log)",
+    "problem_b_regression": "PASS (51)",
+    "root_tests": "PASS (12)",
+    "repo_check": "PASS",
+    "diff_check": "PASS",
+    "scheduler_rerun": "NOT_RUN",
+    "reservation_replay_rerun": "NOT_RUN; M2-E persisted replay PASS retained"
+  }
+}

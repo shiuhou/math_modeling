@@ -347,3 +347,42 @@ Codex 本輪完成回覆控制在：修改與未改範圍、實際命令及驗�
 - 本輪中型與65,536核心五策略比較 COMPLETE/PASS；EASY-NR、其他強基線、第二門檻與111,284-job全量 NOT_RUN，原M2-D完整研究仍 INCOMPLETE。65,536規模 GO 已獲實測支持；下一步完整 A10 多策略矩陣目前 NO-GO（未證明全量900s成本，65k→全量不作線性保證）。下一個最小工作為另行授權的單策略全量成本門檻探針，或先以已驗證65k做方法取捨；本輪不啟動。
 
 - 方法取捨：本設定 TIME 相較 HOL 改善 38,700 個作業且無配對惡化；但相較 FILL 平均等待更高。FIXED/FLEX 雖真實接納62/133個crossing，平均等待只比TIME改善約0.125%/0.232%，新增受損作業10096/8207、原零等待新增延遲8/11，故目前不推薦以性能優勢為由取代TIME作預設。這不否定其安全正確性，也不外推至其他theta或完整trace。
+
+## 18. M2-F 結果（Job-count lower bound 與 exact gap decomposition，2026-10-15）
+
+- 本輪基準為 `cd9c0398eaff72ee7d9ac905fba39394cebb0f9e`；只新增獨立 read-only 分析入口 `experiments/analyze_m2f_bounds.py`、`test_q2_bounds.py` 及新結果目錄，未修改 `simulator.py`、`placement.py`、`validation.py`、既有 evaluator、Q1/Q3 或 M2-E 證據。Claude 歸檔只作推導交叉閱讀；其 job CSV hash 為 `735bc06...`，與正式 `ef14d696...` 不同，沒有執行或移植原型程式。
+- 使用正式 `read_data()` 後的 A10 `head(65536)` 前綴，2,494 張 GPU；五份 M2-E timing archive 均恰有 65,536 個唯一 job ID，集合 hash `ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142`，所有 `submit_time/duration/worker_num/gpu_request/cpu_request/gpu_model` 逐 ID 相同，`start>=submit_time` 且 `finish=start+duration`。M2-E comparison 的五個 Mean Waiting 全部精確核對，輸入驗證 PASS。
+
+### 18.1 數學下界
+
+令 `Z(t)={j:r_j<=t<r_j+p_j}`，令 `S(t)` 為實際在服務的作業集合。因為排程合法且同一時刻 GPU 總需求不超過 `C`，`S(t)` 是 `Z(t)` 的一個子集，且其 GPU 寬度總和不超過 `C`。`q(t)` 定義為從 `Z(t)` 刪除最少作業後使剩餘寬度總和不超過 `C` 的刪除數，因此每個 `t` 至少有 `q(t)` 個 `Z(t)` 作業不在服務中。
+
+對非搶占作業，作業 `j` 在 `[r_j,r_j+p_j)` 不在服務的時間長度正好是 `min(W_j,p_j)`：若 `W_j<p_j`，它在提交後等待 `W_j` 秒；若 `W_j>=p_j`，整個原始時長窗口都未服務。因此
+
+`Σ_j min(W_j,p_j) >= ∫q(t)dt`，而 `min(W_j,p_j)<=W_j`，遂得 `Σ_j W_j >= ∫q(t)dt`。除以 `3600N` 即得 `L_count`。這是只放鬆到 GPU 容量的合法下界，沒有處理 CPU 打包、節點形狀、gang 同步、HOL 或保護規則。
+
+工具以整數秒事件掃描 `[r_j,r_j+p_j)`；同刻先結束上一區間再套用到達／完成事件，使用 GPU 寬度直方圖按寬度升序保留最多作業，不使用網格近似。結果為：`∫q(t)dt = 5,878,938,330` job-seconds，`L_count = 24.9181888580 h`，`peak q=1,483`，`q>0` 持續 `6,151,723 s`，`121,253` 個事件時間戳、`121,252` 個積分區間，積分終點 `15,897,599 s`。
+
+### 18.2 五策略精確分解
+
+使用 `W_j=min(W_j,p_j)+max(W_j-p_j,0)`，定義 `Within-window Gap = Σmin(W,p)-∫q`、`Beyond-duration Waiting = Σmax(W-p,0)`。所有總和先用整數 job-seconds 計算，三項相加 residual 均為 0，五策略的 Within-window Gap 均非負。
+
+| Policy | Mean Waiting h | Capacity LB h | Within-window Gap h | Beyond-duration h | Mean/LB | W>p |
+|---|---:|---:|---:|---:|---:|---:|
+| SPT-FILL | 31.041706 | 24.918189 | 5.181686 | 0.941831 | 1.245745 | 13,749 (20.98%) |
+| SPT-URGENT-HOL | 556.492115 | 24.918189 | 10.954945 | 520.618981 | 22.332767 | 46,171 (70.45%) |
+| SPT-URGENT-TIME | 350.527702 | 24.918189 | 10.944522 | 314.664991 | 14.067142 | 45,501 (69.43%) |
+| SPT-URGENT-FIXED | 350.088468 | 24.918189 | 10.944510 | 314.225770 | 14.049515 | 45,503 (69.43%) |
+| SPT-URGENT-FLEX | 349.715164 | 24.918189 | 10.944496 | 313.852479 | 14.034534 | 45,510 (69.44%) |
+
+SPT-FILL 最接近這個容量鬆弛下界。HOL、TIME、FIXED、FLEX 的平均等待主要由 beyond-duration 記帳項構成（占 Mean 分別 93.55%、89.77%、89.76%、89.75%）；這反映等待超過自身原始時長的數值規模，不把它解讀成唯一可消除的因果損失。TIME→FIXED→FLEX 的平均改善主要表現在 beyond-duration 項下降約 `0.439221 h` 與 `0.812512 h`，within-window gap 只下降約 `0.000013 h` 與 `0.000026 h`；共同 Capacity LB 完全不變。這與 M2-E 中 crossing=62/133 且存在配對受損作業的結果一致，但分解本身不能證明 crossing 的因果機制或普遍優越性。
+
+下界與分解只能回答每一策略距離同一 GPU 容量標尺多遠；它們不能處理節點級可行性、CPU／gang 形狀、urgent FIFO，也不能證明某一策略最優。P99／Max 的尾部取捨及短多 worker 的公平性仍以 M2-E 逐作業證據為準。
+
+### 18.3 M2-F 驗收與產物
+
+- 小型半開區間／寬度直方圖／gang／W>p／正 gap／輸入不一致 oracle：6 tests PASS。
+- 五策略正式 timing 輸入核對：PASS；下界事件積分：PASS；五策略分解 residual=0 且 Within-window Gap 均非負：PASS。
+- 分析耗時約 4.2 s，peak RSS 約 705,096 KiB；沒有重新執行 scheduler。
+- 正式產物：`results/20261015-b-q2-m2f-01/manifest.json`、`lower_bound.json`、`gap_decomposition.json`、`input_validation.json`、`commands.sh`。M2-E `evidence-65536.tar.gz` 與既有結果未覆寫。
+- M2-F 狀態：**PASS / GO**，可作為 Q2 論文的理論標尺與描述性分解；須明確標示它是 GPU 容量鬆弛下界，不是最優排程值或可消除等待份額。未啟動新 scheduler、全量 111,284 trace、1350h、Q3 或參數搜尋。

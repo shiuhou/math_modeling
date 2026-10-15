@@ -1,0 +1,131 @@
+{
+  "status": "PASS",
+  "capacity_lower_bound_hours": 24.918188858032227,
+  "policies": {
+    "SPT-FILL": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 7323657388,
+      "mean_wait_hours": 31.041706458197698,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 7101451527,
+      "within_window_gap_job_seconds": 1222513197,
+      "within_window_gap_hours": 5.18168638865153,
+      "beyond_duration_wait_job_seconds": 222205861,
+      "beyond_duration_wait_hours": 0.9418312115139431,
+      "decomposition_sum_job_seconds": 7323657388,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 1.2457448908126239,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.802732571792994,
+        "within_window_gap": 0.1669265958567531,
+        "beyond_duration_wait": 0.03034083235025303
+      },
+      "w_greater_than_p_count": 13749,
+      "w_greater_than_p_fraction": 0.2097930908203125,
+      "w_equal_p_count": 329,
+      "w_zero_count": 4761,
+      "wait_max_seconds": 6696684
+    },
+    "SPT-URGENT-HOL": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 131292962157,
+      "mean_wait_hours": 556.4921152623494,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 8463534207,
+      "within_window_gap_job_seconds": 2584595877,
+      "within_window_gap_hours": 10.954945360819499,
+      "beyond_duration_wait_job_seconds": 122829427950,
+      "beyond_duration_wait_hours": 520.6189810434977,
+      "decomposition_sum_job_seconds": 131292962157,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 22.33276737859572,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.044777254114885236,
+        "within_window_gap": 0.01968571532348659,
+        "beyond_duration_wait": 0.9355370305616281
+      },
+      "w_greater_than_p_count": 46171,
+      "w_greater_than_p_fraction": 0.7045135498046875,
+      "w_equal_p_count": 268,
+      "w_zero_count": 4395,
+      "wait_max_seconds": 4220738
+    },
+    "SPT-URGENT-TIME": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 82699860521,
+      "mean_wait_hours": 350.5277019966973,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 8461075110,
+      "within_window_gap_job_seconds": 2582136780,
+      "within_window_gap_hours": 10.944522349039714,
+      "beyond_duration_wait_job_seconds": 74238785411,
+      "beyond_duration_wait_hours": 314.6649907896254,
+      "decomposition_sum_job_seconds": 82699860521,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 14.067142038042096,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.07108764504514684,
+        "within_window_gap": 0.031222988330727803,
+        "beyond_duration_wait": 0.8976893666241254
+      },
+      "w_greater_than_p_count": 45501,
+      "w_greater_than_p_fraction": 0.6942901611328125,
+      "w_equal_p_count": 272,
+      "w_zero_count": 4440,
+      "wait_max_seconds": 4219277
+    },
+    "SPT-URGENT-FIXED": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 82596232272,
+      "mean_wait_hours": 350.0884682210286,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 8461072088,
+      "within_window_gap_job_seconds": 2582133758,
+      "within_window_gap_hours": 10.944509540134007,
+      "beyond_duration_wait_job_seconds": 74135160184,
+      "beyond_duration_wait_hours": 314.2257698228624,
+      "decomposition_sum_job_seconds": 82596232272,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 14.04951500350234,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.07117683420037735,
+        "within_window_gap": 0.0312621252443659,
+        "beyond_duration_wait": 0.8975610405552568
+      },
+      "w_greater_than_p_count": 45503,
+      "w_greater_than_p_fraction": 0.6943206787109375,
+      "w_equal_p_count": 271,
+      "w_zero_count": 4437,
+      "wait_max_seconds": 4219299
+    },
+    "SPT-URGENT-FLEX": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 82508158846,
+      "mean_wait_hours": 349.71516437954375,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 8461068958,
+      "within_window_gap_job_seconds": 2582130628,
+      "within_window_gap_hours": 10.944496273464626,
+      "beyond_duration_wait_job_seconds": 74047089888,
+      "beyond_duration_wait_hours": 313.85247924804685,
+      "decomposition_sum_job_seconds": 82508158846,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 14.034533824749273,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.07125281199127147,
+        "within_window_gap": 0.03129545809911357,
+        "beyond_duration_wait": 0.8974517299096149
+      },
+      "w_greater_than_p_count": 45510,
+      "w_greater_than_p_fraction": 0.694427490234375,
+      "w_equal_p_count": 270,
+      "w_zero_count": 4443,
+      "wait_max_seconds": 4219299
+    }
+  }
+}
