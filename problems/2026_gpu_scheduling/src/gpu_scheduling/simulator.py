@@ -50,8 +50,9 @@ def _priority(j: int, policy: str, arr, dur, workers, reqg) -> tuple:
     return (int(dur[j]), int(arr[j]), int(j))
 
 
-def _ordered(wait: Iterable[int], policy: str, arr, dur, workers, reqg) -> list[int]:
-    return sorted(wait, key=lambda j: _priority(j, policy, arr, dur, workers, reqg))
+def _ordered(wait: Iterable[int], policy: str, arr, dur, workers, reqg, priorities=None) -> list[int]:
+    key = priorities.__getitem__ if priorities is not None else lambda j: _priority(j, policy, arr, dur, workers, reqg)
+    return sorted(wait, key=key)
 
 
 def _release(free_g, free_c, cap_g, cap_c, job, plan, reqg, reqc) -> None:
@@ -64,6 +65,34 @@ def _snapshot_hash(gpu, cpu) -> str:
     """Stable integrity digest for compact completed reservation evidence."""
     payload = {"gpu": [int(x) for x in gpu], "cpu": [int(x) for x in cpu]}
     return hashlib.sha256(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
+
+
+class _CurrentPlacementCache:
+    """Memoize pure FF-id plans for one unchanged current resource state.
+
+    Demand, rather than job ID/duration, determines current placement. Both
+    successful and unsuccessful plans are reusable until ANY allocation or
+    release. Reservation projections/certificates never use this cache.
+    """
+
+    def __init__(self, free_g, free_c):
+        self.free_g, self.free_c = free_g, free_c
+        self.plans: dict[tuple[int, int, int], PlacementPlan | None] = {}
+        self.hits = self.misses = self.peak_entries = 0
+
+    def get(self, q: int, c: int, workers: int) -> PlacementPlan | None:
+        key = (q, c, workers)
+        if key in self.plans:
+            self.hits += 1
+            return self.plans[key]
+        self.misses += 1
+        plan = plan_first_fit(self.free_g, self.free_c, q, c, workers)
+        self.plans[key] = plan
+        self.peak_entries = max(self.peak_entries, len(self.plans))
+        return plan
+
+    def invalidate(self) -> None:
+        self.plans.clear()
 
 
 def simulate_pool(
@@ -100,6 +129,8 @@ def simulate_pool(
     reqg = jobs.gpu_request.to_numpy(dtype=np.int64)
     reqc = jobs.cpu_units.to_numpy(dtype=np.int64)
     workers = jobs.worker_num.to_numpy(dtype=np.int64)
+    # The complete ordering key is immutable for the lifetime of a job.
+    priorities = [_priority(j, policy, arr, dur, workers, reqg) for j in range(n)]
     capg = nodes.gpu_capacity_num.to_numpy(dtype=np.int64)
     capc = nodes.cpu_units.to_numpy(dtype=np.int64)
     for q, c, w in jobs[["gpu_request", "cpu_units", "worker_num"]].drop_duplicates().itertuples(index=False, name=None):
@@ -107,6 +138,7 @@ def simulate_pool(
             raise ValueError("Job infeasible on an empty pool; no jobs were dropped")
 
     free_g, free_c = capg.copy(), capc.copy()
+    placement_cache = _CurrentPlacementCache(free_g, free_c)
     starts = np.full(n, -1, dtype=np.int64)
     ends = np.full(n, -1, dtype=np.int64)
     plans: list[list[tuple[int, int]] | None] = [None] * n
@@ -132,7 +164,7 @@ def simulate_pool(
         events.append({"time": int(t), "kind": kind, **extra})
 
     def current_plan(j: int) -> PlacementPlan | None:
-        return plan_first_fit(free_g, free_c, int(reqg[j]), int(reqc[j]), int(workers[j]))
+        return placement_cache.get(int(reqg[j]), int(reqc[j]), int(workers[j]))
 
     def build_reservation(protected: int, now: int) -> bool:
         nonlocal reservation, state_version
@@ -276,6 +308,7 @@ def simulate_pool(
             raise AssertionError("stale placement proposal")
         check_plan(free_g, free_c, int(reqg[j]), int(reqc[j]), plan, int(workers[j]))
         apply_plan(free_g, free_c, int(reqg[j]), int(reqc[j]), plan, sign=-1)
+        placement_cache.invalidate()
         starts[j], ends[j] = int(now), int(now + dur[j])
         stored = [(int(m), int(w)) for m, w in plan.nodes]
         plans[j] = stored
@@ -402,7 +435,7 @@ def simulate_pool(
         # therefore stable; rebuilding it after every successful start was a
         # dominant cost on large queues.  ``waiting_members`` is maintained by
         # commit(), so filtering preserves the exact old relative order.
-        ordered_base = _ordered(waiting, policy, arr, dur, workers, reqg)
+        ordered_base = _ordered(waiting, policy, arr, dur, workers, reqg, priorities)
         order_builds += 1
         while waiting:
             peak_queue = max(peak_queue, len(waiting))
@@ -504,6 +537,7 @@ def simulate_pool(
                 continue
             _, plan = running.pop(j)
             _release(free_g, free_c, capg, capc, j, plan, reqg, reqc)
+            placement_cache.invalidate()
             finished += 1
             event("finish", t, job=int(j))
         while arrivals < n and int(arr[arrivals]) == t:
@@ -544,6 +578,9 @@ def simulate_pool(
         "reservation_evidence_schema_version": 2,
         "reservations": reservations, "events": events,
         "cost": {"planner_calls": int(decisions), "candidate_checks": int(decisions),
+                 "current_plan_cache_hits": int(placement_cache.hits),
+                 "current_plan_evaluations": int(placement_cache.misses),
+                 "current_plan_cache_peak_entries": int(placement_cache.peak_entries),
                  "order_builds": int(order_builds),
                  "bypass_candidate_checks": int(bypass_checks_total),
                  "protected_hol_blocked": int(protected_hol_blocked),
