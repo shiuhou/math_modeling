@@ -66,3 +66,11 @@ GO 只適用於把這組受控結果納入 Q3 條件性敏感性分析；不能�
 本輪只修出版層，無新增情景、排程或模擬。修訂版為 [Q3-S3 r3](../../results/20261016-b-q3-s3-publication-9ac1d7f2-r3/README.md)。M0 對 S0 的平均 finish delta 由既有 S0−M0 配對證據反向重算；對稱平均差與改善／惡化數互換，正延遲總量、分位數與 zero-wait 新延遲不直接取負，缺欄位以 `null`／狀態標示。生成器回歸確認 M0/S0 群體分母一致、finish delta 等於群體平均 JCT 差。
 
 LaTeX 生成器改為可獨立編譯的 11pt 文件，移除 `scriptsize`，修正表格資料列雙反斜線、`node_name` 轉義與 `W_j`／`\omega_j` 符號。內建編譯工具曾回傳 fragment 缺少 preamble 的診斷；加入 preamble 後請求未回傳完成 PDF，本地亦無 tectonic/xelatex/pdflatex，因此 manifest 保留 `NOT_RUN`，不宣稱編譯或逐頁檢查通過。大型證據跨機交付仍獨立為 `BLOCKED`，未重跑實驗。
+
+## Q3-S3 出版分母修訂（2026-10-16）
+
+本輪以 `79e93c315f006d67f743b14a1d7faf16b00dd072` 為基準，只修出版層，`new_scheduling_runs=0`；S1/S2 結果與 manifest、`q3.simulate`、共用 DES、原始 CSV、Q1 成果均未修改。唯一交付為 [Q3-S3 r4](../../results/20261016-b-q3-s3-publication-9ac1d7f2-r4/README.md)。
+
+生成器從 persisted S4 與 S0 schedule 逐 job 配對，將 native A100 全體分母與正等待差分受損子群分開保存。S4−S0：FCFS 全體 80,877、受損 5,735、全體均值 0.077111426 h、受損均值 1.087452630 h、正延遲總量 6236.540833 job-hours；SJF-HOL 全體 80,877、受損 2,150、全體均值 0.018491695 h、受損均值 0.695605943 h、正延遲總量 1495.552778 job-hours。全體 P99 與受損子群 P99 均各自標示群體與 S4−S0 基線。
+
+正文補入 S0／SJF-HOL 相對 M0 的 49,772 個較晚完成 A10、4,397 個原零等待新增等待、68,183.1825 positive completion-delay job-hours，以及 A10 waiting P95 `11.086875 → 12.690806` h；同時保留 S2／FCFS 高 Max waiting 與 S3／FCFS 平均等待劣於 M0 的負面結果。英文正文 fragment 與 `q3_section_preview.tex` wrapper 由同一生成器產生。內建編譯器無法解析 sibling project files，未取得 PDF，狀態為 `NOT_RUN`；跨機大型證據為 `BLOCKED`。

@@ -1,0 +1,38 @@
+{
+  "new_scheduling_runs": 0,
+  "source_json_loaded": true,
+  "paper_ready_rows": 14,
+  "policies": [
+    "FCFS",
+    "SJF-HOL"
+  ],
+  "scenarios": [
+    "M0",
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5"
+  ],
+  "numeric_source_single": true,
+  "english_chinese_generated_from_same_rows": true,
+  "tex_required_sections": true,
+  "fragment_has_no_document_wrapper": true,
+  "fragment_has_no_local_font_redefinition": true,
+  "preview_wrapper_has_document_wrapper": true,
+  "preview_wrapper_separate": true,
+  "preview_input_and_figure_declared": true,
+  "paired_regressions": true,
+  "reverse_uncomputed_asymmetric_fields_explicit": true,
+  "table_rows_end_with_two_backslashes": true,
+  "node_name_escaped": true,
+  "worker_wait_symbols_separated": true,
+  "native_s4_denominators_explicit": true,
+  "native_s4_quantile_populations_explicit": true,
+  "s0_sjf_hol_harmed_evidence": true,
+  "no_static_relocation_claim": true,
+  "latex_compiler": "NOT_RUN: built-in compiler could not resolve sibling q3_section.tex; no PDF returned",
+  "cross_machine_evidence": "BLOCKED: no authorized shared storage was available",
+  "elapsed_seconds": 2.2357633629872
+}

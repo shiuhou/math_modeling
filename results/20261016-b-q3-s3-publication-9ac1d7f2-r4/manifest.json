@@ -1,0 +1,126 @@
+{
+  "schema_version": 2,
+  "kind": "q3_s3_publication_revision",
+  "status": "PASS",
+  "experiment_id": "20261016-b-q3-s3-publication-9ac1d7f2-r4",
+  "purpose": "denominator-corrected Q3 body and reproducible publication package; no scheduling rerun",
+  "base_commit": "79e93c315f006d67f743b14a1d7faf16b00dd072",
+  "new_scheduling_runs": 0,
+  "revised_from": "results/20261016-b-q3-s3-publication-9ac1d7f2-r3",
+  "protected_scope": {
+    "s1_s2_results_and_manifests_unchanged": true,
+    "q3_simulate_unchanged": true,
+    "shared_des_unchanged": true,
+    "raw_csv_unchanged": true,
+    "q1_unchanged": true,
+    "q2_merged": false,
+    "main_modified": false
+  },
+  "denominator_revision": {
+    "comparison": "S4 minus S0",
+    "harmed_definition": "positive waiting delta only",
+    "statistics": {
+      "FCFS": {
+        "native_s4_all_n": 80877,
+        "native_s4_harmed_n": 5735,
+        "native_s4_mean_delta_wait_all_hours": 0.07711142640470509,
+        "native_s4_mean_delta_wait_harmed_hours": 1.0874526300494043,
+        "native_s4_positive_extra_wait_hours": 6236.5408333333335,
+        "native_s4_p95_delta_wait_all_hours": 0.4234999999999976,
+        "native_s4_p99_delta_wait_all_hours": 2.074777777777785,
+        "native_s4_p95_delta_wait_harmed_hours": 3.204583333333334,
+        "native_s4_p99_delta_wait_harmed_hours": 4.099277777777762,
+        "native_s4_max_delta_wait_harmed_hours": 6.185555555555555
+      },
+      "SJF-HOL": {
+        "native_s4_all_n": 80877,
+        "native_s4_harmed_n": 2150,
+        "native_s4_mean_delta_wait_all_hours": 0.01849169452103537,
+        "native_s4_mean_delta_wait_harmed_hours": 0.6956059431524547,
+        "native_s4_positive_extra_wait_hours": 1495.5527777777777,
+        "native_s4_p95_delta_wait_all_hours": 0.0,
+        "native_s4_p99_delta_wait_all_hours": 0.40562222222222366,
+        "native_s4_p95_delta_wait_harmed_hours": 3.3757916666666645,
+        "native_s4_p99_delta_wait_harmed_hours": 6.07295277777777,
+        "native_s4_max_delta_wait_harmed_hours": 7.9719444444444445
+      }
+    },
+    "schedule_sources": {
+      "FCFS": {
+        "s4": {
+          "path": "outputs/b-q3-s2-fixed-split-v1/S4_FCFS/jobs.csv.gz",
+          "sha256": "5e0827ced269771c026f7d92d96530f75c8b17ddbba443ceb0daa45aea00d113"
+        },
+        "s0": {
+          "path": "outputs/b-q3-fixed-split-v1-final/FCFS_M1_jobs.csv.gz",
+          "sha256": "d996d7912ad5c92048946af22eb9b3dff69b0efa4ee9a4a59c0a652dc8cef77d"
+        }
+      },
+      "SJF-HOL": {
+        "s4": {
+          "path": "outputs/b-q3-s2-fixed-split-v1/S4_SJF-HOL/jobs.csv.gz",
+          "sha256": "2f6a658a0d8db2a2c2a6df657500874bd3bdc930dbb102a4b1f0f2e415e1f520"
+        },
+        "s0": {
+          "path": "outputs/b-q3-fixed-split-v1-final/SJF-HOL_M1_jobs.csv.gz",
+          "sha256": "eb84592e486db524254757373ecb1ed9133d91b4c15847a2d61b3e29446b1133"
+        }
+      }
+    }
+  },
+  "validation": {
+    "generator_checks": "PASS: publication_checks.json",
+    "repo_checks": "PASS: python3 scripts/check_repo.py (122 files)",
+    "root_tests": "PASS: python3 -m unittest discover -s tests -v (12 tests)",
+    "problem_b_tests": "PASS: PYTHONPATH=... .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v (43 tests)",
+    "diff_check": "PASS: git diff --check",
+    "latex_compiler": "NOT_RUN: built-in compiler could not resolve sibling q3_section.tex; no PDF returned",
+    "page_by_page_inspection": "NOT_RUN: no PDF",
+    "cross_machine_evidence": "BLOCKED: no authorized shared storage"
+  },
+  "generator": {
+    "path": "problems/2026_gpu_scheduling/experiments/make_q3_publication.py",
+    "sha256": "1cd4d089e04e164490f2f918f3a5eca7ef154387f34ec8bf3c375714ce7ec5ad",
+    "git_commit_at_execution": "79e93c315f006d67f743b14a1d7faf16b00dd072",
+    "new_scheduling_runs": 0
+  },
+  "files": {
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/README.md": "9e3447c9c1df7ec631552686e2a67899e645f9c1c6002afa6bc377ef39a88cbd",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/paper_ready_metrics.csv": "8911677036374eaef7016227f0031951a575d13bb348ee1f8ccc7b3b07dd2331",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/paper_ready_metrics.json": "2e53d345d6e0f282622e1f8a119bb385c2963bb78c47982e4fc98ea6a8506fb2",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/publication_checks.json": "9e5f79980f0918592bfadde6a401c811da6919d82e07fb0236ebe8583314f623",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/publication_errata.md": "edde6acd14bb2c43d546c810e7fa404f22d1433ebb375a48930dd45b00531dbc",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/q3_claim_sources.json": "5fe2444dec2ee7ebe668149ba462d0223482e25ece1cf09c757dee98c2d430e9",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/q3_donor_capacity_wait_tradeoff.png": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/q3_s3_main_table.tex": "f303e28e81cf2c7133a098e8fb0df2607137f4467d73cdc78409f382b0fb9459",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/q3_section.tex": "e8a4fca5d1ede1744a4f0e4fd62e7c71ce70f380a533f31f9fbb2d531bbb409e",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/q3_section_preview.tex": "0e53d938f218fea1bd0c074cf462b6d772051863501a993cc9fd0ae489829a16",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/q3_section_zh.html": "4178f3c276d14051f34d4011a7bd4ac8e355f1ebc816dd2309ff9dc18c0c5528"
+  },
+  "paper_files": {
+    "problems/2026_gpu_scheduling/paper/q3_section.tex": "e8a4fca5d1ede1744a4f0e4fd62e7c71ce70f380a533f31f9fbb2d531bbb409e",
+    "problems/2026_gpu_scheduling/paper/q3_section_preview.tex": "0e53d938f218fea1bd0c074cf462b6d772051863501a993cc9fd0ae489829a16",
+    "problems/2026_gpu_scheduling/paper/q3_section_zh.html": "4178f3c276d14051f34d4011a7bd4ac8e355f1ebc816dd2309ff9dc18c0c5528",
+    "problems/2026_gpu_scheduling/paper/q3_s3_main_table.tex": "f303e28e81cf2c7133a098e8fb0df2607137f4467d73cdc78409f382b0fb9459",
+    "problems/2026_gpu_scheduling/paper/figures/q3_donor_capacity_wait_tradeoff.png": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6"
+  },
+  "limitations": [
+    "compatibility and sigma are assumptions, not hardware benchmarks",
+    "no dynamic sharing/MIG/migration/pricing/RL",
+    "no Q2 x Q3 joint schedule",
+    "cross-machine evidence BLOCKED",
+    "no completed LaTeX PDF or page inspection"
+  ],
+  "inputs": {
+    "S1_metrics": "results/20261015-b-q3-fixed-split-c9e8f1a2/metrics.json",
+    "S1_metrics_sha256": "bccc58ab91c33b150499062e9c802331692de43ef1382ccde81d55fac58ec10b",
+    "S1_manifest": "results/20261015-b-q3-fixed-split-c9e8f1a2/manifest.json",
+    "S1_manifest_sha256": "e7faada6dede25eb1712e2c18d8e0d007b24811682caea4093dc4f870fd0a3a5",
+    "S2_sensitivity_metrics": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+    "S2_sensitivity_metrics_sha256": "f40415f478528878edfa31cc497e92258c54e84e2ce5c3504ee68282007d9d47",
+    "S2_manifest": "results/20261015-b-q3-s2-fixed-split-v1/manifest.json",
+    "S2_manifest_sha256": "a621ff9efb99438a19eab7b98b0de3aa28a58c20d7e5c5ee5e3add1fa606957f",
+    "r3_manifest": "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/manifest.json",
+    "r3_manifest_sha256": "6ecc8dcb31dca2af4261b8927aa0d61edb617a5c82634dc4bd5e140f08ea53ac"
+  }
+}

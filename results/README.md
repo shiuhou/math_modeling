@@ -51,3 +51,5 @@
 ## Q3-S3 出版勘誤修訂版
 
 [Q3-S3 r3 修訂交付](20261016-b-q3-s3-publication-9ac1d7f2-r3/README.md) 修正 M0/S0 反向 paired evidence、缺欄位語義與 LaTeX 生成；沒有新增排程。舊 S1/S2 結果與 manifest 不變。內建編譯請求未回傳完成 PDF，且 worktree 無本地 LaTeX 編譯器，因此狀態保留 `NOT_RUN`，逐頁檢查也保留 `NOT_RUN`。
+
+[Q3-S3 r4 分母修訂交付](20261016-b-q3-s3-publication-9ac1d7f2-r4/README.md) 只修正文生成器與出版數據。S4／90 台的 native A100 全體與正差分受損子群分母、平均新增等待、正延遲總量及群體分位數分開保存；S0／SJF-HOL 相對 M0 的 49,772、4,397、68,183.1825 job-hours 與 P95 變化納入正文。英文正文是 fragment，獨立 wrapper 為 `q3_section_preview.tex`；S1/S2 結果與 manifest 不變。內建編譯因隔離環境無法解析 sibling project files，狀態保留 `NOT_RUN`，跨機大型證據保留 `BLOCKED`。

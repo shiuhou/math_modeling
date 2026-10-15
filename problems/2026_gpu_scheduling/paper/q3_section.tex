@@ -1,22 +1,10 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[margin=0.8in]{geometry}
-\usepackage{amsmath,amssymb,booktabs,graphicx,caption}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\setlength{\tabcolsep}{2.5pt}
-\begin{document}
-\begingroup
-\renewcommand{\normalsize}{\fontsize{11.1pt}{13.3pt}\selectfont}
-\normalsize
 \section{Question 3: Fixed-Split Cross-GPU Substitution}
 \label{sec:q3}
 
 \subsection{Model and assumptions}
 We study a finite, whole-card, pre-start substitution policy on the supplied trace of 224,112 jobs. Job $j$ has native GPU model $n_j$, actual execution model $m_j$, duration $p_j$, worker count $W_j$, per-worker GPU request $g_j$, and per-worker CPU request $c_j$. A compatibility indicator $K_{jm}$ and multiplier $\sigma_{jm}$ are declared scenario assumptions; they are not measured hardware facts. For the only foreign edge in this study, A10 jobs may execute on A100-SXM4-80GB and
 \begin{equation}
- p'_j=\sigma_{jm}p_j,
- \qquad f_j=s_j+p'_j,
- \qquad \omega_j=s_j-a_j.
+ p'_j=\sigma_{jm}p_j,\qquad f_j=s_j+p'_j,\qquad \omega_j=s_j-a_j.
 \end{equation}
 The fixed partition reserves the first $B$ A100 nodes in ascending $\texttt{node\_name}$ order for routed A10 jobs and leaves the other A100 nodes for native A100 jobs. Each worker's CPU and GPU remain on one physical node, all workers of a job start together, jobs are non-preemptive and non-migrating, and no resource may be used twice. At every node $i$ and time $t$,
 \begin{equation}
@@ -41,9 +29,13 @@ We report worker count $W_j$ separately from waiting $\omega_j=s_j-a_j$, actual 
 \subsection{Benefit, native-pool cost and sensitivity}
 With $\sigma=1$, S0 reduces A10 mean waiting from 900.129 to 587.875 hours under FCFS (34.7\% relative to M0) and from 32.906 to 20.534 hours under SJF-HOL (37.6\%). Cluster-wide mean JCT changes from 523.961 to 368.910 hours for FCFS and from 93.353 to 87.209 hours for SJF-HOL. The native A100 mean and P99 waiting costs are zero in S0 on this trace; this is a trace result, not an SLA.
 
+Under S0, SJF-HOL versus M0 makes 49,772 A10 jobs finish later, gives 4,397 jobs that had zero M0 waiting a new delay, and has 68183.1825 positive completion-delay job-hours. Its A10 waiting P95 changes from 11.086875 to 12.690806 hours. These are S0-minus-M0 paired quantities; the harmed-job denominator is not used for the all-job P95.
+
+For the 90-node S4 point, the native denominator is separated explicitly. FCFS has 80,877 native A100 jobs in the full population, of which 5,735 have positive S4-minus-S0 waiting; the corresponding SJF-HOL counts are 80,877 and 2,150. The all-native mean additional waits are 0.077111 and 0.018492 hours (FCFS/SJF-HOL), whereas the harmed-subgroup means are 1.087453 and 0.695606 hours. Positive additional-wait totals are 6236.5408 and 1495.5528 job-hours. The all-native P99 values are 2.074778 and 0.405622 hours; harmed-subgroup P99 values, computed only from positive-delta jobs, are 4.099278 and 6.072953 hours. Every value in this paragraph is S4 minus S0, with its population stated.
+
 More routing is not uniformly better. At 60 donor nodes, FCFS A10 mean waiting is 702.551, 587.875, and 1010.136 hours at 5\%, 10\%, and 20\%. The 20\% case is worse than both 10\% and M0. SJF-HOL gives 25.328, 20.534, and 22.058 hours, while its P99 tail and 90-day completion count move differently. These are finite fixed-split observations; they do not establish monotonicity for another trace or a dynamic policy.
 
-At 10\% routing and $\sigma=1$, increasing donors from 30 to 60 to 90 lowers A10 mean waiting for both policies, but 90 nodes creates native A100 harm: 5,735 FCFS jobs and 2,150 SJF-HOL jobs wait longer than in S0. Their mean additional waits are 0.0771 and 0.0185 hours, respectively. The 90-node point remains in the trade-off table rather than being discarded.
+At 10\% routing and $\sigma=1$, increasing donors from 30 to 60 to 90 lowers A10 mean waiting for both policies, but 90 nodes creates the native costs reported above. A compact tail check retains the negative cases: S2 FCFS (20\% routing, 60 donors) reaches A10 maximum waiting 5445.367 hours, while S3 FCFS (10\%, 30 donors) has mean waiting 916.407 hours, worse than M0's 900.129 hours.
 
 \begin{figure}[!ht]
 \centering
@@ -58,5 +50,3 @@ For $\sigma=2$, the effective duration of routed A10 jobs doubles and SJF-HOL is
 If the policy requirement is zero additional native A100 waiting on this trace, 60 nodes at 10\% is a tested candidate for either policy; it is not a proven maximum safe capacity or a global optimum. If a small native cost is acceptable, 90 nodes supplies an additional point on the A10--native trade-off. SJF-HOL's lower mean waiting does not remove its tail and completion-fairness losses; all harmed-job counts and positive delay totals remain in the paired evidence.
 
 Compatibility and $\sigma$ are assumptions without an A10/A100 performance matrix. Allocation rates are request occupancy, not measured utilization; GPU-hours across models are not interchangeable compute or monetary units. The experiment adds no physical GPUs, does not implement dynamic sharing, MIG, pricing, RL, migration, or Q2\,$\times$\,Q3 scheduling, and does not prove heuristic optimality. Q1's A10 lower bound is not transferred to substituted schedules. The conclusion is therefore conditional on the declared trace, partitions, hash rule, policy, and duration scenarios.
-\par\endgroup
-\end{document}
