@@ -6,4 +6,4 @@ env -u PYTHONHOME -u PYTHONPATH PYTHONPATH=problems/2026_gpu_scheduling/src .ven
 # G2/G3: same command with jobs 111284, policy/output respectively SPT-HOL/q2-m2g-g2-111284-20261016-spt-hol and SPT-FILL/q2-m2g-g3-111284-20261016-spt-fill.
 # Independent replay: verify_m2a_pressure.py --data problems/2026_gpu_scheduling/data/raw --run <child-output> --out <run>-verified.json
 # Lower bound/decomposition: analyze_m2f_bounds.py --timing-dir <child-output> --jobs <count> --policies <policy> --comparison /tmp/q2-m2g-empty.json --out results/<per-run>
-# Comparison assembly: analyze_m2g.py --archive results/20261015-b-q2-m2e-01/evidence-65536.tar.gz --g1-timing <g1-child> --g2-timing <g2-child> --g3-timing <g3-child> --out results/20261016-b-q2-m2g-01
+# Comparison assembly: analyze_m2g.py --archive results/20261015-b-q2-m2e-01/evidence-65536.tar.gz --g1-timing <g1-child> --g2-timing <g2-child> --g3-timing <g3-child> --g1-decomposition <g1-decomp> --g2-decomposition <g2-decomp> --g3-decomposition <g3-decomp> --out results/20261016-b-q2-m2g-01

@@ -15,6 +15,7 @@ import hashlib
 import io
 import json
 import tarfile
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 import numpy as np
@@ -40,6 +41,16 @@ def id_hash(ids: set[int]) -> str:
     return hashlib.sha256(("\n".join(map(str, sorted(ids))) + "\n").encode()).hexdigest()
 
 
+def cpu_units(value: str) -> int:
+    try:
+        scaled = Decimal(str(value)) * 100
+    except InvalidOperation as exc:
+        raise ValueError(f"invalid cpu_request {value!r}") from exc
+    if scaled != scaled.to_integral_value():
+        raise ValueError(f"cpu_request is not representable in hundredths: {value}")
+    return int(scaled)
+
+
 def parse_csv(blob: bytes, source: str) -> dict[int, dict]:
     with gzip.GzipFile(fileobj=io.BytesIO(blob)) as f:
         text = f.read().decode("utf-8")
@@ -61,6 +72,7 @@ def parse_csv(blob: bytes, source: str) -> dict[int, dict]:
             "job_name": jid, "gpu_model": row["gpu_model"],
             "submit_time": submit, "duration": duration,
             "worker_num": int(row["worker_num"]), "gpu_request": int(row["gpu_request"]),
+            "cpu_units": cpu_units(row["cpu_request"]),
             "start": start, "finish": finish,
             "wait": start - submit, "jct": finish - submit,
         }
@@ -100,7 +112,8 @@ def validate_raw(rows: dict[int, dict], raw) -> dict:
                   (row["submit_time"], int(r.submit_time), "submit_time"),
                   (row["duration"], int(r.duration), "duration"),
                   (row["worker_num"], int(r.worker_num), "worker_num"),
-                  (row["gpu_request"], int(r.gpu_request), "gpu_request"))
+                  (row["gpu_request"], int(r.gpu_request), "gpu_request"),
+                  (row["cpu_units"], int(r.cpu_units), "cpu_request"))
         for got, want, name in checks:
             if got != want:
                 raise ValueError(f"job {jid} input mismatch in {name}")
@@ -146,8 +159,8 @@ def groups(rows: dict[int, dict]) -> dict:
 def pair(base: dict[int, dict], candidate: dict[int, dict]) -> dict:
     if set(base) != set(candidate):
         raise ValueError("paired timing sets differ")
-    if any((base[j]["submit_time"], base[j]["duration"], base[j]["worker_num"], base[j]["gpu_request"]) !=
-           (candidate[j]["submit_time"], candidate[j]["duration"], candidate[j]["worker_num"], candidate[j]["gpu_request"])
+    if any((base[j]["submit_time"], base[j]["duration"], base[j]["worker_num"], base[j]["gpu_request"], base[j]["cpu_units"]) !=
+           (candidate[j]["submit_time"], candidate[j]["duration"], candidate[j]["worker_num"], candidate[j]["gpu_request"], candidate[j]["cpu_units"])
            for j in base):
         raise ValueError("paired timing inputs differ")
     delta = np.asarray([candidate[j]["wait"] - base[j]["wait"] for j in sorted(base)], dtype=np.int64)
@@ -208,10 +221,10 @@ def run(args):
     full_validation["FULL-SPT-FILL"] = validate_raw(current["FULL-SPT-FILL"], raw)
     decomp_root = root / "results/20261015-b-q2-m2f-01/gap_decomposition.json"
     old_decomp = json.loads(decomp_root.read_text())["policies"]
-    g1_decomp = json.loads((root / "results/20261016-b-q2-m2g-g1-01/gap_decomposition.json").read_text())["policies"]["SPT-HOL"]
+    g1_decomp = json.loads(Path(args.g1_decomposition).resolve().read_text())["policies"]["SPT-HOL"]
     full_decomp = {
-        "FULL-SPT-HOL": json.loads((root / "results/20261016-b-q2-m2g-g2-01/gap_decomposition.json").read_text())["policies"]["SPT-HOL"],
-        "FULL-SPT-FILL": json.loads((root / "results/20261016-b-q2-m2g-g3-01/gap_decomposition.json").read_text())["policies"]["SPT-FILL"],
+        "FULL-SPT-HOL": json.loads(Path(args.g2_decomposition).resolve().read_text())["policies"]["SPT-HOL"],
+        "FULL-SPT-FILL": json.loads(Path(args.g3_decomposition).resolve().read_text())["policies"]["SPT-FILL"],
     }
     def row(policy, rows, summary, decomp):
         m = metrics(rows, summary)
@@ -254,6 +267,9 @@ def main():
     p.add_argument("--g1-timing", required=True)
     p.add_argument("--g2-timing", required=True)
     p.add_argument("--g3-timing", required=True)
+    p.add_argument("--g1-decomposition", required=True)
+    p.add_argument("--g2-decomposition", required=True)
+    p.add_argument("--g3-decomposition", required=True)
     p.add_argument("--out", type=Path, required=True)
     args = p.parse_args()
     print(json.dumps(run(args), indent=2, ensure_ascii=False))
