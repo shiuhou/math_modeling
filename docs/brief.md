@@ -11,7 +11,7 @@
 | 工程 | 一個活動 DES、共享 loader／evaluator、獨立 ledger replay；原 scripts 逐 byte inert 歸檔 |
 | Q1 | feat/b-q1：唯一英文章節、繁中對照、正文／補充圖與獨立交付；數值沿用 39 統計／九表，最終狀態見 [Q1 任務](../notes/tasks/b-q1.md) |
 | Q2 基線 | PASS：FCFS／嚴格 SJF-HOL 全 trace 各 224,112 jobs，節點容量及持久化 metrics 核查；改進算法 NOT_RUN |
-| Q3 | 研究材料已納入；技術／金融實驗 NOT_RUN，耦合 donor／相容性驗證 BLOCKED |
+| Q3 | 固定分流 pilot：60 完整 A100 節點、全 trace 10% SHA256 分流、假設 sigma=1；M0 恢復／M1 帳本與反事實核查 PASS，見 [Q3 任務](../notes/tasks/b-q3.md)；相容性與性能 benchmark 未驗證 |
 | 論文 | 跨章 Q1 量綱／需求語義已修正；Q2/Q3 性能數字保留為未驗證歷史主張；編譯與排版狀態見整合驗收，不代表可提交 |
 | 協作 | 各自在自己的電腦 clone；Q2/Q3 研究分支由同一整合提交建立。分工及 reviewer 待確認 |
 | 資料／環境 | raw 保持不變、依賴固定；歷史 job byte 不同的原因未知；公開再散布範圍及全隊正式硬體待確認 |
@@ -28,3 +28,5 @@
 - 目前人員分工未指定，不把分支名當成已認領；不同電腦的 Codex 對話與本機 outputs 不會自動同步。
 
 實際驗收與剩餘缺口見 [整合任務](../notes/tasks/b-intake.md)；正式證據按 [results 約定](../results/README.md) 保存。根目錄工程測試不證明模型正確，基線 PASS 不證明舊改進器／Q3 性能成立。使用者最新要求優先提供 Q2/Q3 開工基礎，本輪不測試或重構舊算法。
+
+Q3 本輪以 disjoint physical partitions 包裝既有 `simulate_pool`，沒有變更共享 DES／loader／evaluator 接口；[正式模型與來源採納表](../problems/2026_gpu_scheduling/docs/q3_model.md) 明示 K、sigma、B、native donor cost 及固定分流。GO 僅表示可進小型敏感性研究，不證明真實硬體可相容或所有作業受益。Q2 分支未整合。

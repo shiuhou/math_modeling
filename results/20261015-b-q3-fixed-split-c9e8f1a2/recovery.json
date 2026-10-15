@@ -1,0 +1,10 @@
+{
+  "FCFS/B0": "PASS: exact all-job start/finish and physical placement",
+  "FCFS/K_disabled": "PASS: exact all-job start/finish and physical placement",
+  "FCFS/historical_normalized_schedule": "PASS",
+  "FCFS/historical_metrics_H7775878": "PASS",
+  "SJF-HOL/B0": "PASS: exact all-job start/finish and physical placement",
+  "SJF-HOL/K_disabled": "PASS: exact all-job start/finish and physical placement",
+  "SJF-HOL/historical_normalized_schedule": "PASS",
+  "SJF-HOL/historical_metrics_H7775878": "PASS"
+}

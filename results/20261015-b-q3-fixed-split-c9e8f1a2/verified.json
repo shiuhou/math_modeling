@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "checks": {
+    "FCFS/M0": {
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 317241,
+        "donor_nodes": 0,
+        "borrowed_gpu_cap": 0,
+        "queue_integral_job_seconds": 360617234543,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": {
+        "status": "PASS",
+        "method": "independent aggregation from persisted job records and physical capacities"
+      }
+    },
+    "FCFS/M1": {
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 317102,
+        "donor_nodes": 60,
+        "borrowed_gpu_cap": 480,
+        "queue_integral_job_seconds": 235521487793,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": {
+        "status": "PASS",
+        "method": "independent aggregation from persisted job records and physical capacities"
+      }
+    },
+    "FCFS/paired": {
+      "status": "PASS",
+      "method": "original job ID pairing"
+    },
+    "SJF-HOL/M0": {
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 316107,
+        "donor_nodes": 0,
+        "borrowed_gpu_cap": 0,
+        "queue_integral_job_seconds": 13200824967,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": {
+        "status": "PASS",
+        "method": "independent aggregation from persisted job records and physical capacities"
+      }
+    },
+    "SJF-HOL/M1": {
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 315939,
+        "donor_nodes": 60,
+        "borrowed_gpu_cap": 480,
+        "queue_integral_job_seconds": 8244035157,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": {
+        "status": "PASS",
+        "method": "independent aggregation from persisted job records and physical capacities"
+      }
+    },
+    "SJF-HOL/paired": {
+      "status": "PASS",
+      "method": "original job ID pairing"
+    }
+  },
+  "seconds": 55.70475776298554,
+  "sensitivity_decision": "GO for predeclared small single-factor study; no performance superiority requirement"
+}

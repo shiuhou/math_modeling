@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261015-b-q3-fixed-split-c9e8f1a2",
+  "question_or_claim": "Q3 fixed whole-card pre-start substitution: physical feasibility and complete paired counterfactual under assumed compatibility/sigma",
+  "code": {
+    "commit": "7075317883808b1cd7f80cadf3980be291c69cf0",
+    "dirty": true,
+    "snapshot": "delivery ZIP run/source/ and repository/",
+    "sha256": "run.json:source_sha256"
+  },
+  "data": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "configuration": {
+    "donor_nodes": 60,
+    "route_numerator": 1,
+    "route_denominator": 10,
+    "compatibility": true,
+    "sigma": 1,
+    "horizon_seconds": 7776000,
+    "hash_namespace": "q3-fixed-split-v1"
+  },
+  "validation": {
+    "status": "PASS",
+    "scope": "full original trace, both policies, physical node replay and independent metrics",
+    "evidence": "verified.json",
+    "engineering": "engineering_checks.json",
+    "source_snapshot_matches_current": "PASS",
+    "protected_Q1_and_shared_sources": "PASS: protected_sources.json",
+    "bundle_source_reproduction": "PASS: fresh clone + archive overlay; 14 Q3 tests and tiny CLI roundtrip"
+  },
+  "results": {
+    "README.md": "27c50fa21cf8a089de0d9c68ace04e73c1bdfa90c040f53880680b4e79586ab1",
+    "archive_check.json": "0c1b1284d2af9e39fdf23669fe8c18d6b2f0ce002ff94a3fdd2361ce5aef4f52",
+    "b-q3-final-run.log": "1f90b6f855daabe291ef79be484c0e9dd0113fda20cf7479a8bc632d0eb621ea",
+    "b-q3-final-verification.log": "bea378a38dbf975ddeeb3fe89496e13c1c645415efed7948b0fcd9ffcb3a09ef",
+    "bundle_reproduction.json": "3df20a54026285ad85898065c885c2a4b7a12572588ef73114bcb500d4d69ac7",
+    "bundle_reproduction.log": "491b5c5680029dc38a665a970f13c5f6137220583b1c1b95de797986530ad815",
+    "config.json": "cdce724b8bf028cb67b2850f34a00dd6ac41d53de4d20ad83faeb85b4269d65f",
+    "diff_check.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engineering_checks.json": "bfb7a26576cca3522ecd91e26f828462cd5246d415b507c56c27fd9b5cc65df0",
+    "metrics.json": "bccc58ab91c33b150499062e9c802331692de43ef1382ccde81d55fac58ec10b",
+    "problem_tests.log": "c3fe5693831bd4909565dd269d5d3ed91c3e41cdab891822f6c2e623797cd218",
+    "protected_sources.json": "b52c014eefb1922d782593d5b6d1f4709347f1c11a1843de740a03fc9f00fb55",
+    "recovery.json": "5cd4adeec4e485a9ce444cb1462d0ce7876b735d673d9ce5fb90ea40d1ad677a",
+    "repo_check.log": "e0729a0e88d68dc22289702e6e02f0269a67ac42f3d3e7a4fd0651a96f89e599",
+    "root_tests.log": "da779567eaa9a818219ae3bf52f5f607e352d7d8f9a4d9aa7e46413584ea238b",
+    "run.json": "313ce6aea4827910358cb65ee78640c2d028c3d40619b760acd3586136646279",
+    "sources.json": "9ca6257747a5a846d364422f70f807fe0b43f5026aa94e50c5a7a6509eb4236f",
+    "verified.json": "32ed177b91ef050dad11e303d1f883cfebb1d85cb7cd687a28e02f8ef8ce67ed"
+  },
+  "delivery": {
+    "status": "PASS",
+    "file": "outputs/Q3_fixed_split_v1_delivery.zip",
+    "bytes": 23132824,
+    "sha256": "714a59c8addeecc47e91c6b40dbd1c3a76e3e0c7eccb45676daedf87b1cf5c3d",
+    "contents": "all four persisted schedules/physical ledgers, frozen config, source snapshots, research reports, small evidence and DELIVERY.txt",
+    "raw_csv_included": false,
+    "shared_storage_confirmed": false,
+    "access": "local Codex workspace artifact; arrange team shared retention separately",
+    "archive_self_manifest_excluded": "avoids circular hashes; this separate manifest is authoritative"
+  },
+  "commands": [
+    ".venv/bin/python problems/2026_gpu_scheduling/experiments/run_q3_fixed_split.py --out outputs/b-q3-new-id",
+    ".venv/bin/python problems/2026_gpu_scheduling/experiments/verify_q3_fixed_split.py --run outputs/b-q3-new-id"
+  ],
+  "working_directory": ".",
+  "not_applicable": {
+    "seeds": "deterministic SHA256 threshold; no randomized repetitions",
+    "monetary_cost": "no GPU pricing supplied",
+    "solver_gap": "deterministic scheduling, no optimization solver"
+  },
+  "open_items": [
+    "K and sigma are scenario assumptions, no hardware benchmark",
+    "cross-machine shared evidence storage not confirmed",
+    "system break-even and parameter sensitivities not run",
+    "human review not performed"
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "logical_cpus_available_to_process": 16,
+    "simulation_processes": 1,
+    "explicit_resource_limits": "none imposed by this task; shared host"
+  },
+  "duration_seconds": {
+    "run_total": 118.15933347700047,
+    "per_policy_including_recovery_and_io": {
+      "FCFS": 55.35993927399977,
+      "SJF-HOL": 62.62743644102011
+    },
+    "independent_verification": 55.70475776298554
+  },
+  "sensitivity_decision": "GO: physical and counterfactual validation; no sensitivities executed",
+  "git": {
+    "branch": "feat/b-q3",
+    "base_before": "abdbc4ce07c3877ac9fdb1e846a5b9c3b803f401",
+    "base_after": "7075317883808b1cd7f80cadf3980be291c69cf0",
+    "base_fast_forward_and_push": "PASS (prior branch-foundation step)",
+    "research_commit_push": "NOT_DONE",
+    "working_tree_clean": false,
+    "Q2_merged": false,
+    "main_modified": false,
+    "state_scope": "Historical state at experiment packaging, before the subsequent user authorization to commit and push. Current publication state is in Git history and notes/tasks/b-q3.md."
+  },
+  "historical_regression": {
+    "artifact_directory": "math_modeling-b-intake-ready/outputs/b-intake-full-final (local optional source)",
+    "status": "PASS: normalized timings, placements and all metrics at H=7775878",
+    "sha256": {
+      "SJF-HOL_job_times.csv.gz": "7932833fd36a4dd28182f5a69bd751ba6687eca5e0659819cc6666a4c87a3420",
+      "baseline_metrics.json": "1f85b42bd5424600b7588411b6f318ffce2d7fd53c532356e8257ccf3a293b30",
+      "data_audit.json": "287ada2369f22468b2c60fc0020ba4ea5acb6af9fdc2bddd6d7e372b742a0e27",
+      "SJF-HOL_node_placements.csv.gz": "9fb681975af86bc05dcec45cc36e111b205da2f7db3b786526c86131ad332436",
+      "FCFS_node_placements.csv.gz": "d0ef6f4dc513b8c1348d3d82f6b82dc3972a9a45ea0e2aa756ec6eb2bdab02a9",
+      "FCFS_job_times.csv.gz": "212741fe2e7d52743a1fc2aff242e24cafacf19fbadbb35d52a5cb6b7a212cd6",
+      "run.json": "ff4c8ce8cad47928f8b7ba03d6bd0bedd435233b8e5316a7fd919fd47bd69e6c"
+    }
+  },
+  "command": [
+    "problems/2026_gpu_scheduling/experiments/run_q3_fixed_split.py",
+    "--out",
+    "outputs/b-q3-fixed-split-v1-final",
+    "--historical-baseline",
+    "/home/shiuhou/math_modeling-b-intake-ready/outputs/b-intake-full-final"
+  ],
+  "source_snapshot_note": "run/source contains exact code used by final full experiment; snapshot SHA256 validated. repository overlay adds research reports, activity/documentation and pinned requirements."
+}

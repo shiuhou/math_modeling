@@ -139,3 +139,14 @@ Q2 日後可將已保存 job ID／start 與原始 worker／GPU／duration 連結
 `feat/b-q3`：先明示 compatibility、MIG／速度／價格與使用者行為假設，再研究耦合跨池方案；保留共享 evaluator。
 
 主要負責人與 reviewer 待確認。不要求兩位隊員共用主機或同一 worktree；分支各自 commit/push，透過 PR 整合。Q1 後續變更由整合者協調進兩題，勿各自複製公式。此輪不重構／驗證舊 Q2/Q3，不推 main、不合併 PR。
+
+## Q3 固定分流 v1
+
+[模型與四報告採納表](docs/q3_model.md)、[唯一活動記錄](../../notes/tasks/b-q3.md)、[正式第一輪結果](../../results/20261015-b-q3-fixed-split-c9e8f1a2/metrics.json)。本版只做有限整卡、啟動前 A10→A100 替代；原始到達全 trace 使用固定 10% 雜湊分流，60 台 A100 外來專屬、372 台原生專屬。sigma=1 與相容性是假設，60 非最優；不使用第 0 天最長作業搬遷。沒有新增物理容量。
+
+```bash
+.venv/bin/python problems/2026_gpu_scheduling/experiments/run_q3_fixed_split.py --out outputs/b-q3-new-id
+.venv/bin/python problems/2026_gpu_scheduling/experiments/verify_q3_fixed_split.py --run outputs/b-q3-new-id
+```
+
+主窗口 7776000 秒、等待與 JCT 完整排空；M0 的 B=0／關閉相容性均逐筆精確恢復原 DES。獨立驗證從 raw 重建分流，再重播單一實體節點帳本並重算指標。兩政策全 trace 第一輪 PASS，性能結論僅適用當前假設與 trace；SJF-HOL 平均改善仍伴隨部分 A10 延誤，不宣稱全面優越。原生 A100 全部納入比較，本 trace 新增等待為零；這不是原生服務的普遍保證。詳細數字及本機證據封存位置見活動記錄與正式 manifest。

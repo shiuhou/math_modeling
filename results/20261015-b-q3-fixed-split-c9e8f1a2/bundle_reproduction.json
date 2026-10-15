@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "scope": "fresh clone at Q1 base plus delivered ZIP repository overlay; 14 Q3 tests including real producer/verifier CLI with tiny physical fixture; default frozen config present",
+  "full_trace_rerun_from_archive": "NOT_RUN; full final run and independent verification already passed from matching sources",
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "problems/2026_gpu_scheduling/tests",
+    "-p",
+    "test_q3.py",
+    "-v"
+  ],
+  "environment": "existing pinned Q3-local venv; fresh source tree",
+  "raw_from": "base repository clone; excluded from ZIP"
+}

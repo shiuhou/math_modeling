@@ -1,0 +1,9 @@
+{
+  "donor_nodes": 60,
+  "route_numerator": 1,
+  "route_denominator": 10,
+  "compatibility": true,
+  "sigma": 1,
+  "horizon_seconds": 7776000,
+  "hash_namespace": "q3-fixed-split-v1"
+}
