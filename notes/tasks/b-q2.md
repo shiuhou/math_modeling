@@ -440,3 +440,13 @@ SPT-HOL 相對 SPT-FILL 的配對平均差為 `-2.060576h`（改善 55,266、惡
 - 英文正文 `paper/document_en.tex` 與繁中對照 `paper/document_zh.html` 已改為唯一 Q2 正文：完整 A10 的普通 `SPT-HOL`／`SPT-FILL`、作業計數容量下界、gang 四分組與效率—尾部取捨為主；65k urgent/TIME/FIXED/FLEX 明確標示為保護代價分析。正文說明普通 `SPT-HOL` 不含 168h aging，並保留 HOL 相對 FILL 仍有受損作業及 Max wait 略增的限制。
 - 跨章 Q3 文字只作狀態勘誤：不再把 Q2 A10 證據寫成跨池驗證；Q3 技術／金融數值仍標為 `NOT_RUN`。未修改 Q1、共用 DES、歷史實驗或 Q3 模擬。
 - 執行 `build_paper.py` 時缺少 `tectonic`／`pdflatex`，LaTeX 編譯狀態為 `BLOCKED`；源文件、HTML、數值與分析測試均已檢查，未把編譯未完成寫成 PASS。
+
+## 21. Claude cross-review 後的 M2-G 有界修訂（2026-10-16）
+
+- 本節先記錄：Claude cross-review 是外部審查輸入，不是本輪 Codex 自行完成的驗證。沒有重跑正式 scheduler，沒有修改 simulator、placement、validation、raw CSV、M2-E/F/G 歷史帳本或 Claude 原始研究包。
+- FILL 正文已精確限定：`K=200` 是每池每 timestamp 在阻塞前綴後的 bypass candidate-attempt budget；可行前綴不計入，成功／失敗嘗試均計數，重檢可能再次計數，成功啟動不重置當刻預算；shared-timer 只提供額外派工機會。主張只適用本次 K／timer／FF-id 配置，不外推無上限 FILL，也沒有改動 K 計數。
+- G3 保存的 `order_builds=314756` 已由 `results/20261016-b-q2-m2g-01/g3-111284-benchmark.json` 核對。cross-review 提供的 `budget_exhausted=307844` 對應 `307844/314756=97.804013%` 的 order-build 記錄；G3 archive 未獨立保存該 event count，因此 numerator 標為外部審查輸入。該比例是候選嘗試診斷，不能解讀為 97.8% 的等待由預算造成。
+- 唯讀核對 Q3 固定提交 `79e93c315f006d67f743b14a1d7faf16b00dd072` 的 M0 證據：完整 FCFS/SJF-HOL timing、224,112 rows、原始 data hash 與配置均通過來源核對。Q2 G2 的 111,284 A10 `SPT-HOL` rows 與 Q3 M0 `SJF-HOL` A10 rows 逐 ID 的 submit/duration/worker/GPU/CPU、start、finish 完全一致；canonical timing hash 均為 `378acdbfddd9e4ace3652f68b298daa7ea4e43ba239286c171ef3cb0118baea8`。這是來源一致性核查，不把 Q3 M0 寫成 Q2 新跑的全叢集結果。
+- 完整 A10 的三種固定權重後處理結果（`H_j=worker_num*gpu_request*duration`）為：FCFS 普通／GPU-work 加權平均等待 `900.128570 / 619.351865 h`；SPT-HOL `32.906454 / 677.689933 h`；SPT-FILL `34.967030 / 677.495535 h`。同一 A10 群體的 job-count 下界為 `22.3179305700 h`，Q1 已驗證 GPU-work 加權下界為 `560.5213678903 h`。不同目標的排序可不同；三項 gap 仍是記帳，不是因果份額或精確 OPT gap。
+- 已新增 canonical Q2-only 正文：[英文](../../problems/2026_gpu_scheduling/paper/q2_section.tex) 與 [繁中](../../problems/2026_gpu_scheduling/paper/q2_section_zh.html)。整合總稿 `document_en.tex`／`document_zh.html` 同步修正文義與整群體摘要，但仍標為待整合草稿；Q3 只保留來源狀態，不改 Q3 模擬或數據。
+- 新增後處理工具 `experiments/analyze_m2g_revision.py` 與結果目錄 `results/20261016-b-q2-m2g-revision-01/`，內含 revision、full-cluster summary、GPU-work weighted summary、FILL budget 勘誤、manifest 與命令。Q3 M0 大型 timing 保留在其 worktree，本分支保存來源 bytes hash、row/ID hash、canonical timing hash 與缺件聲明；不把不可取得的本機路徑冒充跨機共享證據。

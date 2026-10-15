@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "kind": "q2_m2g_cross_review_revision_manifest",
+  "status": "PASS",
+  "base_commit": "0c74cd5a7cbdf26ecc9d4b1428190b541b706c65",
+  "scheduler_rerun": "NOT_RUN",
+  "scheduler_semantics_changed": "NO",
+  "raw_csv_changed": "NO",
+  "external_review": {
+    "status": "RECORDED_NOT_INDEPENDENTLY_VALIDATED",
+    "description": "Claude cross-review supplied the FILL budget interpretation and the 307844 count; this tool validates persisted denominators and timing, not the external prose."
+  },
+  "source_index_correction": "preserved from 0c74cd5",
+  "input": {
+    "node_info_df_sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean_sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+    "a10_jobs": 111284,
+    "a10_job_id_sha256": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2"
+  },
+  "configuration": {
+    "theta_seconds": 604800,
+    "event_mode": "shared-timer",
+    "reservation_k": 200,
+    "placement": "FF-id",
+    "horizon_seconds": 7776000
+  },
+  "checks": {
+    "raw_a10_set": {
+      "status": "PASS",
+      "row_count": 111284,
+      "job_id_sha256": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2"
+    },
+    "fcfs_full_timing_source": {
+      "status": "PASS",
+      "row_count": 224112,
+      "job_id_sha256": "26a2831017995f7909d7717bd33c7545cc54488fcbd6116c281922e601b85f3a",
+      "source_commit": "7075317883808b1cd7f80cadf3980be291c69cf0"
+    },
+    "sjf_hol_full_timing_source": {
+      "status": "PASS",
+      "row_count": 224112,
+      "job_id_sha256": "26a2831017995f7909d7717bd33c7545cc54488fcbd6116c281922e601b85f3a",
+      "source_commit": "7075317883808b1cd7f80cadf3980be291c69cf0"
+    },
+    "fcfs_a10_input_match": {
+      "status": "PASS",
+      "row_count": 111284,
+      "job_id_sha256": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2",
+      "input_match": true
+    },
+    "sjf_hol_a10_input_match": {
+      "status": "PASS",
+      "row_count": 111284,
+      "job_id_sha256": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2",
+      "input_match": true
+    },
+    "q2_g2_input_match": {
+      "status": "PASS",
+      "row_count": 111284,
+      "job_id_sha256": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2",
+      "input_match": true
+    },
+    "q2_g3_input_match": {
+      "status": "PASS",
+      "row_count": 111284,
+      "job_id_sha256": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2",
+      "input_match": true
+    },
+    "q2_g2_vs_q3_m0_sjf_hol_a10": {
+      "status": "PASS",
+      "row_count": 111284,
+      "id_hash_equal": true,
+      "timing_rows_equal": true,
+      "q2_g2_timing_canonical_sha256": "378acdbfddd9e4ace3652f68b298daa7ea4e43ba239286c171ef3cb0118baea8",
+      "q3_m0_sjf_hol_a10_timing_canonical_sha256": "378acdbfddd9e4ace3652f68b298daa7ea4e43ba239286c171ef3cb0118baea8"
+    }
+  },
+  "budget_diagnostic": {
+    "policy": "SPT-FILL",
+    "budget_exhausted": 307844,
+    "budget_exhausted_source": "external Claude cross-review; not a persisted G3 summary field",
+    "order_builds": 314756,
+    "order_builds_source": "results/20261016-b-q2-m2g-01/g3-111284-benchmark.json",
+    "ratio_budget_exhausted_per_order_build": 0.9780401326741984,
+    "interpretation": "candidate-attempt/order-build diagnostic only; not a fraction of waiting time",
+    "unverified_items": [
+      "G3 archive does not persist budget_exhausted event count independently"
+    ]
+  },
+  "weighted_waiting": {
+    "FCFS": {
+      "jobs": 111284,
+      "mean_wait_hours": 900.1285695807325,
+      "gpu_work_weighted_mean_wait_hours": 619.3518653009497,
+      "total_wait_job_seconds": 360611667854,
+      "total_gpu_work_seconds": 40028314872,
+      "weighted_wait_gpu_seconds_squared": 89249801330977009
+    },
+    "SPT-HOL": {
+      "jobs": 111284,
+      "mean_wait_hours": 32.906454035021504,
+      "gpu_work_weighted_mean_wait_hours": 677.689933237864,
+      "total_wait_job_seconds": 13183062591,
+      "total_gpu_work_seconds": 40028314872,
+      "weighted_wait_gpu_seconds_squared": 97656429719627576
+    },
+    "SPT-FILL": {
+      "jobs": 111284,
+      "mean_wait_hours": 34.967030093674246,
+      "gpu_work_weighted_mean_wait_hours": 677.495535269614,
+      "total_wait_job_seconds": 14008575517,
+      "total_gpu_work_seconds": 40028314872,
+      "weighted_wait_gpu_seconds_squared": 97628416596526640
+    }
+  },
+  "lower_bounds": {
+    "job_count_mean_wait_hours": 22.317930570033027,
+    "job_count_integral_job_seconds": 8941062908,
+    "gpu_work_weighted_a10_mean_wait_hours": 560.5213678903011,
+    "gpu_work_bound_source": "Q1 fixed-pool fluid bound; CPU/node/gang relaxed"
+  },
+  "full_cluster_scope": {
+    "jobs": 224112,
+    "policies": [
+      "FCFS",
+      "Q3-M0-SJF-HOL"
+    ],
+    "source_commit": "7075317883808b1cd7f80cadf3980be291c69cf0",
+    "status": "Q3_M0_READ_ONLY",
+    "source_submission_commit": "79e93c315f006d67f743b14a1d7faf16b00dd072",
+    "run_source_commit": "7075317883808b1cd7f80cadf3980be291c69cf0"
+  },
+  "paper": {
+    "english": "problems/2026_gpu_scheduling/paper/q2_section.tex",
+    "traditional_chinese": "problems/2026_gpu_scheduling/paper/q2_section_zh.html",
+    "integration_draft_en": "problems/2026_gpu_scheduling/paper/document_en.tex",
+    "integration_draft_zh": "problems/2026_gpu_scheduling/paper/document_zh.html",
+    "english_sha256": "5701296490a1ecedbf7eb3f7194e4f29c6b2c7c279db78904bdd856bdfc7979d",
+    "traditional_chinese_sha256": "6744e8eb5c4d2576d3388266fee2fde641d9073284b302fed96ed784710907af",
+    "integration_draft_en_sha256": "81e6ee38c47e137fc0b07a3bfdb7b63afcea8c732346bd340f20cd81bd1b2345",
+    "integration_draft_zh_sha256": "2cd20a1155ab5c86926a3e0e36742c36a7c23b758d33d4a62467920fdb28d2b2"
+  },
+  "missing_or_limited": [
+    "Q3 M0 full-cluster timing is an external worktree artifact; only its hashes and derived summary are committed here",
+    "Q2 has no full 224112-job run; the full-cluster table is explicitly Q3 M0 FCFS/SJF-HOL evidence",
+    "GPU-work weighted lower bound is Q1's fluid bound, not the Q2 job-count bound"
+  ],
+  "files": {
+    "revision.json": "d4bd110a0a1e36b0046add82b59cdd0b0c720193adb544ec2f81dcf9c3faec8f",
+    "full_cluster_summary.json": "4698f11e4efdc9377f3e09c230119fc7448cc0c943c66b513970ea1f5f2ea9cc",
+    "weighted_waiting.json": "af1f6ecb051f0dc470830e78e145a9b3349b3ec63d70ccf7c0add2482ae95b9d",
+    "fill_budget_erratum.json": "9ef24ca9d072e99e7e7052d48e40e80a1f6e47dea3735003bf720dd157f17741",
+    "commands.sh": "8b15dc230fdbf857d0e31f5c8c71c6eea721f6e69a7b0dfa46a6b197c3cc15da"
+  },
+  "comparison_regression": {
+    "source": "results/20261016-b-q2-m2g-01/comparison.json",
+    "metrics_groups_pairs_unchanged": true
+  },
+  "analysis_tool": {
+    "path": "problems/2026_gpu_scheduling/experiments/analyze_m2g_revision.py",
+    "sha256": "bad8e4fe9b63aa61bb3e70d984a1e943af10dadb1727c210ad501f7d6e4a6588"
+  },
+  "tests": {
+    "path": "problems/2026_gpu_scheduling/tests/test_q2_m2g_revision.py",
+    "sha256": "9d5c87825bb62dc86a607b950e4e408f6aed0d8095b4ec9cb0b4962e6f8e5418",
+    "status": "NOT_RUN"
+  },
+  "hash_serialization": {
+    "job_id_sha256": "UTF-8 sorted decimal job IDs, one per line, trailing newline",
+    "timing_canonical_sha256": "UTF-8 sorted job rows with fields job_name,submit_time,duration,worker_num,gpu_request,start,finish joined by commas and newline"
+  }
+}

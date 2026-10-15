@@ -1,0 +1,12 @@
+{
+  "policy": "SPT-FILL",
+  "budget_exhausted": 307844,
+  "budget_exhausted_source": "external Claude cross-review; not a persisted G3 summary field",
+  "order_builds": 314756,
+  "order_builds_source": "results/20261016-b-q2-m2g-01/g3-111284-benchmark.json",
+  "ratio_budget_exhausted_per_order_build": 0.9780401326741984,
+  "interpretation": "candidate-attempt/order-build diagnostic only; not a fraction of waiting time",
+  "unverified_items": [
+    "G3 archive does not persist budget_exhausted event count independently"
+  ]
+}

@@ -203,7 +203,7 @@
       <h2>二、问题二：容量有效的调度比较与方法收敛</h2>
       <h3>2.1 模型与策略定义</h3>
       <p>每一种 GPU 型号作为独立资源池分析。作业 <span class="math">j</span> 具有提交时刻 <span class="math">r<sub>j</sub></span>、时长 <span class="math">p<sub>j</sub></span>、Worker 数 <span class="math">w<sub>j</sub></span>、每 Worker 的 GPU 请求 <span class="math">g<sub>j</sub></span> 与 CPU 请求 <span class="math">c<sub>j</sub></span>。作业在 <span class="math">s<sub>j</sub> &ge; r<sub>j</sub></span> 时启动，并在 <span class="math">s<sub>j</sub>+p<sub>j</sub></span> 完成，所有 Worker 必须同步启动。对节点 <span class="math">i</span>，合法放置必须同时满足 <span class="math">g<sub>j</sub>x<sub>j,i</sub> &le; G<sub>i</sub><sup>free</sup>(t)</span>、<span class="math">c<sub>j</sub>x<sub>j,i</sub> &le; C<sub>i</sub><sup>free</sup>(t)</span> 以及 <span class="math">&sum;<sub>i</sub>x<sub>j,i</sub>=w<sub>j</sub></span>。模拟器使用非抢占、精确整数秒时长和原子 gang 放置。</p>
-      <p>普通 <code>SPT-HOL</code> 按 <span class="math">(p<sub>j</sub>,r<sub>j</sub>,job_id)</span> 排序已到达作业；它没有 aging threshold、urgent promotion 或 reservation。队首不可放置时，该决策时刻停止启动。<code>SPT-FILL</code> 使用相同的时长优先顺序，但可继续检查后方当前可行作业。因此普通 <code>SPT-HOL</code> 不含 168 小时 aging。<code>SPT-URGENT-HOL/TIME/FIXED/FLEX</code> 另行加入 aging/reservation 机制，本节只在已验证的 65,536-job 前缀中报告。</p>
+      <p>普通 <code>SPT-HOL</code> 按 <span class="math">(p<sub>j</sub>,r<sub>j</sub>,job_id)</span> 排序已到达作业；它没有 aging threshold、urgent promotion 或 reservation。队首不可放置时，该决策时刻停止启动。<code>SPT-FILL</code> 使用相同的时长优先顺序，但可继续检查后方当前可行作业。<span class="math">K=200</span> 是每池每 timestamp 在首次阻塞前缀之后进入绕过模式的候选尝试预算：可行前缀不计入，成功与失败都计数，重检可能再次计数，成功启动不重置当刻预算；shared-timer 会增加派工机会。这个语义只限本次 K、timer 与 FF-id 配置，不能外推为无上限 FILL。因此普通 <code>SPT-HOL</code> 不含 168 小时 aging。<code>SPT-URGENT-HOL/TIME/FIXED/FLEX</code> 另行加入 aging/reservation 机制，本节只在已验证的 65,536-job 前缀中报告。</p>
       <p>正式 A10 运行共同使用 <code>FF-id</code>、<code>shared-timer</code>、<span class="math">K=200</span>、<span class="math">&theta;=604800</span> 秒、<span class="math">H=7,776,000</span> 秒和完整排空。168 小时是探索性门槛，不是最优参数；事件模式是独立的实验配置，不由策略名称暗示。</p>
 
       <h3>2.2 作业计数容量下界与精确分解</h3>
@@ -223,12 +223,33 @@
       <p>按作业 ID 配对，HOL−FILL 的平均等待差为 <strong>−2.060576 小时</strong>：55,266 个作业改善、50,575 个恶化、5,443 个不变；其中 1,226 个在 FILL 下零等待的作业在 HOL 下获得正等待。因此 HOL 在本 trace 的平均、P95 和 P99 较低，但最大等待高 1.98 小时，不能宣称全面支配或一般无饥饿。</p>
       <p>四个互斥群组按“时长 &le;3600 秒／更长”与“单 Worker／多 Worker”划分。群组平均等待（short-single、short-multi、long-single、long-multi）分别为：HOL <strong>0.046、0.443、159.514、3.797 小时</strong>；FILL <strong>0.043、68.299、157.983、586.902 小时</strong>，群组数量为 87,576、377、22,921、410。HOL 显著降低全量 A10 多 Worker 作业等待，而 FILL 对短单 Worker 作业略有优势；这是特定 trace 的观察，不是因果证明。</p>
 
-      <h3>2.4 65,536-job 保护策略范围分析</h3>
+      <h3>2.4 整群体来源核对与 GPU-work 加权等待</h3>
+      <p>下表是 Q3 固定提交 commit <code>7075317883808b1cd7f80cadf3980be291c69cf0</code> 的只读 M0 FCFS/SJF-HOL 证据，不是本轮 Q2 引擎新跑的 224,112-job。Q2 G2 的 SPT-HOL 与 Q3 M0 SJF-HOL 在 A10 的 111,284 行 timing 逐笔一致，canonical timing hash 为 <code>378acdbf...18baea8</code>。</p>
+      <table><thead><tr><th>策略</th><th>池</th><th>n</th><th>Mean W (h)</th><th>P95 (h)</th><th>Max (h)</th><th>90日完成</th></tr></thead><tbody>
+        <tr><td>FCFS</td><td>A10</td><td>111284</td><td>900.129</td><td>1408.478</td><td>1423.254</td><td>54531</td></tr>
+        <tr><td>FCFS</td><td>A100-SXM4-80GB</td><td>80877</td><td>0.000</td><td>0.000</td><td>0.000</td><td>80101</td></tr>
+        <tr><td>FCFS</td><td>A800-SXM4-80GB</td><td>3959</td><td>0.146</td><td>0.000</td><td>12.250</td><td>3943</td></tr>
+        <tr><td>FCFS</td><td>GPU-series-1</td><td>9643</td><td>0.029</td><td>0.000</td><td>9.971</td><td>8221</td></tr>
+        <tr><td>FCFS</td><td>GPU-series-2</td><td>13633</td><td>0.045</td><td>0.000</td><td>6.992</td><td>13606</td></tr>
+        <tr><td>FCFS</td><td>H800</td><td>4716</td><td>0.016</td><td>0.000</td><td>7.856</td><td>4705</td></tr>
+        <tr><td>FCFS</td><td>ALL</td><td>224112</td><td>446.971</td><td>1356.501</td><td>1423.254</td><td>165107</td></tr>
+        <tr><td>SJF-HOL</td><td>A10</td><td>111284</td><td>32.906</td><td>11.087</td><td>3017.288</td><td>107002</td></tr>
+        <tr><td>SJF-HOL</td><td>A100-SXM4-80GB</td><td>80877</td><td>0.000</td><td>0.000</td><td>0.000</td><td>80101</td></tr>
+        <tr><td>SJF-HOL</td><td>A800-SXM4-80GB</td><td>3959</td><td>0.115</td><td>0.000</td><td>14.858</td><td>3943</td></tr>
+        <tr><td>SJF-HOL</td><td>GPU-series-1</td><td>9643</td><td>0.434</td><td>0.000</td><td>76.818</td><td>8213</td></tr>
+        <tr><td>SJF-HOL</td><td>GPU-series-2</td><td>13633</td><td>0.016</td><td>0.000</td><td>7.165</td><td>13606</td></tr>
+        <tr><td>SJF-HOL</td><td>H800</td><td>4716</td><td>0.016</td><td>0.000</td><td>7.856</td><td>4705</td></tr>
+        <tr><td>SJF-HOL</td><td>ALL</td><td>224112</td><td>16.362</td><td>0.689</td><td>3017.288</td><td>217570</td></tr>
+      </tbody></table>
+      <p>完整 A10 的作业计数下界为 22.3179305700 小时；Q1 已验证的 GPU-work 加权下界为 560.5213678903 小时。固定 <span class="math">H<sub>j</sub>=worker_num&times;gpu_request&times;duration</span> 后，FCFS 的普通／加权平均等待为 900.129／619.352 小时，SPT-HOL 为 32.906／677.690 小时，SPT-FILL 为 34.967／677.496 小时。不同目标会改变排序；这里的主方案推荐仍以普通平均等待为目标。下界放松 CPU、节点形状与 gang 约束，三项分解是记账而不是因果份额或精确 OPT gap。</p>
+      <p>G3 保存的 <code>order_builds=314756</code>。Claude cross-review 提供 <code>budget_exhausted=307844</code>，对应 97.804% 的 order-build 记录；这只是候选尝试诊断，不能解释为 97.804% 的等待由预算造成。G3 archive 没有独立保存该 event count，因此 numerator 标为外部审查输入。本轮没有修改 K 计数或进行 K 搜索。</p>
+
+      <h3>2.5 65,536-job 保护策略范围分析</h3>
       <p>同一计数下界在已验证 65,536-job A10 前缀为 <strong>24.9181888580 小时</strong>。普通 FILL/HOL 平均等待为 31.042/30.332 小时。保护策略分别为：URGENT-HOL 556.492 小时、URGENT-TIME 350.528 小时、URGENT-FIXED 350.088 小时、URGENT-FLEX 349.715 小时；FIXED/FLEX 分别接纳 62/133 个 crossing。它们相对 TIME 的平均下降只有 0.439/0.813 小时，且同时存在改善与恶化作业。这些是 65k 探索性门槛结果，不能混作完整 A10 结果。
 
-      <h3>2.5 方法选择与范围</h3>
+      <h3>2.6 方法选择与范围</h3>
       <p>以已验证 A10 的普通平均等待为目标，普通 <code>SPT-HOL</code> 是当前主候选：它比 <code>SPT-FILL</code> 简单，并在 65k 前缀与完整 A10 中均有较低平均等待。<code>SPT-FILL</code> 仍适合作为偏好单 Worker 即时启动的对照；保护策略可作为特定尾部保护偏好的实验备选，但目前的平均等待代价和额外证据处理成本不足以支持将其作为默认方法。</p>
-      <p>证据范围仅为 A10，并非完整 224,112-job 集群。Urgent 全量、1350 小时、EASY-NR、Q3 和新的正式排程运行均未执行。全部数值、hash、archive、命令与验收状态见 <code>results/20261016-b-q2-m2g-01/</code>。</p>
+      <p>Q2 新引擎的正式排程证据仍限 A10，并非完整 224,112-job Q2 重跑；整群体表明确标为 Q3 M0 只读来源。Urgent 全量、1350 小时、EASY-NR 和新的正式排程运行均未执行。全部数值、hash、来源链、缺件与验收状态见 <code>results/20261016-b-q2-m2g-revision-01/</code>。</p>
     </section>
 
     <section>

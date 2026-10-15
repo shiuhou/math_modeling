@@ -122,7 +122,7 @@ Each GPU model is evaluated as its own pool. A job $j$ has release time $r_j$, d
 \end{equation}
 The simulator is non-preemptive, uses exact integer-second durations, and commits a gang placement atomically. All comparisons below use the same First-Fit-by-numeric-node-ID (FF-id) placement, the same raw CSV and loader ordering, and the same explicit event mode, `shared-timer'. The event mode is an experimental configuration shared by all policies; it is not encoded by a policy name.
 
-The ordinary \texttt{SPT-HOL} baseline orders arrived jobs by $(p_j,r_j,\text{job\_id})$. It has no aging threshold, no urgent promotion, and no reservation. If its head cannot be placed, the dispatch stops for that decision epoch. \texttt{SPT-FILL} uses the same size order but may inspect later jobs that are feasible in the current state. Thus ordinary \texttt{SPT-HOL} must not be described as a 168-hour aging policy. The protected policies \texttt{SPT-URGENT-HOL}, \texttt{SPT-URGENT-TIME}, \texttt{SPT-URGENT-FIXED}, and \texttt{SPT-URGENT-FLEX} add the separately recorded aging/reservation mechanisms; this report uses them only in the verified 65,536-job prefix analysis.
+The ordinary \texttt{SPT-HOL} baseline orders arrived jobs by $(p_j,r_j,\text{job\_id})$. It has no aging threshold, no urgent promotion, and no reservation. If its head cannot be placed, the dispatch stops for that decision epoch. \texttt{SPT-FILL} uses the same size order but may inspect later jobs that are feasible in the current state. Its $K=200$ is a per-pool, per-timestamp bypass-attempt budget only after a blocking prefix is encountered: feasible prefix checks do not count, successful and failed attempts count, retries may count again, and a successful start does not reset the timestamp budget. Shared timer ticks create additional dispatch opportunities. These statements are limited to the measured $K$, timer and FF-id configuration and do not describe an unbounded FILL policy. Thus ordinary \texttt{SPT-HOL} must not be described as a 168-hour aging policy. The protected policies \texttt{SPT-URGENT-HOL}, \texttt{SPT-URGENT-TIME}, \texttt{SPT-URGENT-FIXED}, and \texttt{SPT-URGENT-FLEX} add the separately recorded aging/reservation mechanisms; this report uses them only in the verified 65,536-job prefix analysis.
 
 For the formal A10 runs, the common configuration is $\theta=604800$ seconds (168 hours), $K=200$ per pool and timestamp, `shared-timer', $H=7,776,000$ seconds, and complete drain of the input jobs. The 168-hour threshold is exploratory and is not claimed to be optimal. It is a run configuration, separate from the definition of ordinary \texttt{SPT-HOL}.
 
@@ -169,13 +169,61 @@ The paired difference (HOL minus FILL) is $-2.060576$ hours: 55,266 jobs improve
 
 The four mutually exclusive workload groups (duration $\le3600$ seconds or longer, and one worker or more than one worker) make the gang trade-off visible. Mean waits for (short-single, short-multi, long-single, long-multi) are respectively $0.046,0.443,159.514,3.797$ hours for HOL and $0.043,68.299,157.983,586.902$ hours for FILL. The corresponding group sizes are $(87576,377,22921,410)$. HOL greatly reduces multi-worker waits in this full A10 trace, while FILL gives a slightly lower mean for short single-worker jobs. These are workload-specific observations, not a causal proof.
 
+\subsection{Full-cluster source reconciliation and GPU-work weighting}
+The full-cluster FCFS/SJF-HOL table below is read-only M0 evidence retrieved from fixed Q3 submission \texttt{79e93c315f006d67f743b14a1d7faf16b00dd072}; its recorded run source is commit \texttt{7075317883808b1cd7f80cadf3980be291c69cf0}. It is not a new full-cluster run of the Q2 engine. The Q2 G2 SPT-HOL A10 timing and Q3 M0 SJF-HOL A10 timing have identical 111,284-row ID, input-attribute, start and finish records (canonical timing hash \texttt{378acdbf...18baea8}).
+
+\begin{table}[htbp]
+\centering\small
+\caption{Read-only Q3 M0 full-cluster summary; waiting uses complete drain.}
+\begin{tabular}{llrrrrr}
+\toprule
+Policy & Pool & $n$ & Mean $W$ (h) & P95 (h) & Max (h) & $f\le H$\\
+\midrule
+FCFS & A10 &111284&900.129&1408.478&1423.254&54531\\
+FCFS & A100-SXM4-80GB &80877&0.000&0.000&0.000&80101\\
+FCFS & A800-SXM4-80GB &3959&0.146&0.000&12.250&3943\\
+FCFS & GPU-series-1 &9643&0.029&0.000&9.971&8221\\
+FCFS & GPU-series-2 &13633&0.045&0.000&6.992&13606\\
+FCFS & H800 &4716&0.016&0.000&7.856&4705\\
+FCFS & ALL &224112&446.971&1356.501&1423.254&165107\\
+SJF-HOL & A10 &111284&32.906&11.087&3017.288&107002\\
+SJF-HOL & A100-SXM4-80GB &80877&0.000&0.000&0.000&80101\\
+SJF-HOL & A800-SXM4-80GB &3959&0.115&0.000&14.858&3943\\
+SJF-HOL & GPU-series-1 &9643&0.434&0.000&76.818&8213\\
+SJF-HOL & GPU-series-2 &13633&0.016&0.000&7.165&13606\\
+SJF-HOL & H800 &4716&0.016&0.000&7.856&4705\\
+SJF-HOL & ALL &224112&16.362&0.689&3017.288&217570\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For the same original A10 population and fixed weights $H_j=w_jg_jp_j$, the Q1 GPU-work-weighted lower bound is $560.5213678903$ h, while the job-count lower bound is $22.3179305700$ h. The persisted timing gives the following distinct objectives:
+
+\begin{table}[htbp]
+\centering\small
+\caption{Ordinary and GPU-work-weighted A10 waiting.}
+\begin{tabular}{lrrr}
+\toprule
+Policy & Mean job wait (h) & GPU-work weighted mean (h) & Mean / count LB\\
+\midrule
+FCFS &900.129&619.352&40.30\\
+SPT-HOL &32.906&677.690&1.47\\
+SPT-FILL&34.967&677.496&1.57\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The different weighting changes the ordering in this trace; the recommendation above remains an ordinary-mean recommendation. Neither lower bound is an exact OPT gap, and the three waiting terms are accounting rather than causal shares.
+
 \subsection{Bounded protected-policy analysis}
 The same lower-bound calculation on the verified 65,536-job A10 prefix gives $L_{\rm count}=24.9181888580$ hours. The ordinary baselines have means 31.042 hours (FILL) and 30.332 hours (HOL). The protected results are deliberately reported separately: \texttt{SPT-URGENT-HOL} 556.492 hours, \texttt{SPT-URGENT-TIME} 350.528 hours, \texttt{SPT-URGENT-FIXED} 350.088 hours, and \texttt{SPT-URGENT-FLEX} 349.715 hours. FIXED and FLEX accepted 62 and 133 crossing candidates, respectively, but their mean reductions relative to TIME were only 0.439 and 0.813 hours and came with both improved and worsened jobs. These numbers are prefix evidence at the exploratory threshold, not complete-A10 results and not evidence that the additional certificate machinery is generally beneficial.
+
+For the complete-A10 FILL run, the persisted G3 summary records 314,756 order builds. The Claude cross-review supplied 307,844 budget-exhausted events, or 97.804\% of those order-build records. This is a candidate-attempt diagnostic, not 97.804\% of waiting time; the G3 archive does not independently persist that event count, so its numerator remains an external-review input. No K counter or K search was changed in this revision.
 
 \subsection{Method choice and scope}
 For the stated objective of ordinary mean waiting on the verified A10 data, ordinary \texttt{SPT-HOL} is the current main candidate: it is simpler than the protected policies and has lower mean waiting than \texttt{SPT-FILL} in both the 65,536-job prefix and the complete A10 run. \texttt{SPT-FILL} remains a useful baseline when immediate starts for single-worker jobs are preferred. The protected policies remain valid safety experiments and a possible tail-protection preference, but their 65k average-wait cost and extra evidence processing do not support selecting them as the default here.
 
-The evidence is restricted to A10, not the full 224,112-job cluster. The urgent full trace, the 1350-hour threshold, EASY-NR, and Question 3 experiments were not run in this round. All reported values, source/data hashes, archives, commands and validation statuses are recorded in `results/20261016-b-q2-m2g-01/`.
+The Q2 scheduler evidence is restricted to A10, not a new full 224,112-job Q2 run. The full-cluster table is explicitly read-only Q3 M0 FCFS/SJF-HOL evidence. The urgent full trace, the 1350-hour threshold, EASY-NR, and new scheduling runs were not run in this round. All reported values, source/data hashes, archives, commands, missing items and validation statuses are recorded in `results/20261016-b-q2-m2g-revision-01/`. The canonical Q2-only section is `paper/q2_section.tex`; this integrated document remains a draft pending assembly.
 
 \section{Question 3: Mitigating Cross-Model Imbalance via Technical and Financial Co-Design}
 \vspace{2pt}
