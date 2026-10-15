@@ -5,10 +5,10 @@
 <h1>問題三：固定分流跨 GPU 替代</h1>
 <p class="note">本章只使用已完成的 M0、S0、S1–S5；沒有新增排程情景。第一輪的 M1 統一稱為 S0。相容性與 σ 是情景假設，不是硬體 benchmark。</p>
 <h2>模型與假設</h2>
-<p>作業 j 的原生 GPU 型號為 n<sub>j</sub>，實際型號為 m<sub>j</sub>，原始時長為 p<sub>j</sub>，有效時長為 p′<sub>j</sub> = σ<sub>jm</sub>p<sub>j</sub>，完成時間為 f<sub>j</sub> = s<sub>j</sub> + p′<sub>j</sub>，等待為 ω<sub>j</sub> = s<sub>j</sub> − a<sub>j</sub>。固定分區把按 node_name 排序的前 B 台 A100 專供外來 A10，其餘 A100 只服務原生 A100；worker 必須同節點滿足 CPU/GPU，全部同步啟動，不搶占、不遷移、不 fallback，且每一時刻逐節點容量不超額。</p>
+<p>作業 j 的原生 GPU 型號為 n<sub>j</sub>，實際型號為 m<sub>j</sub>，原始時長為 p<sub>j</sub>，有效時長為 p′<sub>j</sub> = σ<sub>jm</sub>p<sub>j</sub>，完成時間為 f<sub>j</sub> = s<sub>j</sub> + p′<sub>j</sub>，等待為 ω<sub>j</sub> = s<sub>j</sub> − a<sub>j</sub>；worker 數另以 W<sub>j</sub> 表示。固定分區把按 <code>node_name</code> 字典序排序的前 B 台 A100 專供外來 A10，其餘 A100 只服務原生 A100；worker 必須同節點滿足 CPU/GPU，全部同步啟動，不搶占、不遷移、不 fallback，且每一時刻逐節點容量不超額。</p>
 <div class="formula">Σ<sub>j:s<sub>j</sub>≤t&lt;f<sub>j</sub></sub> g<sub>j</sub>y<sub>ji</sub> ≤ G<sub>i</sub><sup>cap</sup>，Σ c<sub>j</sub>y<sub>ji</sub> ≤ C<sub>i</sub><sup>cap</sup>，Σ<sub>i</sub>y<sub>ji</sub> = W<sub>j</sub></div>
 <h2>反事實設計與主要結果</h2>
-<p>M0 是原始型號隔離；S0 是 60 台／10% 固定 SHA-256 分流／σ=1。S1–S5 每次只變更一個因素。所有比較使用 224,112 個原始 job ID；90 天窗口為 H=7,776,000 秒，窗口完成與完整排空分開計算。W=s−a，JCT=f−a，relative completion delay=f−a−p。</p>
+<p>M0 是原始型號隔離；S0 是 60 台／10% 固定 SHA-256 分流／σ=1。S1–S5 每次只變更一個因素。所有比較使用 224,112 個原始 job ID；90 天窗口為 H=7,776,000 秒，窗口完成與完整排空分開計算。worker 數為 W<sub>j</sub>，等待為 ω<sub>j</sub>=s<sub>j</sub>−a<sub>j</sub>，JCT=f<sub>j</sub>−a<sub>j</sub>，relative completion delay=f<sub>j</sub>−a<sub>j</sub>−p<sub>j</sub>。</p>
 <table><caption>Q3 main results. Native harmed counts are paired against S0 under the same policy.</caption><thead><tr>
 <th>Scenario</th>
 <th>Policy</th>

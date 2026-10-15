@@ -1,3 +1,10 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,graphicx,caption}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\setlength{\tabcolsep}{2.5pt}
+\begin{document}
 \begingroup
 \renewcommand{\normalsize}{\fontsize{11.1pt}{13.3pt}\selectfont}
 \normalsize
@@ -11,7 +18,7 @@ We study a finite, whole-card, pre-start substitution policy on the supplied tra
  \qquad f_j=s_j+p'_j,
  \qquad \omega_j=s_j-a_j.
 \end{equation}
-The fixed partition reserves the first $B$ A100 nodes in ascending `node_name` order for routed A10 jobs and leaves the other A100 nodes for native A100 jobs. Each worker's CPU and GPU remain on one physical node, all workers of a job start together, jobs are non-preemptive and non-migrating, and no resource may be used twice. At every node $i$ and time $t$,
+The fixed partition reserves the first $B$ A100 nodes in ascending $\texttt{node\_name}$ order for routed A10 jobs and leaves the other A100 nodes for native A100 jobs. Each worker's CPU and GPU remain on one physical node, all workers of a job start together, jobs are non-preemptive and non-migrating, and no resource may be used twice. At every node $i$ and time $t$,
 \begin{equation}
  \sum_{j:s_j\le t<f_j}g_jy_{ji}\le G_i^{\rm cap},\qquad
  \sum_{j:s_j\le t<f_j}c_jy_{ji}\le C_i^{\rm cap},\qquad
@@ -22,13 +29,12 @@ The model is a deterministic scheduling heuristic, not an optimality claim.
 \subsection{Fixed-split counterfactual design}
 M0 is the original model-isolated schedule. S0 is the earlier Q3-S1 M1 result, renamed to make the comparison unambiguous: 60 dedicated A100 nodes, a 10\% SHA-256 threshold, and $\sigma=1$. S1--S5 vary exactly one factor from S0: 5\% or 20\% routing, 30 or 90 donor nodes, or $\sigma=2$. The hash namespace is fixed as `q3-fixed-split-v1`; eligibility uses only the current job and declared capacity. There is no fallback from the foreign queue and no relocation of a running job.
 
-We report $W=s-a$, actual JCT $J=f-a$, relative completion delay $f-a-p_j$, and paired finish difference $f_{\rm scenario}-f_{\rm reference}$. Every comparison uses the same original job IDs. The 90-day window is $H=7,776,000$ seconds; waiting and JCT use complete drain, while completion counts use $f_j\le H$.
+We report worker count $W_j$ separately from waiting $\omega_j=s_j-a_j$, actual JCT $J_j=f_j-a_j$, relative completion delay $f_j-a_j-p_j$, and paired finish difference $f_{\rm scenario}-f_{\rm reference}$. Every comparison uses the same original job IDs. The 90-day window is $H=7,776,000$ seconds; waiting and JCT use complete drain, while completion counts use $f_j\le H$.
 
 \begin{table}[!ht]
 \centering
 \caption{Main Q3 results generated from the paper-ready JSON. Native harmed counts are paired against S0 under the same policy.}
 \label{tab:q3_main}
-\scriptsize
 \input{q3_s3_main_table.tex}
 \end{table}
 
@@ -53,3 +59,4 @@ If the policy requirement is zero additional native A100 waiting on this trace, 
 
 Compatibility and $\sigma$ are assumptions without an A10/A100 performance matrix. Allocation rates are request occupancy, not measured utilization; GPU-hours across models are not interchangeable compute or monetary units. The experiment adds no physical GPUs, does not implement dynamic sharing, MIG, pricing, RL, migration, or Q2\,$\times$\,Q3 scheduling, and does not prove heuristic optimality. Q1's A10 lower bound is not transferred to substituted schedules. The conclusion is therefore conditional on the declared trace, partitions, hash rule, policy, and duration scenarios.
 \par\endgroup
+\end{document}

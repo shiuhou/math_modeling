@@ -47,3 +47,7 @@
 ## Q3-S3 結論凍結與論文交付
 
 [Q3-S3 出版交付](20261016-b-q3-s3-publication-9ac1d7f2/README.md) 只讀取 S1/S2 已保存的正式 JSON，將第一輪 M1 統一命名為 S0，生成英文 Q3 章節、繁中正文、主表、圖、CSV/JSON 與 claim-to-source map。`new_scheduling_runs=0`；S1/S2 的原始數值、逐節點驗證、原始 CSV、Q1 成果與共用模擬器均未改寫。LaTeX 編譯器在本環境不可用，出版清單保留 `NOT_RUN`；大型 ZIP 的跨機共享仍為 `BLOCKED`。
+
+## Q3-S3 出版勘誤修訂版
+
+[Q3-S3 r3 修訂交付](20261016-b-q3-s3-publication-9ac1d7f2-r3/README.md) 修正 M0/S0 反向 paired evidence、缺欄位語義與 LaTeX 生成；沒有新增排程。舊 S1/S2 結果與 manifest 不變。內建編譯請求未回傳完成 PDF，且 worktree 無本地 LaTeX 編譯器，因此狀態保留 `NOT_RUN`，逐頁檢查也保留 `NOT_RUN`。

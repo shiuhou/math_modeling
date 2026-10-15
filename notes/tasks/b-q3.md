@@ -60,3 +60,9 @@ GO 只適用於把這組受控結果納入 Q3 條件性敏感性分析；不能�
 結論已凍結於 [Q3-S3 README](../../results/20261016-b-q3-s3-publication-9ac1d7f2/README.md) 與其 `manifest.json`：60 台／10% 是本 trace 上 native A100 零新增等待的已測候選；20% 不保證優於 10%；90 台出現可量化 native harm；sigma=2 的等待與完成方向可能相反。相容性與 sigma 仍是未經硬體 benchmark 的情景假設，不能宣稱全域最佳或唯一因果貢獻。
 
 出版包保留來源、配置、結果雜湊、生成命令與靜態檢查。LaTeX 編譯器在當前環境不可用，記為 `NOT_RUN`；S1/S2 大型 ZIP 的跨機共享未確認，記為 `BLOCKED`。本輪不修改原始 CSV、Q1 成果、共用模擬器或 S1/S2 歷史清單。
+
+## Q3-S3 出版勘誤修訂（2026-10-16）
+
+本輪只修出版層，無新增情景、排程或模擬。修訂版為 [Q3-S3 r3](../../results/20261016-b-q3-s3-publication-9ac1d7f2-r3/README.md)。M0 對 S0 的平均 finish delta 由既有 S0−M0 配對證據反向重算；對稱平均差與改善／惡化數互換，正延遲總量、分位數與 zero-wait 新延遲不直接取負，缺欄位以 `null`／狀態標示。生成器回歸確認 M0/S0 群體分母一致、finish delta 等於群體平均 JCT 差。
+
+LaTeX 生成器改為可獨立編譯的 11pt 文件，移除 `scriptsize`，修正表格資料列雙反斜線、`node_name` 轉義與 `W_j`／`\omega_j` 符號。內建編譯工具曾回傳 fragment 缺少 preamble 的診斷；加入 preamble 後請求未回傳完成 PDF，本地亦無 tectonic/xelatex/pdflatex，因此 manifest 保留 `NOT_RUN`，不宣稱編譯或逐頁檢查通過。大型證據跨機交付仍獨立為 `BLOCKED`，未重跑實驗。

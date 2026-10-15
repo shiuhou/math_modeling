@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "kind": "q3_s3_publication_revision_v1",
+  "status": "PASS",
+  "experiment_id": "20261016-b-q3-s3-publication-9ac1d7f2-r3",
+  "purpose": "publication erratum and revised paper package; no scheduling rerun",
+  "revised_from": "results/20261016-b-q3-s3-publication-9ac1d7f2",
+  "base_commit": "5d197b60856b7a002e21ad4206b365a84faf8a4f",
+  "new_scheduling_runs": 0,
+  "errata": [
+    "M0 paired_s0 is reverse-derived from persisted S0 minus M0 evidence; it is not the M0 identity pair.",
+    "symmetric mean deltas and improvement/worsening counts are reversed; asymmetric positive totals, quantiles, maxima and zero-wait counts are null with explicit status.",
+    "M0-vs-S0 mean finish regression equals same-cohort mean JCT difference.",
+    "LaTeX table rows emit two backslashes; node_name is escaped; W_j and omega_j are distinct; scriptsize removed."
+  ],
+  "inputs": {
+    "S1_metrics": "results/20261015-b-q3-fixed-split-c9e8f1a2/metrics.json",
+    "S1_metrics_sha256": "bccc58ab91c33b150499062e9c802331692de43ef1382ccde81d55fac58ec10b",
+    "S1_manifest_sha256": "e7faada6dede25eb1712e2c18d8e0d007b24811682caea4093dc4f870fd0a3a5",
+    "S2_sensitivity_metrics": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+    "S2_sensitivity_metrics_sha256": "f40415f478528878edfa31cc497e92258c54e84e2ce5c3504ee68282007d9d47",
+    "S2_manifest_sha256": "a621ff9efb99438a19eab7b98b0de3aa28a58c20d7e5c5ee5e3add1fa606957f",
+    "old_publication_manifest_sha256": "a1f0a4fb621d280899f3fc250fc77840ff78158f12610ec33289c88248c76314"
+  },
+  "validation": {
+    "source_and_regression_checks": {
+      "status": "PASS",
+      "evidence": "publication_checks.json"
+    },
+    "paper_ready_rows": 14,
+    "m0_s0_group_denominators": "PASS: original_A10 rows use 111284 jobs; native_A100 rows use 80877 jobs; paired reversals preserve same group.",
+    "asymmetric_reverse_fields": "PASS: null plus REVERSED_SYMMETRIC_ONLY, never negated",
+    "table_generation": "PASS: two-backslash row endings, node_name escape, no scriptsize",
+    "repo_check": {
+      "status": "PASS",
+      "command": "python3 scripts/check_repo.py",
+      "scope": "124 files"
+    },
+    "root_tests": {
+      "status": "PASS",
+      "command": "python3 -m unittest discover -s tests -v",
+      "tests": 12
+    },
+    "problem_b_tests": {
+      "status": "PASS",
+      "command": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v",
+      "tests": 43
+    },
+    "diff_check": {
+      "status": "PASS",
+      "command": "git diff --check"
+    },
+    "latex_compiler": "NOT_RUN: built-in compile request did not return; local tectonic/xelatex/pdflatex unavailable",
+    "page_by_page_inspection": "NOT_RUN: no completed PDF was returned by built-in compiler"
+  },
+  "evidence_distribution": {
+    "status": "BLOCKED",
+    "reason": "No authorized cross-machine shared storage; no experiment rerun performed",
+    "local_artifacts": [
+      {
+        "path": "outputs/Q3_fixed_split_v1_delivery.zip",
+        "bytes": 23132824,
+        "sha256": "714a59c8addeecc47e91c6b40dbd1c3a76e3e0c7eccb45676daedf87b1cf5c3d"
+      },
+      {
+        "path": "outputs/Q3_fixed_split_s2_delivery.zip",
+        "bytes": 57670130,
+        "sha256": "19a0a577fe473a22452311631da54203e6fecc169099d1aa03f813c0c3068279"
+      }
+    ]
+  },
+  "generator": {
+    "path": "problems/2026_gpu_scheduling/experiments/make_q3_publication.py",
+    "sha256": "d7bc126b797274e8e4b216fb145f5e1fc6592eb1c1f9b9c8eff84bc05b12a3a3",
+    "command": "env -u PYTHONHOME -u PYTHONPATH -u LD_LIBRARY_PATH .venv/bin/python problems/2026_gpu_scheduling/experiments/make_q3_publication.py --out results/20261016-b-q3-s3-publication-9ac1d7f2-r3 --latex-status \"NOT_RUN: built-in compile request did not return; local tectonic/xelatex/pdflatex unavailable\"",
+    "git_commit_at_execution": "5d197b60856b7a002e21ad4206b365a84faf8a4f",
+    "new_scheduling_runs": 0
+  },
+  "files": {
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/README.md": "21b70f50a4f295e1d6dc9b5c7ad6419d351c854a6345d28685a575ad810c5671",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/paper_ready_metrics.csv": "d8b81014efeae36f3b1f9a3befcc0bddd43a153f75470407eeb91813b421350d",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/paper_ready_metrics.json": "3a9cf890262729eb11dc451cae7c5a4bb7e6e96a1857d769cc476204232671c0",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/publication_checks.json": "3d13bc03394677244204ca7f5117225cba5f6042b991b087f3b98140c8823c50",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/publication_errata.md": "b6fcb2e94c336f59620286288c0b82f9ba10a3bf31784cf6b952dfca468e713c",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/q3_claim_sources.json": "8e129a62b6f38cb20bff78af31ebe4e4eae840a121829b85fecc7aabaeaed89d",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/q3_donor_capacity_wait_tradeoff.png": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6",
+    "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/q3_s3_main_table.tex": "f303e28e81cf2c7133a098e8fb0df2607137f4467d73cdc78409f382b0fb9459"
+  },
+  "paper_files": {
+    "problems/2026_gpu_scheduling/paper/q3_section.tex": "0ad7f636c02dfb39f7b94b9d90faa3ec6e569dedb8abac83c804dd5f007b92ca",
+    "problems/2026_gpu_scheduling/paper/q3_section_zh.html": "231615ea195f3935455d433a4bb88b162a283e58c25dbfcbc70f32908776f987",
+    "problems/2026_gpu_scheduling/paper/q3_s3_main_table.tex": "f303e28e81cf2c7133a098e8fb0df2607137f4467d73cdc78409f382b0fb9459",
+    "problems/2026_gpu_scheduling/paper/figures/q3_donor_capacity_wait_tradeoff.png": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6"
+  },
+  "protected_scope": {
+    "unchanged": [
+      "S1/S2 result files and manifests",
+      "raw CSV",
+      "Q1 research",
+      "q3_model.md",
+      "q3.py",
+      "q3_validation.py",
+      "shared simulator"
+    ],
+    "q2_merged": false,
+    "main_modified": false
+  },
+  "limitations": [
+    "No hardware K/sigma benchmark",
+    "No dynamic sharing/MIG/migration/pricing/RL",
+    "No Q2 x Q3 joint schedule",
+    "No global optimum claim"
+  ]
+}
