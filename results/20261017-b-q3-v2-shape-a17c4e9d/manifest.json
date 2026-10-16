@@ -76,7 +76,7 @@
     "problems/2026_gpu_scheduling/experiments/verify_q3_v2_shape.py": "ac9246c26b37f4fc214d85cc2274975f626efd0bd309edccac85f635fb9f01cf",
     "problems/2026_gpu_scheduling/configs/q3_v2_shape.json": "4c772802690f9d3ac853f0713038d9097d84ecca97123474b3d4534a258878af",
     "problems/2026_gpu_scheduling/docs/q3_v2_model.md": "8f7b574446302ee47f6dc69b2997a68d3f4c00889a19cfe8bc025f7fd037800e",
-    "problems/2026_gpu_scheduling/tests/test_q3_v2_shape.py": "87fd203fae62a3d82613132f88f269e8a8a90ae267517825f7d221ce7950939f",
+    "problems/2026_gpu_scheduling/tests/test_q3_v2_shape.py": "4e4f7908d324409de83fb9b611198703af326bf3e3b169a576e5ff405d68e0a0",
     "problems/2026_gpu_scheduling/src/gpu_scheduling/q3.py": "a8b95271b5cc5ac1a2a93be39598d73f979f66116a661a9fd0f196ebb9bb84d2",
     "problems/2026_gpu_scheduling/src/gpu_scheduling/q3_validation.py": "fb3f9a1d678f06d7a8ae1ef0863b5ecbd85aea3471512ee2bbd4e93a8b3d343b"
   },
@@ -113,14 +113,14 @@
   "validation": {
     "full_trace_runs": "PASS: four serial cases; each <900 seconds",
     "independent_replay": "PASS: independent_verification.json",
-    "synthetic_tests": "PASS: test_q3_v2_shape.py (6 tests)",
+    "synthetic_tests": "PASS: test_q3_v2_shape.py (7 tests)",
     "native_invariance": "PASS: all four timing and placement comparisons against same-sigma R0",
     "route_and_shape": "PASS: V1 eligibility/hash replay plus derived 16 CPU/GPU rule",
     "candidate_B": "IMPLEMENTATION_DEFERRED with specification and minimal interface",
     "cross_machine_delivery": "BLOCKED: no authorized shared storage",
     "repo_check": "PASS: scripts/check_repo.py (309 files)",
     "root_tests": "PASS: root unittest (12 tests)",
-    "problem_tests": "PASS: Problem B unittest (91 tests)",
+    "problem_tests": "PASS: Problem B unittest (92 tests)",
     "diff_check": "PASS: git diff --check"
   }
 }

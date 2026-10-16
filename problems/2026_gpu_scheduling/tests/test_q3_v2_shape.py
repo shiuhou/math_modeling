@@ -5,7 +5,7 @@ import unittest
 import pandas as pd
 
 from gpu_scheduling.data import prepare_data
-from gpu_scheduling.q3 import Config, TARGET
+from gpu_scheduling.q3 import Config, TARGET, simulate
 from gpu_scheduling.q3_v2 import completion_cost_spec, derive_shape_limit, route_shape, shape_allowed, simulate_shape
 
 
@@ -59,6 +59,21 @@ class RShapeTests(unittest.TestCase):
         routed = one.route_reason == "routed"
         self.assertTrue((two.loc[routed, "duration"] == 2 * two.loc[routed, "original_duration"]).all())
         self.assertTrue((two.loc[~routed, "duration"] == two.loc[~routed, "original_duration"]).all())
+
+    def test_sigma_two_can_start_earlier_but_finish_later(self):
+        nodes = self.nodes[self.nodes.node_name != 2].reset_index(drop=True)
+        jobs = self.jobs[self.jobs.job_name.isin([1, 2])].copy()
+        jobs.loc[jobs.job_name == 1, "cpu_request"] = 20  # shape rejected, blocks the native A10 pool
+        jobs.loc[jobs.job_name == 1, "duration"] = 15
+        jobs.loc[jobs.job_name == 2, "cpu_request"] = 8
+        jobs.loc[jobs.job_name == 2, "duration"] = 20
+        nodes, jobs = prepare_data(nodes, jobs)
+        m0, _ = simulate(nodes, jobs, "FCFS", replace(self.cfg, donor_nodes=0))
+        r2, _ = simulate_shape(nodes, jobs, "FCFS", replace(self.cfg, sigma=2))
+        m0j = m0.set_index("job_name").loc[2]
+        r2j = r2.set_index("job_name").loc[2]
+        self.assertLess(r2j.start, m0j.start)
+        self.assertGreater(r2j.finish, m0j.finish)
 
     def test_reversing_arrival_order_does_not_change_route(self):
         _, a = route_shape(self.nodes, self.jobs, self.cfg)

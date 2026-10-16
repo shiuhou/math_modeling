@@ -20,4 +20,4 @@ R-shape 先套用 V1 eligibility 與 `q3-fixed-split-v1` 10% hash，再以正式
 
 正式小型結果在 `results/20261017-b-q3-v2-shape-a17c4e9d/`；完整 timing／placement 在 ignored local output 與 delivery ZIP，跨機交付 `BLOCKED`。V1 的 M0/S0/S5 schedule 只作同契約已驗證 reference，沒有修改歷史結果。
 
-工程回歸：repo check 309 files PASS；根目錄 12 tests PASS；Problem B 91 tests PASS（含 6 項 V2 R-shape/B deferred 測試）；`git diff --check` PASS。大型 delivery ZIP 僅本機保存，跨機共享為 BLOCKED。
+工程回歸：repo check 309 files PASS；根目錄 12 tests PASS；Problem B 92 tests PASS（含 7 項 V2 R-shape/B deferred 測試）；`git diff --check` PASS。大型 delivery ZIP 僅本機保存，跨機共享為 BLOCKED。
