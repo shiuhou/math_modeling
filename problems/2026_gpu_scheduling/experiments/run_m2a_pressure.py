@@ -100,6 +100,8 @@ def main() -> None:
     parser.add_argument("--theta-seconds", type=int, default=4_860_000)
     parser.add_argument("--reservation-k", type=int, default=200)
     parser.add_argument("--event-mode", choices=("shared-timer", "arrival-completion-only"), default="shared-timer")
+    parser.add_argument("--no-diagnostics", action="store_true",
+                        help="disable candidate-ID diagnostic sets while preserving scheduling semantics")
     parser.add_argument("--policies", nargs="+", choices=sorted(POLICY_ALIASES),
                         default=["SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX", "EASY-NR"])
     args = parser.parse_args()
@@ -128,7 +130,8 @@ def main() -> None:
         policy_started = time.perf_counter()
         scheduler_started = time.perf_counter()
         result = simulate_pool(pool, jobs, requested, theta_seconds=args.theta_seconds,
-                               reservation_k=args.reservation_k, event_mode=args.event_mode, progress=phase)
+                               reservation_k=args.reservation_k, event_mode=args.event_mode,
+                               diagnostics=not args.no_diagnostics, progress=phase)
         scheduler_seconds = time.perf_counter() - scheduler_started
         phase("simulate_pool", "end", jobs=len(jobs), events=len(result["events"]), promises=len(result["reservations"]))
         phase("reservation_validation", "begin", jobs=len(jobs), events=len(result["events"]), promises=len(result["reservations"]))
@@ -195,6 +198,7 @@ def main() -> None:
         "data_sha256": hashes, "model": args.model, "jobs": len(jobs),
         "configuration": {"policies": [r["policy"] for r in results], "theta_seconds": args.theta_seconds,
                           "reservation_k": args.reservation_k, "event_mode": args.event_mode,
+                          "diagnostics": not args.no_diagnostics,
                           "placement": "first-fit ascending node_name", "horizon_seconds": 7_776_000},
         "environment": {"python": platform.python_version(), "platform": platform.platform()},
         "runtime_seconds_total": time.perf_counter() - run_started,
