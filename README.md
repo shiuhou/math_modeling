@@ -1,20 +1,21 @@
 # Astra Modeling Team
 
-`shiuhou/math_modeling` 由隊員各自在自己的電腦 clone，按任務分支與 GitHub PR 協作。目標是讓題目、推導、程式、實驗證據與論文可以互相核對。
+`shiuhou/math_modeling` 以 Git 分支與 PR 協作，讓題目、推導、程式、實驗證據與論文可以互相核對。
 
-目前階段：**Problem B 共用研究基礎**。Q1 與唯一 FCFS／SJF-HOL 基線可重現；Q2/Q3 從 `chore/b-intake-ready` 整合基礎獨立研究，舊性能表未重驗。初次 clone 的 B 題隊員請使用 [B 題唯一入口](problems/2026_gpu_scheduling/README.md) 的分支、環境、測試與基線命令；目前 main 尚未包含這些整合。分工、公開資料範圍與正式環境待確認。
+目前狀態：**2026 MCM Problem B Baseline V1 已完成並合入 `main`**。第一輪 Q1、Q2、Q3 已整合；固定、不可變的參考點是 [`2026-mcm-b-baseline-v1`](https://github.com/shiuhou/math_modeling/releases/tag/2026-mcm-b-baseline-v1)，指向合併提交 `4ee2c6bfa98cf7177ff976abe73b122889437f46`。Q2 最新 SPT-HOL／SPT-FILL 比較已驗證；Q3 M0、S0、S1–S5 共 14 組情景已驗證；合併後共享 DES 已重跑 14 組，並與歷史排程逐 ID 精確一致。保底論文已產生 9 頁英文 PDF與 code supplement。正式競賽提交仍等待隊伍身份、人工作者確認與最終 AI 披露。
 
 ## 從這裡開始
 
 1. 閱讀唯一數模規範正文 [modeling.md](modeling.md)；Agent 入口是 [AGENTS.md](AGENTS.md)。
-2. 查看 [專案現況、題目覆蓋與共用介面](docs/brief.md)，以及相關的 [任務筆記](notes/tasks/)。
-3. 按 [CONTRIBUTING.md](CONTRIBUTING.md) 認領短期任務、在自己的 clone 開分支、驗證並準備 PR。
+2. 查看 [專案現況、題目覆蓋與共用介面](docs/brief.md)。
+3. 按 [B 題唯一工程入口](problems/2026_gpu_scheduling/README.md) 核對 Baseline V1、正式證據與第二輪分工。
+4. 按 [CONTRIBUTING.md](CONTRIBUTING.md) 從正確的研究分支開工並準備 PR。
 
-[初始化委託原文](codex_repo_bootstrap_prompt.md) 保留作本輪範圍依據，不是另一套日常研究規範。
+## 第二輪研究流程
 
-## 現在可執行的檢查
+Baseline V1 是不可變參考。現有第二輪分支為 `feat/b-q2-k-ablation`、`feat/b-gang-placement` 與 `feat/b-q3-substitution-v2`；其他研究分支必須從 `2026-mcm-b-baseline-v1` 建立。純文件提交可以後續合入 `main`，但不移動 tag，也不改寫保底實驗。新方法必須沿用同一原始資料、指標、評價窗口與驗證標準；共享程式修改先經 PR 協調，已驗證的 results 不可覆寫。
 
-倉庫檢查使用 **Python 3.10+ 標準函式庫與 Git**，無需安裝研究套件。每位隊員在自己的電腦準備環境並登入自己的 GitHub／Codex 帳號，見 [個人電腦設定](docs/host.md)。完整測試包含舊 Linux 工具，目前只在 Linux 驗證；其他平台狀態見該文件。B 題研究套件與本機版本見 B 題入口；全隊正式環境待確認。
+## 檢查與目錄
 
 在倉庫根目錄執行：
 
@@ -24,37 +25,12 @@ python3 -m unittest discover -s tests -v
 git diff --check
 ```
 
-`check_repo.py` 檢查 Git 已追蹤及尚未被忽略的新檔案：行內 Markdown 連結的本地路徑，以及 JSON 語法（拒絕重複鍵與非有限數值）。它不查外部網址、頁內錨點、reference-style 連結、題目內容或實驗清單的研究語義。倉庫文件請使用可檢查的行內相對連結。
-
-測試涵蓋檢查器的有效／無效輸入、CLI 失敗回傳、Git 忽略效果及既有協作工具的基本行為；不啟動 Codex、tmux 或建模實驗。[GitHub Actions](.github/workflows/repository-checks.yml) 執行相同倉庫檢查與測試；本地通過不代表遠端 CI 已執行。實際驗證狀態見 [專案摘要](docs/brief.md)。
-
-## 目錄職責
-
 | 位置 | 用途 |
 | --- | --- |
-| [docs/brief.md](docs/brief.md) | 唯一專案入口：選題、覆蓋、介面、依賴與驗證摘要 |
-| [CONTRIBUTING.md](CONTRIBUTING.md)、[任務模板](.github/ISSUE_TEMPLATE/research_task.md)、[PR 模板](.github/pull_request_template.md) | 認領、審閱與整合 |
-| [scripts/](scripts/)、[tests/](tests/) | 倉庫檢查及既有團隊工具；工程行為測試 |
-| [src/](src/)、[experiments/](experiments/)、[notebooks/](notebooks/) | 可重用研究程式、實驗執行入口、探索；B 題實作集中於 problems/2026_gpu_scheduling |
-| [data/](data/README.md)、[outputs/](outputs/README.md) | 本機原始資料與可再生暫存；內容預設不進 Git，B 題沿用既有已追蹤 raw CSV |
-| [results/](results/README.md) | 可追蹤的正式清單、指標及必要明細；已有 Q1 重算表及清單，完整論文仍未驗證 |
-| [paper/](paper/draft.md)、[figures/](figures/) | 論文工作稿與選用圖表；寫作工具待確認 |
-| [notes/tasks/](notes/tasks/) | 隨 Git 保存的任務交付摘要；已有 Issue 時引用其狀態 |
-| [.agents/skills/](.agents/skills/) | 按需要選用的工具，不固定成員角色 |
+| [docs/brief.md](docs/brief.md) | 當前研究、驗收與協作狀態 |
+| [problems/2026_gpu_scheduling/README.md](problems/2026_gpu_scheduling/README.md) | B 題唯一工程與實驗入口 |
+| [results/README.md](results/README.md) | 正式證據目錄與來源導航 |
+| [scripts/](scripts/)、[tests/](tests/) | 倉庫檢查與工程測試 |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | 分支、驗證與 PR 流程 |
 
-## 第一次 clone 與開任務
-
-在自己的電腦執行，把 `task-slug` 換成實際任務名稱：
-
-```bash
-git clone https://github.com/shiuhou/math_modeling.git
-cd math_modeling
-git switch -c feat/task-slug
-codex
-```
-
-已有 clone 的隊員，先保存目前任務並確認工作目錄乾淨，再切回 `main`、執行 `git pull --ff-only origin main`，從最新主線開新分支。提交、推送及 PR 步驟見 [協作流程](CONTRIBUTING.md)。
-
-各自的 clone 已隔離工作目錄，不要求額外 worktree 或 tmux。`scripts/team.py` 是保留的舊共用主機工具，不用於目前跨電腦協作，其留言也不會隨 Git push 同步。
-
-研究方法保持開放，實驗預設由隊員執行。Git 提交、推送、PR 與合併依任務授權進行；各步驟分別記錄實際執行狀態。
+歷史研究日志與負面結果保留原狀；它們是歷史快照，不取代 Baseline V1 的正式證據。
