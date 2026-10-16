@@ -1,0 +1,34 @@
+{
+  "status": "IMPLEMENTATION_DEFERRED",
+  "candidate": "completion-cost",
+  "eligibility": "R-shape eligible jobs only",
+  "decision": "s_hat_A - s_hat_B > (sigma - 1) * p_j + eta",
+  "eta_seconds": 0,
+  "allowed_information": [
+    "arrived jobs",
+    "currently running fixed-configuration jobs",
+    "known remaining durations and current resources"
+  ],
+  "forbidden_information": [
+    "future submissions",
+    "post-hoc M0 waiting",
+    "future realized completion time of the candidate"
+  ],
+  "minimum_interface": {
+    "name": "route_on_arrival(state, job)",
+    "state": [
+      "now",
+      "arrived_waiting_jobs",
+      "running_remaining",
+      "free_cpu_gpu",
+      "partition_queue_state"
+    ],
+    "return": [
+      "route_reason",
+      "effective_duration",
+      "updated_shadow_state"
+    ],
+    "ordering": "same-submit jobs use ascending original job ID; each decision updates shadow state"
+  },
+  "limitation": "q3.route currently constructs the complete route before simulate_pool; no safe online callback exists yet"
+}

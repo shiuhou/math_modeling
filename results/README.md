@@ -52,4 +52,8 @@
 
 [Q3-S3 r3 修訂交付](20261016-b-q3-s3-publication-9ac1d7f2-r3/README.md) 修正 M0/S0 反向 paired evidence、缺欄位語義與 LaTeX 生成；沒有新增排程。舊 S1/S2 結果與 manifest 不變。內建編譯請求未回傳完成 PDF，且 worktree 無本地 LaTeX 編譯器，因此狀態保留 `NOT_RUN`，逐頁檢查也保留 `NOT_RUN`。
 
+## Q3-V2 R-shape bounded study
+
+[Q3-V2 R-shape 結果](20261017-b-q3-v2-shape-a17c4e9d/README.md) 以 `2026-mcm-b-baseline-v1`／`4ee2c6bfa98cf7177ff976abe73b122889437f46` 為基準，固定 60 台 A100 接收節點，完成 FCFS／SJF-HOL × sigma 1/2 四組完整 trace。門檻由正式 node CSV 推導為 16 CPU/GPU；R-shape 保留 10,604 個 V1 hash-selected 作業。獨立 route／逐節點 replay／native timing-placement invariance 均 PASS。sigma=1 不優於 V1 R0；sigma=2 相對同 sigma R0 有固定 trace 的完成時間改善。Candidate B 因現有 `q3.route()` 缺少安全逐到達 callback，標記 `IMPLEMENTATION_DEFERRED`，不報告虛假 full-trace 數字。大型 evidence 跨機交付為 `BLOCKED`。
+
 [Q3-S3 r4 分母修訂交付](20261016-b-q3-s3-publication-9ac1d7f2-r4/README.md) 只修正文生成器與出版數據。S4／90 台的 native A100 全體與正差分受損子群分母、平均新增等待、正延遲總量及群體分位數分開保存；S0／SJF-HOL 相對 M0 的 49,772、4,397、68,183.1825 job-hours 與 P95 變化納入正文。英文正文是 fragment，獨立 wrapper 為 `q3_section_preview.tex`；S1/S2 結果與 manifest 不變。內建編譯因隔離環境無法解析 sibling project files，狀態保留 `NOT_RUN`，跨機大型證據保留 `BLOCKED`。
