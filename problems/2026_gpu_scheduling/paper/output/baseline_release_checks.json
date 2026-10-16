@@ -17,7 +17,8 @@
     "q2_saved_g1_g2_g3": "PASS: verified artifacts status PASS",
     "q3_saved_14_schedules": "PASS: read-only persisted ID/timing/finish/placement structural checks",
     "q2_g2_q3_m0_a10": "PASS: 111284 IDs, start/finish and canonical placement rows exact",
-    "new_scheduling_runs": "NOT_RUN"
+    "new_scheduling_runs": "PASS: merged q3.py/shared simulate_pool, 14 frozen scenarios; see integration_runtime_equivalence.json",
+    "merged_runtime_equivalence": "PASS: 14/14 exact per-ID and placement, metrics/paired indicators, physical replay"
   },
   "pdf": {
     "path": "problems/2026_gpu_scheduling/paper/output/pdf/problem_b_baseline_v1.pdf",
@@ -66,7 +67,7 @@
     "status": "PARTIAL: candidate excludes raw CSV and large schedule archives; large archive cross-machine access BLOCKED"
   },
   "release_gates": {
-    "TECHNICAL_BASELINE_READY": "PASS",
+    "TECHNICAL_BASELINE_READY": "PASS: merged runtime DES equivalence confirmed (14/14)",
     "PAPER_BASELINE_READY": "PASS",
     "SUBMISSION_READY": "BLOCKED: team names/institution/advisor, human review, official separate guidelines PDF availability, and final AI-use confirmation"
   },
@@ -76,5 +77,15 @@
     "official_guidelines_pdf": "BLOCKED_NOT_IN_REPOSITORY"
   },
   "human_review": "NOT_DONE",
-  "ai_disclosure": "DRAFT_REQUIRES_TEAM_CONFIRMATION"
+  "ai_disclosure": "DRAFT_REQUIRES_TEAM_CONFIRMATION",
+  "runtime_equivalence": {
+    "path": "problems/2026_gpu_scheduling/paper/output/integration_runtime_equivalence.json",
+    "report": "problems/2026_gpu_scheduling/paper/output/integration_runtime_equivalence_report.md",
+    "output_root": "problems/2026_gpu_scheduling/outputs/integration-runtime-equivalence-1b46c8f6",
+    "commit": "1b46c8f65579afea25990cd1254302b520e38a70",
+    "runs": 14,
+    "total_wall_seconds": 1210.8628571110312,
+    "max_rss_mib": 383.30078125,
+    "guardrails": "900s timeout / 4096 MiB address-space, sequential"
+  }
 }
