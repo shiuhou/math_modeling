@@ -48,6 +48,10 @@ def main():
                         help="Per-pool, per-timestamp candidate budget")
     parser.add_argument("--event-mode", choices=sorted(EVENT_MODES), default="shared-timer",
                         help="Explicit event comparison mode")
+    parser.add_argument("--placement", choices=("ff-id", "ratio"), default="ff-id")
+    parser.add_argument("--node-order-seed", type=int,
+                        help="Deterministically shuffle physical node order for FF sensitivity")
+    parser.add_argument("--gpu-model", help="Run only one GPU model (useful for controlled pool experiments)")
     args = parser.parse_args()
     if args.out.exists(): parser.error("Output exists; choose a new directory")
     if len(set(args.policies)) != len(args.policies): parser.error("Policies must not be repeated")
@@ -76,7 +80,8 @@ def main():
         "configuration": {"horizon_seconds": horizon, "policies": args.policies, "audit_only": args.audit_only,
                           "theta_seconds": args.theta_seconds, "reservation_k": args.reservation_k,
                           "event_mode": args.event_mode,
-                          "cpu_scale": 100, "placement": "first-fit by ascending node_name",
+                          "cpu_scale": 100, "placement": args.placement,
+                          "node_order_seed": args.node_order_seed,
                           "events": "all completions, then arrivals, then scheduling; half-open allocation intervals"},
         "command": ["python", str(Path(__file__).resolve().relative_to(repo)), *sys.argv[1:]],
         "environment": {"python": platform.python_version(), "numpy": np.__version__, "pandas": pd.__version__,
@@ -95,11 +100,17 @@ def main():
                     ledger = csv.writer(handle)
                     ledger.writerow(["job_name", "node_name", "workers"])
                     for model, sub in jobs.groupby("gpu_model", sort=True):
+                        if args.gpu_model and model != args.gpu_model:
+                            continue
                         pool = nodes[nodes.gpu_model == model].sort_values("node_name").reset_index(drop=True)
+                        order = None
+                        if args.node_order_seed is not None:
+                            order = np.random.default_rng(args.node_order_seed).permutation(len(pool)).tolist()
                         result = simulate_pool(pool, sub, policy,
                                                theta_seconds=args.theta_seconds,
                                                reservation_k=args.reservation_k,
-                                               event_mode=args.event_mode)
+                                               event_mode=args.event_mode, placement=args.placement,
+                                               node_order=order)
                         rows.append({"policy": policy, "gpu_model": model, **metrics(result, pool, horizon)})
                         for jid, plan in zip(result["jobs"].job_name, result["plans"]):
                             ledger.writerows((int(jid), int(pool.node_name.iloc[m]), w) for m, w in plan)
@@ -119,7 +130,8 @@ def main():
                 frame = pd.concat(chunks, ignore_index=True)
                 frame.to_csv(args.out / f"{policy}_job_times.csv.gz", index=False, compression="gzip")
                 combined = {"jobs": frame, "starts": frame.start.to_numpy(), "ends": frame.finish.to_numpy()}
-                rows.append({"policy": policy, "gpu_model": "ALL", **metrics(combined, nodes, horizon)})
+                metric_nodes = nodes if not args.gpu_model else nodes[nodes.gpu_model == args.gpu_model]
+                rows.append({"policy": policy, "gpu_model": "ALL", **metrics(combined, metric_nodes, horizon)})
             write_json(args.out / "baseline_metrics.json", rows)
             record["validation"]["capacity_replay"] = "PASS"
     except Exception:

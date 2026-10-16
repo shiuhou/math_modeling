@@ -1,0 +1,479 @@
+[
+  {
+    "dimension": "cpu_gpu_ratio_bin",
+    "level": "0",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "cpu_gpu_ratio_bin",
+    "level": "(0,100]",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "cpu_gpu_ratio_bin",
+    "level": "(100,400]",
+    "jobs": 1387,
+    "mean_wait_delta_hours": -0.04806496835696547,
+    "improved_jobs": 9,
+    "worsened_jobs": 8,
+    "positive_added_wait_total_hours": 1.6352777777777778
+  },
+  {
+    "dimension": "cpu_gpu_ratio_bin",
+    "level": ">400",
+    "jobs": 8254,
+    "mean_wait_delta_hours": -0.025655507094203483,
+    "improved_jobs": 53,
+    "worsened_jobs": 7,
+    "positive_added_wait_total_hours": 1.4005555555555556
+  },
+  {
+    "dimension": "worker_num",
+    "level": "1",
+    "jobs": 8563,
+    "mean_wait_delta_hours": -0.025050280924390465,
+    "improved_jobs": 50,
+    "worsened_jobs": 15,
+    "positive_added_wait_total_hours": 3.035833333333333
+  },
+  {
+    "dimension": "worker_num",
+    "level": "2",
+    "jobs": 230,
+    "mean_wait_delta_hours": -0.07649154589371981,
+    "improved_jobs": 3,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "3",
+    "jobs": 230,
+    "mean_wait_delta_hours": -0.06297584541062802,
+    "improved_jobs": 2,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "4",
+    "jobs": 131,
+    "mean_wait_delta_hours": -0.05583757421543681,
+    "improved_jobs": 2,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "5",
+    "jobs": 111,
+    "mean_wait_delta_hours": -0.06548048048048048,
+    "improved_jobs": 3,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "6",
+    "jobs": 62,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "7",
+    "jobs": 59,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "8",
+    "jobs": 46,
+    "mean_wait_delta_hours": -0.15846618357487924,
+    "improved_jobs": 1,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "9",
+    "jobs": 33,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "10",
+    "jobs": 26,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "11",
+    "jobs": 22,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "12",
+    "jobs": 17,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "13",
+    "jobs": 16,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "14",
+    "jobs": 9,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "15",
+    "jobs": 6,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "16",
+    "jobs": 9,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "17",
+    "jobs": 9,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "18",
+    "jobs": 6,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "19",
+    "jobs": 5,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "20",
+    "jobs": 8,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "21",
+    "jobs": 8,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "22",
+    "jobs": 5,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "23",
+    "jobs": 6,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "24",
+    "jobs": 3,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "25",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "27",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "31",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "32",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "34",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "35",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "37",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "40",
+    "jobs": 1,
+    "mean_wait_delta_hours": -9.971111111111112,
+    "improved_jobs": 1,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "42",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "45",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "60",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "62",
+    "jobs": 2,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "63",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "75",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "97",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "100",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "143",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "172",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "203",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "207",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "244",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "worker_num",
+    "level": "249",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "gpu_request",
+    "level": "1",
+    "jobs": 9641,
+    "mean_wait_delta_hours": -0.028879438509144973,
+    "improved_jobs": 62,
+    "worsened_jobs": 15,
+    "positive_added_wait_total_hours": 3.035833333333333
+  },
+  {
+    "dimension": "gpu_request",
+    "level": "4",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  },
+  {
+    "dimension": "gpu_request",
+    "level": "8",
+    "jobs": 1,
+    "mean_wait_delta_hours": 0.0,
+    "improved_jobs": 0,
+    "worsened_jobs": 0,
+    "positive_added_wait_total_hours": 0.0
+  }
+]
