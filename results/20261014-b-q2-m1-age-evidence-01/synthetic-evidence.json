@@ -1,0 +1,200 @@
+{
+  "nodes": [
+    {
+      "node_name": 0,
+      "gpu_model": "X",
+      "gpu_capacity_num": 1,
+      "cpu_num": 8,
+      "cpu_units": 800
+    },
+    {
+      "node_name": 1,
+      "gpu_model": "X",
+      "gpu_capacity_num": 1,
+      "cpu_num": 8,
+      "cpu_units": 800
+    }
+  ],
+  "jobs": [
+    {
+      "job_name": 0,
+      "gpu_model": "X",
+      "gpu_request": 1,
+      "cpu_units": 100,
+      "worker_num": 1,
+      "submit_time": 0,
+      "duration": 10
+    },
+    {
+      "job_name": 1,
+      "gpu_model": "X",
+      "gpu_request": 1,
+      "cpu_units": 100,
+      "worker_num": 2,
+      "submit_time": 1,
+      "duration": 1
+    },
+    {
+      "job_name": 2,
+      "gpu_model": "X",
+      "gpu_request": 1,
+      "cpu_units": 100,
+      "worker_num": 1,
+      "submit_time": 1,
+      "duration": 2
+    }
+  ],
+  "starts": [
+    0,
+    10,
+    1
+  ],
+  "ends": [
+    10,
+    11,
+    3
+  ],
+  "plans": [
+    [
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    [
+      [
+        1,
+        1
+      ]
+    ]
+  ],
+  "reservations": [
+    {
+      "promise_id": "promise-1",
+      "protected_job": 1,
+      "protected_job_name": 1,
+      "issued_time": 1,
+      "promised_R": 10,
+      "current_free_initial": {
+        "gpu": [
+          0,
+          1
+        ],
+        "cpu": [
+          700,
+          800
+        ]
+      },
+      "future_free_initial": {
+        "gpu": [
+          1,
+          1
+        ],
+        "cpu": [
+          800,
+          800
+        ]
+      },
+      "future_free_at_R": {
+        "gpu": [
+          1,
+          1
+        ],
+        "cpu": [
+          800,
+          800
+        ]
+      },
+      "placement_witness": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "state_version": 2,
+      "certificate_updates": [
+        {
+          "time": 1,
+          "job": 2,
+          "state_version": 3
+        },
+        {
+          "time": 10,
+          "event": "fulfillment",
+          "state_version": 4
+        }
+      ],
+      "accepted_backfill_ids": [
+        2
+      ],
+      "fulfillment": {
+        "status": "FULFILLED",
+        "time": 10
+      },
+      "policy": "EASY-TIME"
+    }
+  ],
+  "events": [
+    {
+      "time": 0,
+      "kind": "start",
+      "job": 0,
+      "protected": false
+    },
+    {
+      "time": 1,
+      "kind": "reservation_issued",
+      "promise_id": "promise-1",
+      "protected_job": 1,
+      "promised_R": 10
+    },
+    {
+      "time": 1,
+      "kind": "start",
+      "job": 2,
+      "protected": false
+    },
+    {
+      "time": 3,
+      "kind": "finish",
+      "job": 2
+    },
+    {
+      "time": 10,
+      "kind": "finish",
+      "job": 0
+    },
+    {
+      "time": 10,
+      "kind": "reservation_fulfilled",
+      "promise_id": "promise-1",
+      "protected_job": 1,
+      "promised_R": 10
+    },
+    {
+      "time": 10,
+      "kind": "start",
+      "job": 1,
+      "protected": true
+    },
+    {
+      "time": 11,
+      "kind": "finish",
+      "job": 1
+    }
+  ]
+}

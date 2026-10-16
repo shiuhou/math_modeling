@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "capacity_lower_bound_hours": 24.918188858032227,
+  "policies": {
+    "SPT-HOL": {
+      "jobs": 65536,
+      "total_wait_job_seconds": 7156127243,
+      "mean_wait_hours": 30.33162114037408,
+      "capacity_lower_bound_job_seconds": 5878938330,
+      "capacity_lower_bound_hours": 24.918188858032227,
+      "within_window_total_job_seconds": 7145910027,
+      "within_window_gap_job_seconds": 1266971697,
+      "within_window_gap_hours": 5.370126075744629,
+      "beyond_duration_wait_job_seconds": 10217216,
+      "beyond_duration_wait_hours": 0.04330620659722222,
+      "decomposition_sum_job_seconds": 7156127243,
+      "residual_job_seconds": 0,
+      "mean_to_capacity_lb": 1.2172482243065135,
+      "fractions_of_mean": {
+        "capacity_lower_bound": 0.8215251253044272,
+        "within_window_gap": 0.17704711696390388,
+        "beyond_duration_wait": 0.001427757731668942
+      },
+      "w_greater_than_p_count": 13458,
+      "w_greater_than_p_fraction": 0.205352783203125,
+      "w_equal_p_count": 334,
+      "w_zero_count": 7188,
+      "wait_max_seconds": 6733512
+    }
+  }
+}

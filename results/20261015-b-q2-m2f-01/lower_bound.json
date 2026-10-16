@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "lower_bound": {
+    "capacity_gpu": 2494,
+    "job_count": 65536,
+    "event_records": 131072,
+    "event_timestamps": 121253,
+    "integration_intervals": 121252,
+    "integral_q_job_seconds": 5878938330,
+    "lower_bound_mean_hours": 24.918188858032227,
+    "peak_q_jobs": 1483,
+    "q_positive_seconds": 6151723,
+    "width_histogram": {
+      "1": 65131,
+      "2": 164,
+      "3": 64,
+      "4": 51,
+      "5": 22,
+      "6": 7,
+      "7": 4,
+      "8": 67,
+      "9": 2,
+      "11": 1,
+      "16": 20,
+      "32": 3
+    },
+    "integral_end_seconds": 15897599
+  },
+  "data": {
+    "source_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+    "prefix_rule": "read_data sorted jobs; A10 filter; head(65536)"
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "path": "evidence-g1-65536.tar.gz",
+    "bytes": 2691945,
+    "sha256": "5b9e3500ad9b2ede3191ee486e14f0533d295250f8c1b8d9ea9cbabc22f83e43",
+    "member_root": "a10-65536-theta604800-spt-hol"
+  },
+  {
+    "path": "evidence-g2-111284.tar.gz",
+    "bytes": 4648698,
+    "sha256": "32500c9daa360b0b9a6af1990415f91b8b24b08edd36951bea4e9815a2bf70dd",
+    "member_root": "a10-111284-theta604800-spt-hol"
+  },
+  {
+    "path": "evidence-g3-111284.tar.gz",
+    "bytes": 5666196,
+    "sha256": "0ac366402f23e77e15f0869c9e13e5ff8d31d624b05b83045578172051fd67da",
+    "member_root": "a10-111284-theta604800-spt-fill"
+  }
+]

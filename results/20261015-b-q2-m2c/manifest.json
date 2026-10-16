@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261015-b-q2-m2c",
+  "question_or_claim": "Q2 M2-C performance, memory, evidence compaction and independent replay scalability; no full-trace claim",
+  "code": {
+    "commit": "d30ddc0c40452124a73e7fb56790a75d24820ee0",
+    "dirty": true,
+    "changes": [
+      "epoch-local queue ordering cache",
+      "single event-ordered reservation validator",
+      "reservation evidence schema 2",
+      "bounded child timeout/RSS controls"
+    ],
+    "workspace_untracked": [
+      "notes/tasks/b-q2 _newest.md (preserved user file; not part of source run)"
+    ]
+  },
+  "data": {
+    "source": "problems/2026_gpu_scheduling/data/raw",
+    "sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "scope": "A10 prefixes selected by stable raw order"
+  },
+  "configuration": {
+    "placement": "FF-id ascending node_name",
+    "event_mode": "shared-timer",
+    "reservation_k": 200,
+    "A": {
+      "jobs": [
+        16384,
+        32768
+      ],
+      "theta_seconds": 4860000,
+      "policies": [
+        "SPT-URGENT-TIME",
+        "SPT-URGENT-FIXED",
+        "SPT-URGENT-FLEX"
+      ]
+    },
+    "B": {
+      "jobs": [
+        4096,
+        8192
+      ],
+      "theta_seconds": 4,
+      "policies": [
+        "SPT-URGENT-TIME",
+        "SPT-URGENT-FIXED",
+        "SPT-URGENT-FLEX"
+      ]
+    },
+    "full_trace": "NOT_RUN"
+  },
+  "commands": {
+    "A": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py --jobs 16384 32768 --theta-seconds 4860000 --short-theta-seconds 4860000 --policies SPT-URGENT-TIME SPT-URGENT-FIXED SPT-URGENT-FLEX --out outputs/q2-m2c-anchor-20261015",
+    "B": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py --jobs 4096 8192 --theta-seconds 4 --short-theta-seconds 4 --policies SPT-URGENT-TIME SPT-URGENT-FIXED SPT-URGENT-FLEX --out outputs/q2-m2c-short-20261015",
+    "control": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py --jobs 16 --theta-seconds 4860000 --short-theta-seconds 4860000 --policies SPT-URGENT-TIME --max-rss-kib 1000 --timeout-seconds 10 --out outputs/q2-m2c-limit-test-20261015"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "process_isolation": "one child per policy",
+    "timeout_rss_control": "PASS (RSS_LIMIT control)"
+  },
+  "validation": {
+    "status": "PASS_WITH_NOT_RUN_SCOPE",
+    "checks": [
+      {
+        "name": "repo/root/Problem B tests",
+        "status": "PASS",
+        "evidence": "final command output; 12 root and 34 Problem B tests"
+      },
+      {
+        "name": "A six persisted replays",
+        "status": "PASS",
+        "evidence": "A_theta1350-*-verified.json"
+      },
+      {
+        "name": "B six persisted replays",
+        "status": "PASS",
+        "evidence": "B_theta4-*-verified.json"
+      },
+      {
+        "name": "schedule hash A",
+        "status": "PASS",
+        "evidence": "comparison.json"
+      },
+      {
+        "name": "schedule hash B 4096",
+        "status": "PASS",
+        "evidence": "comparison.json plus prior M2-A pressure-theta4-summary.json"
+      },
+      {
+        "name": "timeout/RSS control",
+        "status": "PASS",
+        "evidence": "rss-limit-control-status.json"
+      },
+      {
+        "name": "full 224112 trace",
+        "status": "NOT_RUN",
+        "reason": "outside this performance repair scope"
+      }
+    ]
+  },
+  "results": {
+    "comparison": "comparison.json",
+    "A_summaries": "A_theta1350-*-summary.json",
+    "B_summaries": "B_theta4-*-summary.json",
+    "verifications": "*-verified.json",
+    "coordinator_diagnostics": [
+      "anchor-benchmark.json",
+      "short-benchmark.json",
+      "rss-limit-control-status.json"
+    ],
+    "large_outputs": "ignored outputs/q2-m2c-*; child summary hashes retained"
+  },
+  "open_items": [
+    "Formal nine-policy full trace remains NOT_RUN",
+    "16,384 theta=4s and larger short-threshold probes remain restricted until resource budget is separately approved",
+    "Historical schema-1 reservation outputs remain preserved but require rerun under schema 2 for new validator replay"
+  ]
+}

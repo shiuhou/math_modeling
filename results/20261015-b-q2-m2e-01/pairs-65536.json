@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "kind": "m2d_paired_analysis",
+  "benchmark_sha256": "2fa1ca800182ceb3d7043da0657861e818906433474312f44a4feede2f56d94f",
+  "comparisons": [
+    {
+      "jobs": 65536,
+      "theta_seconds": 604800,
+      "baseline": "SPT-URGENT-TIME",
+      "policy": "SPT-URGENT-FIXED",
+      "result": {
+        "jobs": 65536,
+        "mean_wait_delta_hours": -0.43923377566867405,
+        "p95_wait_delta_hours": 0.01638888888888889,
+        "max_wait_delta_hours": 371.1972222222222,
+        "improved_jobs": 9504,
+        "worsened_jobs": 10096,
+        "unchanged_jobs": 45936,
+        "changed_jobs": 19600,
+        "base_zero_wait_jobs": 4440,
+        "base_zero_wait_new_delay_jobs": 8,
+        "long_jobs_duration_ge_p95": 3277,
+        "long_jobs_improved": 196,
+        "long_jobs_worsened": 136
+      },
+      "detail": "paired-65536-604800-SPT-URGENT-TIME-to-SPT-URGENT-FIXED.csv.gz",
+      "detail_sha256": "4d5394fd5a47a49d5519f3f93fa3488be69af40ec951f76c43ccb67491c5b12f"
+    },
+    {
+      "jobs": 65536,
+      "theta_seconds": 604800,
+      "baseline": "SPT-URGENT-TIME",
+      "policy": "SPT-URGENT-FLEX",
+      "result": {
+        "jobs": 65536,
+        "mean_wait_delta_hours": -0.8125376171535916,
+        "p95_wait_delta_hours": 0.0077777777777777776,
+        "max_wait_delta_hours": 1005.7505555555556,
+        "improved_jobs": 14207,
+        "worsened_jobs": 8207,
+        "unchanged_jobs": 43122,
+        "changed_jobs": 22414,
+        "base_zero_wait_jobs": 4440,
+        "base_zero_wait_new_delay_jobs": 11,
+        "long_jobs_duration_ge_p95": 3277,
+        "long_jobs_improved": 279,
+        "long_jobs_worsened": 181
+      },
+      "detail": "paired-65536-604800-SPT-URGENT-TIME-to-SPT-URGENT-FLEX.csv.gz",
+      "detail_sha256": "f992120ca2a20d67b490249355092b487a14ad82dd01566ddfe70d39498bc86d"
+    },
+    {
+      "jobs": 65536,
+      "theta_seconds": 604800,
+      "baseline": "SPT-URGENT-FIXED",
+      "policy": "SPT-URGENT-FLEX",
+      "result": {
+        "jobs": 65536,
+        "mean_wait_delta_hours": -0.3733038414849175,
+        "p95_wait_delta_hours": 0.0008333333333333334,
+        "max_wait_delta_hours": 984.6827777777778,
+        "improved_jobs": 13249,
+        "worsened_jobs": 3886,
+        "unchanged_jobs": 48401,
+        "changed_jobs": 17135,
+        "base_zero_wait_jobs": 4437,
+        "base_zero_wait_new_delay_jobs": 7,
+        "long_jobs_duration_ge_p95": 3277,
+        "long_jobs_improved": 195,
+        "long_jobs_worsened": 144
+      },
+      "detail": "paired-65536-604800-SPT-URGENT-FIXED-to-SPT-URGENT-FLEX.csv.gz",
+      "detail_sha256": "a95846bfd66dc07e01eaa6b0de4e5c9cefe08f62c3fdd1a735d9b4f3554964d6"
+    }
+  ]
+}

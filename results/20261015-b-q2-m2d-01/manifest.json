@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261015-b-q2-m2d-01",
+  "question_or_claim": "Q2 M2-D A10 formal comparison readiness and bounded cost evidence; no full-trace performance claim",
+  "code": {
+    "commit": "c7c99f76160568487d3cfde6f73e09a20e729a5e",
+    "dirty": true,
+    "changes": [
+      "incremental active-promise reservation replay",
+      "formal threshold labels",
+      "duration strata in pressure summaries",
+      "paired TIME/FIXED/FLEX analysis entrypoint"
+    ],
+    "workspace_untracked": [
+      "notes/tasks/b-q2 _newest.md (preserved user file; not part of source run)"
+    ]
+  },
+  "data": {
+    "source": "problems/2026_gpu_scheduling/data/raw",
+    "sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "scope": "A10 stable raw-order prefix and requested full count",
+    "a10_jobs": 111284,
+    "a10_nodes": 2494
+  },
+  "configuration": {
+    "model": "A10",
+    "jobs_prefix": [
+      65536
+    ],
+    "jobs_full": 111284,
+    "nodes": 2494,
+    "theta_seconds": [
+      604800,
+      4860000
+    ],
+    "theta_roles": {
+      "604800": "exploratory-168h",
+      "4860000": "historical-anchor-1350h"
+    },
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "placement": "FF-id ascending node_name",
+    "horizon_seconds": 7776000,
+    "policies_requested": [
+      "SPT-FILL",
+      "SPT-URGENT-HOL",
+      "SPT-URGENT-TIME",
+      "SPT-URGENT-FIXED",
+      "SPT-URGENT-FLEX",
+      "EASY-NR"
+    ],
+    "full_baselines_requested": [
+      "FCFS-HOL",
+      "SPT-HOL",
+      "SGW-FILL"
+    ],
+    "per_policy_timeout_seconds": 900,
+    "per_policy_max_rss_kib": 4194304,
+    "concurrency": 1
+  },
+  "command": {
+    "prefix": "see benchmark.json records; parent command interrupted after controlled timeout",
+    "verification": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python problems/2026_gpu_scheduling/experiments/verify_m2a_pressure.py --run outputs/q2-m2d-prefix-20261015/a10-65536-theta604800-spt-fill --out results/20261015-b-q2-m2d-01/prefix-65536-604800-spt-fill-verified.json"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "process_isolation": "one child per policy",
+    "timeout_rss_control": "TIMEOUT path exercised"
+  },
+  "duration_seconds": {
+    "spt_fill_65536_theta168h": 363.6978646689968,
+    "spt_urgent_hol_timeout": 900.0315343270049
+  },
+  "validation": {
+    "status": "INCOMPLETE",
+    "checks": [
+      {
+        "name": "repo_check",
+        "status": "PASS",
+        "evidence": "command output in task log"
+      },
+      {
+        "name": "root_tests",
+        "status": "PASS",
+        "evidence": "12 tests"
+      },
+      {
+        "name": "problem_b_tests",
+        "status": "PASS",
+        "evidence": "36 tests"
+      },
+      {
+        "name": "independent_capacity_and_reservation_replay",
+        "status": "PASS",
+        "evidence": "prefix-65536-604800-spt-fill-verified.json"
+      },
+      {
+        "name": "spt_fill_prefix_metrics",
+        "status": "PASS",
+        "evidence": "benchmark.json"
+      },
+      {
+        "name": "spt_urgent_hol_prefix",
+        "status": "TIMEOUT",
+        "evidence": "timeout-spt-urgent-hol.json"
+      },
+      {
+        "name": "other_65k_policies_and_theta1350",
+        "status": "NOT_RUN",
+        "evidence": "stopped by controlled cost rule"
+      },
+      {
+        "name": "full_111284_comparison",
+        "status": "NOT_RUN",
+        "evidence": "stopped by controlled cost rule"
+      }
+    ]
+  },
+  "results": {
+    "compact_benchmark": "benchmark.json",
+    "independent_replay": "prefix-65536-604800-spt-fill-verified.json",
+    "timeout_diagnostic": "timeout-spt-urgent-hol.json",
+    "executed_output_hashes": {
+      "summary.json": "d6e3427ea53a8d259a7090b45e97fb1b413f6b271f68703126fb0f52d5b2bfb7",
+      "SPT-FILL_job_times.csv.gz": "e4b052d0d709c7f0e557381fe3ec53712d3b54023c21d57a7aea865af64f4848",
+      "SPT-FILL_node_placements.csv.gz": "3e323bf8653c540d536d6a87eff3d69887e61f2fde99e8d3f9b79a64af562b5e",
+      "SPT-FILL_reservations.json": "1242fc0fe7f5667807317e8f73719752362ee86bd06104bb3ac7c305a47600f3"
+    },
+    "large_outputs": "outputs/q2-m2d-prefix-20261015 (ignored; reproducible from benchmark command)"
+  },
+  "open_items": [
+    "Complete two-threshold six-policy and optional three-baseline A10 comparison after cost optimization or higher budget.",
+    "Run TIME→FIXED→FLEX paired analysis only when matching policy outputs exist.",
+    "Preserve theta=4s only as engineering stress scenario, not main table."
+  ]
+}

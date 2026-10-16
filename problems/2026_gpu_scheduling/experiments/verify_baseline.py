@@ -11,7 +11,8 @@ sys.path.insert(0, str(PROBLEM / 'src'))
 import pandas as pd
 from gpu_scheduling.data import prepare_data, read_data
 from gpu_scheduling.evaluation import metrics
-from gpu_scheduling.validation import validate
+from gpu_scheduling.simulator import canonical_policy
+from gpu_scheduling.validation import validate, validate_reservations
 from verify_intake import compare_inputs
 
 
@@ -41,6 +42,42 @@ def verify(source, run):
             if workers != int(workers) or workers <= 0: raise ValueError('Invalid worker count')
             plans[lookup[jid]].append((node_lookup[nid], int(workers)))
         validate(nodes, frame, frame.start.to_numpy(), frame.finish.to_numpy(), plans)
+        reservation_checks = []
+        expected_models = sorted(str(x) for x in set(jobs.gpu_model))
+        reservation_files = []
+        for model_name in expected_models:
+            evidence = run / f'{policy}_{model_name}_reservations.json'
+            if not evidence.is_file():
+                raise ValueError(f'Missing reservation evidence: {evidence.name}')
+            reservation_files.append(evidence)
+        expected_mode = record['configuration'].get('event_mode')
+        if expected_mode not in ('arrival-completion-only', 'shared-timer'):
+            raise ValueError('Run does not declare an explicit event_mode')
+        for evidence in reservation_files:
+            payload = json.loads(evidence.read_text())
+            model = payload['gpu_model']
+            if str(model) not in expected_models:
+                raise ValueError('Unknown reservation evidence pool')
+            if canonical_policy(payload.get('policy')) != canonical_policy(policy):
+                raise ValueError('Reservation evidence policy mismatch')
+            if payload.get('event_mode') != expected_mode:
+                raise ValueError('Reservation evidence event_mode mismatch')
+            sub = frame[frame.gpu_model == model].reset_index(drop=True)
+            pool = nodes[nodes.gpu_model == model].reset_index(drop=True)
+            sub_lookup = {int(j): i for i, j in enumerate(sub.job_name)}
+            sub_node_lookup = {int(n): i for i, n in enumerate(pool.node_name)}
+            sub_plans = [[] for _ in range(len(sub))]
+            for jid, nid, workers in placement[placement.job_name.isin(sub.job_name)].itertuples(index=False, name=None):
+                sub_plans[sub_lookup[int(jid)]].append((sub_node_lookup[int(nid)], int(workers)))
+            validate_reservations(pool, sub, {
+                'starts': sub.start.to_numpy(),
+                'ends': sub.finish.to_numpy(),
+                'plans': sub_plans,
+                'reservations': payload.get('reservations'),
+                'events': payload.get('events'),
+                'policy': policy,
+            })
+            reservation_checks.append({'gpu_model': model, 'status': 'PASS' if payload.get('reservations') else 'PASS_NO_PROMISE', 'reservations': len(payload.get('reservations', []))})
         rows = [row for row in saved_metrics if row['policy'] == policy]
         expected_models = set(frame.gpu_model) | {'ALL'}
         if {row['gpu_model'] for row in rows} != expected_models or len(rows) != len(expected_models):
@@ -53,7 +90,7 @@ def verify(source, run):
             if set(row) != set(measured) | {'policy','gpu_model'}:raise ValueError('Metric keys differ')
             for name,value in measured.items():
                 if not math.isclose(value, row[name], rel_tol=1e-11, abs_tol=1e-10): raise ValueError(f'{policy}/{model}/{name} mismatch')
-        checked.append({'policy':policy,'jobs':len(frame),'ledger_rows':len(placement),'input_fields':'PASS','capacity_replay':'PASS','metrics':'PASS'})
+        checked.append({'policy':policy,'jobs':len(frame),'ledger_rows':len(placement),'input_fields':'PASS','capacity_replay':'PASS','reservation_replay': reservation_checks or 'NOT_APPLICABLE','metrics':'PASS'})
     return {'status':'PASS','scope':record['scope'],'checks':checked,'run_sha256':hashlib.sha256((run/'run.json').read_bytes()).hexdigest()}
 
 

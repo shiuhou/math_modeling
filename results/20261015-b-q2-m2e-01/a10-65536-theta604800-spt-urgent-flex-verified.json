@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "scope": "A10 bounded pressure",
+  "checks": [
+    {
+      "policy": "SPT-URGENT-FLEX",
+      "jobs": 65536,
+      "ledger_rows": 67016,
+      "capacity_replay": "PASS",
+      "reservation_replay": "PASS"
+    }
+  ],
+  "source_summary": "summary.json"
+}

@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "kind": "m2a_pressure_run",
+  "code_commit": "960176cc5c45c59553183ac5d1637120d3475ecb",
+  "code_dirty": true,
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "model": "A10",
+  "jobs": 4096,
+  "configuration": {
+    "policies": [
+      "SPT-URGENT-TIME",
+      "SPT-URGENT-FIXED",
+      "SPT-URGENT-FLEX",
+      "EASY-NR"
+    ],
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "placement": "first-fit ascending node_name",
+    "horizon_seconds": 7776000
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "runtime_seconds_total": 23.03863842699502,
+  "peak_rss_kib_process": 549720,
+  "results": [
+    {
+      "policy": "SPT-URGENT-TIME",
+      "requested_policy": "SPT-URGENT-TIME",
+      "jobs": 4096,
+      "runtime_seconds": 1.6303184809949016,
+      "peak_rss_kib_process": 149940,
+      "schedule_sha256": "ffdc1d15b7b4e6dfdd40372ec64a97cfe195a8703a0394f5b8d4a288841fa9df",
+      "reservations": 0,
+      "event_count": 12288,
+      "max_certificate_updates": 0,
+      "cost": {
+        "planner_calls": 18753,
+        "candidate_checks": 18753,
+        "bypass_candidate_checks": 14164,
+        "reservation_calls": 0,
+        "crossing_accepted": 0,
+        "crossing_rejected": 0,
+        "certificate_updates": 0,
+        "reservation_rejects": 0
+      },
+      "validation": "PASS"
+    },
+    {
+      "policy": "SPT-URGENT-FIXED",
+      "requested_policy": "SPT-URGENT-FIXED",
+      "jobs": 4096,
+      "runtime_seconds": 1.6341710400010925,
+      "peak_rss_kib_process": 149940,
+      "schedule_sha256": "ffdc1d15b7b4e6dfdd40372ec64a97cfe195a8703a0394f5b8d4a288841fa9df",
+      "reservations": 0,
+      "event_count": 12288,
+      "max_certificate_updates": 0,
+      "cost": {
+        "planner_calls": 18753,
+        "candidate_checks": 18753,
+        "bypass_candidate_checks": 14164,
+        "reservation_calls": 0,
+        "crossing_accepted": 0,
+        "crossing_rejected": 0,
+        "certificate_updates": 0,
+        "reservation_rejects": 0
+      },
+      "validation": "PASS"
+    },
+    {
+      "policy": "SPT-URGENT-FLEX",
+      "requested_policy": "SPT-URGENT-FLEX",
+      "jobs": 4096,
+      "runtime_seconds": 1.6327079680049792,
+      "peak_rss_kib_process": 149940,
+      "schedule_sha256": "ffdc1d15b7b4e6dfdd40372ec64a97cfe195a8703a0394f5b8d4a288841fa9df",
+      "reservations": 0,
+      "event_count": 12288,
+      "max_certificate_updates": 0,
+      "cost": {
+        "planner_calls": 18753,
+        "candidate_checks": 18753,
+        "bypass_candidate_checks": 14164,
+        "reservation_calls": 0,
+        "crossing_accepted": 0,
+        "crossing_rejected": 0,
+        "certificate_updates": 0,
+        "reservation_rejects": 0
+      },
+      "validation": "PASS"
+    },
+    {
+      "policy": "EASY-NR",
+      "requested_policy": "EASY-NR",
+      "jobs": 4096,
+      "runtime_seconds": 18.135743383987574,
+      "peak_rss_kib_process": 549720,
+      "schedule_sha256": "006060157e25d52d62e79f0bd5b9aa9028ff16364bc7c2046a99bc9c27d8ea8a",
+      "reservations": 242,
+      "event_count": 12772,
+      "max_certificate_updates": 1,
+      "cost": {
+        "planner_calls": 48975,
+        "candidate_checks": 48975,
+        "bypass_candidate_checks": 44879,
+        "reservation_calls": 242,
+        "crossing_accepted": 0,
+        "crossing_rejected": 0,
+        "certificate_updates": 0,
+        "reservation_rejects": 44879
+      },
+      "validation": "PASS"
+    }
+  ],
+  "outputs": {
+    "SPT-URGENT-FLEX_node_placements.csv.gz": "3fa867110dc57ecdc840415f2eb9a64b9f1c9b405925ad38eacfd320605a6e68",
+    "SPT-URGENT-FLEX_job_times.csv.gz": "3c7d885629b55c5ca5a2e87275edf04d5306449747919097ee1600a2867381de",
+    "SPT-URGENT-TIME_node_placements.csv.gz": "1f113f73b8f41b99df48d7eb60927ada1d20e3cd93f292a5bd4513f1d953546f",
+    "SPT-URGENT-TIME_reservations.json": "ed09c38c71491e79c69ec9aca3ef6ecf3c511cd8969e16a927d23250356bf813",
+    "EASY-NR_reservations.json": "4530d5e2274b20019487da1edfea0652642c62b23887919b48ffb1207a71f373",
+    "EASY-NR_job_times.csv.gz": "ecad20def03f323dd712be64e25e813af363750dae64085bb2ab392a54cf8f79",
+    "SPT-URGENT-FIXED_job_times.csv.gz": "3d96d57c2cbe903459b09bdfbaf2b467aceff71f9e49f2a989ede080f9e205a2",
+    "SPT-URGENT-FIXED_node_placements.csv.gz": "da741de71ce70b2363355013c689493ea46a412846eddd99b5ebbe3eba8ec838",
+    "SPT-URGENT-FIXED_reservations.json": "74fded704400c0634de4d5bf08f2cf528d3ce4f80d89689f902a92164769ff32",
+    "SPT-URGENT-TIME_job_times.csv.gz": "7885325d02e269591ecd94e35dbfa76585d372535c31e6fa651070eb49ad298a",
+    "EASY-NR_node_placements.csv.gz": "dbd2f98e33769438e1c7109da0513e311090f5fbbef9460df2d1e67c193195ff",
+    "SPT-URGENT-FLEX_reservations.json": "4017d0dadc87e5f20e8cf13901e2e046fb001338a4554301aed15e9dc757f03a"
+  },
+  "source_sha256": {
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "6ddc34efff1f9a72465d40385aa4c8162d040dc4fb00f9b319d5605572012337",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": "5f21502c2d4dd51fc496b1f960223f63e7618c64ad3e38cc3fe893dbc4f44dfd",
+    "problems/2026_gpu_scheduling/experiments/run_baselines.py": "dc837861343fc8f8ebca7b0f2a8e9e1dfd0b0d3e3e39280dd968f0795e3600d4",
+    "problems/2026_gpu_scheduling/experiments/verify_baseline.py": "c2baf97b232fd773653bac006b25cc022d619d5bc95959c58c7d3c6ac915ed85",
+    "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py": "13ae1eacc59251fa29c8385195390877a4233b0ddc35ebef47497e0cdeca1a30",
+    "problems/2026_gpu_scheduling/experiments/verify_m2a_pressure.py": "05dd6b2acaa2236a1e6237db40210ce67a554c831779e39cc85088967b9fba9a",
+    "problems/2026_gpu_scheduling/tests/test_q2_m1.py": "4051ce323ae494dde329a697d6233ab2d0322f0e3ea81c08e12180ddc752d4ed"
+  },
+  "command": [
+    "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py",
+    "--data",
+    "problems/2026_gpu_scheduling/data/raw",
+    "--out",
+    "outputs/q2-m2a-pressure-a10-shared-20261014",
+    "--jobs",
+    "4096",
+    "--theta-seconds",
+    "4860000",
+    "--reservation-k",
+    "200",
+    "--event-mode",
+    "shared-timer",
+    "--policies",
+    "SPT-URGENT-TIME",
+    "SPT-URGENT-FIXED",
+    "SPT-URGENT-FLEX",
+    "EASY-NR"
+  ]
+}

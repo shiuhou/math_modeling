@@ -1,0 +1,257 @@
+{
+  "base": "0add5f1b56caad43048c93b38218b7f0bb1bfe84",
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "probes": {
+    "before": {
+      "young_starts": [
+        0,
+        10,
+        11
+      ],
+      "shared-timer": {
+        "protected_job_name": 1,
+        "issued_time": 5,
+        "promised_R": 20,
+        "fulfillment": {
+          "status": "FULFILLED",
+          "time": 20
+        }
+      },
+      "arrival-completion-only": {
+        "protected_job_name": 1,
+        "issued_time": 1,
+        "promised_R": 20,
+        "fulfillment": {
+          "status": "FULFILLED",
+          "time": 20
+        }
+      },
+      "null_evidence": "INCORRECTLY_ACCEPTED"
+    },
+    "after": {
+      "young_starts": [
+        0,
+        10,
+        1
+      ],
+      "shared-timer": {
+        "protected_job_name": 1,
+        "issued_time": 5,
+        "promised_R": 20,
+        "fulfillment": {
+          "status": "FULFILLED",
+          "time": 20
+        }
+      },
+      "arrival-completion-only": {
+        "protected_job_name": 1,
+        "issued_time": 7,
+        "promised_R": 20,
+        "fulfillment": {
+          "status": "FULFILLED",
+          "time": 20
+        }
+      },
+      "null_evidence": "REJECTED"
+    }
+  },
+  "baseline_regression": [
+    {
+      "mode": "shared-timer",
+      "policy": "FCFS-HOL",
+      "pool": "A10",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "bffcb3d81cd147c1a61131bf0649269b446eae63b7e26a0079272dadb2123d1d"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "FCFS-HOL",
+      "pool": "A100-SXM4-80GB",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "c4252d8356190272658871edc50f045a23ddd17c9cce7961adbf7618b8b4b3a0"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "FCFS-HOL",
+      "pool": "A800-SXM4-80GB",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "e7bb084d09751b78ca8389a9ffa1beb74569b0a96e9ff29ccdb6867809090410"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "FCFS-HOL",
+      "pool": "GPU-series-1",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "126060038af7c4b6273ae7b958e657c13808c4be156395f08e2cec93fab9563d"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "FCFS-HOL",
+      "pool": "GPU-series-2",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "b7e3a54fe9e25143b9e0141ece7aa8506f8f00802a3df2c0fcc70aa9e403a16e"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "FCFS-HOL",
+      "pool": "H800",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "367ea8861669107749112e9a9c71f01d2a1f6aeffb4a86ec8681747ced6330f5"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "SPT-HOL",
+      "pool": "A10",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "5aba5c85eec29b3287181d142a5a94a0877b2ac77f9cb245addba6dc4901c221"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "SPT-HOL",
+      "pool": "A100-SXM4-80GB",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "7159df46393a7eb9f48fdb435c6406e1c607b2374c4cac8ded49eb4e2e95f70e"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "SPT-HOL",
+      "pool": "A800-SXM4-80GB",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "5a9e91c9e10ce2644d05a4e495fa9ff29339a5ca034e8e961c46f1a5f02ceeee"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "SPT-HOL",
+      "pool": "GPU-series-1",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "371cf4721d6eaa061043e917f109c885408f48651ea92053ea821350b49f2399"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "SPT-HOL",
+      "pool": "GPU-series-2",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "8520b55704f15a6f4c7dc3f375b3636a0f195528874c2b0f771fa5389f22acb3"
+    },
+    {
+      "mode": "shared-timer",
+      "policy": "SPT-HOL",
+      "pool": "H800",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "367ea8861669107749112e9a9c71f01d2a1f6aeffb4a86ec8681747ced6330f5"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "FCFS-HOL",
+      "pool": "A10",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "bffcb3d81cd147c1a61131bf0649269b446eae63b7e26a0079272dadb2123d1d"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "FCFS-HOL",
+      "pool": "A100-SXM4-80GB",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "c4252d8356190272658871edc50f045a23ddd17c9cce7961adbf7618b8b4b3a0"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "FCFS-HOL",
+      "pool": "A800-SXM4-80GB",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "e7bb084d09751b78ca8389a9ffa1beb74569b0a96e9ff29ccdb6867809090410"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "FCFS-HOL",
+      "pool": "GPU-series-1",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "126060038af7c4b6273ae7b958e657c13808c4be156395f08e2cec93fab9563d"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "FCFS-HOL",
+      "pool": "GPU-series-2",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "b7e3a54fe9e25143b9e0141ece7aa8506f8f00802a3df2c0fcc70aa9e403a16e"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "FCFS-HOL",
+      "pool": "H800",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "367ea8861669107749112e9a9c71f01d2a1f6aeffb4a86ec8681747ced6330f5"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "SPT-HOL",
+      "pool": "A10",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "5aba5c85eec29b3287181d142a5a94a0877b2ac77f9cb245addba6dc4901c221"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "SPT-HOL",
+      "pool": "A100-SXM4-80GB",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "7159df46393a7eb9f48fdb435c6406e1c607b2374c4cac8ded49eb4e2e95f70e"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "SPT-HOL",
+      "pool": "A800-SXM4-80GB",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "5a9e91c9e10ce2644d05a4e495fa9ff29339a5ca034e8e961c46f1a5f02ceeee"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "SPT-HOL",
+      "pool": "GPU-series-1",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "371cf4721d6eaa061043e917f109c885408f48651ea92053ea821350b49f2399"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "SPT-HOL",
+      "pool": "GPU-series-2",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "8520b55704f15a6f4c7dc3f375b3636a0f195528874c2b0f771fa5389f22acb3"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "policy": "SPT-HOL",
+      "pool": "H800",
+      "jobs": 64,
+      "status": "PASS",
+      "schedule_sha256": "367ea8861669107749112e9a9c71f01d2a1f6aeffb4a86ec8681747ced6330f5"
+    }
+  ],
+  "baseline_scope": "first 64 jobs per pool; both modes; timings, placements, events, reservations and metrics at both horizons",
+  "full_trace_rerun": "NOT_RUN; fix is gated to urgent policies, baseline branches unchanged"
+}

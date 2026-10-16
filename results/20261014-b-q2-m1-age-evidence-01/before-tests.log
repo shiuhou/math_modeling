@@ -1,0 +1,106 @@
+test_history_mode_does_not_promote_young_blocked_job (test_q2_m1.M1Checks.test_history_mode_does_not_promote_young_blocked_job) ... FAIL
+test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) ...
+  test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) (policy='SPT-URGENT-HOL', mode='arrival-completion-only', arrivals=[0, 1, 2, 7]) ... FAIL
+  test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) (policy='SPT-URGENT-TIME', mode='arrival-completion-only', arrivals=[0, 1, 2, 7]) ... FAIL
+  test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) (policy='SPT-URGENT-HOL', mode='arrival-completion-only', arrivals=[0, 0, 1, 2]) ... FAIL
+  test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) (policy='SPT-URGENT-TIME', mode='arrival-completion-only', arrivals=[0, 0, 1, 2]) ... FAIL
+test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) ...
+  test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) (field='reservations', value=None) ... FAIL
+  test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) (field='reservations', value=0) ... ERROR
+  test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) (field='reservations', value=[None]) ... ERROR
+  test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) (field='events', value=[None]) ... ERROR
+
+======================================================================
+ERROR: test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) (field='reservations', value=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 189, in test_reservation_evidence_requires_explicit_lists
+    validate_reservations(nd, bad["jobs"], bad)
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py", line 55, in validate_reservations
+    recorded_ids = {item.get("promise_id") for item in reservations}
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'int' object is not iterable
+
+======================================================================
+ERROR: test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) (field='reservations', value=[None])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 189, in test_reservation_evidence_requires_explicit_lists
+    validate_reservations(nd, bad["jobs"], bad)
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py", line 55, in validate_reservations
+    recorded_ids = {item.get("promise_id") for item in reservations}
+                    ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+ERROR: test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) (field='events', value=[None])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 189, in test_reservation_evidence_requires_explicit_lists
+    validate_reservations(nd, bad["jobs"], bad)
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py", line 51, in validate_reservations
+    issued_items = [item for item in events if item.get("kind") == "reservation_issued"]
+                                               ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+FAIL: test_history_mode_does_not_promote_young_blocked_job (test_q2_m1.M1Checks.test_history_mode_does_not_promote_young_blocked_job)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 153, in test_history_mode_does_not_promote_young_blocked_job
+    self.assertEqual(result["starts"].tolist(), [0, 10, 1])
+AssertionError: Lists differ: [0, 10, 11] != [0, 10, 1]
+
+First differing element 2:
+11
+1
+
+- [0, 10, 11]
+?         -
+
++ [0, 10, 1]
+
+======================================================================
+FAIL: test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) (policy='SPT-URGENT-HOL', mode='arrival-completion-only', arrivals=[0, 1, 2, 7])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 172, in test_history_promotes_at_next_epoch_in_urgent_fifo_order
+    self.assertEqual(promise["issued_time"], issued)
+AssertionError: 1 != 7
+
+======================================================================
+FAIL: test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) (policy='SPT-URGENT-TIME', mode='arrival-completion-only', arrivals=[0, 1, 2, 7])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 172, in test_history_promotes_at_next_epoch_in_urgent_fifo_order
+    self.assertEqual(promise["issued_time"], issued)
+AssertionError: 1 != 7
+
+======================================================================
+FAIL: test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) (policy='SPT-URGENT-HOL', mode='arrival-completion-only', arrivals=[0, 0, 1, 2])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 172, in test_history_promotes_at_next_epoch_in_urgent_fifo_order
+    self.assertEqual(promise["issued_time"], issued)
+AssertionError: 1 != 7
+
+======================================================================
+FAIL: test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) (policy='SPT-URGENT-TIME', mode='arrival-completion-only', arrivals=[0, 0, 1, 2])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 172, in test_history_promotes_at_next_epoch_in_urgent_fifo_order
+    self.assertEqual(promise["issued_time"], issued)
+AssertionError: 1 != 7
+
+======================================================================
+FAIL: test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) (field='reservations', value=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/tests/test_q2_m1.py", line 188, in test_reservation_evidence_requires_explicit_lists
+    with self.subTest(field=field, value=value), self.assertRaises(AssertionError):
+AssertionError: AssertionError not raised
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.032s
+
+FAILED (failures=6, errors=3)

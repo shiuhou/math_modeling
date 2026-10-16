@@ -1,0 +1,32 @@
+{
+  "status": "RSS_LIMIT",
+  "tag": "a10-16-theta4860000-spt-urgent-time",
+  "jobs": 16,
+  "theta_seconds": 4860000,
+  "policy": "SPT-URGENT-TIME",
+  "elapsed_seconds": 0.05153766200237442,
+  "observed_peak_rss_kib": 27112,
+  "returncode": -9,
+  "command": [
+    "/home/shiuhou/math_modeling-b-q2/.venv/bin/python",
+    "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py",
+    "--data",
+    "/home/shiuhou/math_modeling-b-q2/problems/2026_gpu_scheduling/data/raw",
+    "--out",
+    "outputs/q2-m2c-limit-test-20261015/a10-16-theta4860000-spt-urgent-time",
+    "--model",
+    "A10",
+    "--jobs",
+    "16",
+    "--theta-seconds",
+    "4860000",
+    "--reservation-k",
+    "200",
+    "--event-mode",
+    "shared-timer",
+    "--policies",
+    "SPT-URGENT-TIME"
+  ],
+  "stdout_tail": "",
+  "stderr_tail": ""
+}

@@ -1,0 +1,36 @@
+{
+  "model": "A10",
+  "jobs_prefix": 65536,
+  "jobs_full": 111284,
+  "nodes": 2494,
+  "placement": "FF-id",
+  "reservation_k": 200,
+  "event_mode": "shared-timer",
+  "theta_seconds": [
+    604800,
+    4860000
+  ],
+  "theta_roles": {
+    "604800": "exploratory-168h",
+    "4860000": "historical-anchor-1350h"
+  },
+  "horizon_seconds": 7776000,
+  "drain_all_jobs": true,
+  "duration_modification": false,
+  "primary_policies": [
+    "SPT-FILL",
+    "SPT-URGENT-HOL",
+    "SPT-URGENT-TIME",
+    "SPT-URGENT-FIXED",
+    "SPT-URGENT-FLEX",
+    "EASY-NR"
+  ],
+  "conditional_baselines": [
+    "FCFS-HOL",
+    "SPT-HOL",
+    "SGW-FILL"
+  ],
+  "per_policy_timeout_seconds": 900,
+  "per_policy_max_rss_kib": 4194304,
+  "concurrency": 1
+}

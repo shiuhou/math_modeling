@@ -1,0 +1,33 @@
+{
+  "status": "TIMEOUT",
+  "tag": "a10-65536-theta604800-spt-urgent-hol",
+  "jobs": 65536,
+  "theta_seconds": 604800,
+  "threshold_label": "exploratory-168h",
+  "policy": "SPT-URGENT-HOL",
+  "elapsed_seconds": 900.0315343270049,
+  "observed_peak_rss_kib": 216564,
+  "returncode": -9,
+  "command": [
+    ".venv/bin/python",
+    "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py",
+    "--data",
+    "problems/2026_gpu_scheduling/data/raw",
+    "--out",
+    "outputs/q2-m2d-prefix-20261015/a10-65536-theta604800-spt-urgent-hol",
+    "--model",
+    "A10",
+    "--jobs",
+    "65536",
+    "--theta-seconds",
+    "604800",
+    "--reservation-k",
+    "200",
+    "--event-mode",
+    "shared-timer",
+    "--policies",
+    "SPT-URGENT-HOL"
+  ],
+  "stdout_tail": "",
+  "stderr_tail": ""
+}

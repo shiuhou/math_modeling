@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "kind": "formal_bounded_strategy_comparison",
+  "experiment_id": "20261015-b-q2-m2d-65536",
+  "status": "INCOMPLETE",
+  "claim_scope": "A10 65536-job exploratory theta=168h prefix; no full-trace or performance-win claim",
+  "source_commit_at_run": "5cb1827520cdee30fe41ea5d3a0d5f8bb4fa8116",
+  "data": {
+    "source": "problems/2026_gpu_scheduling/data/raw",
+    "node_sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+    "pool": "A10",
+    "nodes": 2494,
+    "jobs_prefix": 65536,
+    "jobs_full": 111284
+  },
+  "configuration": {
+    "theta_seconds": 604800,
+    "theta_label": "exploratory-168h",
+    "event_mode": "shared-timer",
+    "reservation_k": 200,
+    "placement": "FF-id ascending numeric node_name",
+    "horizon_seconds": 7776000,
+    "timeout_seconds": 900,
+    "max_rss_kib": 4194304,
+    "concurrency": 1
+  },
+  "strategies": {
+    "SPT-FILL": {
+      "status": "PASS",
+      "source_commit": "c7c99f76160568487d3cfde6f73e09a20e729a5e",
+      "verification": "results/20261015-b-q2-m2d-01/prefix-65536-604800-spt-fill-verified.json",
+      "summary": "outputs/q2-m2d-prefix-20261015/a10-65536-theta604800-spt-fill/summary.json",
+      "schedule_sha256": "7cc447d910164051695f7d3188d070d4aad1569618f874310ab5f86aad2a5067",
+      "runtime_seconds": 363.6978646689968,
+      "peak_rss_kib": 557120,
+      "reservations": 0,
+      "crossing_accepted": 0,
+      "verification_status": "PASS",
+      "note": "Historical source version; SPT-FILL dispatch semantics were checked equivalent to current path, but this is not a same-commit rerun."
+    },
+    "SPT-URGENT-HOL": {
+      "status": "PASS",
+      "source_commit": "6caebca50d07c0c3f0886b876332275b6eade4c2",
+      "verification": "results/20261015-b-q2-m2d-rss-01/a10-65536-spt-urgent-hol-verified.json",
+      "summary": "outputs/q2-m2d-rss-65536-20261015/a10-65536-theta604800-spt-urgent-hol/summary.json",
+      "schedule_sha256": "42129d2777d68d488cb37469a80275fc16f5c3b140f0846a84a00f2ac5171e18",
+      "runtime_seconds": 653.5320778960013,
+      "peak_rss_kib": 914604,
+      "reservations": 38253,
+      "crossing_accepted": 0,
+      "verification_status": "PASS"
+    },
+    "SPT-URGENT-TIME": {
+      "status": "TIMEOUT",
+      "benchmark": "outputs/q2-m2d-formal-65536-20261015-spt-urgent-time/benchmark.json",
+      "benchmark_sha256": "ca34006e71e0617cfbbd0ef9cfcb5c0e705d3ff5a04c8defab77fb364b6a48e4",
+      "latest_phase": "scheduling",
+      "completed_jobs_at_stop": 45723,
+      "promises_at_stop": 6889,
+      "observed_peak_rss_kib": 230732,
+      "verification_status": "NOT_RUN",
+      "reason": "900-second child timeout before complete persisted outputs"
+    },
+    "SPT-URGENT-FIXED": {
+      "status": "TIMEOUT",
+      "benchmark": "outputs/q2-m2d-formal-65536-20261015-spt-urgent-fixed/benchmark.json",
+      "benchmark_sha256": "69b0ccd6f32771671eb8eb44d96b2c8d295d646deba00d594eee88c0a34ee6f8",
+      "latest_phase": "scheduling",
+      "completed_jobs_at_stop": 45740,
+      "promises_at_stop": 6909,
+      "observed_peak_rss_kib": 228100,
+      "verification_status": "NOT_RUN",
+      "reason": "900-second child timeout before complete persisted outputs"
+    },
+    "SPT-URGENT-FLEX": {
+      "status": "TIMEOUT",
+      "benchmark": "outputs/q2-m2d-formal-65536-20261015-spt-urgent-flex/benchmark.json",
+      "benchmark_sha256": "d379b215f3749d28c9492cacbd3bca2ee51a53b824eb70f90951702f27ac17b9",
+      "latest_phase": "scheduling",
+      "completed_jobs_at_stop": 45336,
+      "promises_at_stop": 6528,
+      "observed_peak_rss_kib": 226612,
+      "verification_status": "NOT_RUN",
+      "reason": "900-second child timeout before complete persisted outputs"
+    }
+  },
+  "diagnostics": {
+    "gang_starvation": {
+      "spt_fill": "gang-spt-fill.json",
+      "spt_urgent_hol": "gang-spt-urgent-hol.json",
+      "historical_pair_only": "gang-spt-fill-to-hol-paired.json",
+      "pair_note": "Different source commits; diagnostic only, not a strict same-version policy comparison."
+    },
+    "time_fixed_flex_pairing": "NOT_RUN: no two complete matching job-time outputs",
+    "crossing_comparison": "NOT_AVAILABLE for TIME/FIXED/FLEX at this prefix under the guard"
+  },
+  "validation": {
+    "completed_runs": {
+      "SPT-FILL": "PASS",
+      "SPT-URGENT-HOL": "PASS"
+    },
+    "timeout_runs": {
+      "SPT-URGENT-TIME": "TIMEOUT",
+      "SPT-URGENT-FIXED": "TIMEOUT",
+      "SPT-URGENT-FLEX": "TIMEOUT"
+    },
+    "repo_and_tests": "inherited PASS from prior committed M2-D evidence; no scheduler changes in this run",
+    "full_111284_trace": "NOT_RUN",
+    "theta_1350h": "NOT_RUN"
+  },
+  "commands": {
+    "runner_template": ".venv/bin/python problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py --out <new-output> --jobs 65536 --theta-seconds 604800 --short-theta-seconds 604800 --reservation-k 200 --event-mode shared-timer --timeout-seconds 900 --max-rss-kib 4194304 --policies <policy>",
+    "gang_diagnostic": ".venv/bin/python problems/2026_gpu_scheduling/experiments/analyze_gang_starvation.py --times <job_times.csv.gz> --out <result.json>"
+  },
+  "go_no_go": {
+    "next_full_a10_comparison": "NO-GO",
+    "reason": "All three remaining urgent variants timed out on the 65536 prefix before independent verification; no strict TIME-to-FIXED-to-FLEX pairing exists.",
+    "minimum_blocker": "Reduce measured scheduler cost or obtain an explicitly changed resource budget; do not infer full-trace results from partial runs."
+  }
+}

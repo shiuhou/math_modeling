@@ -1,0 +1,17 @@
+{
+  "decision": "GO_SEQUENTIAL_REMAINING_65536",
+  "basis": "TIME 65536 complete at 475.774s / 819220 KiB; persisted independent replay PASS",
+  "policies": [
+    "SPT-URGENT-FIXED",
+    "SPT-URGENT-FLEX",
+    "SPT-FILL",
+    "SPT-URGENT-HOL"
+  ],
+  "limits": {
+    "timeout_seconds": 900,
+    "max_rss_kib": 4194304
+  },
+  "source_commit": "7d5d26b1ecd79303ca482a35377e7d5817c9c532",
+  "configuration": "Same official A10 prefix, theta604800, shared-timer, K200, FF-id, H7776000",
+  "stop": "No change of limits or policy. A failed policy stays failed; independent others may continue. No full A10."
+}

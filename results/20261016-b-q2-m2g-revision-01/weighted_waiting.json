@@ -1,0 +1,34 @@
+{
+  "lower_bounds": {
+    "job_count_mean_wait_hours": 22.317930570033027,
+    "job_count_integral_job_seconds": 8941062908,
+    "gpu_work_weighted_a10_mean_wait_hours": 560.5213678903011,
+    "gpu_work_bound_source": "Q1 fixed-pool fluid bound; CPU/node/gang relaxed"
+  },
+  "policies": {
+    "FCFS": {
+      "jobs": 111284,
+      "mean_wait_hours": 900.1285695807325,
+      "gpu_work_weighted_mean_wait_hours": 619.3518653009497,
+      "total_wait_job_seconds": 360611667854,
+      "total_gpu_work_seconds": 40028314872,
+      "weighted_wait_gpu_seconds_squared": 89249801330977009
+    },
+    "SPT-HOL": {
+      "jobs": 111284,
+      "mean_wait_hours": 32.906454035021504,
+      "gpu_work_weighted_mean_wait_hours": 677.689933237864,
+      "total_wait_job_seconds": 13183062591,
+      "total_gpu_work_seconds": 40028314872,
+      "weighted_wait_gpu_seconds_squared": 97656429719627576
+    },
+    "SPT-FILL": {
+      "jobs": 111284,
+      "mean_wait_hours": 34.967030093674246,
+      "gpu_work_weighted_mean_wait_hours": 677.495535269614,
+      "total_wait_job_seconds": 14008575517,
+      "total_gpu_work_seconds": 40028314872,
+      "weighted_wait_gpu_seconds_squared": 97628416596526640
+    }
+  }
+}

@@ -60,12 +60,41 @@ tests/                  手算、容量、輸入／指標及持久化核查
 ## 共用實作與接口
 
 - [data.py](src/gpu_scheduling/data.py)：`read_data(source) -> nodes, jobs, hashes`；時間秒、每 worker 欄位、`cpu_units` 為百分之一 vCPU；穩定排序。
-- [simulator.py](src/gpu_scheduling/simulator.py)：唯一活動 DES，`simulate_pool(nodes, jobs, policy)`，支援 `FCFS` 與嚴格 `SJF-HOL`。每池獨立；完成事件先於同時提交，再決策；gang 原子放置；FF 按 `node_name` 升序。不可行作業報錯，不遺漏。
+- [simulator.py](src/gpu_scheduling/simulator.py)：唯一活動 DES，`simulate_pool(nodes, jobs, policy)`。保留 `FCFS`／`SJF-HOL` 相容別名，正式基線名為 `FCFS-HOL`／`SPT-HOL`；M1 提供 `SPT-FILL`、`SGW-FILL`、`EASY-TIME`、`SPT-URGENT-HOL`、`SPT-URGENT-TIME`；M2-A 新增 `SPT-URGENT-FIXED`、`SPT-URGENT-FLEX`、`EASY-NR`。所有策略共用 node-level CPU/GPU gang planner；TIME 只接納 `finish <= immutable promised_R`，FIXED/FLEX/EASY-NR 以可重播證書安全地接受 crossing。
 - [evaluation.py](src/gpu_scheduling/evaluation.py)：唯一共享評價器。等待／JCT 包含全部作業直至排空；分位數 linear；BSLD 為 `max(1,JCT/max(duration,60s))`。分配率只積分 `[0,H)`，完成數 `finish <= H`；預設 `H = 最後提交時刻`，名義 90 天需顯式 `--horizon-seconds 7776000`。
 - [validation.py](src/gpu_scheduling/validation.py)：獨立節點 CPU/GPU ledger 回放；微型 scalar oracle 僅供測試，不是第二套正式引擎。
-- [run_baselines.py](experiments/run_baselines.py)：唯一基線流程，記錄 `run.json`、來源 commit／dirty snapshot／雜湊、資料、參數、環境、耗時、全部 metrics、job times 與 node placements；[verify_baseline.py](experiments/verify_baseline.py) 在另一程序從持久化明細核查，不信任 metrics 自報成功。
+- [run_baselines.py](experiments/run_baselines.py)：唯一基線／M1／M2-A 流程，記錄 `run.json`、來源 commit／dirty snapshot／雜湊、資料、參數、環境、耗時、全部 metrics、job times、node placements 及 reservation/event/certificate evidence；[verify_baseline.py](experiments/verify_baseline.py) 在另一程序從持久化明細核查，不信任 metrics 自報成功。`--theta-seconds`、`--reservation-k` 與 `--event-mode` 均明示配置。
+
+Q2 M1 工程 smoke（只做正確性與持久化驗收，不是性能結論）：
+
+```bash
+.venv/bin/python problems/2026_gpu_scheduling/experiments/run_baselines.py \
+  --smoke --theta-seconds 4860000 --reservation-k 200 \
+  --event-mode shared-timer \
+  --policies FCFS-HOL SPT-HOL SPT-FILL SGW-FILL EASY-TIME \
+             SPT-URGENT-HOL SPT-URGENT-TIME --out outputs/q2-m1-smoke
+.venv/bin/python problems/2026_gpu_scheduling/experiments/verify_baseline.py \
+  --run outputs/q2-m1-smoke --out outputs/q2-m1-smoke-verified.json
+```
+
+`--event-mode shared-timer` 讓同一 theta 組的所有 policy 收到相同池內 ticks；沒有 urgent 的 policy 只把 tick 當調度機會。歷史 arrival/completion-only 對照使用 `--event-mode arrival-completion-only`，不能用 policy 名稱暗中選擇比較模式。 兩種模式均要求等待年齡 `t-a >= theta` 才有 urgent 資格：shared-timer 在精確 `a+theta` 提升；arrival-completion-only 在下一個到達／完成 epoch 檢查並提升，沿用相同 urgent FIFO 及原 promise 保護。預約驗證要求顯式 `reservations`／`events` 清單（無預約可為空清單）；缺失、null 或錯誤型別均驗證失敗。
 
 Q2 以此引擎擴充排序／放置，勿另建 DES／評分器。Q3 保持此資料與評價口徑，跨池機制需耦合節點容量，不能各池各自許諾相同 donor 資源。改共用接口前於 [docs/brief.md](../../docs/brief.md) 提出並透過 PR 協調；不覆蓋 Q1 或另一題的修改。
+
+M2-B 有界成本探針（只比較已明示的 A10 前綴，不能代替完整 trace）可用：
+
+```bash
+.venv/bin/python problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py \
+  --jobs 16384 32768 --theta-seconds 4860000 --short-theta-seconds 4 \
+  --reservation-k 200 --event-mode shared-timer \
+  --policies SPT-URGENT-TIME SPT-URGENT-FIXED SPT-URGENT-FLEX \
+  --timeout-seconds 900 --max-rss-kib 4194304 \
+  --out outputs/q2-m2b-bounded-01
+```
+
+它為每個策略建立獨立 child process，分開記錄 scheduler、獨立 reservation replay、評價、I/O 與 process peak RSS；可用 timeout／RSS 上限中止子程序，並留下 `TIMEOUT` 或 `RSS_LIMIT` 狀態與診斷。短門檻只是機制壓力情景。若短門檻造成記憶體或時間失控，應停止並標記完整 trace `NOT_RUN`，不能從錨點前綴推論 FIXED/FLEX 性能收益。
+
+reservation evidence schema `2` 在履約後移除 dense CPU/GPU vectors，只保留 snapshot hash、immutable witness、版本、稀疏 crossing delta、履約及事件 ledger；活動中的 reservation 才保留 scheduler 所需 snapshot。validator 不會把缺少 schema 或舊 schema 靜默當作新證據。
 
 ## 驗證狀態與舊程式處置
 

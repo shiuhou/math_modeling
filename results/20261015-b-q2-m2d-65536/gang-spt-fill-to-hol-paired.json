@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "gang_starvation_diagnostic",
+  "source": "outputs/q2-m2d-prefix-20261015/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+  "jobs": 65536,
+  "strata": {
+    "short_single_worker": {
+      "n": 51141,
+      "mean_wait_hours": 0.04250091794146467,
+      "p99_wait_hours": 0.34833333333333333,
+      "max_wait_hours": 2.8041666666666667
+    },
+    "short_multi_worker": {
+      "n": 283,
+      "mean_wait_hours": 58.65196211228896,
+      "p99_wait_hours": 453.5389888888889,
+      "max_wait_hours": 915.2472222222223
+    },
+    "long_multi_worker": {
+      "n": 122,
+      "mean_wait_hours": 361.81326047358834,
+      "p99_wait_hours": 1509.5673694444433,
+      "max_wait_hours": 1547.9319444444445
+    }
+  },
+  "comparison": {
+    "baseline": "outputs/q2-m2d-prefix-20261015/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+    "candidate": "outputs/q2-m2d-rss-65536-20261015/a10-65536-theta604800-spt-urgent-hol/SPT-URGENT-HOL_job_times.csv.gz",
+    "strata": {
+      "short_single_worker": {
+        "n": 51141,
+        "improved_jobs": 2,
+        "worsened_jobs": 30882,
+        "unchanged_jobs": 20257
+      },
+      "short_multi_worker": {
+        "n": 283,
+        "improved_jobs": 0,
+        "worsened_jobs": 276,
+        "unchanged_jobs": 7
+      },
+      "long_multi_worker": {
+        "n": 122,
+        "improved_jobs": 15,
+        "worsened_jobs": 105,
+        "unchanged_jobs": 2
+      }
+    }
+  }
+}

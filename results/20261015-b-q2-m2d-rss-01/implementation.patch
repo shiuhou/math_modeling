@@ -1,0 +1,591 @@
+diff --git a/problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py b/problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py
+new file mode 100644
+index 0000000..77fbed1
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/experiments/profile_m2d_replay.py
+@@ -0,0 +1,122 @@
++#!/usr/bin/env python3
++"""Bounded old/new verifier RSS curve, using actual persisted/schema-2 evidence.
++
++Run each revision/case in a separate process. A historical source is loaded
++with observability-only hooks; scheduling and evidence are never modified.
++"""
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import resource
++import subprocess
++import sys
++import time
++import types
++import numpy as np
++import pandas as pd
++
++PROBLEM = Path(__file__).resolve().parents[1]
++REPO = PROBLEM.parents[1]
++sys.path.insert(0, str(PROBLEM / 'src'))
++sys.path.insert(0, str(PROBLEM / 'experiments'))
++from gpu_scheduling.data import read_data, prepare_data
++from gpu_scheduling.simulator import simulate_pool
++from gpu_scheduling.validation import validate_reservations
++from run_m2a_pressure import PhaseLog
++
++
++def load_run(path):
++    summary = json.loads((path / 'summary.json').read_text())
++    nodes, jobs, hashes = read_data(PROBLEM / 'data/raw')
++    assert hashes == summary['data_sha256']
++    nodes = nodes[nodes.gpu_model == summary['model']].sort_values('node_name').reset_index(drop=True)
++    jobs = jobs[jobs.gpu_model == summary['model']].head(summary['jobs'])
++    policy = summary['results'][0]['policy']
++    frame = pd.read_csv(path / f'{policy}_job_times.csv.gz')
++    jobs = jobs.set_index('job_name').loc[frame.job_name].reset_index()
++    placements = pd.read_csv(path / f'{policy}_node_placements.csv.gz')
++    job_ids = {int(j): i for i, j in enumerate(frame.job_name)}
++    node_ids = {int(n): i for i, n in enumerate(nodes.node_name)}
++    plans = [[] for _ in range(len(jobs))]
++    for jid, nid, w in placements.itertuples(index=False, name=None):
++        plans[job_ids[int(jid)]].append((node_ids[int(nid)], int(w)))
++    result = json.loads((path / f'{policy}_reservations.json').read_text())
++    result.update(starts=frame.start.to_numpy(), ends=frame.finish.to_numpy(), plans=plans)
++    return nodes, jobs, result
++
++
++def synthetic(count, node_count):
++    # Every pair creates one real HOL promise, then fulfills it before the next
++    # pair arrives. Extra nodes have zero CPU capacity; vectors retain pool size.
++    nodes = pd.DataFrame({'node_name': range(node_count), 'gpu_model': ['X'] * node_count,
++                          'gpu_capacity_num': [1] * node_count,
++                          'cpu_num': [1, 1] + [0] * (node_count - 2)})
++    rows = []
++    for k in range(count):
++        for offset, workers, duration in ((0, 1, 2), (1, 2, 1)):
++            rows.append(dict(job_name=2*k+offset, gpu_model='X', gpu_request=1,
++                             cpu_request=1., worker_num=workers, submit_time=3*k, duration=duration))
++    nodes, jobs = prepare_data(nodes, pd.DataFrame(rows))
++    result = simulate_pool(nodes, jobs, 'SPT-URGENT-HOL', theta_seconds=0)
++    assert len(result['reservations']) == count
++    return nodes, result['jobs'], result
++
++
++def historical(revision, progress):
++    path = 'problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py'
++    source = subprocess.check_output(['git', 'show', f'{revision}:{path}'], cwd=REPO, text=True)
++    source_hash = hashlib.sha256(source.encode()).hexdigest()
++    source = source.replace('    for item in events:', '''    def report(action, count):
++        progress("reservation_replay", action, events_processed=count,
++                 promises_issued=len(issued_ids), promises_completed=len(fulfilled_ids),
++                 live_dense_contexts=sum(c["future_g"] is not None for c in contexts.values()),
++                 live_dense_bytes=sum(c["future_g"].nbytes + c["future_c"].nbytes
++                                      for c in contexts.values() if c["future_g"] is not None),
++                 retained_active_set_bytes=sum(sys.getsizeof(c["active_at_issue"]) for c in contexts.values()))
++    report("begin", 0)
++    for event_index, item in enumerate(events):
++        if event_index and event_index % 4096 == 0:
++            report("progress", event_index)''')
++    source = source.replace('    if active_promise_id is not None:\n        raise AssertionError("pending promise', '    report("events_end", len(events))\n    if active_promise_id is not None:\n        raise AssertionError("pending promise')
++    module = types.ModuleType('gpu_scheduling._historical_validation')
++    module.__package__ = 'gpu_scheduling'
++    module.progress = progress
++    module.sys = sys
++    exec(compile(source, f'<{revision}:validation.py>', 'exec'), module.__dict__)
++    return module.validate_reservations, source_hash
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--run', type=Path)
++    p.add_argument('--synthetic-promises', type=int)
++    p.add_argument('--nodes', type=int, default=2494)
++    p.add_argument('--revision', default='current')
++    p.add_argument('--out', type=Path, required=True)
++    args = p.parse_args()
++    if args.out.exists(): p.error('choose a fresh output directory')
++    args.out.mkdir(parents=True)
++    nodes, jobs, result = load_run(args.run) if args.run else synthetic(args.synthetic_promises, args.nodes)
++    phase = PhaseLog(args.out / 'phase_log.jsonl')
++    phase('input_ready', 'end', jobs=len(jobs), promises=len(result['reservations']), nodes=len(nodes))
++    if args.revision == 'current':
++        verifier = lambda n, j, r: validate_reservations(n, j, r, progress=phase)
++        source_hash = hashlib.sha256((PROBLEM / 'src/gpu_scheduling/validation.py').read_bytes()).hexdigest()
++    else:
++        verifier, source_hash = historical(args.revision, phase)
++    started = time.perf_counter()
++    verifier(nodes, jobs, result)
++    elapsed = time.perf_counter() - started
++    phase('validation', 'end')
++    output = dict(status='PASS', revision=args.revision, validation_seconds=elapsed,
++                  peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
++                  jobs=len(jobs), nodes=len(nodes), promises=len(result['reservations']), events=len(result['events']),
++                  source_sha256=source_hash,
++                  event_sha256=hashlib.sha256(json.dumps(result['events'], sort_keys=True).encode()).hexdigest(),
++                  schedule_sha256=hashlib.sha256(json.dumps(dict(starts=result['starts'].tolist(),
++                      ends=result['ends'].tolist(), plans=result['plans']), sort_keys=True).encode()).hexdigest())
++    (args.out / 'summary.json').write_text(json.dumps(output, indent=2)+'\n')
++    print(json.dumps(output))
++
++if __name__ == '__main__': main()
+diff --git a/problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py b/problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py
+index 9f67ab7..eab3dd3 100644
+--- a/problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py
++++ b/problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py
+@@ -18,6 +18,8 @@ import resource
+ import sys
+ import time
+ import numpy as np
++import os
++import subprocess
+
+ PROBLEM = Path(__file__).resolve().parents[1]
+ REPO = PROBLEM.parents[1]
+@@ -36,6 +38,32 @@ def write_json(path: Path, value) -> None:
+     path.write_text(json.dumps(native(value), ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+
+
++class PhaseLog:
++    """Durable, sparse diagnostics; never added to scheduling evidence."""
++    def __init__(self, path: Path):
++        self.path = path
++        self.started = time.perf_counter()
++        self.policy = None
++
++    def __call__(self, phase, action, **counts):
++        rss = None
++        for line in Path("/proc/self/status").read_text().splitlines():
++            if line.startswith("VmRSS:"):
++                rss = int(line.split()[1])
++                break
++        row = {"elapsed_seconds": time.perf_counter() - self.started,
++               "policy": self.policy, "phase": phase, "action": action,
++               "rss_kib": rss,
++               "peak_rss_kib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
++               **counts}
++        # Phase boundaries and one sample per 4096 epochs/events only.
++        # Flush+fsync means SIGKILL cannot discard the last complete record.
++        with self.path.open("a") as handle:
++            handle.write(json.dumps(row, separators=(",", ":")) + "\n")
++            handle.flush()
++            os.fsync(handle.fileno())
++
++
+ def duration_strata(jobs, starts, ends, horizon: int) -> dict:
+     """Report fixed rank-based duration strata for cross-policy comparison."""
+     durations = jobs.duration.to_numpy(dtype="int64")
+@@ -79,6 +107,10 @@ def main() -> None:
+         parser.error("Output exists; choose a new directory")
+     if args.jobs <= 0:
+         parser.error("--jobs must be positive")
++    code_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip()
++    code_dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=REPO, text=True).strip())
++    source_paths = sorted((PROBLEM / "src/gpu_scheduling").glob("*.py")) + [Path(__file__).resolve()]
++    source_hashes = {str(p.relative_to(REPO)): sha256(p) for p in source_paths}
+     input_started = time.perf_counter()
+     nodes, raw_jobs, hashes = read_data(args.data)
+     jobs = raw_jobs[raw_jobs.gpu_model == args.model].head(args.jobs).copy()
+@@ -89,20 +121,29 @@ def main() -> None:
+     input_seconds = time.perf_counter() - input_started
+     run_started = time.perf_counter()
+     results = []
++    phase = PhaseLog(args.out / "phase_log.jsonl")
+     for requested in args.policies:
++        phase.policy = requested
++        phase("simulate_pool", "begin", jobs=len(jobs), nodes=len(pool))
+         policy_started = time.perf_counter()
+         scheduler_started = time.perf_counter()
+         result = simulate_pool(pool, jobs, requested, theta_seconds=args.theta_seconds,
+-                               reservation_k=args.reservation_k, event_mode=args.event_mode)
++                               reservation_k=args.reservation_k, event_mode=args.event_mode, progress=phase)
+         scheduler_seconds = time.perf_counter() - scheduler_started
++        phase("simulate_pool", "end", jobs=len(jobs), events=len(result["events"]), promises=len(result["reservations"]))
++        phase("reservation_validation", "begin", jobs=len(jobs), events=len(result["events"]), promises=len(result["reservations"]))
+         validation_started = time.perf_counter()
+-        validate_reservations(pool, result["jobs"], result)
++        validate_reservations(pool, result["jobs"], result, progress=phase)
+         validation_seconds = time.perf_counter() - validation_started
++        phase("reservation_validation", "end")
++        phase("metrics", "begin")
+         metrics_started = time.perf_counter()
+         metric_values = metrics(result, pool, 7_776_000)
+         metric_values["duration_strata"] = duration_strata(
+             result["jobs"], result["starts"], result["ends"], 7_776_000)
+         metrics_seconds = time.perf_counter() - metrics_started
++        phase("metrics", "end")
++        phase("persistence", "begin")
+         output_started = time.perf_counter()
+         policy = result["policy"]
+         with gzip.open(args.out / f"{policy}_job_times.csv.gz", "wt", newline="") as handle:
+@@ -122,6 +163,7 @@ def main() -> None:
+             "gpu_model": args.model, "policy": policy, "event_mode": args.event_mode,
+             "reservation_evidence_schema_version": result["reservation_evidence_schema_version"],
+             "reservations": result["reservations"], "events": result["events"], "cost": result["cost"]})
++        phase("persistence", "end", files=3)
+         schedule_hash = hashlib.sha256(json.dumps({
+             "starts": result["starts"].tolist(), "ends": result["ends"].tolist(),
+             "plans": result["plans"]}, sort_keys=True).encode()).hexdigest()
+@@ -148,8 +190,8 @@ def main() -> None:
+         })
+     summary = {
+         "schema_version": 1, "kind": "m2a_pressure_run",
+-        "code_commit": __import__("subprocess").check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip(),
+-        "code_dirty": bool(__import__("subprocess").check_output(["git", "status", "--porcelain"], cwd=REPO, text=True).strip()),
++        "code_commit": code_commit, "code_dirty": code_dirty,
++        "source_sha256": source_hashes,
+         "data_sha256": hashes, "model": args.model, "jobs": len(jobs),
+         "configuration": {"policies": [r["policy"] for r in results], "theta_seconds": args.theta_seconds,
+                           "reservation_k": args.reservation_k, "event_mode": args.event_mode,
+diff --git a/problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py b/problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py
+index 301b6e2..ee52a53 100644
+--- a/problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py
++++ b/problems/2026_gpu_scheduling/experiments/run_m2b_benchmark.py
+@@ -101,7 +101,18 @@ def main() -> None:
+             wall = time.perf_counter() - started
+             if child.returncode != 0 or stop_reason is not None:
+                 status = stop_reason or "FAILED"
+-                failure = {
++                phase_path = child_out / "phase_log.jsonl"
++                latest_phase = None
++                if phase_path.exists():
++                    # Diagnostic log is sparse and bounded; ignore a partial
++                    # final write if the child was killed during append.
++                    for line in phase_path.read_text().splitlines():
++                        try:
++                            latest_phase = json.loads(line)
++                        except json.JSONDecodeError:
++                            pass
++                failure = {"latest_phase": latest_phase,
++                    "phase_log": str(phase_path.relative_to(args.out)),
+                     "status": status, "tag": tag, "jobs": jobs, "theta_seconds": theta,
+                     "threshold_label": threshold_label,
+                     "policy": policy, "elapsed_seconds": wall,
+diff --git a/problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py b/problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py
+index f41b921..9567e72 100644
+--- a/problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py
++++ b/problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py
+@@ -74,6 +74,7 @@ def simulate_pool(
+     theta_seconds: int = 4_860_000,
+     reservation_k: int = 200,
+     event_mode: str = "shared-timer",
++    progress=None,
+ ) -> dict:
+     """Simulate one GPU-model pool with node-local gang placement.
+
+@@ -477,7 +478,18 @@ def simulate_pool(
+             if blocked or not ordered or not any(j not in seen for j in ordered):
+                 return
+
++    epochs = 0
++    def report(phase, action):
++        if progress is not None:
++            progress(phase, action, jobs_arrived=arrivals, jobs_finished=finished,
++                     events=len(events), promises=len(reservations), waiting=len(waiting),
++                     timers=len(timers), running=len(running), epochs=epochs)
++
++    report("scheduling", "begin")
+     while arrivals < n or waiting or running:
++        epochs += 1
++        if epochs % 4096 == 0:
++            report("scheduling", "progress")
+         next_arrival = int(arr[arrivals]) if arrivals < n else math.inf
+         next_finish = int(running_heap[0][0]) if running_heap else math.inf
+         next_timer = int(timers[0][0]) if timers else math.inf
+@@ -519,7 +531,10 @@ def simulate_pool(
+
+     if finished != n or not np.array_equal(free_g, capg) or not np.array_equal(free_c, capc):
+         raise AssertionError("resource conservation or completion failure")
++    report("scheduling", "end")
++    report("internal_capacity", "begin")
+     validate(nodes, jobs, starts, ends, plans)
++    report("internal_capacity", "end")
+     return {
+         "jobs": jobs, "starts": starts, "ends": ends, "plans": plans,
+         "feasibility_checks": int(decisions), "peak_queue": int(peak_queue),
+diff --git a/problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py b/problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py
+index d4c8ef8..81a9cd0 100644
+--- a/problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py
++++ b/problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py
+@@ -33,12 +33,13 @@ def validate(nodes: pd.DataFrame,jobs: pd.DataFrame,s: np.ndarray,e: np.ndarray,
+         if gu!=0 or cu!=0:raise AssertionError('Final allocation is not zero')
+
+
+-def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict) -> None:
++def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict, *, progress=None) -> None:
+     """Replay promise certificates in one event-ordered ledger pass.
+
+     The previous implementation rebuilt every snapshot by scanning the prefix
+     of ``events`` for every promise and every crossing.  This implementation
+-    keeps one current node ledger and one small context per promise.  Crossing
++    keeps one current node ledger and releases each live context after its
++    fulfillment and matching protected start have both been verified.  Crossing
+     certificates are checked at their event position, before the corresponding
+     start event mutates the ledger, so the independent checks retain the exact
+     FIXED/FLEX semantics without quadratic prefix scans.
+@@ -113,7 +114,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+             "R": promised_r, "initial_witness": initial_witness,
+             "updates": recorded_updates, "update_pos": 0,
+             "accepted": {int(x) for x in accepted_raw}, "started": set(),
+-            "active_at_issue": set(), "future_g": None, "future_c": None,
++            "future_g": None, "future_c": None,
+             "witness": initial_witness, "version": None,
+             "fulfilled": None, "issued_seen": False,
+         }
+@@ -139,8 +140,12 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+     # The scheduler permits at most one pending promise per pool.  Keep that
+     # invariant explicit during replay so start events do not rescan every
+     # historical context (which made validation quadratic in the number of
+-    # promises).  Fulfilled contexts remain in ``contexts`` for final audit.
++    # promises). Completed contexts are audited then released at protected start.
+     active_promise_id: str | None = None
++    awaiting_start: str | None = None
++    completed_ids: set[str] = set()
++    seen_starts = np.zeros(len(jobs), dtype=bool)
++    seen_finishes = np.zeros(len(jobs), dtype=bool)
+     last_time = -1
+
+     def apply_job(j: int, sign: int) -> None:
+@@ -151,7 +156,50 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+                 or np.any(current_g > caps_g) or np.any(current_c > caps_c):
+             raise AssertionError("independent current resource replay failed")
+
+-    for item in events:
++    def finish_context(pid: str) -> None:
++        ctx = contexts[pid]
++        promise = ctx["promise"]
++        if ctx["update_pos"] != len(ctx["updates"]):
++            raise AssertionError("certificate update evidence is incomplete")
++        accepted = ctx["accepted"]
++        if accepted != ctx["started"]:
++            raise AssertionError("accepted backfill evidence does not match start events")
++        crossing_jobs = {int(u["job"]) for u in ctx["updates"]}
++        if crossing_jobs != {j for j in accepted if int(ends[j]) > ctx["R"]}:
++            raise AssertionError("crossing backfill certificate ids do not match allocations")
++        if int(promise.get("state_version")) != int(ctx["version"]):
++            raise AssertionError("promise final certificate version differs from replay")
++        check_snapshot(promise, "future_free_at_R", ctx["future_g"], ctx["future_c"])
++        final_witness = tuple((int(node), int(count))
++                              for node, count in promise.get("placement_witness", []))
++        if final_witness != ctx["witness"]:
++            raise AssertionError("final witness differs from certificate replay")
++        check_plan(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
++                   int(job_c[ctx["protected"]]), final_witness, int(job_w[ctx["protected"]]))
++        if int(slots(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
++                     int(job_c[ctx["protected"]])).sum()) < int(job_w[ctx["protected"]]):
++            raise AssertionError("future snapshot does not contain protected gang")
++        if starts[ctx["protected"]] < 0 or starts[ctx["protected"]] > ctx["R"] \
++                or ctx["fulfilled"] != int(starts[ctx["protected"]]):
++            raise AssertionError("promise timing contract")
++        completed_ids.add(pid)
++        # The caller also clears its local ctx reference. No historical dense
++        # arrays or copies of the active-job set survive this point.
++        del contexts[pid]
++
++    def report(action: str, count: int) -> None:
++        if progress is not None:
++            progress("reservation_replay", action, events_processed=count,
++                     promises_issued=len(issued_ids), promises_completed=len(completed_ids),
++                     live_dense_contexts=int(active_promise_id is not None or awaiting_start is not None),
++                     live_dense_bytes=(2 * caps_g.nbytes if active_promise_id is not None
++                                       or awaiting_start is not None else 0),
++                     active_jobs=len(active))
++
++    report("begin", 0)
++    for event_index, item in enumerate(events):
++        if event_index and event_index % 4096 == 0:
++            report("progress", event_index)
+         try:
+             t = int(item["time"])
+         except (KeyError, TypeError, ValueError):
+@@ -160,6 +208,11 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+             raise AssertionError("event order is not monotone")
+         last_time = t
+         kind = item.get("kind")
++        if awaiting_start is not None:
++            pending = contexts[awaiting_start]
++            if (kind != "start" or item.get("job") != pending["protected"]
++                    or t != pending["fulfilled"]):
++                raise AssertionError("fulfillment must be followed by its protected start")
+         if kind == "reservation_issued":
+             pid = item.get("promise_id")
+             if pid not in contexts or pid in issued_ids:
+@@ -174,7 +227,6 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+             ctx["version"] = int(item.get("state_version"))
+             if ctx["version"] < 0:
+                 raise AssertionError("invalid issuance version")
+-            ctx["active_at_issue"] = set(active)
+             future_g, future_c = caps_g.copy(), caps_c.copy()
+             for j in active:
+                 if int(ends[j]) > ctx["R"]:
+@@ -192,7 +244,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+
+         if kind == "certificate_update":
+             pid = item.get("promise_id")
+-            if pid not in contexts or pid not in issued_ids:
++            if pid not in contexts or pid not in issued_ids or pid != active_promise_id:
+                 raise AssertionError("certificate has no prior promise issuance")
+             ctx = contexts[pid]
+             pos = ctx["update_pos"]
+@@ -242,6 +294,8 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+                 effective_c = np.minimum(current_c, old_future_c - z_c)
+                 check_plan(effective_g, effective_c, int(job_g[j]), int(job_c[j]), plan, int(job_w[j]))
+             elif mode == "flex":
++                if policy == "SPT-URGENT-FIXED":
++                    raise AssertionError("FIXED policy cannot use FLEX certificate")
+                 check_plan(future_g, future_c, int(job_g[ctx["protected"]]),
+                            int(job_c[ctx["protected"]]), head_witness, int(job_w[ctx["protected"]]))
+                 if int(slots(future_g, future_c, int(job_g[ctx["protected"]]),
+@@ -283,6 +337,7 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+             if active_promise_id != pid:
+                 raise AssertionError("fulfilled promise is not the active pending promise")
+             active_promise_id = None
++            awaiting_start = pid
+             continue
+
+         if kind == "start":
+@@ -290,16 +345,23 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+                 j = int(item["job"])
+             except (KeyError, TypeError, ValueError):
+                 raise AssertionError("invalid start event")
+-            if not 0 <= j < len(jobs) or j in active or t != int(starts[j]):
++            if not 0 <= j < len(jobs) or seen_starts[j] or j in active or t != int(starts[j]):
+                 raise AssertionError("start event disagrees with timing ledger")
++            seen_starts[j] = True
+             if active_promise_id is not None:
+                 ctx = contexts[active_promise_id]
++                if j == ctx["protected"]:
++                    raise AssertionError("protected start has no prior fulfillment")
+                 if (ctx["issued_seen"] and ctx["fulfilled"] is None
+                         and ctx["issued"] <= t < ctx["R"]
+-                        and j != ctx["protected"] and j not in ctx["active_at_issue"]):
++                        and j != ctx["protected"]):
+                     ctx["started"].add(j)
+             apply_job(j, -1)
+             active[j] = plans[j]
++            if awaiting_start is not None:
++                finish_context(awaiting_start)
++                awaiting_start = None
++                ctx = None  # release the final local reference to dense arrays
+             continue
+
+         if kind == "finish":
+@@ -307,38 +369,21 @@ def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict)
+                 j = int(item["job"])
+             except (KeyError, TypeError, ValueError):
+                 raise AssertionError("invalid finish event")
+-            if not 0 <= j < len(jobs) or j not in active or t != int(ends[j]):
++            if not 0 <= j < len(jobs) or seen_finishes[j] or j not in active or t != int(ends[j]):
+                 raise AssertionError("finish event disagrees with timing ledger")
++            seen_finishes[j] = True
+             apply_job(j, 1)
+             del active[j]
+
+     if active_promise_id is not None:
+         raise AssertionError("pending promise has no fulfillment")
+-    if set(contexts) != issued_ids or set(contexts) != fulfilled_ids:
++    if awaiting_start is not None:
++        raise AssertionError("fulfillment has no protected start")
++    if contexts or issued_ids != fulfilled_ids or issued_ids != completed_ids:
+         raise AssertionError("reservation evidence is missing issuance or fulfillment")
+-    for pid, ctx in contexts.items():
+-        promise = ctx["promise"]
+-        if ctx["update_pos"] != len(ctx["updates"]):
+-            raise AssertionError("certificate update evidence is incomplete")
+-        accepted = ctx["accepted"]
+-        if accepted != ctx["started"]:
+-            raise AssertionError("accepted backfill evidence does not match start events")
+-        crossing_jobs = {int(u["job"]) for u in ctx["updates"]}
+-        if crossing_jobs != {j for j in accepted if int(ends[j]) > ctx["R"]}:
+-            raise AssertionError("crossing backfill certificate ids do not match allocations")
+-        if int(promise.get("state_version")) != int(ctx["version"]):
+-            raise AssertionError("promise final certificate version differs from replay")
+-        check_snapshot(promise, "future_free_at_R", ctx["future_g"], ctx["future_c"])
+-        final_witness = tuple((int(node), int(count))
+-                              for node, count in promise.get("placement_witness", []))
+-        check_plan(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
+-                   int(job_c[ctx["protected"]]), final_witness, int(job_w[ctx["protected"]]))
+-        if int(slots(ctx["future_g"], ctx["future_c"], int(job_g[ctx["protected"]]),
+-                     int(job_c[ctx["protected"]])).sum()) < int(job_w[ctx["protected"]]):
+-            raise AssertionError("future snapshot does not contain protected gang")
+-        if starts[ctx["protected"]] < 0 or starts[ctx["protected"]] > ctx["R"] \
+-                or ctx["fulfilled"] != int(starts[ctx["protected"]]):
+-            raise AssertionError("promise timing contract")
++    if not seen_starts.all() or not seen_finishes.all():
++        raise AssertionError("start/finish evidence is incomplete")
++    report("end", len(events))
+     if active or not np.array_equal(current_g, caps_g) or not np.array_equal(current_c, caps_c):
+         raise AssertionError("final allocation is not fully released")
+
+diff --git a/problems/2026_gpu_scheduling/tests/test_q2_m2d_rss.py b/problems/2026_gpu_scheduling/tests/test_q2_m2d_rss.py
+new file mode 100644
+index 0000000..3b64533
+--- /dev/null
++++ b/problems/2026_gpu_scheduling/tests/test_q2_m2d_rss.py
+@@ -0,0 +1,69 @@
++"""History reclamation must retain the complete schema-2 proof protocol."""
++import copy
++import unittest
++
++from test_q2_m2b import _fixed_then_flex_fixture, _nodes
++from gpu_scheduling.validation import validate_reservations
++
++
++class ReservationContextRelease(unittest.TestCase):
++    def check_bad(self, mutate):
++        jobs, result = _fixed_then_flex_fixture()
++        mutate(result)
++        with self.assertRaises((AssertionError, ValueError, TypeError)):
++            validate_reservations(_nodes(), jobs, result)
++
++    def test_fulfillment_requires_immediate_matching_unique_start(self):
++        def missing(r):
++            r['events'] = [e for e in r['events'] if not (e['kind'] == 'start' and e['job'] == 1)]
++        def duplicate(r):
++            i = next(i for i, e in enumerate(r['events']) if e['kind'] == 'start' and e['job'] == 1)
++            r['events'].insert(i + 1, copy.deepcopy(r['events'][i]))
++        def swapped(r):
++            i = next(i for i, e in enumerate(r['events']) if e['kind'] == 'reservation_fulfilled')
++            r['events'][i], r['events'][i + 1] = r['events'][i + 1], r['events'][i]
++        def intervening(r):
++            i = next(i for i, e in enumerate(r['events']) if e['kind'] == 'reservation_fulfilled')
++            r['events'].insert(i + 1, {'time': 10, 'kind': 'timer'})
++        for mutate in (missing, duplicate, swapped, intervening):
++            with self.subTest(mutation=mutate.__name__):
++                self.check_bad(mutate)
++
++    def test_duplicate_fulfillment_and_post_fulfillment_certificate_rejected(self):
++        def duplicate(r):
++            i = next(i for i, e in enumerate(r['events']) if e['kind'] == 'reservation_fulfilled')
++            r['events'].insert(i + 2, copy.deepcopy(r['events'][i]))
++        def late(r):
++            e = copy.deepcopy(next(e for e in r['events'] if e['kind'] == 'certificate_update'))
++            e['time'] = 10
++            i = next(i for i, e in enumerate(r['events']) if e['kind'] == 'reservation_fulfilled')
++            r['events'].insert(i + 2, e)
++        for mutate in (duplicate, late):
++            self.check_bad(mutate)
++
++    def test_missing_start_finish_and_forged_final_witness_rejected(self):
++        def missing_start(r):
++            r['events'] = [e for e in r['events'] if not (e['kind'] == 'start' and e['job'] == 2)]
++        def missing_finish(r):
++            r['events'] = [e for e in r['events'] if not (e['kind'] == 'finish' and e['job'] == 2)]
++        def witness(r):
++            # Still fits in the final future snapshot; violates certificate chain.
++            r['reservations'][0]['placement_witness'] = [[0, 2]]
++        for mutate in (missing_start, missing_finish, witness):
++            self.check_bad(mutate)
++
++    def test_fixed_policy_cannot_forge_flex_certificate(self):
++        self.check_bad(lambda r: r.update(policy='SPT-URGENT-FIXED'))
++
++    def test_dense_context_is_released_only_after_protected_start(self):
++        jobs, result = _fixed_then_flex_fixture()
++        samples = []
++        validate_reservations(_nodes(), jobs, result,
++                              progress=lambda phase, action, **counts: samples.append((action, counts)))
++        self.assertEqual(samples[-1][1]['promises_completed'], 1)
++        self.assertEqual(samples[-1][1]['live_dense_contexts'], 0)
++        self.assertEqual(samples[-1][1]['live_dense_bytes'], 0)
++
++
++if __name__ == '__main__':
++    unittest.main()

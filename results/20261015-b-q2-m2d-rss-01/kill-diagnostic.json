@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "kind": "m2b_bounded_cost_probe",
+  "status": "INCOMPLETE",
+  "configuration": {
+    "model": "A10",
+    "jobs": [
+      8192
+    ],
+    "theta_seconds": [
+      4
+    ],
+    "short_theta_seconds": 4,
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "policies": [
+      "SPT-URGENT-HOL"
+    ],
+    "placement": "first-fit ascending node_name",
+    "horizon_seconds": 7776000,
+    "timeout_seconds": 2.0,
+    "max_rss_kib": 4194304
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "records": [
+    {
+      "latest_phase": {
+        "elapsed_seconds": 1.3170596420095535,
+        "policy": "SPT-URGENT-HOL",
+        "phase": "scheduling",
+        "action": "progress",
+        "rss_kib": 137904,
+        "peak_rss_kib": 150572,
+        "jobs_arrived": 5706,
+        "jobs_finished": 1617,
+        "events": 11928,
+        "promises": 251,
+        "waiting": 1601,
+        "timers": 1,
+        "running": 2488,
+        "epochs": 8192
+      },
+      "phase_log": "a10-8192-theta4-spt-urgent-hol/phase_log.jsonl",
+      "status": "TIMEOUT",
+      "tag": "a10-8192-theta4-spt-urgent-hol",
+      "jobs": 8192,
+      "theta_seconds": 4,
+      "threshold_label": "configured-threshold",
+      "policy": "SPT-URGENT-HOL",
+      "elapsed_seconds": 2.011604327999521,
+      "observed_peak_rss_kib": 140432,
+      "returncode": -9,
+      "command": [
+        ".venv/bin/python",
+        "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py",
+        "--data",
+        "problems/2026_gpu_scheduling/data/raw",
+        "--out",
+        "outputs/q2-m2d-rss-kill-test-20261015/a10-8192-theta4-spt-urgent-hol",
+        "--model",
+        "A10",
+        "--jobs",
+        "8192",
+        "--theta-seconds",
+        "4",
+        "--reservation-k",
+        "200",
+        "--event-mode",
+        "shared-timer",
+        "--policies",
+        "SPT-URGENT-HOL"
+      ],
+      "stdout_tail": "",
+      "stderr_tail": ""
+    }
+  ],
+  "note": "Each record is an independent child process; no performance claim is made for unrun full trace."
+}

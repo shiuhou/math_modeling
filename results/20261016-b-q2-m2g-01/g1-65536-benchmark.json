@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "kind": "m2b_bounded_cost_probe",
+  "status": "PASS",
+  "configuration": {
+    "model": "A10",
+    "jobs": [
+      65536
+    ],
+    "theta_seconds": [
+      604800
+    ],
+    "short_theta_seconds": 604800,
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "policies": [
+      "SPT-HOL"
+    ],
+    "placement": "first-fit ascending node_name",
+    "horizon_seconds": 7776000,
+    "timeout_seconds": 900.0,
+    "max_rss_kib": 4194304
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "records": [
+    {
+      "jobs": 65536,
+      "theta_seconds": 604800,
+      "threshold_label": "exploratory-168h",
+      "policy": "SPT-HOL",
+      "child_output": "a10-65536-theta604800-spt-hol",
+      "child_wall_seconds": 16.497040248999838,
+      "child_summary_sha256": "9b8af63e1535edfad44f1925172438fb14eae8108a34d6e3458e45f1f936bd49",
+      "peak_rss_kib_process": 371268,
+      "scheduler_seconds": 12.663348556990968,
+      "validation_seconds": 1.7005165329901502,
+      "metrics_seconds": 0.0076261640060693026,
+      "io_seconds": 1.6069034129905049,
+      "input_seconds": 0.18280580700957216,
+      "runtime_seconds": 15.986169274983695,
+      "schedule_sha256": "7405acaa4fc22784e67225d48af0072e259bd61277f66f83d9b4b4a09e1559c6",
+      "reservations": 0,
+      "cost": {
+        "planner_calls": 243648,
+        "candidate_checks": 243648,
+        "current_plan_cache_hits": 98977,
+        "current_plan_evaluations": 144671,
+        "current_plan_cache_peak_entries": 4,
+        "order_builds": 0,
+        "bypass_candidate_checks": 0,
+        "protected_hol_blocked": 0,
+        "protected_hol_fastpath": 0,
+        "protected_hol_commits": 0,
+        "reservation_calls": 0,
+        "crossing_accepted": 0,
+        "crossing_rejected": 0,
+        "certificate_updates": 0,
+        "reservation_rejects": 0
+      },
+      "metrics": {
+        "jobs": 65536,
+        "mean_wait_hours": 30.33162114037408,
+        "median_wait_hours": 0.021944444444444444,
+        "p95_wait_hours": 48.640972222222224,
+        "p99_wait_hours": 1252.8401388888892,
+        "max_wait_hours": 1870.42,
+        "mean_jct_hours": 156.46415136973064,
+        "zero_wait_fraction": 0.10968017578125,
+        "mean_bounded_slowdown_60s": 1.4309617265646515,
+        "p99_bounded_slowdown_60s": 5.611600177304968,
+        "completed_at_horizon": 63411,
+        "gpu_allocation_rate_at_horizon": 0.9886586776885925,
+        "cpu_allocation_rate_at_horizon": 0.1808823562351342,
+        "final_completion_days": 261.9341550925926,
+        "duration_strata": {
+          "quantile_bounds_seconds": [
+            1.0,
+            455.0,
+            365855.5,
+            10953785.850000024,
+            15897599.0
+          ],
+          "bands": {
+            "q00_q50": {
+              "count": 32757,
+              "duration_min_seconds": 1,
+              "duration_max_seconds": 454,
+              "mean_wait_hours": 0.022889916659034712,
+              "p95_wait_hours": 0.08694444444444445,
+              "zero_wait_fraction": 0.09985651921726654
+            },
+            "q50_q90": {
+              "count": 26225,
+              "duration_min_seconds": 455,
+              "duration_max_seconds": 365836,
+              "mean_wait_hours": 1.4027871411926702,
+              "p95_wait_hours": 2.577277777777777,
+              "zero_wait_fraction": 0.07428026692087702
+            },
+            "q90_q99": {
+              "count": 5898,
+              "duration_min_seconds": 365875,
+              "duration_max_seconds": 10943185,
+              "mean_wait_hours": 276.56382511962624,
+              "p95_wait_hours": 1445.3099722222219,
+              "zero_wait_fraction": 0.2617836554764327
+            },
+            "q99_q100": {
+              "count": 656,
+              "duration_min_seconds": 10959494,
+              "duration_max_seconds": 15897599,
+              "mean_wait_hours": 486.43564744241195,
+              "p95_wait_hours": 1813.1536805555556,
+              "zero_wait_fraction": 0.6478658536585366
+            }
+          }
+        }
+      },
+      "validation": "PASS"
+    }
+  ],
+  "note": "Each record is an independent child process; no performance claim is made for unrun full trace."
+}
