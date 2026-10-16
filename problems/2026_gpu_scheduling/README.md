@@ -2,34 +2,31 @@
 
 B 題唯一研究入口；題意依據是 [原題 PDF](docs/2026_MCM_GPU_Scheduling.pdf)，規範沿用 [modeling.md](../../modeling.md)。資料、程式、依賴及基本基線都在 Git 中，首次開工不需要任何對話附件或 ZIP。
 
-## 開工與驗收
+## 目前正式狀態與開工
 
-本次共用基礎在 `chore/b-intake-ready`，包含 `feat/b-q1` 已提交的 Q1。`feat/b-q2`、`feat/b-q3` 從相同整合提交起步；尚未合併 main。隊員各自在自己的電腦執行，將最後一行的分支換為所需題目：
+第一輪 Q1、Q2、Q3 已整合進 Baseline V1；正式 main 合併提交為 `4ee2c6bfa98cf7177ff976abe73b122889437f46`，技術整合驗收提交為 `9f76e086690e574d73ca54cfb0c08d7e9eb0b9fe`。固定參考 tag 是 `2026-mcm-b-baseline-v1`。正式最新來源為 Q2 `b91918bb084848b93de642ad4e3ea0a7d3f25e68` 與 Q3 `170cc37a820e830a969cb1b1cd3cadb1e8fdf256`。
+
+Q2 的最新 SPT-HOL／SPT-FILL 比較已驗證。Q3 的 M0、S0、S1–S5 共 14 組情景已驗證；合併後共享 DES 重新執行 14 組，與歷史排程逐 ID 精確一致。9 頁英文保底論文與 code supplement 位於 [paper output](paper/output/)，完整來源索引見 [paper_sources.json](paper/paper_sources.json)。正式競賽提交仍待隊伍身份、人工作者確認及最終 AI 披露。
+
+新隊員按分工使用既有第二輪分支：`feat/b-q2-k-ablation`、`feat/b-gang-placement`、`feat/b-q3-substitution-v2`。其他研究分支必須從 `2026-mcm-b-baseline-v1` 建立；Baseline V1、原始資料、容量、事件契約與共同 evaluator 都是不可變比較基準。不要覆寫已驗證 results；共享程式修改先經 PR 協調。
+
+開工命令：
 
 ```bash
 git clone https://github.com/shiuhou/math_modeling.git
 cd math_modeling
-git fetch origin
-git switch --track origin/feat/b-q2
-# Q3 使用 git switch --track origin/feat/b-q3
+git fetch origin --tags
+git rev-parse 2026-mcm-b-baseline-v1^{}
+# 依分工切換既有分支，例如：
+git switch --track origin/feat/b-q2-k-ablation
 python3 -m venv .venv
 .venv/bin/python -m pip install -r problems/2026_gpu_scheduling/requirements.txt
 python3 scripts/check_repo.py
 python3 -m unittest discover -s tests -v
 PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v
-.venv/bin/python problems/2026_gpu_scheduling/experiments/run_baselines.py --smoke --out outputs/b-smoke-01
-.venv/bin/python problems/2026_gpu_scheduling/experiments/verify_baseline.py --run outputs/b-smoke-01 --out outputs/b-smoke-01-verified.json
 ```
 
-`--out` 拒絕覆蓋：重跑請改運行 ID。Python 3.11+；本機驗收為 Linux、Python 3.12.3、固定 numpy/pandas/matplotlib。Windows 請用 `.venv\Scripts\python.exe`；環境變數設定依 shell 調整，尚未在 Windows 驗證。全隊正式硬體／環境待確認。
-
-Smoke 只取每型號前 64 個作業，用於工程驗收，不能作性能結論。完整確定性基線：
-
-```bash
-.venv/bin/python problems/2026_gpu_scheduling/experiments/run_baselines.py --out outputs/b-full-01
-.venv/bin/python problems/2026_gpu_scheduling/experiments/verify_baseline.py --run outputs/b-full-01 --out outputs/b-full-01-verified.json
-.venv/bin/python problems/2026_gpu_scheduling/experiments/make_figures.py --run outputs/b-full-01 --out outputs/b-full-01-figures
-```
+完整命令與歷史實驗仍保留在本文件後段；重新執行時使用新的輸出 ID，不覆蓋既有 results。正式證據與來源導航見 [results](../../results/README.md)。
 
 ## 結構、資料與生成物
 
@@ -123,7 +120,7 @@ reservation evidence schema `2` 在履約後移除 dense CPU/GPU vectors，只�
 
 ## Q1 與論文入口
 
-Q1 延續整合基礎 `abdbc4c`，在 `feat/b-q1` 完成獨立交付。切換本分支後，使用上方相同 Python 環境；另安裝 Tectonic（本機 0.17.0）或 pdflatex，首次編譯可能下載 TeX 套件。可用 `--compiler PATH` 指定編譯器，缺少時明示 BLOCKED。
+Q1 延續整合基礎 `abdbc4c`，其獨立交付已整合進 Baseline V1；以下命令只供歷史 Q1 交付重現，使用上方相同 Python 環境；另安裝 Tectonic（本機 0.17.0）或 pdflatex，首次編譯可能下載 TeX 套件。可用 `--compiler PATH` 指定編譯器，缺少時明示 BLOCKED。
 
 ```bash
 # 從 Git 中的 raw CSV 生成兩頁英文、繁中離線 HTML、正文／補充圖與交付 ZIP。
@@ -157,15 +154,15 @@ PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discove
 
 這是全量原始隔離池的 **GPU 工作量加權等待** `sum(H*waiting)/sum(H)` 下界，放鬆 CPU、節點形狀及 gang 約束；不是普通平均或個別等待下界，不證明最優。A10 前段 560.3121107156859 h，尾段 0.20925717461523632 h，合計 560.5213678903011 h；其他池的小正值沒有捨入成零。完整證明與六池精度結果隨既有 `supplementary.html`／交付 ZIP 生成；正文仍兩頁、一表兩圖，中英文 A10 數字共用生成 macro。
 
-[新增驗收](../../results/20261015-b-q1-capacity-bound/acceptance.json)、[精確結果](../../results/20261015-b-q1-capacity-bound/q1_capacity_bounds.json) 記錄來源、測試與剩餘缺口。Q1 18 項針對性測試、六池獨立高精度核算、39 統計／九表回歸、兩頁呈現及來源快照乾淨目錄重現 PASS；團隊人工審閱 NOT_RUN，歷史 byte 身份／再散布範圍 BLOCKED。本輪未執行 Q2/Q3 或全文編譯。
+[新增驗收](../../results/20261015-b-q1-capacity-bound/acceptance.json)、[精確結果](../../results/20261015-b-q1-capacity-bound/q1_capacity_bounds.json) 記錄來源、測試與剩餘缺口。Q1 18 項針對性測試、六池獨立高精度核算、39 統計／九表回歸、兩頁呈現及來源快照乾淨目錄重現 PASS；團隊人工審閱 NOT_RUN，歷史 byte 身份／再散布範圍 BLOCKED。該 Q1 歷史快照當時未執行 Q2/Q3 或全文編譯；目前正式 Q2/Q3 驗收請以本文件「目前正式狀態」及 results 導航為準。
 
 Q2 日後可將已保存 job ID／start 與原始 worker／GPU／duration 連結，計算同一完整池的加權等待，無須重新排程；本輪不改 evaluator。不得將全量 A10 下界套到作業子集、不同容量／時長或 Q3 跨型號 run。`q1_summary.tex`、全局 preamble、全稿 Q2/Q3、共享 loader／DES／evaluator 及兩個研究 worktree 都未修改。
 
 ## Q2／Q3 下一步
 
-`feat/b-q2`：研究排序與放置，在共用 DES 接入候選，與本基線比較；不要將歷史 AMBF 表視為驗收結果。
+`feat/b-q2` 與 `feat/b-q3` 是已刪除的第一輪歷史分支名稱；其結果已由 Baseline V1 固定保存。第二輪請使用 `feat/b-q2-k-ablation`、`feat/b-gang-placement`、`feat/b-q3-substitution-v2`，或從 tag 建立新的研究分支。不要將歷史 AMBF 表視為驗收結果。
 
-`feat/b-q3`：先明示 compatibility、MIG／速度／價格與使用者行為假設，再研究耦合跨池方案；保留共享 evaluator。
+第二輪 Q3 研究仍須明示 compatibility、MIG／速度／價格與使用者行為假設，再研究耦合跨池方案；保留共享 evaluator。
 
 主要負責人與 reviewer 待確認。不要求兩位隊員共用主機或同一 worktree；分支各自 commit/push，透過 PR 整合。Q1 後續變更由整合者協調進兩題，勿各自複製公式。此輪不重構／驗證舊 Q2/Q3，不推 main、不合併 PR。
 
