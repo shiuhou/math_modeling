@@ -1,0 +1,18 @@
+\section{Question 1: Workload Structure and Capacity Pressure}
+\label{sec:q1}
+The supplied trace contains 224,112 jobs on 4,278 nodes, with 10,412 GPUs and 632,636 vCPUs across six GPU models. For job $j$, let $a_j$ be release time, $p_j$ duration in seconds, $W_j$ worker count, and $(g_j,c_j)$ the per-worker GPU and vCPU requests. A job's submitted GPU work is $H_j=W_jg_jp_j$. These are requests and stated durations, not measured utilization.
+
+The data are highly concentrated: the empirical GPU-work Gini coefficient is 0.9522, the median duration is 1,330 s, the 95th percentile is 309.09 h, and the maximum is about 184 days. The top 2,241 jobs (1\%) account for 43.30\% of GPU work; the top 11,205 jobs (5\%) account for 87.68\%. The 3,512 jobs released at $a_j=0$ are the trace-origin batch. Because no calendar origin is supplied, relative phases within a 24-hour cycle are not labelled as real-world clock periods.
+
+For model $m$ with capacity $(G_m,C_m)$, the lifetime work to exact observation-window supply ratio is
+\begin{equation}
+ \rho_m^{GPU}=\frac{\sum_{j\in\mathcal J_m}W_jg_jp_j}{T\sum_{i\in\mathcal I_m}G_i},\qquad
+ \rho_m^{CPU}=\frac{\sum_{j\in\mathcal J_m}W_jc_jp_j}{T\sum_{i\in\mathcal I_m}C_i},
+\end{equation}
+where $T=7,775,878$ s is the exact Q1 observation window. Table~\ref{tab:q1_pool} compares submitted lifetime work with supply; it does not claim an allocation rate or steady-state instability.
+
+\begin{table}[H]\centering\caption{Submitted lifetime work and exact-window capacity ratios.}\label{tab:q1_pool}\input{q1_table.tex}\end{table}
+
+A counterfactual immediate-start demand curve is $D_m(t)=\sum_jW_jg_j\mathbf 1\{a_j\le t<a_j+p_j\}$. Exact interval integration gives an A10 mean of 3,614.54 GPUs against 2,494 available and an instantaneous peak of 4,103. This is a demand diagnostic under impossible immediate starts, not an observed allocation. GPU-series-1 also illustrates node-shape pressure: 2,478 jobs (25.70\% of that pool, 78.07\% of its work) exceed the 24-vCPU-per-GPU ratio of its 8-GPU nodes. This motivates capacity-valid scheduling tests rather than a placement conclusion from averages alone.
+
+Q1 supplies two different lower-bound perspectives used later. The GPU-work weighted waiting bound is 560.521 h for A10 after including the drain tail; its objective weights each job by $H_j$. The Q2 job-count bound instead weights each job equally and is 22.3179305700 h on the complete A10 set. They are not interchangeable estimates of one common optimum. Both relax node shape, CPU coupling, and gang feasibility, so they are theoretical benchmarks rather than scheduler guarantees.

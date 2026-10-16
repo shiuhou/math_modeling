@@ -1,0 +1,46 @@
+\input{preamble.tex}
+\usepackage{lastpage}
+\begin{document}
+\begin{titlepage}
+\thispagestyle{fancy}
+\begin{center}
+\vspace*{0.35in}
+{\LARGE\bfseries\color{primary} Capacity-Valid Scheduling of a Heterogeneous GPU Cluster}\\[8pt]
+{\large 2026 HKUST-GZ MCM Senior Track --- Problem B}\\[18pt]
+\end{center}
+\takeaway{Submission identity}{Team members: [TEAM TO CONFIRM]. Institution: [TEAM TO CONFIRM]. Advisor: [TEAM TO CONFIRM]. These fields remain pending human confirmation; the team must confirm any identifier required by the official Senior Track portal.}
+\section*{Summary}
+This report analyzes the supplied heterogeneous GPU trace using one capacity-valid, non-preemptive, gang-scheduling contract. The trace contains 224,112 jobs; GPU work is concentrated (Gini 0.9522), and the largest 5\% account for 87.68\% of GPU work. A10 has lifetime-work/window-capacity ratio 2.064 and counterfactual immediate-start mean demand 3,614.54 GPUs against 2,494 available; these are pressure diagnostics, not measured utilization.
+
+For Question 2, the complete 111,284-job A10 comparison gives ordinary SPT-HOL mean waiting 32.906 h versus SPT-FILL 34.967 h, against the equal-weight job-count lower bound 22.3179305700 h. A separate protected-policy experiment is limited to a verified 65,536-job prefix. For Question 3, a declared fixed-split substitution counterfactual routes a SHA-256-selected 10\% subset to 60 dedicated A100 nodes with $\sigma=1$; it reduces A10 mean waiting on this trace while retaining native-pool harm and duration sensitivity. These are finite, contract-specific observations, not optimality or hardware-performance claims.
+
+\textbf{Keywords:} GPU scheduling; gang placement; heterogeneous resources; head-of-line blocking; fixed-split counterfactuals
+\vfill
+\textit{Publication candidate. Final team identity, human review and AI disclosure require confirmation before submission.}
+\end{titlepage}
+\setcounter{page}{2}
+\input{q1_section.tex}
+\input{q2_section.tex}
+\input{q3_section.tex}
+\section{Conclusion and evidence limits}
+The three questions provide complementary evidence under a declared trace and simulation contract. Q1 identifies workload concentration and two lower bounds with different weighting objectives. Q2 compares ordinary policies on the complete A10 trace and keeps protected policies at their verified prefix scope. Q3 evaluates a fixed, physical, pre-start substitution scenario while retaining native-pool harm and duration sensitivity.
+
+Q1 uses the exact observation window $T=7,775,878$ s; scheduling waiting and JCT use complete drain; 90-day completion counts use $H=7,776,000$ s. Prefix evidence is not extended to the complete A10 trace. No unsupported performance, hardware-speed, pricing, or optimality claim is used. Large Q3 delivery archives remain local with hashes; cross-machine availability is unresolved.
+
+\section*{References}
+\sloppy
+\begin{enumerate}
+\item HKUST-GZ MCM 2026 Senior Track, Problem B, repository copy: \url{problems/2026_gpu_scheduling/docs/2026_MCM_GPU_Scheduling.pdf}; SHA256 is recorded in \texttt{paper\_sources.json}.
+\item Q1 verified evidence, fixed commit \texttt{7075317883808b1cd7f80cadf3980be291c69cf0}; paths and hashes are in \texttt{paper\_sources.json}.
+\item Q2 cross-review evidence, fixed commit \texttt{b91918bb084848b93de642ad4e3ea0a7d3f25e68}; paths and hashes are in \texttt{paper\_sources.json}.
+\item Q3 cross-review publication evidence, fixed commit \texttt{170cc37a820e830a969cb1b1cd3cadb1e8fdf256}; r4 path \texttt{results/20261016-b-q3-s3-publication-9ac1d7f2-r4/}; r3 is historical.
+\item Claude independent archive, fixed commit \texttt{9aeddd708b29} (full SHA in \texttt{paper\_sources.json}); preserved for provenance and review, not executed in this release.
+\item Submission portal: \url{https://cmt3.research.microsoft.com/HKUSTGZMCM2026}. The repository does not contain the separate Registration and Submission Guidelines PDF; its availability is recorded as BLOCKED pending team confirmation.
+\end{enumerate}
+
+\clearpage
+\section*{Report on use of AI tools}
+This integration used OpenAI Codex to inspect fixed commits, combine already saved Q1/Q2/Q3 evidence, revise and typeset this candidate, and run repository and PDF checks. The Claude package was preserved as an independent source; its scripts were not executed here. The team must confirm whether ChatGPT, Claude, or other tools were used outside this record and must approve the final wording. No AI output is treated as experimental evidence without a fixed source and human review.
+
+\textbf{Submission status: SUBMISSION\_BLOCKED pending team names, institution/advisor fields, human review, and confirmed AI-use record.}
+\end{document}

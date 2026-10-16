@@ -1,0 +1,330 @@
+#!/usr/bin/env python3
+"""Reproduce the data audit and two INITIAL strict-pool scheduling baselines.
+
+Usage:
+  python research_calculations.py --zip /path/2026_MCM_Senior_GPU_Scheduling.zip --out results
+
+Requires numpy and pandas. No GPU, network, or cluster access is used.
+CPU requests are represented exactly in hundredths of a vCPU after a precision
+check. FCFS and SJF-HOL both stop at an infeasible queue head WITHIN each GPU
+pool. SJF-HOL is NOT shortest-feasible-job-first. No backfill or proposed method
+is implemented here. This script is a research prototype, not a production
+scheduler. All simulated allocations are independently validated by node.
+"""
+from __future__ import annotations
+import argparse
+import hashlib
+import heapq
+import json
+import math
+import platform
+import time
+import zipfile
+from collections import deque
+from pathlib import Path
+from typing import Any
+import numpy as np
+import pandas as pd
+
+CPU_SCALE = 100
+DAY = 86400
+
+
+def native(x: Any) -> Any:
+    if isinstance(x, dict): return {str(k): native(v) for k, v in x.items()}
+    if isinstance(x, (tuple, list)): return [native(v) for v in x]
+    if isinstance(x, np.ndarray): return native(x.tolist())
+    if isinstance(x, np.generic): return x.item()
+    return x
+
+
+def integer_array(s: pd.Series, scale: int = 1) -> np.ndarray:
+    v = s.to_numpy(dtype=float) * scale
+    if not np.isfinite(v).all() or not np.allclose(v, np.rint(v), rtol=0, atol=1e-8):
+        raise ValueError(f"{s.name}: values cannot be represented at scale {scale}")
+    return np.rint(v).astype(np.int64)
+
+
+def read_data(path: Path) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
+    with zipfile.ZipFile(path) as z:
+        names = {}
+        for key in ('node_info_df.csv', 'job_info_clean.csv'):
+            found = [n for n in z.namelist() if Path(n).name == key and not n.startswith('__MACOSX/')]
+            if len(found) != 1: raise ValueError(f"Expected one {key}, found {found}")
+            names[key] = found[0]
+        frames = [pd.read_csv(z.open(names[key])) for key in names]
+        hashes = {key: hashlib.sha256(z.read(name)).hexdigest() for key, name in names.items()}
+    nodes, jobs = frames
+    required_n = {'node_name','gpu_model','gpu_capacity_num','cpu_num'}
+    required_j = {'job_name','gpu_model','cpu_request','gpu_request','worker_num','submit_time','duration'}
+    if not required_n <= set(nodes) or not required_j <= set(jobs): raise ValueError('Required columns missing')
+    if nodes.isna().any().any() or jobs.isna().any().any(): raise ValueError('Missing values found')
+    if nodes.node_name.duplicated().any() or jobs.job_name.duplicated().any(): raise ValueError('Duplicate IDs')
+    for col in ('gpu_capacity_num','cpu_num'): nodes[col] = integer_array(nodes[col])
+    for col in ('gpu_request','worker_num','submit_time','duration'): jobs[col] = integer_array(jobs[col])
+    jobs['cpu_units'] = integer_array(jobs.cpu_request, CPU_SCALE)
+    nodes['cpu_units'] = integer_array(nodes.cpu_num, CPU_SCALE)
+    if not (nodes.gpu_capacity_num > 0).all() or not (nodes.cpu_units >= 0).all(): raise ValueError('Invalid capacity')
+    if not (jobs[['gpu_request','worker_num','duration']] > 0).all().all(): raise ValueError('Invalid positive demand/duration')
+    if not (jobs[['cpu_units','submit_time']] >= 0).all().all(): raise ValueError('Invalid CPU demand or arrival time')
+    if not set(jobs.gpu_model) <= set(nodes.gpu_model): raise ValueError('Unknown GPU type')
+    nodes = nodes.sort_values('node_name', kind='stable').reset_index(drop=True)
+    jobs = jobs.sort_values(['submit_time','job_name'], kind='stable').reset_index(drop=True)
+    return nodes, jobs, hashes
+
+
+def slots(free_g: np.ndarray, free_c: np.ndarray, q: int, c: int) -> np.ndarray:
+    h = free_g // q
+    if c: h = np.minimum(h, free_c // c)
+    return h
+
+
+def audit(nodes: pd.DataFrame, jobs: pd.DataFrame, hashes: dict) -> dict:
+    a0, T = int(jobs.submit_time.min()), int(jobs.submit_time.max())
+    span = T-a0
+    if span <= 0: raise ValueError('Trace has no positive arrival span')
+    gwork = jobs.gpu_request * jobs.worker_num * jobs.duration
+    cwork = jobs.cpu_request * jobs.worker_num * jobs.duration
+    types, impossible = [], 0
+    for g, sub in jobs.groupby('gpu_model', sort=True):
+        nd = nodes[nodes.gpu_model == g]
+        G, C = int(nd.gpu_capacity_num.sum()), int(nd.cpu_num.sum())
+        ss = sub[['gpu_request','cpu_units','worker_num']].drop_duplicates()
+        for q,c,w in ss.itertuples(index=False, name=None):
+            if slots(nd.gpu_capacity_num.to_numpy(), nd.cpu_units.to_numpy(), q, c).sum() < w:
+                impossible += int(((sub.gpu_request==q)&(sub.cpu_units==c)&(sub.worker_num==w)).sum())
+        Dg = int((sub.gpu_request*sub.worker_num*sub.duration).sum())
+        Dc = float((sub.cpu_request*sub.worker_num*sub.duration).sum())
+        latest = int((sub.submit_time+sub.duration).max())
+        types.append(dict(gpu_model=g,nodes=len(nd),gpus=G,vcpus=C,jobs=len(sub),
+            gpu_hours=Dg/3600,cpu_hours=Dc/3600,gpu_load_ratio=Dg/(G*span),cpu_load_ratio=Dc/(C*span),
+            gpu_work_bound_days=Dg/G/DAY,arrival_service_bound_days=latest/DAY,
+            combined_makespan_bound_days=max(Dg/G,Dc/C,latest)/DAY,
+            duration_median_seconds=float(sub.duration.median()),
+            duration_p95_seconds=float(sub.duration.quantile(.95)),
+            multiworker_fraction=float((sub.worker_num>1).mean()),
+            max_workers=int(sub.worker_num.max()),gpu_per_worker_max=int(sub.gpu_request.max()),
+            cpu_per_worker_max=float(sub.cpu_request.max())))
+    if impossible: raise ValueError(f'{impossible} jobs are infeasible on an empty cluster')
+    quant = {str(q): float(jobs.duration.quantile(q)) for q in [.0,.25,.5,.75,.9,.95,.99,1.]}
+    sorted_work = np.sort(gwork.to_numpy())[::-1]
+    concentration = {str(f): float(sorted_work[:math.ceil(f*len(jobs))].sum()/sorted_work.sum()) for f in [.001,.01,.05,.1]}
+    day = jobs.submit_time // DAY
+    daily = pd.DataFrame({'day':day,'jobs':1,'gpu_seconds':gwork}).groupby('day').sum().reset_index()
+    configs = nodes.groupby(['gpu_model','gpu_capacity_num','cpu_num']).size().reset_index(name='nodes')
+    return native(dict(hashes=hashes,records=dict(nodes=len(nodes),jobs=len(jobs),gpu_types=nodes.gpu_model.nunique(),
+        gpus=nodes.gpu_capacity_num.sum(),vcpus=nodes.cpu_num.sum()),
+        audit=dict(missing=0,duplicate_job_ids=0,duplicate_node_ids=0,empty_cluster_infeasible_jobs=impossible,
+                   fractional_cpu_jobs=int((jobs.cpu_request%1!=0).sum()),zero_cpu_jobs=int((jobs.cpu_request==0).sum()),
+                   cpu_scale=CPU_SCALE,minimum_duration_seconds=int(jobs.duration.min())),
+        times=dict(first_submit_seconds=a0,last_submit_seconds=T,span_seconds=span,span_days=span/DAY,
+                   jobs_at_time_zero=int((jobs.submit_time==0).sum()),jobs_longer_than_arrival_span=int((jobs.duration>span).sum()),
+                   maximum_earliest_finish_seconds=int((jobs.submit_time+jobs.duration).max())),
+        aggregate=dict(gpu_hours=float(gwork.sum()/3600),cpu_hours=float(cwork.sum()/3600),
+            nominal_gpu_load_ratio=float(gwork.sum()/(nodes.gpu_capacity_num.sum()*span)),
+            nominal_cpu_load_ratio=float(cwork.sum()/(nodes.cpu_num.sum()*span)),
+            duration_mean_seconds=float(jobs.duration.mean()),duration_quantiles_seconds=quant,
+            single_worker_fraction=float((jobs.worker_num==1).mean()),
+            maximum_job_gpus=int((jobs.worker_num*jobs.gpu_request).max()),
+            concentration_top_job_fraction=concentration),
+        per_gpu_type=types,node_configurations=configs.to_dict('records'),daily=daily.to_dict('records')))
+
+
+def simulate_pool(nodes: pd.DataFrame, jobs: pd.DataFrame, policy: str) -> dict:
+    """Online arrivals, known submitted durations, identical workers, first-fit nodes."""
+    if policy not in ('FCFS','SJF-HOL'): raise ValueError(policy)
+    nodes=nodes.sort_values('node_name',kind='stable').reset_index(drop=True)
+    jobs=jobs.sort_values(['submit_time','job_name'],kind='stable').reset_index(drop=True)
+    n=len(jobs)
+    arr=jobs.submit_time.to_numpy(dtype=np.int64)
+    dur=jobs.duration.to_numpy(dtype=np.int64)
+    reqg=jobs.gpu_request.to_numpy(dtype=np.int64)
+    reqc=jobs.cpu_units.to_numpy(dtype=np.int64)
+    workers=jobs.worker_num.to_numpy(dtype=np.int64)
+    capg=nodes.gpu_capacity_num.to_numpy(dtype=np.int64); capc=nodes.cpu_units.to_numpy(dtype=np.int64)
+    fg=capg.copy();fc=capc.copy()
+    starts=np.full(n,-1,dtype=np.int64);ends=np.full(n,-1,dtype=np.int64)
+    plans=[None]*n
+    wait=deque() if policy=='FCFS' else []
+    running=[]; k=0; finished=0; decisions=0; peak_queue=0
+    while k<n or wait or running:
+        t=min(int(arr[k]) if k<n else math.inf, running[0][0] if running else math.inf)
+        if not math.isfinite(t): raise RuntimeError('Stuck queue: no future event')
+        t=int(t)
+        while running and running[0][0]==t:
+            _, j=heapq.heappop(running)
+            for m,w in plans[j]:
+                fg[m]+=w*reqg[j];fc[m]+=w*reqc[j]
+                if fg[m]>capg[m] or fc[m]>capc[m]: raise AssertionError('Over-release')
+            finished+=1
+        while k<n and arr[k]==t:
+            if policy=='FCFS': wait.append(k)
+            else: heapq.heappush(wait,(int(dur[k]),int(arr[k]),int(jobs.job_name.iloc[k]),k))
+            k+=1
+        peak_queue=max(peak_queue,len(wait))
+        while wait:
+            j=wait[0] if policy=='FCFS' else wait[0][3]
+            h=slots(fg,fc,int(reqg[j]),int(reqc[j]));decisions+=1
+            if int(h.sum())<int(workers[j]): break
+            todo=int(workers[j]);plan=[]
+            for m in np.flatnonzero(h):
+                take=min(todo,int(h[m]));plan.append((int(m),take));todo-=take
+                if todo==0:break
+            if todo:raise AssertionError('Feasibility/placement mismatch')
+            # Atomic commit: no resource state has been changed while planning.
+            for m,w in plan:
+                fg[m]-=w*reqg[j];fc[m]-=w*reqc[j]
+                if fg[m]<0 or fc[m]<0:raise AssertionError('Capacity violation')
+            plans[j]=plan;starts[j]=t;ends[j]=t+dur[j]
+            if policy=='FCFS':wait.popleft()
+            else:heapq.heappop(wait)
+            heapq.heappush(running,(int(ends[j]),j))
+    assert finished==n and np.array_equal(fg,capg) and np.array_equal(fc,capc)
+    validate(nodes,jobs,starts,ends,plans)
+    return dict(jobs=jobs,starts=starts,ends=ends,plans=plans,feasibility_checks=decisions,peak_queue=peak_queue)
+
+
+def validate(nodes: pd.DataFrame,jobs: pd.DataFrame,s: np.ndarray,e: np.ndarray,plans: list) -> None:
+    """Independent node-by-node event replay from the final allocation ledger."""
+    if not np.all(s>=jobs.submit_time.to_numpy()) or not np.all(e-s==jobs.duration.to_numpy()):
+        raise AssertionError('Timing contract')
+    ledgers=[[] for _ in range(len(nodes))]
+    cols=jobs[['gpu_request','cpu_units','worker_num','gpu_model']]
+    for j,(q,c,w,g) in enumerate(cols.itertuples(index=False,name=None)):
+        if sum(n for _,n in plans[j])!=w:raise AssertionError('Worker count')
+        for m,n in plans[j]:
+            if n<=0 or nodes.gpu_model.iloc[m]!=g:raise AssertionError('Placement contract')
+            ledgers[m].append((int(s[j]),1,n*q,n*c))
+            ledgers[m].append((int(e[j]),0,-n*q,-n*c))
+    for m,ledger in enumerate(ledgers):
+        gu=cu=0
+        for _,_,dg,dc in sorted(ledger):
+            gu+=dg;cu+=dc
+            if not(0<=gu<=int(nodes.gpu_capacity_num.iloc[m]) and 0<=cu<=int(nodes.cpu_units.iloc[m])):
+                raise AssertionError(f'Independent capacity replay failed: node {m}')
+        if gu!=0 or cu!=0:raise AssertionError('Final allocation is not zero')
+
+
+def metrics(result: dict,nodes: pd.DataFrame,horizon: int) -> dict:
+    j=result['jobs'];s=result['starts'];e=result['ends']
+    w=s-j.submit_time.to_numpy();p=j.duration.to_numpy()
+    overlap=np.minimum(p,np.maximum(horizon-s,0))
+    # Standard bounded slowdown is at least one, including jobs shorter than tau.
+    bs=np.maximum(1.,(w+p)/np.maximum(p,60))
+    return native(dict(jobs=len(j),mean_wait_hours=w.mean()/3600,median_wait_hours=np.median(w)/3600,
+        p95_wait_hours=np.quantile(w,.95)/3600,p99_wait_hours=np.quantile(w,.99)/3600,
+        max_wait_hours=w.max()/3600,mean_jct_hours=np.mean(e-j.submit_time.to_numpy())/3600,
+        zero_wait_fraction=np.mean(w==0),mean_bounded_slowdown_60s=np.mean(bs),p99_bounded_slowdown_60s=np.quantile(bs,.99),
+        completed_at_horizon=np.sum(e<=horizon),gpu_allocation_rate_at_horizon=float(np.sum(overlap*j.worker_num*j.gpu_request)/(horizon*nodes.gpu_capacity_num.sum())),
+        cpu_allocation_rate_at_horizon=float(np.sum(overlap*j.worker_num*j.cpu_request)/(horizon*nodes.cpu_num.sum())),
+        final_completion_days=e.max()/DAY,feasibility_checks=result['feasibility_checks'],peak_queue=result['peak_queue'],
+        invariant_validation='PASS; all-job timing and independent node-capacity ledger replay'))
+
+
+def reference_small(nodes: pd.DataFrame, jobs: pd.DataFrame, policy: str) -> list[int]:
+    """Slow integer-time reference for small test fixtures; deliberately no NumPy placement."""
+    jobs=jobs.sort_values(['submit_time','job_name'],kind='stable').reset_index(drop=True)
+    rows=list(jobs.itertuples(index=False)); caps=[(int(x.gpu_capacity_num),int(x.cpu_units)) for x in nodes.itertuples()]
+    free=[list(x) for x in caps]; pending=[];active={};started=[-1]*len(rows)
+    limit=int(jobs.submit_time.max()+jobs.duration.sum()+1)
+    for t in range(limit+1):
+        for k in list(active):
+            end,plan=active[k]
+            if end==t:
+                for m,w in plan:free[m][0]+=w*int(rows[k].gpu_request);free[m][1]+=w*int(rows[k].cpu_units)
+                del active[k]
+        pending.extend(k for k,j in enumerate(rows) if j.submit_time==t)
+        key=(lambda k:(rows[k].submit_time,rows[k].job_name)) if policy=='FCFS' else (lambda k:(rows[k].duration,rows[k].submit_time,rows[k].job_name))
+        pending.sort(key=key)
+        while pending:
+            k=pending[0];j=rows[k];todo=int(j.worker_num);plan=[]
+            for m,(g,c) in enumerate(free):
+                room=g//int(j.gpu_request)
+                if j.cpu_units:room=min(room,c//int(j.cpu_units))
+                take=min(todo,room)
+                if take:plan.append((m,take));todo-=take
+                if not todo:break
+            if todo:break
+            for m,w in plan:free[m][0]-=w*int(j.gpu_request);free[m][1]-=w*int(j.cpu_units)
+            started[k]=t;active[k]=(t+int(j.duration),plan);pending.pop(0)
+        if all(x>=0 for x in started) and not active:return started
+    raise AssertionError('Reference simulation did not finish')
+
+
+def tests() -> list[str]:
+    nd=pd.DataFrame(dict(node_name=[0,1],gpu_model=['X','X'],gpu_capacity_num=[1,1],cpu_num=[4,4],cpu_units=[400,400]))
+    j=pd.DataFrame(dict(job_name=[0,1,2],gpu_model=['X']*3,gpu_request=[1,1,1],cpu_request=[4.,4.,4.],
+            cpu_units=[400]*3,worker_num=[1,2,1],submit_time=[0,1,2],duration=[10,5,3]))
+    fc=simulate_pool(nd,j,'FCFS');sj=simulate_pool(nd,j,'SJF-HOL')
+    assert fc['starts'].tolist()==[0,10,15]
+    assert sj['starts'].tolist()==[0,10,2]
+    assert slots(np.array([1,1]),np.array([400,400]),2,400).sum()==0 # worker cannot span nodes
+    assert slots(np.array([1,1]),np.array([0,0]),1,0).sum()==2 # zero CPU demand
+    # Exact fractional CPU, co-location, resource release and same-time arrival.
+    nd2=pd.DataFrame(dict(node_name=[0],gpu_model=['X'],gpu_capacity_num=[4],cpu_num=[1],cpu_units=[100]))
+    j2=pd.DataFrame(dict(job_name=[0,1,2],gpu_model=['X']*3,gpu_request=[1,1,1],cpu_request=[.6,.6,.4],
+             cpu_units=[60,60,40],worker_num=[1,1,1],submit_time=[0,0,2],duration=[2,2,2]))
+    assert simulate_pool(nd2,j2,'FCFS')['starts'].tolist()==[0,2,2]
+    # Deterministic tie-break at arrival zero: ascending job_name.
+    assert simulate_pool(nd2,j2.iloc[[1,0,2]],'FCFS')['starts'].tolist()==[0,2,2]
+    rng=np.random.default_rng(20261014)
+    for trial in range(30):
+        nd3=pd.DataFrame({'node_name':[0,1,2],'gpu_model':['X']*3,
+             'gpu_capacity_num':rng.integers(1,5,3),'cpu_num':rng.integers(1,5,3)})
+        nd3['cpu_units']=nd3.cpu_num*100
+        rows=[]
+        for jid in range(15):
+            while True:
+                q=int(rng.integers(1,5));c=int(rng.choice([0,20,60,100,150,200,400]));w=int(rng.integers(1,4))
+                if slots(nd3.gpu_capacity_num.to_numpy(),nd3.cpu_units.to_numpy(),q,c).sum()>=w:break
+            rows.append(dict(job_name=jid,gpu_model='X',gpu_request=q,cpu_request=c/100,cpu_units=c,
+                worker_num=w,submit_time=int(rng.integers(0,12)),duration=int(rng.integers(1,9))))
+        jj=pd.DataFrame(rows)
+        for pol in ('FCFS','SJF-HOL'):
+            assert simulate_pool(nd3,jj,pol)['starts'].tolist()==reference_small(nd3,jj,pol)
+    return ['30 seeded small instances x two policies match independent scalar time-step reference PASS',
+            'FCFS hand-calculated timing PASS','SJF-HOL hand-calculated timing PASS',
+            'gang all-or-nothing and node-local worker demand PASS','zero CPU demand PASS',
+            'fractional CPU, same-time release/arrival, co-location PASS','deterministic tie-break PASS']
+
+
+def main() -> None:
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--zip',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--audit-only',action='store_true')
+    args=ap.parse_args();args.out.mkdir(parents=True,exist_ok=True)
+    test_results=tests();nodes,jobs,hashes=read_data(args.zip)
+    data=audit(nodes,jobs,hashes)
+    data['environment']={'python':platform.python_version(),'numpy':np.__version__,'pandas':pd.__version__,
+                         'platform':platform.platform(),'cpu_scale':CPU_SCALE,'test_results':test_results,
+                         'script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                         'location_note':'Executed in the ChatGPT analysis container, NOT the user server.'}
+    (args.out/'data_audit.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
+    print('AUDIT',json.dumps({k:data[k] for k in ['records','audit','times','aggregate']},ensure_ascii=False),flush=True)
+    if args.audit_only:return
+    all_metrics=[];H=int(jobs.submit_time.max())
+    for policy in ('FCFS','SJF-HOL'):
+        chunks=[];start=time.perf_counter()
+        for g,sub in jobs.groupby('gpu_model',sort=True):
+            nd=nodes[nodes.gpu_model==g]
+            t=time.perf_counter();r=simulate_pool(nd,sub,policy)
+            row={'policy':policy,'gpu_model':g,**metrics(r,nd,H),'wall_seconds_including_validation':time.perf_counter()-t}
+            all_metrics.append(row)
+            chunks.append(pd.DataFrame({'job_name':r['jobs'].job_name.to_numpy(),'gpu_model':g,
+               'submit_time':r['jobs'].submit_time.to_numpy(),'duration':r['jobs'].duration.to_numpy(),
+               'worker_num':r['jobs'].worker_num.to_numpy(),'gpu_request':r['jobs'].gpu_request.to_numpy(),
+               'cpu_request':r['jobs'].cpu_request.to_numpy(),'start':r['starts'],'finish':r['ends']}))
+            print('RESULT',json.dumps(row),flush=True)
+        out=pd.concat(chunks,ignore_index=True)
+        out.to_csv(args.out/f'{policy}_job_times.csv.gz',index=False,compression='gzip')
+        rr={'jobs':out,'starts':out.start.to_numpy(),'ends':out.finish.to_numpy(),
+            'feasibility_checks':sum(x['feasibility_checks'] for x in all_metrics if x['policy']==policy),
+            'peak_queue':None}
+        # Pool peak queues occur at different times; there is no valid summed cluster peak.
+        row={'policy':policy,'gpu_model':'ALL',**metrics(rr,nodes,H),'wall_seconds_including_validation':time.perf_counter()-start}
+        all_metrics.append(row)
+        print('RESULT',json.dumps(row),flush=True)
+        (args.out/'baseline_metrics.json').write_text(json.dumps(all_metrics,ensure_ascii=False,indent=2))
+    print('ALL DONE',flush=True)
+
+if __name__=='__main__':main()

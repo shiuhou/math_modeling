@@ -1,0 +1,24 @@
+test_roundtrip_and_semantic_tampering (test_q3.Q3PersistedCLI.test_roundtrip_and_semantic_tampering) ... FCFS/M0: raw routing, physical replay, metrics PASS
+FCFS/M1: raw routing, physical replay, metrics PASS
+SJF-HOL/M0: raw routing, physical replay, metrics PASS
+SJF-HOL/M1: raw routing, physical replay, metrics PASS
+FCFS/M0: raw routing, physical replay, metrics PASS
+ok
+test_bad_configuration_and_fractional_duration (test_q3.Q3Tests.test_bad_configuration_and_fractional_duration) ... ok
+test_capacity_overallocation_detected (test_q3.Q3Tests.test_capacity_overallocation_detected) ... ok
+test_corrupt_ledger_duplicate_workers_partition (test_q3.Q3Tests.test_corrupt_ledger_duplicate_workers_partition) ... ok
+test_corrupt_saved_job_identity_model_duration_and_time (test_q3.Q3Tests.test_corrupt_saved_job_identity_model_duration_and_time) ... ok
+test_cpu_bottleneck_same_node (test_q3.Q3Tests.test_cpu_bottleneck_same_node) ... ok
+test_empty_foreign_queue_retains_idle_capacity (test_q3.Q3Tests.test_empty_foreign_queue_retains_idle_capacity) ... ok
+test_hand_fcfs_queue_release_and_native_harm (test_q3.Q3Tests.test_hand_fcfs_queue_release_and_native_harm) ... ok
+test_hash_no_future_or_order_dependence (test_q3.Q3Tests.test_hash_no_future_or_order_dependence) ... ok
+test_infeasible_native_partition_rejected (test_q3.Q3Tests.test_infeasible_native_partition_rejected) ... ok
+test_metrics_tamper_detected (test_q3.Q3Tests.test_metrics_tamper_detected) ... ok
+test_multinode_gang_structural_fallback (test_q3.Q3Tests.test_multinode_gang_structural_fallback) ... ok
+test_sjf_hol_and_independent_scalar_oracle (test_q3.Q3Tests.test_sjf_hol_and_independent_scalar_oracle) ... ok
+test_zero_and_disabled_exact_equivalence (test_q3.Q3Tests.test_zero_and_disabled_exact_equivalence) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 1.082s
+
+OK

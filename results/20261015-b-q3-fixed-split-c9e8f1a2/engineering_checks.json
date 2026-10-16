@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "root_tests": {
+    "status": "PASS",
+    "count": 12,
+    "log": "root_tests.log"
+  },
+  "problem_tests": {
+    "status": "PASS",
+    "count": 40,
+    "q3_count": 14,
+    "log": "problem_tests.log"
+  },
+  "protected_sources": {
+    "status": "PASS",
+    "evidence": "protected_sources.json"
+  },
+  "model_ledger_and_metrics": {
+    "status": "PASS",
+    "evidence": "verified.json"
+  },
+  "repeat_same_configuration": {
+    "status": "PASS",
+    "metrics_exactly_equal": true
+  },
+  "repository_check": {
+    "status": "PASS",
+    "log": "repo_check.log"
+  },
+  "git_diff_check": {
+    "status": "PASS",
+    "log": "diff_check.log"
+  },
+  "bundle_source_reproduction": {
+    "status": "PASS",
+    "evidence": "bundle_reproduction.json"
+  }
+}

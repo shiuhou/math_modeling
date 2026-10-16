@@ -6,7 +6,7 @@
 - 先閱讀唯一數模規範正文 [modeling.md](modeling.md)，再看目前任務、[專案入口](docs/brief.md) 與相關程式／筆記。本檔是 Agent 入口，不另立一份研究手冊。
 - 規範第 1 章定義需求來源與權威關係；附錄 A／B／C 只有在選題確認並核對原始題目後才套用。未確認的選題、分工、資料授權與正式環境明確標記待確認。
 - 按 [協作流程](CONTRIBUTING.md) 使用短期任務分支與 PR；共用介面在專案入口提出並審閱後再供其他任務依賴。
-- 真實驗證入口是 `python3 scripts/check_repo.py`、`python3 -m unittest discover -s tests -v` 與 `git diff --check`；範圍與限制見 [README](README.md)。研究實驗入口尚未建立，不能以倉庫檢查代替模型驗證。
+- 真實驗證入口是 `python3 scripts/check_repo.py`、`python3 -m unittest discover -s tests -v` 與 `git diff --check`；範圍與限制見 [README](README.md)。B 題研究入口與實際驗證範圍見 [B 題 README](problems/2026_gpu_scheduling/README.md)，不能以倉庫檢查代替模型驗證。
 
 ## 工作方式
 - 自行選擇、推導、替換或組合方法；Skills 是可取用的工具，不是固定角色或必經關卡。

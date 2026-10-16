@@ -1,0 +1,78 @@
+{
+  "commit_scope": {
+    "git_commit_at_execution": "79e93c315f006d67f743b14a1d7faf16b00dd072",
+    "new_scheduling_runs": 0
+  },
+  "model": {
+    "file": "problems/2026_gpu_scheduling/docs/q3_model.md",
+    "claim": "whole-card pre-start fixed partition, CPU/GPU same-node constraints"
+  },
+  "M0_S0": {
+    "file": "results/20261015-b-q3-fixed-split-c9e8f1a2/metrics.json",
+    "fields": [
+      "FCFS.M0",
+      "FCFS.M1",
+      "SJF-HOL.M0",
+      "SJF-HOL.M1"
+    ],
+    "note": "M1 is renamed S0 in publication text"
+  },
+  "S1_S5": {
+    "file": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+    "fields": [
+      "S1..S5.*.A10",
+      "S1..S5.*.native_A100",
+      "S1..S5.*.ALL",
+      "paired_M0",
+      "paired_S0"
+    ]
+  },
+  "routing": {
+    "file": "results/20261015-b-q3-s2-fixed-split-v1/routing_audit.json",
+    "formula": "SHA256(q3-fixed-split-v1:<job_id>) threshold; S1 subset S0 subset S2"
+  },
+  "metrics": {
+    "file": "paper_ready_metrics.json",
+    "formulas": {
+      "waiting": "start-submit",
+      "jct": "finish-submit",
+      "relative_completion_delay": "finish-submit-original_duration",
+      "paired_finish_delta": "finish_scenario-finish_reference"
+    }
+  },
+  "native_s4_subgroup": {
+    "comparison": "S4 minus S0",
+    "definition": "all native_A100 jobs; harmed subgroup is positive waiting delta only",
+    "rows": {
+      "FCFS": 80877,
+      "SJF-HOL": 80877
+    },
+    "schedule_sources": {
+      "FCFS": {
+        "s4": {
+          "file": "outputs/b-q3-s2-fixed-split-v1/S4_FCFS/jobs.csv.gz",
+          "sha256": "5e0827ced269771c026f7d92d96530f75c8b17ddbba443ceb0daa45aea00d113"
+        },
+        "s0": {
+          "file": "outputs/b-q3-fixed-split-v1-final/FCFS_M1_jobs.csv.gz",
+          "sha256": "d996d7912ad5c92048946af22eb9b3dff69b0efa4ee9a4a59c0a652dc8cef77d"
+        }
+      },
+      "SJF-HOL": {
+        "s4": {
+          "file": "outputs/b-q3-s2-fixed-split-v1/S4_SJF-HOL/jobs.csv.gz",
+          "sha256": "2f6a658a0d8db2a2c2a6df657500874bd3bdc930dbb102a4b1f0f2e415e1f520"
+        },
+        "s0": {
+          "file": "outputs/b-q3-fixed-split-v1-final/SJF-HOL_M1_jobs.csv.gz",
+          "sha256": "eb84592e486db524254757373ecb1ed9133d91b4c15847a2d61b3e29446b1133"
+        }
+      }
+    },
+    "cross_machine_status": "BLOCKED: persisted schedules are local and no authorized shared storage is available"
+  },
+  "figure": {
+    "file": "q3_donor_capacity_wait_tradeoff.png",
+    "source": "results/20261015-b-q3-s2-fixed-split-v1/figures/donor_capacity_wait_tradeoff.png"
+  }
+}

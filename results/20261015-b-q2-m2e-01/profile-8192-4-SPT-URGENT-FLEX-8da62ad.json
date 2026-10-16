@@ -1,0 +1,269 @@
+{
+  "kind": "m2e_scheduler_profile",
+  "simulator_revision": "8da62ad",
+  "current_commit": "7d5d26b1ecd79303ca482a35377e7d5817c9c532",
+  "simulator_sha256": "ff657bca08110de5835be753eaf705160c865f438d28bf25110f43b7405f3be9",
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "configuration": {
+    "jobs": 8192,
+    "policy": "SPT-URGENT-FLEX",
+    "theta_seconds": 4,
+    "event_mode": "shared-timer",
+    "reservation_k": 200,
+    "placement": "FF-id"
+  },
+  "scheduler_profiled_seconds": 46.76527514201007,
+  "validation_seconds": 6.484444722009357,
+  "peak_rss_kib": 149744,
+  "cost": {
+    "planner_calls": 2329361,
+    "candidate_checks": 2329361,
+    "order_builds": 17613,
+    "bypass_candidate_checks": 2322623,
+    "protected_hol_blocked": 0,
+    "protected_hol_fastpath": 0,
+    "protected_hol_commits": 0,
+    "reservation_calls": 2529,
+    "crossing_accepted": 5,
+    "crossing_rejected": 15327,
+    "certificate_updates": 5,
+    "reservation_rejects": 2321165
+  },
+  "reservations": 2529,
+  "event_count": 40890,
+  "timer_events": 8192,
+  "distinct_decision_times": 17613,
+  "schedule_sha256": "889ef9208762257aaa74a8f4dd06afca1dd76ea05e98e84fb19ebd8f52aa6714",
+  "events_sha256": "09fbf23e395bddd15bce7c6e958c181be932d1545edfc4c335650bae0f4f1a5b",
+  "reservations_sha256": "a2bdd2c8215f7c768f868cb327069f849aec1a9c29b7526ab2e9d8e1916065a6",
+  "independent_validation": "PASS",
+  "functions": [
+    {
+      "file": "simulator.py",
+      "line": 69,
+      "function": "simulate_pool",
+      "calls": 1,
+      "self_seconds": 0.11968967200000001,
+      "cumulative_seconds": 46.765208951000005
+    },
+    {
+      "file": "simulator.py",
+      "line": 369,
+      "function": "dispatch",
+      "calls": 17613,
+      "self_seconds": 1.923691462,
+      "cumulative_seconds": 45.075023237
+    },
+    {
+      "file": "simulator.py",
+      "line": 216,
+      "function": "safe_plan",
+      "calls": 2329361,
+      "self_seconds": 0.6815664020000001,
+      "cumulative_seconds": 27.085190207
+    },
+    {
+      "file": "simulator.py",
+      "line": 134,
+      "function": "current_plan",
+      "calls": 2345368,
+      "self_seconds": 1.483431481,
+      "cumulative_seconds": 23.538154142
+    },
+    {
+      "file": "placement.py",
+      "line": 28,
+      "function": "plan_first_fit",
+      "calls": 2378576,
+      "self_seconds": 4.4847653990000005,
+      "cumulative_seconds": 22.739819321000002
+    },
+    {
+      "file": "placement.py",
+      "line": 18,
+      "function": "slots",
+      "calls": 2378597,
+      "self_seconds": 14.593696962000001,
+      "cumulative_seconds": 15.068445232
+    },
+    {
+      "file": "simulator.py",
+      "line": 53,
+      "function": "_ordered",
+      "calls": 17613,
+      "self_seconds": 0.008638105,
+      "cumulative_seconds": 7.719903293000001
+    },
+    {
+      "file": "simulator.py",
+      "line": 137,
+      "function": "build_reservation",
+      "calls": 2529,
+      "self_seconds": 1.505340468,
+      "cumulative_seconds": 6.876731769
+    },
+    {
+      "file": "simulator.py",
+      "line": 54,
+      "function": "<lambda>",
+      "calls": 11777957,
+      "self_seconds": 1.405428154,
+      "cumulative_seconds": 5.361405233
+    },
+    {
+      "file": "simulator.py",
+      "line": 63,
+      "function": "_snapshot_hash",
+      "calls": 7592,
+      "self_seconds": 2.6618000310000003,
+      "cumulative_seconds": 4.0658937680000005
+    },
+    {
+      "file": "simulator.py",
+      "line": 45,
+      "function": "_priority",
+      "calls": 11777957,
+      "self_seconds": 3.955977079,
+      "cumulative_seconds": 3.955977079
+    },
+    {
+      "file": "simulator.py",
+      "line": 199,
+      "function": "_future_after_crossing",
+      "calls": 15332,
+      "self_seconds": 0.041990480000000004,
+      "cumulative_seconds": 1.5705255120000001
+    },
+    {
+      "file": "simulator.py",
+      "line": 349,
+      "function": "due_protected",
+      "calls": 2529,
+      "self_seconds": 0.004980457000000001,
+      "cumulative_seconds": 0.627968175
+    },
+    {
+      "file": "simulator.py",
+      "line": 415,
+      "function": "<lambda>",
+      "calls": 3136062,
+      "self_seconds": 0.579718587,
+      "cumulative_seconds": 0.579718587
+    },
+    {
+      "file": "simulator.py",
+      "line": 272,
+      "function": "commit",
+      "calls": 8192,
+      "self_seconds": 0.129253757,
+      "cumulative_seconds": 0.365514043
+    },
+    {
+      "file": "placement.py",
+      "line": 80,
+      "function": "apply_plan",
+      "calls": 19329,
+      "self_seconds": 0.20505335100000002,
+      "cumulative_seconds": 0.346379531
+    },
+    {
+      "file": "simulator.py",
+      "line": 57,
+      "function": "_release",
+      "calls": 11137,
+      "self_seconds": 0.056657222,
+      "cumulative_seconds": 0.297991284
+    },
+    {
+      "file": "simulator.py",
+      "line": 207,
+      "function": "_head_witness_capacity",
+      "calls": 15327,
+      "self_seconds": 0.10196527000000001,
+      "cumulative_seconds": 0.155559613
+    },
+    {
+      "file": "simulator.py",
+      "line": 191,
+      "function": "_resource_delta",
+      "calls": 15337,
+      "self_seconds": 0.029485632,
+      "cumulative_seconds": 0.08538826000000001
+    },
+    {
+      "file": "simulator.py",
+      "line": 362,
+      "function": "trigger_timer",
+      "calls": 17613,
+      "self_seconds": 0.028052328,
+      "cumulative_seconds": 0.034508442
+    },
+    {
+      "file": "placement.py",
+      "line": 57,
+      "function": "check_plan",
+      "calls": 8192,
+      "self_seconds": 0.022120252,
+      "cumulative_seconds": 0.032439414
+    },
+    {
+      "file": "simulator.py",
+      "line": 131,
+      "function": "event",
+      "calls": 40890,
+      "self_seconds": 0.021470119000000003,
+      "cumulative_seconds": 0.026327680000000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'remove' of 'list' objects>",
+      "calls": 8192,
+      "self_seconds": 0.010839613000000001,
+      "cumulative_seconds": 0.010839613000000001
+    },
+    {
+      "file": "simulator.py",
+      "line": 478,
+      "function": "<genexpr>",
+      "calls": 73969,
+      "self_seconds": 0.0035840620000000003,
+      "cumulative_seconds": 0.0035840620000000003
+    },
+    {
+      "file": "placement.py",
+      "line": 67,
+      "function": "<genexpr>",
+      "calls": 16412,
+      "self_seconds": 0.002667776,
+      "cumulative_seconds": 0.002667776
+    },
+    {
+      "file": "missing.py",
+      "line": 718,
+      "function": "remove_na_arraylike",
+      "calls": 2,
+      "self_seconds": 5.757e-06,
+      "cumulative_seconds": 2.8477000000000002e-05
+    },
+    {
+      "file": "simulator.py",
+      "line": 482,
+      "function": "report",
+      "calls": 8,
+      "self_seconds": 1.219e-06,
+      "cumulative_seconds": 1.219e-06
+    },
+    {
+      "file": "simulator.py",
+      "line": 38,
+      "function": "canonical_policy",
+      "calls": 1,
+      "self_seconds": 8.540000000000001e-07,
+      "cumulative_seconds": 8.540000000000001e-07
+    }
+  ]
+}

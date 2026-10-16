@@ -1,0 +1,1024 @@
+{
+  "scope": "Existing baselines and diagnostic bridge only. No candidate performance experiment.",
+  "input_hashes": {
+    "job_info_clean.csv": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1",
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18"
+  },
+  "input_hash_match": true,
+  "legacy_source_sha256": "31ab2f2aeda99c26e916693fcc8255f0ef327e8819d6fcae4e5a51d551913e27",
+  "horizons_seconds": {
+    "research": 7775878,
+    "legacy": 7776000
+  },
+  "research_stored_output_checks": {
+    "FCFS": {
+      "n_rows": 224112,
+      "same_input_ids": true,
+      "attributes_match_raw": true,
+      "timing_contract": true,
+      "json_metric_mismatches": [],
+      "at_research_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 446.9705059957621,
+          "p95_wait_hours": 1356.5011111111112,
+          "p99_wait_hours": 1416.3043749999997,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 523.9611815446443,
+          "completed_at_horizon": 165035,
+          "gpu_allocation_rate_at_horizon": 0.69570992994094,
+          "cpu_allocation_rate_at_horizon": 0.2892572544553239
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 900.1285695807325,
+          "p95_wait_hours": 1408.4777499999998,
+          "p99_wait_hours": 1419.6163,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 999.8983257201794,
+          "completed_at_horizon": 54525,
+          "gpu_allocation_rate_at_horizon": 0.9992973792562536,
+          "cpu_allocation_rate_at_horizon": 0.19284774987119715
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80062,
+          "gpu_allocation_rate_at_horizon": 0.6275503734305583,
+          "cpu_allocation_rate_at_horizon": 0.4203198032309459
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.1455264376526059,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 6.020888888888889,
+          "max_wait_hours": 12.250277777777777,
+          "mean_jct_hours": 8.381983806236143,
+          "completed_at_horizon": 3938,
+          "gpu_allocation_rate_at_horizon": 0.5731085404000797,
+          "cpu_allocation_rate_at_horizon": 0.4949216905170329
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 0.02918827128486985,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 9.971111111111112,
+          "mean_jct_hours": 396.2892780888843,
+          "completed_at_horizon": 8209,
+          "gpu_allocation_rate_at_horizon": 0.6086467296708173,
+          "cpu_allocation_rate_at_horizon": 0.3481345144304482
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.04483300325191325,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 1.5134333333333334,
+          "max_wait_hours": 6.991666666666666,
+          "mean_jct_hours": 5.351907931734273,
+          "completed_at_horizon": 13598,
+          "gpu_allocation_rate_at_horizon": 0.5693129890041324,
+          "cpu_allocation_rate_at_horizon": 0.3742346385252066
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.0164318278201866,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.659088269248893,
+          "completed_at_horizon": 4703,
+          "gpu_allocation_rate_at_horizon": 0.5581517413803544,
+          "cpu_allocation_rate_at_horizon": 0.521929446672888
+        }
+      ],
+      "at_90d_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 446.9705059957621,
+          "p95_wait_hours": 1356.5011111111112,
+          "p99_wait_hours": 1416.3043749999997,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 523.9611815446443,
+          "completed_at_horizon": 165107,
+          "gpu_allocation_rate_at_horizon": 0.6957122769025215,
+          "cpu_allocation_rate_at_horizon": 0.28925774020372325
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 900.1285695807325,
+          "p95_wait_hours": 1408.4777499999998,
+          "p99_wait_hours": 1419.6163,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 999.8983257201794,
+          "completed_at_horizon": 54531,
+          "gpu_allocation_rate_at_horizon": 0.9992973902798816,
+          "cpu_allocation_rate_at_horizon": 0.1928473598504985
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80101,
+          "gpu_allocation_rate_at_horizon": 0.6275522536847709,
+          "cpu_allocation_rate_at_horizon": 0.42032065165006466
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.1455264376526059,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 6.020888888888889,
+          "max_wait_hours": 12.250277777777777,
+          "mean_jct_hours": 8.381983806236143,
+          "completed_at_horizon": 3943,
+          "gpu_allocation_rate_at_horizon": 0.5731129056771418,
+          "cpu_allocation_rate_at_horizon": 0.4949255293001631
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 0.02918827128486985,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 9.971111111111112,
+          "mean_jct_hours": 396.2892780888843,
+          "completed_at_horizon": 8221,
+          "gpu_allocation_rate_at_horizon": 0.6086518616413625,
+          "cpu_allocation_rate_at_horizon": 0.3481351326180812
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.04483300325191325,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 1.5134333333333334,
+          "max_wait_hours": 6.991666666666666,
+          "mean_jct_hours": 5.351907931734273,
+          "completed_at_horizon": 13606,
+          "gpu_allocation_rate_at_horizon": 0.569313552260423,
+          "cpu_allocation_rate_at_horizon": 0.3742371035565594
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.0164318278201866,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.659088269248893,
+          "completed_at_horizon": 4705,
+          "gpu_allocation_rate_at_horizon": 0.5581566485010664,
+          "cpu_allocation_rate_at_horizon": 0.5219341792525914
+        }
+      ],
+      "node_ledger_in_saved_csv": false
+    },
+    "SJF-HOL": {
+      "n_rows": 224112,
+      "same_input_ids": true,
+      "attributes_match_raw": true,
+      "timing_contract": true,
+      "json_metric_mismatches": [],
+      "at_research_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 16.361889698751813,
+          "p95_wait_hours": 0.6885833333333237,
+          "p99_wait_hours": 363.34756666666533,
+          "max_wait_hours": 3017.2880555555557,
+          "mean_jct_hours": 93.35256524763412,
+          "completed_at_horizon": 217501,
+          "gpu_allocation_rate_at_horizon": 0.69556320742683,
+          "cpu_allocation_rate_at_horizon": 0.28232612672606305
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 32.906454035021504,
+          "p95_wait_hours": 11.086874999999964,
+          "p99_wait_hours": 1542.1810416666613,
+          "max_wait_hours": 3017.2880555555557,
+          "mean_jct_hours": 132.67621017446854,
+          "completed_at_horizon": 106996,
+          "gpu_allocation_rate_at_horizon": 0.9992233669291593,
+          "cpu_allocation_rate_at_horizon": 0.1792681782047949
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80062,
+          "gpu_allocation_rate_at_horizon": 0.6275503734305583,
+          "cpu_allocation_rate_at_horizon": 0.4203198032309459
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.11484571019617748,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 4.3896722222222415,
+          "max_wait_hours": 14.857777777777779,
+          "mean_jct_hours": 8.351303078779715,
+          "completed_at_horizon": 3938,
+          "gpu_allocation_rate_at_horizon": 0.5731085404000797,
+          "cpu_allocation_rate_at_horizon": 0.4949216905170329
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 0.4342770518626061,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 14.491944444444444,
+          "max_wait_hours": 76.81805555555556,
+          "mean_jct_hours": 396.69436686946204,
+          "completed_at_horizon": 8204,
+          "gpu_allocation_rate_at_horizon": 0.6077846705738076,
+          "cpu_allocation_rate_at_horizon": 0.3478716318749947
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.01574427247609966,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.044633333333333414,
+          "max_wait_hours": 7.165,
+          "mean_jct_hours": 5.322819200958459,
+          "completed_at_horizon": 13598,
+          "gpu_allocation_rate_at_horizon": 0.5693129890041324,
+          "cpu_allocation_rate_at_horizon": 0.3742346385252066
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.016315498068042597,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.658971939496748,
+          "completed_at_horizon": 4703,
+          "gpu_allocation_rate_at_horizon": 0.5581517413803544,
+          "cpu_allocation_rate_at_horizon": 0.521929446672888
+        }
+      ],
+      "at_90d_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 16.361889698751813,
+          "p95_wait_hours": 0.6885833333333237,
+          "p99_wait_hours": 363.34756666666533,
+          "max_wait_hours": 3017.2880555555557,
+          "mean_jct_hours": 93.35256524763412,
+          "completed_at_horizon": 217570,
+          "gpu_allocation_rate_at_horizon": 0.6955655086318177,
+          "cpu_allocation_rate_at_horizon": 0.2823266222853525
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 32.906454035021504,
+          "p95_wait_hours": 11.086874999999964,
+          "p99_wait_hours": 1542.1810416666613,
+          "max_wait_hours": 3017.2880555555557,
+          "mean_jct_hours": 132.67621017446854,
+          "completed_at_horizon": 107002,
+          "gpu_allocation_rate_at_horizon": 0.9992233791139888,
+          "cpu_allocation_rate_at_horizon": 0.1792678646076574
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80101,
+          "gpu_allocation_rate_at_horizon": 0.6275522536847709,
+          "cpu_allocation_rate_at_horizon": 0.42032065165006466
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.11484571019617748,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 4.3896722222222415,
+          "max_wait_hours": 14.857777777777779,
+          "mean_jct_hours": 8.351303078779715,
+          "completed_at_horizon": 3943,
+          "gpu_allocation_rate_at_horizon": 0.5731129056771418,
+          "cpu_allocation_rate_at_horizon": 0.4949255293001631
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 0.4342770518626061,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 14.491944444444444,
+          "max_wait_hours": 76.81805555555556,
+          "mean_jct_hours": 396.69436686946204,
+          "completed_at_horizon": 8213,
+          "gpu_allocation_rate_at_horizon": 0.6077894948975684,
+          "cpu_allocation_rate_at_horizon": 0.3478721542379781
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.01574427247609966,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.044633333333333414,
+          "max_wait_hours": 7.165,
+          "mean_jct_hours": 5.322819200958459,
+          "completed_at_horizon": 13606,
+          "gpu_allocation_rate_at_horizon": 0.569313552260423,
+          "cpu_allocation_rate_at_horizon": 0.3742371035565594
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.016315498068042597,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.658971939496748,
+          "completed_at_horizon": 4705,
+          "gpu_allocation_rate_at_horizon": 0.5581566485010664,
+          "cpu_allocation_rate_at_horizon": 0.5219341792525914
+        }
+      ],
+      "node_ledger_in_saved_csv": false
+    }
+  },
+  "fcfs_bridge": {
+    "original": {
+      "start_differences": [
+        {
+          "gpu_model": "A10",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "different_start_count_vs_research": 1429,
+          "maximum_abs_start_difference_seconds": 440024.0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "H800",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        }
+      ],
+      "all_start_times_equal_research": false,
+      "at_research_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 447.3729576035395,
+          "p95_wait_hours": 1356.5011111111112,
+          "p99_wait_hours": 1416.3043749999997,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 524.3636331524218,
+          "completed_at_horizon": 164807,
+          "gpu_allocation_rate_at_horizon": 0.6944389726452654,
+          "cpu_allocation_rate_at_horizon": 0.28840728949287686
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 900.1285695807325,
+          "p95_wait_hours": 1408.4777499999998,
+          "p99_wait_hours": 1419.6163,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 999.8983257201794,
+          "completed_at_horizon": 54525,
+          "gpu_allocation_rate_at_horizon": 0.9992973792562536,
+          "cpu_allocation_rate_at_horizon": 0.19284774987119715
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80062,
+          "gpu_allocation_rate_at_horizon": 0.6275503734305583,
+          "cpu_allocation_rate_at_horizon": 0.4203198032309459
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.1455264376526059,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 6.020888888888889,
+          "max_wait_hours": 12.250277777777777,
+          "mean_jct_hours": 8.381983806236143,
+          "completed_at_horizon": 3938,
+          "gpu_allocation_rate_at_horizon": 0.5731085404000797,
+          "cpu_allocation_rate_at_horizon": 0.4949216905170329
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 9.382525896735686,
+          "p95_wait_hours": 78.20816666666666,
+          "p99_wait_hours": 101.75,
+          "max_wait_hours": 122.22888888888889,
+          "mean_jct_hours": 405.64261571433514,
+          "completed_at_horizon": 7981,
+          "gpu_allocation_rate_at_horizon": 0.6001530150606992,
+          "cpu_allocation_rate_at_horizon": 0.34530179341528344
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.04483300325191325,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 1.5134333333333334,
+          "max_wait_hours": 6.991666666666666,
+          "mean_jct_hours": 5.351907931734273,
+          "completed_at_horizon": 13598,
+          "gpu_allocation_rate_at_horizon": 0.5693129890041324,
+          "cpu_allocation_rate_at_horizon": 0.3742346385252066
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.0164318278201866,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.659088269248893,
+          "completed_at_horizon": 4703,
+          "gpu_allocation_rate_at_horizon": 0.5581517413803544,
+          "cpu_allocation_rate_at_horizon": 0.521929446672888
+        }
+      ],
+      "at_90d_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 447.3729576035395,
+          "p95_wait_hours": 1356.5011111111112,
+          "p99_wait_hours": 1416.3043749999997,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 524.3636331524218,
+          "completed_at_horizon": 164868,
+          "gpu_allocation_rate_at_horizon": 0.6944412357847427,
+          "cpu_allocation_rate_at_horizon": 0.2884077211225693
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 900.1285695807325,
+          "p95_wait_hours": 1408.4777499999998,
+          "p99_wait_hours": 1419.6163,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 999.8983257201794,
+          "completed_at_horizon": 54531,
+          "gpu_allocation_rate_at_horizon": 0.9992973902798816,
+          "cpu_allocation_rate_at_horizon": 0.1928473598504985
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80101,
+          "gpu_allocation_rate_at_horizon": 0.6275522536847709,
+          "cpu_allocation_rate_at_horizon": 0.42032065165006466
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.1455264376526059,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 6.020888888888889,
+          "max_wait_hours": 12.250277777777777,
+          "mean_jct_hours": 8.381983806236143,
+          "completed_at_horizon": 3943,
+          "gpu_allocation_rate_at_horizon": 0.5731129056771418,
+          "cpu_allocation_rate_at_horizon": 0.4949255293001631
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 9.382525896735686,
+          "p95_wait_hours": 78.20816666666666,
+          "p99_wait_hours": 101.75,
+          "max_wait_hours": 122.22888888888889,
+          "mean_jct_hours": 405.64261571433514,
+          "completed_at_horizon": 7982,
+          "gpu_allocation_rate_at_horizon": 0.6001575868542555,
+          "cpu_allocation_rate_at_horizon": 0.3453022312387778
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.04483300325191325,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 1.5134333333333334,
+          "max_wait_hours": 6.991666666666666,
+          "mean_jct_hours": 5.351907931734273,
+          "completed_at_horizon": 13606,
+          "gpu_allocation_rate_at_horizon": 0.569313552260423,
+          "cpu_allocation_rate_at_horizon": 0.3742371035565594
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.0164318278201866,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.659088269248893,
+          "completed_at_horizon": 4705,
+          "gpu_allocation_rate_at_horizon": 0.5581566485010664,
+          "cpu_allocation_rate_at_horizon": 0.5219341792525914
+        }
+      ]
+    },
+    "node_id_order": {
+      "start_differences": [
+        {
+          "gpu_model": "A10",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "H800",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        }
+      ],
+      "all_start_times_equal_research": true,
+      "at_research_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 446.9705059957621,
+          "p95_wait_hours": 1356.5011111111112,
+          "p99_wait_hours": 1416.3043749999997,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 523.9611815446443,
+          "completed_at_horizon": 165035,
+          "gpu_allocation_rate_at_horizon": 0.69570992994094,
+          "cpu_allocation_rate_at_horizon": 0.2892572544553239
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 900.1285695807325,
+          "p95_wait_hours": 1408.4777499999998,
+          "p99_wait_hours": 1419.6163,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 999.8983257201794,
+          "completed_at_horizon": 54525,
+          "gpu_allocation_rate_at_horizon": 0.9992973792562536,
+          "cpu_allocation_rate_at_horizon": 0.19284774987119715
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80062,
+          "gpu_allocation_rate_at_horizon": 0.6275503734305583,
+          "cpu_allocation_rate_at_horizon": 0.4203198032309459
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.1455264376526059,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 6.020888888888889,
+          "max_wait_hours": 12.250277777777777,
+          "mean_jct_hours": 8.381983806236143,
+          "completed_at_horizon": 3938,
+          "gpu_allocation_rate_at_horizon": 0.5731085404000797,
+          "cpu_allocation_rate_at_horizon": 0.4949216905170329
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 0.02918827128486985,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 9.971111111111112,
+          "mean_jct_hours": 396.2892780888843,
+          "completed_at_horizon": 8209,
+          "gpu_allocation_rate_at_horizon": 0.6086467296708173,
+          "cpu_allocation_rate_at_horizon": 0.3481345144304482
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.04483300325191325,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 1.5134333333333334,
+          "max_wait_hours": 6.991666666666666,
+          "mean_jct_hours": 5.351907931734273,
+          "completed_at_horizon": 13598,
+          "gpu_allocation_rate_at_horizon": 0.5693129890041324,
+          "cpu_allocation_rate_at_horizon": 0.3742346385252066
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.0164318278201866,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.659088269248893,
+          "completed_at_horizon": 4703,
+          "gpu_allocation_rate_at_horizon": 0.5581517413803544,
+          "cpu_allocation_rate_at_horizon": 0.521929446672888
+        }
+      ],
+      "at_90d_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 446.9705059957621,
+          "p95_wait_hours": 1356.5011111111112,
+          "p99_wait_hours": 1416.3043749999997,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 523.9611815446443,
+          "completed_at_horizon": 165107,
+          "gpu_allocation_rate_at_horizon": 0.6957122769025215,
+          "cpu_allocation_rate_at_horizon": 0.28925774020372325
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 900.1285695807325,
+          "p95_wait_hours": 1408.4777499999998,
+          "p99_wait_hours": 1419.6163,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 999.8983257201794,
+          "completed_at_horizon": 54531,
+          "gpu_allocation_rate_at_horizon": 0.9992973902798816,
+          "cpu_allocation_rate_at_horizon": 0.1928473598504985
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80101,
+          "gpu_allocation_rate_at_horizon": 0.6275522536847709,
+          "cpu_allocation_rate_at_horizon": 0.42032065165006466
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.1455264376526059,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 6.020888888888889,
+          "max_wait_hours": 12.250277777777777,
+          "mean_jct_hours": 8.381983806236143,
+          "completed_at_horizon": 3943,
+          "gpu_allocation_rate_at_horizon": 0.5731129056771418,
+          "cpu_allocation_rate_at_horizon": 0.4949255293001631
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 0.02918827128486985,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 9.971111111111112,
+          "mean_jct_hours": 396.2892780888843,
+          "completed_at_horizon": 8221,
+          "gpu_allocation_rate_at_horizon": 0.6086518616413625,
+          "cpu_allocation_rate_at_horizon": 0.3481351326180812
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.04483300325191325,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 1.5134333333333334,
+          "max_wait_hours": 6.991666666666666,
+          "mean_jct_hours": 5.351907931734273,
+          "completed_at_horizon": 13606,
+          "gpu_allocation_rate_at_horizon": 0.569313552260423,
+          "cpu_allocation_rate_at_horizon": 0.3742371035565594
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.0164318278201866,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.659088269248893,
+          "completed_at_horizon": 4705,
+          "gpu_allocation_rate_at_horizon": 0.5581566485010664,
+          "cpu_allocation_rate_at_horizon": 0.5219341792525914
+        }
+      ]
+    },
+    "generic_node_id": {
+      "start_differences": [
+        {
+          "gpu_model": "A10",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        },
+        {
+          "gpu_model": "H800",
+          "different_start_count_vs_research": 0,
+          "maximum_abs_start_difference_seconds": 0.0
+        }
+      ],
+      "all_start_times_equal_research": true,
+      "at_research_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 446.9705059957621,
+          "p95_wait_hours": 1356.5011111111112,
+          "p99_wait_hours": 1416.3043749999997,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 523.9611815446443,
+          "completed_at_horizon": 165035,
+          "gpu_allocation_rate_at_horizon": 0.69570992994094,
+          "cpu_allocation_rate_at_horizon": 0.2892572544553239
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 900.1285695807325,
+          "p95_wait_hours": 1408.4777499999998,
+          "p99_wait_hours": 1419.6163,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 999.8983257201794,
+          "completed_at_horizon": 54525,
+          "gpu_allocation_rate_at_horizon": 0.9992973792562536,
+          "cpu_allocation_rate_at_horizon": 0.19284774987119715
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80062,
+          "gpu_allocation_rate_at_horizon": 0.6275503734305583,
+          "cpu_allocation_rate_at_horizon": 0.4203198032309459
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.1455264376526059,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 6.020888888888889,
+          "max_wait_hours": 12.250277777777777,
+          "mean_jct_hours": 8.381983806236143,
+          "completed_at_horizon": 3938,
+          "gpu_allocation_rate_at_horizon": 0.5731085404000797,
+          "cpu_allocation_rate_at_horizon": 0.4949216905170329
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 0.02918827128486985,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 9.971111111111112,
+          "mean_jct_hours": 396.2892780888843,
+          "completed_at_horizon": 8209,
+          "gpu_allocation_rate_at_horizon": 0.6086467296708173,
+          "cpu_allocation_rate_at_horizon": 0.3481345144304482
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.04483300325191325,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 1.5134333333333334,
+          "max_wait_hours": 6.991666666666666,
+          "mean_jct_hours": 5.351907931734273,
+          "completed_at_horizon": 13598,
+          "gpu_allocation_rate_at_horizon": 0.5693129890041324,
+          "cpu_allocation_rate_at_horizon": 0.3742346385252066
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.0164318278201866,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.659088269248893,
+          "completed_at_horizon": 4703,
+          "gpu_allocation_rate_at_horizon": 0.5581517413803544,
+          "cpu_allocation_rate_at_horizon": 0.521929446672888
+        }
+      ],
+      "at_90d_horizon": [
+        {
+          "gpu_model": "ALL",
+          "jobs": 224112,
+          "mean_wait_hours": 446.9705059957621,
+          "p95_wait_hours": 1356.5011111111112,
+          "p99_wait_hours": 1416.3043749999997,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 523.9611815446443,
+          "completed_at_horizon": 165107,
+          "gpu_allocation_rate_at_horizon": 0.6957122769025215,
+          "cpu_allocation_rate_at_horizon": 0.28925774020372325
+        },
+        {
+          "gpu_model": "A10",
+          "jobs": 111284,
+          "mean_wait_hours": 900.1285695807325,
+          "p95_wait_hours": 1408.4777499999998,
+          "p99_wait_hours": 1419.6163,
+          "max_wait_hours": 1423.253888888889,
+          "mean_jct_hours": 999.8983257201794,
+          "completed_at_horizon": 54531,
+          "gpu_allocation_rate_at_horizon": 0.9992973902798816,
+          "cpu_allocation_rate_at_horizon": 0.1928473598504985
+        },
+        {
+          "gpu_model": "A100-SXM4-80GB",
+          "jobs": 80877,
+          "mean_wait_hours": 0.0,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 0.0,
+          "mean_jct_hours": 27.24837018284281,
+          "completed_at_horizon": 80101,
+          "gpu_allocation_rate_at_horizon": 0.6275522536847709,
+          "cpu_allocation_rate_at_horizon": 0.42032065165006466
+        },
+        {
+          "gpu_model": "A800-SXM4-80GB",
+          "jobs": 3959,
+          "mean_wait_hours": 0.1455264376526059,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 6.020888888888889,
+          "max_wait_hours": 12.250277777777777,
+          "mean_jct_hours": 8.381983806236143,
+          "completed_at_horizon": 3943,
+          "gpu_allocation_rate_at_horizon": 0.5731129056771418,
+          "cpu_allocation_rate_at_horizon": 0.4949255293001631
+        },
+        {
+          "gpu_model": "GPU-series-1",
+          "jobs": 9643,
+          "mean_wait_hours": 0.02918827128486985,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 9.971111111111112,
+          "mean_jct_hours": 396.2892780888843,
+          "completed_at_horizon": 8221,
+          "gpu_allocation_rate_at_horizon": 0.6086518616413625,
+          "cpu_allocation_rate_at_horizon": 0.3481351326180812
+        },
+        {
+          "gpu_model": "GPU-series-2",
+          "jobs": 13633,
+          "mean_wait_hours": 0.04483300325191325,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 1.5134333333333334,
+          "max_wait_hours": 6.991666666666666,
+          "mean_jct_hours": 5.351907931734273,
+          "completed_at_horizon": 13606,
+          "gpu_allocation_rate_at_horizon": 0.569313552260423,
+          "cpu_allocation_rate_at_horizon": 0.3742371035565594
+        },
+        {
+          "gpu_model": "H800",
+          "jobs": 4716,
+          "mean_wait_hours": 0.0164318278201866,
+          "p95_wait_hours": 0.0,
+          "p99_wait_hours": 0.0,
+          "max_wait_hours": 7.855833333333333,
+          "mean_jct_hours": 4.659088269248893,
+          "completed_at_horizon": 4705,
+          "gpu_allocation_rate_at_horizon": 0.5581566485010664,
+          "cpu_allocation_rate_at_horizon": 0.5219341792525914
+        }
+      ]
+    }
+  },
+  "legacy_replay_note": "Function extracted via AST; only return fields added. Wall timing not compared.",
+  "research_small_tests_rerun": [
+    "30 seeded small instances x two policies match independent scalar time-step reference PASS",
+    "FCFS hand-calculated timing PASS",
+    "SJF-HOL hand-calculated timing PASS",
+    "gang all-or-nothing and node-local worker demand PASS",
+    "zero CPU demand PASS",
+    "fractional CPU, same-time release/arrival, co-location PASS",
+    "deterministic tie-break PASS"
+  ],
+  "audit_script_sha256": "778cf440f7eef628b1d662a3f6cf89bb19a02f0534569b4b75d10bd241354415",
+  "research_source_sha256": "f8a4c55f51679e37f233f0355b3d6fcf9fc0a975214324321af371dbfc01d08b",
+  "source_archive_files": {
+    "2026_MCM_Senior_GPU_Scheduling.zip": {
+      "sha256": "31bf55639c397cf0502b8d567bbe56471e65abf287027fdcd9ea0410db89be9b",
+      "bytes": 2573193
+    },
+    "2026_MCM_Problem_B_Source_Code.zip": {
+      "sha256": "bc2b8aef699bb5a08565b3b1ef48e2e93436054de205761e97e1497c5c82bb7e",
+      "bytes": 50428
+    },
+    "B題_GPU調度_研究報告與計算包.zip": {
+      "sha256": "b2220bb77c80a49b56e458380868a7d871ca482e3d338d2abfbf62aca5c5b088",
+      "bytes": 7314756
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "model": "A10",
+  "jobs": 65536,
+  "nodes": 2494,
+  "theta_seconds": 604800,
+  "reservation_k": 200,
+  "event_mode": "shared-timer",
+  "placement": "FF-id ascending numeric node_name",
+  "policy": "SPT-URGENT-HOL",
+  "horizon_seconds": 7776000,
+  "timeout_seconds": 900,
+  "max_rss_kib": 4194304
+}

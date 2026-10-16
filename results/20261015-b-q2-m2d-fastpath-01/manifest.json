@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261015-b-q2-m2d-fastpath-01",
+  "question_or_claim": "M2-D protected-HOL dispatch cost repair; no full-trace performance claim",
+  "code": {
+    "commit": "0f2b9b6f",
+    "base_commit": "91124dfefcd0df68d9d06423b43ccfb60863a00c",
+    "changes": [
+      "SPT-URGENT-HOL protected-head fast path before queue ordering",
+      "protected-HOL counters",
+      "bounded cProfile entrypoint and regressions"
+    ],
+    "execution_note": "A10 child started from base plus identical working-tree simulator patch before commit; functional source is now committed at commit above.",
+    "untracked_preserved": [
+      "notes/tasks/b-q2 _newest.md"
+    ]
+  },
+  "data": {
+    "source": "problems/2026_gpu_scheduling/data/raw",
+    "sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "a10_jobs": 111284,
+    "a10_nodes": 2494
+  },
+  "configuration": {
+    "model": "A10",
+    "prefix_jobs": 65536,
+    "full_jobs": 111284,
+    "theta_seconds": 604800,
+    "theta_role": "exploratory-168h",
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "placement": "FF-id ascending node_name",
+    "horizon_seconds": 7776000,
+    "timeout_seconds": 900,
+    "max_rss_kib": 4194304
+  },
+  "commands": {
+    "profile": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python problems/2026_gpu_scheduling/experiments/profile_m2d_hol.py --jobs 2002 --out results/20261015-b-q2-m2d-fastpath-01/profile-new.json",
+    "a10_4096": "see a10-4096-summary.json and a10-4096-verified.json",
+    "a10_65536": "see hol-65536-benchmark.json"
+  },
+  "validation": {
+    "status": "INCOMPLETE",
+    "checks": [
+      {
+        "name": "protected_hol_profile",
+        "status": "PASS",
+        "evidence": "profile-comparison.json; schedule/event hashes equal"
+      },
+      {
+        "name": "m2d_fastpath_regression_tests",
+        "status": "PASS",
+        "evidence": "test_q2_m2d.py; both targeted cases PASS"
+      },
+      {
+        "name": "a10_4096_time_fixed_flex",
+        "status": "PASS",
+        "evidence": "a10-4096-verified.json; all three reservation replays PASS; hash matches prior ffdc1d..."
+      },
+      {
+        "name": "a10_65536_spt_urgent_hol",
+        "status": "RSS_LIMIT",
+        "evidence": "hol-65536-benchmark.json; 586.155s, observed 4195872 KiB"
+      },
+      {
+        "name": "a10_65536_formal_six_policy",
+        "status": "NOT_RUN",
+        "evidence": "stopped after RSS_LIMIT"
+      },
+      {
+        "name": "theta1350_full_a10",
+        "status": "NOT_RUN",
+        "evidence": "first 168h gate did not pass"
+      }
+    ]
+  },
+  "results": {
+    "profile": "profile-new.json",
+    "profile_comparison": "profile-comparison.json",
+    "a10_4096_summary": "a10-4096-summary.json",
+    "a10_4096_verified": "a10-4096-verified.json",
+    "a10_65536_benchmark": "hol-65536-benchmark.json",
+    "large_outputs": "outputs/q2-m2d-hol-fastpath-65536-20261015 (ignored; only status persisted)"
+  },
+  "open_items": [
+    "Remaining dominant cost is reservation/event/evidence memory growth under high-frequency SPT-URGENT-HOL; no additional restructuring was attempted this round.",
+    "Formal 168h six-policy and 1350h comparison remain NOT_RUN.",
+    "No Q3, 22-grid search or paper performance edits."
+  ],
+  "file_hashes": {
+    "hol-65536-benchmark.json": "2dbe6d652b10b70ee60276de6bbb62c7865b5ae5d68b41b694855910706a83a5",
+    "a10-4096-verified.json": "718172d2cf8bb892ef70f7cc06df5f333d95310c9faa7a9d5d3fbba8868e5a7b",
+    "profile-comparison.json": "2a61f3aee881289f94ca21ed83673f64afa0fb37caf435e206bbb35a4e427c90",
+    "profile-new.json": "476f842996d67d1b9d2f1f35ea8df74ee6847aba77009c6e75f7f70ee42b1de6",
+    "a10-4096-summary.json": "2f910cec4337d9f73a7cb9d8f19b82124b20129afec8826cba90eead41611050"
+  }
+}

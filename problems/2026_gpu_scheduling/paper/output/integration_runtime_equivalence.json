@@ -1,0 +1,1220 @@
+{
+  "schema_version": 1,
+  "acceptance": "post-merge DES execution equivalence",
+  "current_commit": "1b46c8f65579afea25990cd1254302b520e38a70",
+  "branch": "integration/b-baseline-v1",
+  "merged_runtime_reproduction": {
+    "status": "PASS",
+    "program": "problems/2026_gpu_scheduling/src/gpu_scheduling/q3.py (integrated HEAD)",
+    "shared_simulator": "gpu_scheduling.simulator.simulate_pool",
+    "output_root": "problems/2026_gpu_scheduling/outputs/integration-runtime-equivalence-1b46c8f6",
+    "scenarios": 14,
+    "policies": [
+      "FCFS",
+      "SJF-HOL"
+    ],
+    "raw_job_ids": 224112,
+    "raw_hashes": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "horizon_seconds": 7776000,
+    "donor_nodes_by_config": "recorded per scenario",
+    "hash_namespace": "q3-fixed-split-v1",
+    "guardrails": {
+      "timeout_seconds": 900,
+      "address_space_limit_mib": 4096,
+      "execution": "one subprocess at a time"
+    }
+  },
+  "historical_ledger_validity": {
+    "status": "PASS",
+    "artifact": "problems/2026_gpu_scheduling/paper/output/q2_q3_saved_result_replay.json",
+    "meaning": "read-only validation of persisted historical ledgers; it did not execute merged simulator schedules",
+    "prior_new_scheduling_runs": "NOT_RUN"
+  },
+  "numeric_equivalence": {
+    "status": "PASS",
+    "per_id_and_placement": "PASS",
+    "metrics": "PASS",
+    "paired_metrics": "PASS",
+    "records": [
+      {
+        "scenario": "M0",
+        "policy": "FCFS",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": false,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 317241,
+        "current_job_sha256": "bc0a12538592bd1a93152d19b6e875132b8337896b8bee9f18e0507e0993ddc5",
+        "current_placement_sha256": "6b82b8089b3fc5b2afda6581019d7509a7705eb7e7b72e84b7acd14b5137496e",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/FCFS_M0_jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/FCFS_M0_placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 317241,
+          "donor_nodes": 0,
+          "borrowed_gpu_cap": 0,
+          "queue_integral_job_seconds": 360617234543,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": null,
+        "paired_metrics_equivalence": "NOT_APPLICABLE_BASELINE",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 900.1285695807325,
+            "mean_jct_hours": 999.8983257201794,
+            "completed_at_horizon": 54531
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 446.9705059957621,
+            "mean_jct_hours": 523.9611815446443,
+            "completed_at_horizon": 165107
+          }
+        },
+        "wall_seconds": 84.21885841799667,
+        "max_rss_mib": 375.72265625,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "M0",
+        "policy": "SJF-HOL",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": false,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 316107,
+        "current_job_sha256": "6a027f8127081b1d95423e40da3ddb8836576c70383c92e375fa08ca27f818e5",
+        "current_placement_sha256": "b6d2093e7bd2f909e12cf3c49ad1ac24995eb2ceab5006dde9851ab554b7d2d0",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/SJF-HOL_M0_jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/SJF-HOL_M0_placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 316107,
+          "donor_nodes": 0,
+          "borrowed_gpu_cap": 0,
+          "queue_integral_job_seconds": 13200824967,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": null,
+        "paired_metrics_equivalence": "NOT_APPLICABLE_BASELINE",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 32.906454035021504,
+            "mean_jct_hours": 132.67621017446854,
+            "completed_at_horizon": 107002
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 16.361889698751813,
+            "mean_jct_hours": 93.35256524763412,
+            "completed_at_horizon": 217570
+          }
+        },
+        "wall_seconds": 88.38426974599133,
+        "max_rss_mib": 372.65625,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S0",
+        "policy": "FCFS",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 317102,
+        "current_job_sha256": "cd3a1debc33e47867d7c2899f0a3d04ab4cc6574958c47c34e286154b28d41ea",
+        "current_placement_sha256": "04f2fc32bdb95579ad41a935a52b55e7b59f987ff6bf49a31651907a04e646c1",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/FCFS_M1_jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/FCFS_M1_placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 317102,
+          "donor_nodes": 60,
+          "borrowed_gpu_cap": 480,
+          "queue_integral_job_seconds": 235521487793,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 587.8750691523989,
+            "mean_jct_hours": 687.6448252918459,
+            "completed_at_horizon": 70536
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 291.91937735621275,
+            "mean_jct_hours": 368.91005290509503,
+            "completed_at_horizon": 181112
+          }
+        },
+        "wall_seconds": 83.68313468401902,
+        "max_rss_mib": 368.34765625,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S0",
+        "policy": "SJF-HOL",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 315939,
+        "current_job_sha256": "422e0e14676f62c780b44308da576e4c0a0222b5dfc5402c419f353463cd1a4a",
+        "current_placement_sha256": "933bb1106d0b3a8b8b53bd0a2b88278e8ebcf6b60b96a9d4d4fa4af37140bcb7",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/SJF-HOL_M1_jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/SJF-HOL_M1_placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 315939,
+          "donor_nodes": 60,
+          "borrowed_gpu_cap": 480,
+          "queue_integral_job_seconds": 8244035157,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-fixed-split-v1-final/metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 20.533731466338377,
+            "mean_jct_hours": 120.3034876057854,
+            "completed_at_horizon": 107246
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 10.218148808780134,
+            "mean_jct_hours": 87.20882435766245,
+            "completed_at_horizon": 217814
+          }
+        },
+        "wall_seconds": 89.57728524299455,
+        "max_rss_mib": 379.28125,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S1",
+        "policy": "FCFS",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 20,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 317149,
+        "current_job_sha256": "d20999b0dd6617deca458c36c9f2d5c6d311192d503b180d8c4bb3bb1ceb70b4",
+        "current_placement_sha256": "18f8a01a91f5f81e921f5f5f1bbb3ec71749ecfa551931340a78ca1c17102c53",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S1_FCFS/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S1_FCFS/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 317149,
+          "donor_nodes": 60,
+          "borrowed_gpu_cap": 480,
+          "queue_integral_job_seconds": 281463096524,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 702.5506557671264,
+            "mean_jct_hours": 802.3204119065733,
+            "completed_at_horizon": 64117
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 348.8621469572753,
+            "mean_jct_hours": 425.8528225061576,
+            "completed_at_horizon": 174693
+          }
+        },
+        "wall_seconds": 83.77756417001365,
+        "max_rss_mib": 375.71484375,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S1",
+        "policy": "SJF-HOL",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 20,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 315986,
+        "current_job_sha256": "a34b3ed0b6b9c62a5dd8b435a0b185748443d32595252824dc04fb89097b12c2",
+        "current_placement_sha256": "771694c55dc907c8d62bf5a3183881207e446da5e819ec000778f9db71295301",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S1_SJF-HOL/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S1_SJF-HOL/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 315986,
+          "donor_nodes": 60,
+          "borrowed_gpu_cap": 480,
+          "queue_integral_job_seconds": 10164595454,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 25.32767283606708,
+            "mean_jct_hours": 125.09742897551409,
+            "completed_at_horizon": 107198
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 12.598605773997921,
+            "mean_jct_hours": 89.58928132288023,
+            "completed_at_horizon": 217766
+          }
+        },
+        "wall_seconds": 89.55333949200576,
+        "max_rss_mib": 370.61328125,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S2",
+        "policy": "FCFS",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 5,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 316959,
+        "current_job_sha256": "29fd4a21920f73f1927ab204ff109d959b4e755dfced12a59f352405122d437e",
+        "current_placement_sha256": "384acc7ae453b5e1087b27109e1a0aa50dfd28a8fa5f02b6362764e527ef90ba",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S2_FCFS/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S2_FCFS/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 316959,
+          "donor_nodes": 60,
+          "borrowed_gpu_cap": 480,
+          "queue_integral_job_seconds": 404688536450,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 1010.1356533259249,
+            "mean_jct_hours": 1109.9054094653718,
+            "completed_at_horizon": 66922
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 501.595105782922,
+            "mean_jct_hours": 578.5857813318044,
+            "completed_at_horizon": 177498
+          }
+        },
+        "wall_seconds": 83.7023973769974,
+        "max_rss_mib": 356.29296875,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S2",
+        "policy": "SJF-HOL",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 5,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 315803,
+        "current_job_sha256": "0deb09e3748da69746b7eddf2d77fd09126936819d375d00d84d05126c93f4ae",
+        "current_placement_sha256": "e1f8b391d488917da4ecbeb4b40b451f7e222ef8971298bb25d9be7e34737459",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S2_SJF-HOL/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S2_SJF-HOL/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 315803,
+          "donor_nodes": 60,
+          "borrowed_gpu_cap": 480,
+          "queue_integral_job_seconds": 8854493581,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 22.057506532335687,
+            "mean_jct_hours": 121.82726267178272,
+            "completed_at_horizon": 107536
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 10.974787384333627,
+            "mean_jct_hours": 87.96546293321593,
+            "completed_at_horizon": 218104
+          }
+        },
+        "wall_seconds": 88.75106363699888,
+        "max_rss_mib": 361.8828125,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S3",
+        "policy": "FCFS",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 30,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 317087,
+        "current_job_sha256": "e45e10ad91acc4a40ade9679429c1f8eecb3c12c14fedaa07baeb48b9fe2066a",
+        "current_placement_sha256": "7c9c10eb177eb6df1c683cd9589c0566cb3cb5fb076dc93ecf49ab810c769ef3",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S3_FCFS/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S3_FCFS/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 317087,
+          "donor_nodes": 30,
+          "borrowed_gpu_cap": 240,
+          "queue_integral_job_seconds": 367138851017,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 916.407281090623,
+            "mean_jct_hours": 1016.17703723007,
+            "completed_at_horizon": 63563
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 455.053786371943,
+            "mean_jct_hours": 532.0444619208253,
+            "completed_at_horizon": 174139
+          }
+        },
+        "wall_seconds": 83.51043635400129,
+        "max_rss_mib": 367.0703125,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S3",
+        "policy": "SJF-HOL",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 30,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 315942,
+        "current_job_sha256": "4bc1a952cf30f34d63ed68f59894dd061082ce34d4c995c98f71d0a1c3c7bbf5",
+        "current_placement_sha256": "329873549073d267d7e4d0b7239db09a5e2b4a05c8b3b0cf5b64ea672c3242d5",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S3_SJF-HOL/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S3_SJF-HOL/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 315942,
+          "donor_nodes": 30,
+          "borrowed_gpu_cap": 240,
+          "queue_integral_job_seconds": 10259528506,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 25.564636750216664,
+            "mean_jct_hours": 125.33439288966369,
+            "completed_at_horizon": 107194
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 12.716271460004124,
+            "mean_jct_hours": 89.70694700888643,
+            "completed_at_horizon": 217762
+          }
+        },
+        "wall_seconds": 89.25829658101429,
+        "max_rss_mib": 383.30078125,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S4",
+        "policy": "FCFS",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 90,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 317048,
+        "current_job_sha256": "e8017df35d77a0a80aadb01d2b1ea356ec7195698dfd26456143e60861284866",
+        "current_placement_sha256": "d6eb013a5ee9652e2521415beb678ba8124d827f586cd802d8985505478761ad",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S4_FCFS/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S4_FCFS/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 317048,
+          "donor_nodes": 90,
+          "borrowed_gpu_cap": 720,
+          "queue_integral_job_seconds": 216006977001,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 539.108544018008,
+            "mean_jct_hours": 638.8783001574551,
+            "completed_at_horizon": 73799
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.07711142640470509,
+            "mean_jct_hours": 27.32548160924751,
+            "completed_at_horizon": 80065
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 267.7319289276493,
+            "mean_jct_hours": 344.7226044765316,
+            "completed_at_horizon": 184339
+          }
+        },
+        "wall_seconds": 84.09208709502127,
+        "max_rss_mib": 365.78515625,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S4",
+        "policy": "SJF-HOL",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 90,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": true,
+          "sigma": 1,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 315485,
+        "current_job_sha256": "233d4910c75bc2f23e2a9831d78a2a01f9c614a1c1a705c0501a28bf0e507452",
+        "current_placement_sha256": "9c834c4f9d4d4751dc6a76df3ae059cd38dd9865ee1f28fed0ba8b9223cba34e",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S4_SJF-HOL/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S4_SJF-HOL/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 315485,
+          "donor_nodes": 90,
+          "borrowed_gpu_cap": 720,
+          "queue_integral_job_seconds": 7720719468,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 19.214035715426796,
+            "mean_jct_hours": 118.98379185487381,
+            "completed_at_horizon": 107396
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.018491694521035374,
+            "mean_jct_hours": 27.266861877363844,
+            "completed_at_horizon": 80082
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 9.569520135765451,
+            "mean_jct_hours": 86.56019568464775,
+            "completed_at_horizon": 217945
+          }
+        },
+        "wall_seconds": 89.25192795298062,
+        "max_rss_mib": 380.8671875,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S5",
+        "policy": "FCFS",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": true,
+          "sigma": 2,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 317107,
+        "current_job_sha256": "9590237ebacc9eab415ab23b580e2525e8c270e2d253c8479ff69aaeb8d199dd",
+        "current_placement_sha256": "5e5eed8d7663aa4a6ad4cf52f6aa5c2138b8cc1f2cffb61f97b704a5206a8ff8",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S5_FCFS/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S5_FCFS/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 317107,
+          "donor_nodes": 60,
+          "borrowed_gpu_cap": 480,
+          "queue_integral_job_seconds": 289155441237,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 721.7516408168889,
+            "mean_jct_hours": 831.4555450069693,
+            "completed_at_horizon": 66590
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 358.39649772955784,
+            "mean_jct_hours": 440.320027082193,
+            "completed_at_horizon": 177166
+          }
+        },
+        "wall_seconds": 84.645100180991,
+        "max_rss_mib": 366.8671875,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      },
+      {
+        "scenario": "S5",
+        "policy": "SJF-HOL",
+        "status": "PASS",
+        "config": {
+          "donor_nodes": 60,
+          "route_numerator": 1,
+          "route_denominator": 10,
+          "compatibility": true,
+          "sigma": 2,
+          "horizon_seconds": 7776000,
+          "hash_namespace": "q3-fixed-split-v1"
+        },
+        "rows": 224112,
+        "placements": 315961,
+        "current_job_sha256": "71a2b732f22033becb61fd0f1abdf8afcc8f65f6fa576f59c3a24b2961692f9f",
+        "current_placement_sha256": "a9bbb72c47f01267910cb5c3d7307892a27e58948e7d83fae0139235343f2cb2",
+        "historical_job_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S5_SJF-HOL/jobs.csv.gz",
+        "historical_placement_path": "/home/shiuhou/mm/math_modeling-b-q3/outputs/b-q3-s2-fixed-split-v1/S5_SJF-HOL/placements.csv.gz",
+        "per_id_fields": [
+          "submit_time",
+          "original_duration",
+          "duration",
+          "worker_num",
+          "gpu_request",
+          "cpu_request",
+          "cpu_units",
+          "start",
+          "finish",
+          "original_gpu_model",
+          "gpu_model",
+          "partition",
+          "route_reason"
+        ],
+        "per_id_exact_equivalence": "PASS",
+        "placement_exact_equivalence": "PASS",
+        "first_schedule_diff": null,
+        "first_placement_diff": null,
+        "physical_capacity_validation": {
+          "status": "PASS",
+          "original_jobs": 224112,
+          "native_A100_jobs": 80877,
+          "placements": 315961,
+          "donor_nodes": 60,
+          "borrowed_gpu_cap": 480,
+          "queue_integral_job_seconds": 10075720798,
+          "physical_node_replay": "PASS",
+          "routing_from_raw": "PASS",
+          "job_identity_and_attributes": "PASS",
+          "resource_work_identity": "PASS"
+        },
+        "metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "metrics_equivalence": "PASS",
+        "first_metrics_diff": null,
+        "paired_metrics_source": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+        "paired_metrics_equivalence": "PASS",
+        "first_paired_diff": null,
+        "independent_key_metrics": {
+          "original_A10": {
+            "jobs": 111284,
+            "mean_wait_hours": 25.105831381370585,
+            "mean_jct_hours": 134.80973557145083,
+            "completed_at_horizon": 106953
+          },
+          "native_A100": {
+            "jobs": 80877,
+            "mean_wait_hours": 0.0,
+            "mean_jct_hours": 27.24837018284281,
+            "completed_at_horizon": 80101
+          },
+          "ALL": {
+            "jobs": 224112,
+            "mean_wait_hours": 12.48844922528815,
+            "mean_jct_hours": 94.41197857792334,
+            "completed_at_horizon": 217521
+          }
+        },
+        "wall_seconds": 88.45709618000546,
+        "max_rss_mib": 378.890625,
+        "timeout_seconds": 900,
+        "memory_limit_mib": 4096
+      }
+    ]
+  },
+  "physical_capacity_validation": {
+    "status": "PASS",
+    "all_14_schedule_replays": "PASS",
+    "checks": [
+      "per-node CPU/GPU capacity",
+      "routing from raw",
+      "job identity and attributes",
+      "resource-work identity",
+      "waiting/JCT",
+      "90-day completion counts",
+      "native A100 harm and paired indicators"
+    ]
+  },
+  "runtime_cost": {
+    "total_wall_seconds": 1210.8628571110312,
+    "total_wall_hours": 0.3363507936419531,
+    "max_rss_mib": 383.30078125,
+    "runs": 14
+  },
+  "not_run": [
+    "Q2 G1/G2/G3 new simulator reruns",
+    "new schedulers",
+    "parameter search",
+    "additional scenarios",
+    "full trace beyond frozen 14",
+    "modification of historical manifests/results"
+  ],
+  "technical_baseline_ready": "PASS"
+}

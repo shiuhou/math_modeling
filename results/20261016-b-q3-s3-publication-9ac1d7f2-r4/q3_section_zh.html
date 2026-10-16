@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>問題三：固定分流跨 GPU 替代</title>
+<style>body{max-width:1000px;margin:32px auto;padding:0 22px;font:16px/1.75 system-ui,"Noto Sans CJK TC",sans-serif;color:#203040}h1,h2{color:#1b4f72}.note{border-left:4px solid #1b4f72;background:#f1f6fa;padding:10px 16px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:6px;border-bottom:1px solid #d4dde4;text-align:right}th:first-child,td:first-child{text-align:left}thead{background:#eef4f8}figure{margin:22px 0}img{width:100%;height:auto}.formula{padding:10px;background:#f6f8fa;text-align:center;font-family:serif}</style></head><body>
+<h1>問題三：固定分流跨 GPU 替代</h1>
+<p class="note">本章只使用已完成的 M0、S0、S1–S5；沒有新增排程情景。第一輪的 M1 統一稱為 S0。相容性與 σ 是情景假設，不是硬體 benchmark。</p>
+<h2>模型與假設</h2>
+<p>作業 j 的原生 GPU 型號為 n<sub>j</sub>，實際型號為 m<sub>j</sub>，原始時長為 p<sub>j</sub>，有效時長為 p′<sub>j</sub> = σ<sub>jm</sub>p<sub>j</sub>，完成時間為 f<sub>j</sub> = s<sub>j</sub> + p′<sub>j</sub>，等待為 ω<sub>j</sub> = s<sub>j</sub> − a<sub>j</sub>；worker 數另以 W<sub>j</sub> 表示。固定分區把按 <code>node_name</code> 字典序排序的前 B 台 A100 專供外來 A10，其餘 A100 只服務原生 A100；worker 必須同節點滿足 CPU/GPU，全部同步啟動，不搶占、不遷移、不 fallback，且每一時刻逐節點容量不超額。</p>
+<div class="formula">Σ<sub>j:s<sub>j</sub>≤t&lt;f<sub>j</sub></sub> g<sub>j</sub>y<sub>ji</sub> ≤ G<sub>i</sub><sup>cap</sup>，Σ c<sub>j</sub>y<sub>ji</sub> ≤ C<sub>i</sub><sup>cap</sup>，Σ<sub>i</sub>y<sub>ji</sub> = W<sub>j</sub></div>
+<h2>反事實設計與主要結果</h2>
+<p>M0 是原始型號隔離；S0 是 60 台／10% 固定 SHA-256 分流／σ=1。S1–S5 每次只變更一個因素。所有比較使用 224,112 個原始 job ID；90 天窗口為 H=7,776,000 秒，窗口完成與完整排空分開計算。worker 數為 W<sub>j</sub>，等待為 ω<sub>j</sub>=s<sub>j</sub>−a<sub>j</sub>，JCT=f<sub>j</sub>−a<sub>j</sub>，relative completion delay=f<sub>j</sub>−a<sub>j</sub>−p<sub>j</sub>。</p>
+<table><caption>Q3 main results. Native harmed counts are paired against S0 under the same policy.</caption><thead><tr>
+<th>Scenario</th>
+<th>Policy</th>
+<th>A10 mean wait (h)</th>
+<th>A10 P95/P99 (h)</th>
+<th>A10 mean JCT (h)</th>
+<th>Native harmed</th>
+<th>All mean JCT (h)</th>
+<th>90d done</th>
+</tr></thead><tbody>
+<tr><td>M0</td><td>FCFS</td><td>900.129</td><td>1408.478/1419.616</td><td>999.898</td><td>0</td><td>523.961</td><td>165,107</td></tr>
+<tr><td>S0</td><td>FCFS</td><td>587.875</td><td>966.761/987.569</td><td>687.645</td><td>0</td><td>368.910</td><td>181,112</td></tr>
+<tr><td>S1</td><td>FCFS</td><td>702.551</td><td>1167.986/1188.658</td><td>802.320</td><td>0</td><td>425.853</td><td>174,693</td></tr>
+<tr><td>S2</td><td>FCFS</td><td>1010.136</td><td>4322.906/5345.115</td><td>1109.905</td><td>0</td><td>578.586</td><td>177,498</td></tr>
+<tr><td>S3</td><td>FCFS</td><td>916.407</td><td>4053.782/4423.899</td><td>1016.177</td><td>0</td><td>532.044</td><td>174,139</td></tr>
+<tr><td>S4</td><td>FCFS</td><td>539.109</td><td>958.246/985.841</td><td>638.878</td><td>5,735</td><td>344.723</td><td>184,339</td></tr>
+<tr><td>S5</td><td>FCFS</td><td>721.752</td><td>2292.733/2885.707</td><td>831.456</td><td>0</td><td>440.320</td><td>177,166</td></tr>
+<tr><td>M0</td><td>SJF-HOL</td><td>32.906</td><td>11.087/1542.181</td><td>132.676</td><td>0</td><td>93.353</td><td>217,570</td></tr>
+<tr><td>S0</td><td>SJF-HOL</td><td>20.534</td><td>12.691/639.532</td><td>120.303</td><td>0</td><td>87.209</td><td>217,814</td></tr>
+<tr><td>S1</td><td>SJF-HOL</td><td>25.328</td><td>7.745/1108.877</td><td>125.097</td><td>0</td><td>89.589</td><td>217,766</td></tr>
+<tr><td>S2</td><td>SJF-HOL</td><td>22.058</td><td>9.767/526.165</td><td>121.827</td><td>0</td><td>87.965</td><td>218,104</td></tr>
+<tr><td>S3</td><td>SJF-HOL</td><td>25.565</td><td>11.470/1025.261</td><td>125.334</td><td>0</td><td>89.707</td><td>217,762</td></tr>
+<tr><td>S4</td><td>SJF-HOL</td><td>19.214</td><td>5.205/611.002</td><td>118.984</td><td>2,150</td><td>86.560</td><td>217,945</td></tr>
+<tr><td>S5</td><td>SJF-HOL</td><td>25.106</td><td>12.125/1058.270</td><td>134.810</td><td>0</td><td>94.412</td><td>217,521</td></tr>
+</tbody></table>
+<p>在 S0／SJF-HOL 相對 M0，有 49,772 個 A10 作業較晚完成、4,397 個 M0 零等待作業新增等待；正完成延遲總量為 68183.1825 job-hours。A10 等待 P95 由 11.086875 變為 12.690806 小時。</p>
+<p>S4／90 台的 native A100 分母分開計算：FCFS 為全體 80,877、受損 5,735；SJF-HOL 為全體 80,877、受損 2,150。全體平均新增等待為 0.077111/0.018492 小時，受損子群平均為 1.087453/0.695606 小時（FCFS/SJF-HOL）；正新增等待總量為 6236.5408/1495.5528 job-hours。全體 P99 為 2.074778/0.405622，受損子群 P99 為 4.099278/6.072953；全部都是 S4−S0。</p>
+<p>多分流不保證更好：S2／FCFS（20%、60 台）A10 最大等待 5445.367 小時；S3／FCFS（10%、30 台）平均等待 916.407 小時，高於 M0 的 900.129 小時。30/60/90 台增加 donor 可降低 A10 平均等待，但 90 台產生上述 native 成本。</p>
+<figure><img src="figures/q3_donor_capacity_wait_tradeoff.png" alt="donor capacity trade-off"><figcaption>圖：30/60/90 台 donor 的 A10 平均等待改善與 native A100 平均等待增加。</figcaption></figure>
+<p>σ=2 時，FCFS A10 平均 JCT 由 999.898 變為 831.456 小時；SJF-HOL 由 132.676 變為 134.810 小時。SJF-HOL 全體平均 JCT 由 93.353 變為 94.412 小時，90 天完成由 217,570 變為 217,521。因此等待與完成可能方向相反，不能插值或宣稱精確 σ*。</p>
+<h2>條件性建議與限制</h2><p>若政策要求本 trace 的 native A100 零新增等待，60 台／10% 是已測候選之一；若允許有限宿主代價，90 台仍應保留在取捨表。這些結果不證明全域最佳，也不代表動態共享、MIG、定價或 Q2×Q3 聯合排程。allocation 是請求資源占用，不是量測利用率；不同型號 GPU-hours 不可直接視為等效算力或金錢。</p>
+</body></html>

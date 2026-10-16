@@ -1,0 +1,50 @@
+test_supplied_hand_cases_and_scalar_oracle (test_baseline.SuppliedBaselineTests.test_supplied_hand_cases_and_scalar_oracle) ... ok
+test_saved_ledger_roundtrip_and_corruption (test_baseline_cli.BaselineCLI.test_saved_ledger_roundtrip_and_corruption) ... ok
+test_evaluator_does_not_claim_capacity_validation (test_intake_contracts.IntakeContracts.test_evaluator_does_not_claim_capacity_validation) ... ok
+test_fractional_capacity_and_raw_frame_preservation (test_intake_contracts.IntakeContracts.test_fractional_capacity_and_raw_frame_preservation) ... ok
+test_infeasible_job_is_reported_instead_of_default_zero_times (test_intake_contracts.IntakeContracts.test_infeasible_job_is_reported_instead_of_default_zero_times) ... ok
+test_models_cannot_share_a_pool (test_intake_contracts.IntakeContracts.test_models_cannot_share_a_pool) ... ok
+test_precision_rejected_without_rounding (test_intake_contracts.IntakeContracts.test_precision_rejected_without_rounding) ... ok
+test_replay_rejects_overallocation_and_invalid_node_index (test_intake_contracts.IntakeContracts.test_replay_rejects_overallocation_and_invalid_node_index) ... ok
+test_arbitrary_precision_and_small_positive_display (test_q1.CapacityBoundChecks.test_arbitrary_precision_and_small_positive_display) ... ok
+test_coincident_events_origin_and_row_order (test_q1.CapacityBoundChecks.test_coincident_events_origin_and_row_order) ... ok
+test_empty_zero_work_and_under_capacity (test_q1.CapacityBoundChecks.test_empty_zero_work_and_under_capacity) ... ok
+test_interior_drain_triangle (test_q1.CapacityBoundChecks.test_interior_drain_triangle) ... ok
+test_invalid_inputs_rejected (test_q1.CapacityBoundChecks.test_invalid_inputs_rejected) ... ok
+test_raw_six_pools_independent_prefix_minimum_integral (test_q1.CapacityBoundChecks.test_raw_six_pools_independent_prefix_minimum_integral) ... ok
+test_sample_path_identity_independent_legal_schedule (test_q1.CapacityBoundChecks.test_sample_path_identity_independent_legal_schedule) ... ok
+test_tail_is_half_of_hand_calculated_area (test_q1.CapacityBoundChecks.test_tail_is_half_of_hand_calculated_area) ... ok
+test_binned_demand_crossing_boundaries_and_partial_day (test_q1.Q1Checks.test_binned_demand_crossing_boundaries_and_partial_day) ... ok
+test_ccdf_groups_tied_durations (test_q1.Q1Checks.test_ccdf_groups_tied_durations) ... ok
+test_daily_integral_matches_independent_overlap_for_every_bin (test_q1.Q1Checks.test_daily_integral_matches_independent_overlap_for_every_bin) ... ok
+test_gini_matches_pairwise_definition (test_q1.Q1Checks.test_gini_matches_pairwise_definition) ... ok
+test_lorenz_includes_origin_and_endpoint (test_q1.Q1Checks.test_lorenz_includes_origin_and_endpoint) ... ok
+test_partial_phase_exposure (test_q1.Q1Checks.test_partial_phase_exposure) ... ok
+test_seconds_integral_and_boundary_release (test_q1.Q1Checks.test_seconds_integral_and_boundary_release) ... ok
+test_top_count_is_floor (test_q1.Q1Checks.test_top_count_is_floor) ... ok
+test_git_reference_and_numeric_corruption (test_q1_delivery.DeliveryChecks.test_git_reference_and_numeric_corruption) ... ok
+test_missing_compiler_reports_blocked_without_creating_output (test_q1_delivery.DeliveryChecks.test_missing_compiler_reports_blocked_without_creating_output) ... ok
+test_roundtrip_and_semantic_tampering (test_q3.Q3PersistedCLI.test_roundtrip_and_semantic_tampering) ... FCFS/M0: raw routing, physical replay, metrics PASS
+FCFS/M1: raw routing, physical replay, metrics PASS
+SJF-HOL/M0: raw routing, physical replay, metrics PASS
+SJF-HOL/M1: raw routing, physical replay, metrics PASS
+FCFS/M0: raw routing, physical replay, metrics PASS
+ok
+test_bad_configuration_and_fractional_duration (test_q3.Q3Tests.test_bad_configuration_and_fractional_duration) ... ok
+test_capacity_overallocation_detected (test_q3.Q3Tests.test_capacity_overallocation_detected) ... ok
+test_corrupt_ledger_duplicate_workers_partition (test_q3.Q3Tests.test_corrupt_ledger_duplicate_workers_partition) ... ok
+test_corrupt_saved_job_identity_model_duration_and_time (test_q3.Q3Tests.test_corrupt_saved_job_identity_model_duration_and_time) ... ok
+test_cpu_bottleneck_same_node (test_q3.Q3Tests.test_cpu_bottleneck_same_node) ... ok
+test_empty_foreign_queue_retains_idle_capacity (test_q3.Q3Tests.test_empty_foreign_queue_retains_idle_capacity) ... ok
+test_hand_fcfs_queue_release_and_native_harm (test_q3.Q3Tests.test_hand_fcfs_queue_release_and_native_harm) ... ok
+test_hash_no_future_or_order_dependence (test_q3.Q3Tests.test_hash_no_future_or_order_dependence) ... ok
+test_infeasible_native_partition_rejected (test_q3.Q3Tests.test_infeasible_native_partition_rejected) ... ok
+test_metrics_tamper_detected (test_q3.Q3Tests.test_metrics_tamper_detected) ... ok
+test_multinode_gang_structural_fallback (test_q3.Q3Tests.test_multinode_gang_structural_fallback) ... ok
+test_sjf_hol_and_independent_scalar_oracle (test_q3.Q3Tests.test_sjf_hol_and_independent_scalar_oracle) ... ok
+test_zero_and_disabled_exact_equivalence (test_q3.Q3Tests.test_zero_and_disabled_exact_equivalence) ... ok
+
+----------------------------------------------------------------------
+Ran 40 tests in 3.797s
+
+OK

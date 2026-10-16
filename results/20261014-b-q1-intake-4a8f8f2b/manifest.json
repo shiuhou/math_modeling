@@ -1,0 +1,417 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261014-b-q1-intake-4a8f8f2b",
+  "question_or_claim": "Q1 data characterization and audited handoff corrections A-F only; not a final paper or scheduler benchmark",
+  "created_at_utc": "2026-10-14T09:31:31.500644+00:00",
+  "code": {
+    "commit": "dc5e5f28e0bc861248cb13d379ef67342bbc9694",
+    "dirty": true,
+    "changes": {
+      "patch": "source_snapshot.patch",
+      "sha256": "6042030cbe12b379c40245d72f1c2cb468d5bcd86c962cd66259cfe4ebe3b0e4",
+      "base": "Patch relative to recorded commit; contains untracked participating code added as new files; apply from repository root",
+      "files": [
+        {
+          "path": "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py",
+          "sha256": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf"
+        },
+        {
+          "path": "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py",
+          "sha256": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2"
+        },
+        {
+          "path": "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py",
+          "sha256": "23c6afa8cd8e27e8bdbb73e2a4eb694998d4e72e0fb65c9e41bafa0958fa6d49"
+        },
+        {
+          "path": "problems/2026_gpu_scheduling/experiments/eda_analysis.py",
+          "sha256": "0cb89eb7eb9b62ad1249dba5892b1aeeceb9abacd0bbe1ca7d65f8088228d9ab"
+        },
+        {
+          "path": "problems/2026_gpu_scheduling/experiments/eda_deep.py",
+          "sha256": "05f0aa3a00ea63fd6f5afb8dd333143e9c730bb18a1c8775de3c6e120bc2a16f"
+        },
+        {
+          "path": "problems/2026_gpu_scheduling/experiments/generate_figures.py",
+          "sha256": "e611d5aa3acf2f2140036007ca1ea4fbdd85daa6eff6dadee031c89408c70c51"
+        },
+        {
+          "path": "problems/2026_gpu_scheduling/experiments/verify_q1.py",
+          "sha256": "5a698b6902bfa36fc47b1a0d91278e789bf9b2a293047763f1843a17f8f93e1b"
+        },
+        {
+          "path": "problems/2026_gpu_scheduling/requirements.txt",
+          "sha256": "dbe08f50f6124e5037ffc570e9bdf53ec5fef0e80e3506f9ec02b3c5d43f134c"
+        },
+        {
+          "path": "problems/2026_gpu_scheduling/tests/test_q1.py",
+          "sha256": "287abd78d7e2c2cf40a59afbee9b7550392493088b92171c4330dbb7764784db"
+        }
+      ]
+    },
+    "branch": "feat/b-q1"
+  },
+  "data": [
+    {
+      "path": "problems/2026_gpu_scheduling/data/raw/node_info_df.csv",
+      "sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "source": "Existing user-provided CSV in this repository, adapted competition trace per problem PDF",
+      "access": "Use existing raw file or locally supplied original data ZIP; do not alter bytes",
+      "redistribution_authorization": "Unconfirmed; no new raw data uploaded by this task"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/data/raw/job_info_clean.csv",
+      "sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+      "source": "Existing user-provided CSV in this repository, adapted competition trace per problem PDF",
+      "access": "Use existing raw file or locally supplied original data ZIP; do not alter bytes",
+      "redistribution_authorization": "Unconfirmed; no new raw data uploaded by this task"
+    }
+  ],
+  "configuration": {
+    "horizon_seconds": 7775878,
+    "window": "[0,T), T=last submission; all rows in lifetime work",
+    "cpu_scale": 100,
+    "top_k": "floor(n*f)",
+    "ccdf": "strict empirical P(duration > d), ties grouped",
+    "seeds": "Deterministic raw-data accounting"
+  },
+  "command": [
+    ".venv/bin/python",
+    "problems/2026_gpu_scheduling/experiments/eda_analysis.py",
+    "--out",
+    "outputs/b-q1-raw-replay-4a8f8f2b"
+  ],
+  "working_directory": ".",
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "matplotlib": "3.10.8",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "hardware": {
+      "architecture": "x86_64",
+      "cpu_model": "Intel(R) Core(TM) i5-14400",
+      "gpu": "Not used"
+    },
+    "thread_limit": "Not configured/recorded; no performance comparison claimed",
+    "runtime_note": "Task-local virtualenv, not confirmed team formal environment"
+  },
+  "duration_seconds": 1.0922798329993384,
+  "validation": {
+    "status": "PASS",
+    "scope": "Q1 computations/figures/content only, not whole manuscript acceptance",
+    "checks": [
+      {
+        "name": "Raw Q1 replay",
+        "status": "PASS",
+        "command": [
+          ".venv/bin/python",
+          "problems/2026_gpu_scheduling/experiments/eda_analysis.py",
+          "--out",
+          "outputs/b-q1-raw-replay-4a8f8f2b"
+        ],
+        "evidence": "command_log.json",
+        "scope": "All 10 recomputed numerical output files byte-identical to preserved run"
+      },
+      {
+        "name": "Handoff comparison",
+        "status": "PASS",
+        "command": [
+          ".venv/bin/python",
+          "problems/2026_gpu_scheduling/experiments/verify_q1.py",
+          "--handoff-zip",
+          "Q1_final_handoff.zip",
+          "--results",
+          "results/20261014-b-q1-intake-4a8f8f2b",
+          "--out",
+          "outputs/b-q1-handoff-verified-4a8f8f2b.json"
+        ],
+        "evidence": "handoff_comparison.json",
+        "scope": "39 statistics and all 9 CSVs, including every model/configuration/resource"
+      },
+      {
+        "name": "Exact immediate-start integral",
+        "status": "PASS",
+        "scope": "GPU and CPU in all six pools; event sum equals independent clipped interval overlap before output; [0,T) seconds"
+      },
+      {
+        "name": "Q1 figures",
+        "status": "PASS",
+        "command": [
+          ".venv/bin/python",
+          "problems/2026_gpu_scheduling/experiments/generate_figures.py",
+          "--results",
+          "results/20261014-b-q1-intake-4a8f8f2b",
+          "--out",
+          "outputs/b-q1-intake-figures-4a8f8f2b-final"
+        ],
+        "evidence": "figure_check.json",
+        "scope": "All 4 Q1 panels generated by final code and visually inspected; axes/units/legends readable; terminal CCDF zero excluded and final positive plateau retained"
+      },
+      {
+        "name": "Q1 independent unit checks",
+        "status": "PASS",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "problems/2026_gpu_scheduling/tests",
+          "-v"
+        ],
+        "environment_override": {
+          "PYTHONPATH": "problems/2026_gpu_scheduling/src"
+        },
+        "scope": "6 checks: hand integral boundary, pairwise Gini, Lorenz endpoints, tied CCDF, floor top-k, partial phase exposure"
+      },
+      {
+        "name": "Existing intake regression checks",
+        "status": "PASS",
+        "scope": "13 tests in feat/b-intake (6 Q1 + 7 engine/loader/evaluator checks; small independent oracle); no full scheduling trace executed"
+      },
+      {
+        "name": "Q1 paper numerical/semantic audit",
+        "status": "PASS",
+        "scope": "Three requested parts; table regenerated from pool summary; corrected seconds ratio, mean worker/GPU counts, CPU aggregate, A10 demand, ratio count; stale Q1 values/clock/background claims removed"
+      },
+      {
+        "name": "Q2/Q3 isolation",
+        "status": "PASS",
+        "scope": "Original paper substring from Question 2 to EOF and intake data/placement/simulator/evaluation/validation/prototypes compared by SHA256; raw CSV hashes unchanged"
+      },
+      {
+        "name": "Root engineering tests",
+        "status": "PASS",
+        "command": [
+          "python3",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-v"
+        ],
+        "scope": "12 standard-library repository/tool tests"
+      },
+      {
+        "name": "Historical job byte identity",
+        "status": "BLOCKED",
+        "reason": "Current job SHA differs from both handoffs; original data ZIP not found; byte-format cause unconfirmed"
+      },
+      {
+        "name": "Historical input semantic comparison",
+        "status": "PASS",
+        "scope": "Both saved research schedules: job ID set and six raw input fields identical for all 224112 rows; source archive and member hashes below"
+      },
+      {
+        "name": "Whole-paper build and 10-page layout",
+        "status": "BLOCKED",
+        "reason": "No pdflatex/latexmk/tectonic in this environment and original Q2/Q3 figure assets absent"
+      },
+      {
+        "name": "Cross-section Q3 demand consistency",
+        "status": "FAIL",
+        "reason": "Preserved Q3 still cites old 3664.0 GPU mean/~1170 deficit; requires separate Q3 review, not modified by Q1"
+      },
+      {
+        "name": "Q2/Q3 performance validation",
+        "status": "NOT_RUN",
+        "reason": "Only Q1 computation authorized; full-trace fresh scheduling and paper claims not checked"
+      },
+      {
+        "name": "Repository link/JSON check",
+        "status": "PASS",
+        "command": [
+          "python3",
+          "scripts/check_repo.py"
+        ],
+        "scope": "28 Markdown/JSON files in feat/b-q1; root intake separately checked (34)"
+      },
+      {
+        "name": "Git whitespace review",
+        "status": "PASS",
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--check"
+        ],
+        "scope": "All 32 staged files; unstaged git diff --check also passed"
+      },
+      {
+        "name": "Evidence/source integrity",
+        "status": "PASS",
+        "scope": "Every manifest source/output SHA checked, source patch applies to an empty tree, staged file list contains no new raw data/archives/binaries/simulators/prototypes"
+      }
+    ]
+  },
+  "results": [
+    {
+      "path": "command_log.json",
+      "sha256": "35d39b06a57aefd22f38dcbab460619dbfc2609560d3dc56cf1c5c33227beba0",
+      "purpose": "Reproduction/validation evidence"
+    },
+    {
+      "path": "concentration.csv",
+      "sha256": "a3898b0c4a1ee685c10be8a6b8e819a3eefc39f25e96b2446e65658f754d7cfd",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "daily_arrivals.csv",
+      "sha256": "9c86d4920953bab83bbee889bd9fb9ebb41e581a7e861bc5d9966e7c63fe6387",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "duration_quantiles.csv",
+      "sha256": "d43c0caf60e68591a47a1758de5a887cc0194411025425782fd487107d17bac0",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "figure_check.json",
+      "sha256": "c1008502521c100d113a0d352117291a77d9ed22ef1e4ec4ebbbb236201b8b2d",
+      "purpose": "Reproduction/validation evidence"
+    },
+    {
+      "path": "handoff_comparison.json",
+      "sha256": "389decbe6306ea53db085348973a988ddc521e62fd921b3c537a06ed28432b74",
+      "purpose": "Reproduction/validation evidence"
+    },
+    {
+      "path": "immediate_start_demand.csv",
+      "sha256": "1820ca9eba10ba484874ea40629eec3c01f3eb62eeb0741af8db46f48ab9a2bf",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "node_configurations.csv",
+      "sha256": "5312d24cebc50b674af06d98033063b9f33566ee6fa5610c667ff7bc45c079f7",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "pool_summary.csv",
+      "sha256": "00699b13c32de2d46667709b4ba6b88c7dea2caf0e76c7c35ef98899f5c96a1d",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "q1_results.json",
+      "sha256": "e0b7397e4fdd83aa06d948c4eea5ca381c8c923be34e689ae164127ff9c3d8c8",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "relative_24h_phase.csv",
+      "sha256": "0a77ea2c5ac5be640a8dd940e608163c6734709c21b13bbf3517d1228332174f",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "resource_shape.csv",
+      "sha256": "2d7f9a04485c39c648d8fa2f2ff7c58954fdc93ebe5a749afda98102c58cb26e",
+      "purpose": "Numeric handoff evidence"
+    },
+    {
+      "path": "source_snapshot.patch",
+      "sha256": "6042030cbe12b379c40245d72f1c2cb468d5bcd86c962cd66259cfe4ebe3b0e4",
+      "purpose": "Reproduction/validation evidence"
+    },
+    {
+      "path": "thirty_day_blocks.csv",
+      "sha256": "5d2c950939334bd42e5373da3b97210c33e82cc6ef931caf6bc10b67986bb9cd",
+      "purpose": "Numeric handoff evidence"
+    }
+  ],
+  "sources": [
+    {
+      "filename": "2026_MCM_Problem_B_Source_Code.zip",
+      "sha256": "bc2b8aef699bb5a08565b3b1ef48e2e93436054de205761e97e1497c5c82bb7e",
+      "access": "User-provided local archive; ignored, not uploaded"
+    },
+    {
+      "filename": "Q1_final_handoff.zip",
+      "sha256": "4a8f8f2b92feaefa86b9af580ab9132295933171ed765ae063bd14bc9f963485",
+      "access": "User-provided local archive; ignored, not uploaded"
+    },
+    {
+      "filename": "B題_GPU調度_研究報告與計算包.zip",
+      "sha256": "b2220bb77c80a49b56e458380868a7d871ca482e3d338d2abfbf62aca5c5b088",
+      "access": "User-provided local archive; ignored, not uploaded"
+    }
+  ],
+  "independent_input_evidence": {
+    "archive_sha256": "b2220bb77c80a49b56e458380868a7d871ca482e3d338d2abfbf62aca5c5b088",
+    "current_data_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "historical_data_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1"
+    },
+    "checks": {
+      "FCFS": {
+        "jobs": 224112,
+        "input_field_differences": {
+          "gpu_model": 0,
+          "submit_time": 0,
+          "duration": 0,
+          "worker_num": 0,
+          "gpu_request": 0,
+          "cpu_request": 0
+        },
+        "input_comparison": "PASS",
+        "metric_recalculation": "PASS",
+        "gpu_models_checked": [
+          "A10",
+          "A100-SXM4-80GB",
+          "A800-SXM4-80GB",
+          "GPU-series-1",
+          "GPU-series-2",
+          "H800",
+          "ALL"
+        ],
+        "horizon_seconds": 7775878,
+        "saved_job_times_sha256": "0cb7b0423760bd335a286b486d41ed452f663ff67e29fdb8840d2e67906459a3",
+        "capacity_replay": "BLOCKED: archived timing CSV lacks node placements",
+        "fresh_simulation": "NOT_RUN"
+      },
+      "SJF-HOL": {
+        "jobs": 224112,
+        "input_field_differences": {
+          "gpu_model": 0,
+          "submit_time": 0,
+          "duration": 0,
+          "worker_num": 0,
+          "gpu_request": 0,
+          "cpu_request": 0
+        },
+        "input_comparison": "PASS",
+        "metric_recalculation": "PASS",
+        "gpu_models_checked": [
+          "A10",
+          "A100-SXM4-80GB",
+          "A800-SXM4-80GB",
+          "GPU-series-1",
+          "GPU-series-2",
+          "H800",
+          "ALL"
+        ],
+        "horizon_seconds": 7775878,
+        "saved_job_times_sha256": "3ed2742a29d528559fa83efe809c77b743a09adf816d4e7ec53ec0c7eaa0cf5a",
+        "capacity_replay": "BLOCKED: archived timing CSV lacks node placements",
+        "fresh_simulation": "NOT_RUN"
+      }
+    }
+  },
+  "protected_q2_q3_paper_sha256": "709fd227859b501aef96ca64be4879aa1966b5de3182a498846231362900c524",
+  "not_applicable": {
+    "solver": "Q1 descriptive accounting; no solver or optimization",
+    "seeds": "Deterministic; no randomized sampling",
+    "scheduling_metrics": "Counterfactual demand is not actual allocation or waiting"
+  },
+  "open_items": [
+    "Original data ZIP/historical byte provenance",
+    "LaTeX build and 10-page/font layout verification",
+    "Unmodified Q3 demand inconsistency and Q2/Q3 unverified performance/optimality",
+    "Team names, actual AI disclosure including Codex and manual review",
+    "Data public redistribution scope and team formal environment"
+  ]
+}

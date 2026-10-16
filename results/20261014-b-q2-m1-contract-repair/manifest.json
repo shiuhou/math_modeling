@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261014-b-q2-m1-contract-repair",
+  "question_or_claim": "Q2 M1 contract repair: K accounting, same-timestamp EASY-TIME backfill, persistent reservation evidence, and explicit event comparison mode",
+  "parent_evidence": "results/20261014-b-q2-m1/manifest.json (preserved; not overwritten)",
+  "source": {
+    "base_commit": "e867c46bf60bd722ad4bb11782b579fc3b494444",
+    "working_tree_at_execution": true,
+    "patch_sha256": "a10d29c2f1264a63cd92eb183973b5a430b2a8bf1cd0a1fe1e75fd4a8d866fc9",
+    "files": {
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": {
+        "sha256": "c58302f435cfc46bc76f55c9e60ab179a7ca74c390506934c658ec917ced3bbf",
+        "bytes": 16564
+      },
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": {
+        "sha256": "a801836d501c46bb63b5ae146832f6eaed665e1b645f2182bf19eae6edfc173c",
+        "bytes": 10898
+      },
+      "problems/2026_gpu_scheduling/experiments/run_baselines.py": {
+        "sha256": "3cf7e9f58f2f49c87f5c32f40b951a57f0ce05f5bc9e1bbdb49e4bc65ff77bec",
+        "bytes": 7938
+      },
+      "problems/2026_gpu_scheduling/experiments/verify_baseline.py": {
+        "sha256": "47e086f5c3931617f7093cdded2f671d07fe395d3c42db2079fa37653b1ca04c",
+        "bytes": 6573
+      },
+      "problems/2026_gpu_scheduling/tests/test_q2_m1.py": {
+        "sha256": "2f6befee5726477e78726c6a79ae3724d0f50e82c29050b3c1a7e053c6097afc",
+        "bytes": 8089
+      },
+      "problems/2026_gpu_scheduling/tests/test_baseline_cli.py": {
+        "sha256": "cda8b24b7c556f8d6291d03a406f3ec02689904d31bcc1436e6c46f32a200908",
+        "bytes": 2855
+      },
+      "problems/2026_gpu_scheduling/README.md": {
+        "sha256": "c564d7ee769bc6ab36b323bcb390ba5f84f221fb748f48bd465a3eb318271228",
+        "bytes": 11156
+      }
+    }
+  },
+  "data": {
+    "status": "REUSED_M0_BRIDGE",
+    "bridge_manifest": "results/20261014-b-q2-m1/manifest.json",
+    "repo_raw": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "official_bridge": "DIFFERENT_SERIALIZATION / SEMANTICALLY_EQUAL; no raw overwrite"
+  },
+  "contract_repairs": {
+    "K_semantics": "PASS: only bypass candidates consume K; ordinary feasible prefix, protected head, and pre-reservation urgent head are exempt; no same-timestamp reset",
+    "easy_time": "PASS: same-timestamp scan continues after issuing reservation; candidate_finish <= promised_R, including equality",
+    "reservation_validator": "PASS: binds original issuance event, promise_id, protected job, issued time, immutable R, fulfillment; rejects changed R, empty records with events, and missing policy/model evidence",
+    "event_mode": "PASS: explicit arrival-completion-only and shared-timer modes persisted in run/config; shared mode gives all policies the same ticks"
+  },
+  "counterexamples": {
+    "before_patch": {
+      "K_1_two_idle_nodes": "starts [0, 10] (ordinary feasible prefix consumed K)",
+      "K_200_201_jobs_nodes": "last starts included 10 (201st ordinary prefix candidate was cropped)",
+      "K_201_201_jobs_nodes": "all starts 0",
+      "urgent_theta_0_K_1": "starts [0, 10] for urgent TIME probe",
+      "easy_same_timestamp_A_H_B_p2": "starts [0, 10, 2]",
+      "easy_finish_equal_R": "equality was not accepted by the old path"
+    },
+    "after_patch": {
+      "K_1_two_idle_nodes": "starts [0, 0]",
+      "K_200_201_jobs_nodes": "all starts 0",
+      "K_201_201_jobs_nodes": "all starts 0",
+      "urgent_theta_0_K_1": "starts [0, 0]",
+      "easy_same_timestamp_A_H_B_p2": "starts [0, 10, 1]",
+      "easy_finish_equal_R": "starts [0, 10, 1]; backfill recorded under accepted_backfill_ids"
+    }
+  },
+  "runs": [
+    {
+      "mode": "shared-timer",
+      "run_json": {
+        "path": "outputs/q2-m1-contract-repair-final-20261014/run.json",
+        "sha256": "69c16e2c814b7caa3401f84eb6d6077d2a8e23370a855938983b077d691c9fe0",
+        "bytes": 9524
+      },
+      "verified": {
+        "path": "outputs/q2-m1-contract-repair-final-20261014-verified.json",
+        "sha256": "e7cc02a3681d745afcda5b3733006f743b2a0100a76276d30dbb57b798ac1906",
+        "bytes": 6864
+      },
+      "scope": "smoke_first_64_per_model",
+      "policies": [
+        "FCFS-HOL",
+        "SPT-HOL",
+        "SPT-FILL",
+        "SGW-FILL",
+        "EASY-TIME",
+        "SPT-URGENT-HOL",
+        "SPT-URGENT-TIME"
+      ],
+      "scheduled_jobs": 384,
+      "theta_seconds": 4,
+      "reservation_k": 200,
+      "reservation_evidence": "required for every policy/model; replay status in verified JSON",
+      "large_details": "outputs/q2-m1-contract-repair-final-20261014/ (ignored; hashes and reproduction command in run.json)"
+    },
+    {
+      "mode": "arrival-completion-only",
+      "run_json": {
+        "path": "outputs/q2-m1-contract-repair-history-final-20261014/run.json",
+        "sha256": "c587a0d39628785d3a8042ec4d9319e4357f89d79d3898b27767148de4e3868c",
+        "bytes": 5808
+      },
+      "verified": {
+        "path": "outputs/q2-m1-contract-repair-history-final-20261014-verified.json",
+        "sha256": "4468081a3d5a380b64f1a8ed02f3648e5c83c03f1c5a672220b5120da4e02050",
+        "bytes": 3039
+      },
+      "scope": "smoke_first_64_per_model",
+      "policies": [
+        "FCFS-HOL",
+        "SPT-HOL",
+        "SPT-URGENT-TIME"
+      ],
+      "scheduled_jobs": 384,
+      "theta_seconds": 4,
+      "reservation_k": 200,
+      "reservation_evidence": "required for every policy/model; replay status in verified JSON",
+      "large_details": "outputs/q2-m1-contract-repair-history-final-20261014/ (ignored; hashes and reproduction command in run.json)"
+    }
+  ],
+  "validation": {
+    "status": "PASS",
+    "checks": [
+      {
+        "name": "repo checks",
+        "command": "python3 scripts/check_repo.py",
+        "status": "PASS"
+      },
+      {
+        "name": "root tests",
+        "command": "python3 -m unittest discover -s tests -v",
+        "status": "PASS (12 tests)"
+      },
+      {
+        "name": "Problem B tests",
+        "command": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v",
+        "status": "PASS (23 tests)"
+      },
+      {
+        "name": "git diff check",
+        "command": "git diff --check",
+        "status": "PASS"
+      },
+      {
+        "name": "shared-timer smoke and independent replay",
+        "status": "PASS",
+        "artifact": "outputs/q2-m1-contract-repair-final-20261014-verified.json"
+      },
+      {
+        "name": "arrival/completion-only smoke and independent replay",
+        "status": "PASS",
+        "artifact": "outputs/q2-m1-contract-repair-history-final-20261014-verified.json"
+      }
+    ]
+  },
+  "open_items": [
+    "M2 FIXED/FLEX, full parameter search and 22-cell matrix were not run",
+    "Q3 and paper performance claims remain out of scope",
+    "large job_times/node ledgers remain ignored outputs and need team shared artifact storage before publication",
+    "official source redistribution authorization remains a team-confirmed item"
+  ]
+}

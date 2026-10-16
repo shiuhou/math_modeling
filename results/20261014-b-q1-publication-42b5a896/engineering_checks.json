@@ -1,0 +1,59 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "scripts/check_repo.py"
+      ],
+      "status": "PASS",
+      "returncode": 0,
+      "log": "check-0.log"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "status": "PASS",
+      "returncode": 0,
+      "log": "check-1.log"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "problems/2026_gpu_scheduling/tests",
+        "-v"
+      ],
+      "status": "PASS",
+      "returncode": 0,
+      "log": "check-2.log"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "abdbc4c",
+        "--check"
+      ],
+      "status": "PASS",
+      "returncode": 0,
+      "log": "check-3.log"
+    }
+  ],
+  "root_tests": 12,
+  "problem_tests": 18,
+  "existing_q1_numeric_tests": 6,
+  "added_q1_aggregation_tests": 2,
+  "added_delivery_tests": 2,
+  "full_scheduling_experiments": "NOT_RUN"
+}

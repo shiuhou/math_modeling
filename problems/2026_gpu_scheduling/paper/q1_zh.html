@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Problem B — Q1 中文對照稿</title>
+<style>
+body{max-width:960px;margin:36px auto;padding:0 24px;font:17px/1.75 system-ui,"Noto Sans CJK TC","Microsoft JhengHei",sans-serif;color:#203040;background:#fff}h1,h2{color:#1b4f72;line-height:1.4}h1{font-size:27px}h2{font-size:21px;margin-top:30px}.note{border-left:4px solid #1b4f72;background:#f1f6fa;padding:12px 18px}.formula{padding:12px;background:#f6f8fa;overflow:auto;text-align:center;font-family:serif;font-size:19px}figure{margin:24px 0}img{display:block;width:100%;height:auto}figcaption{font-size:16px;line-height:1.6;color:#35485a}table{width:100%;border-collapse:collapse;font-size:16px}th,td{padding:7px 10px;border-bottom:1px solid #d4dde4;text-align:right}th:first-child,td:first-child{text-align:left}thead{background:#eef4f8}caption{text-align:left;margin:12px 0}a{color:#1b4f72}footer{border-top:1px solid #d4dde4;margin-top:30px;padding-top:12px;font-size:16px}@media print{body{margin:0;font-size:11pt}h2{break-after:avoid}figure,table{break-inside:avoid}}
+</style>
+</head>
+<body>
+<h1>第一問：資料特徵與資源失衡</h1>
+<p class="note">本稿逐段對照英文 Q1，使用同一批核算數值與圖表；英文正文是競賽報告的採用版本。Q1 的資料分析不代表 Q2/Q3 調度性能已驗證。<a href="q1_en.pdf">英文 Q1 PDF</a> · <a href="supplementary.html">補充圖表與核算表</a></p>
+<section id="characteristics"><h2>1.1 資料特徵（Data Characteristics）</h2>
+<p>競賽由 Alibaba trace 改編的資料包含 @@QOneJobs@@ 個作業與 @@QOneNodes@@ 個節點，提供 @@QOneGpus@@ 張 GPU、@@QOneCpus@@ 個 vCPU，涵蓋 @@QOneModels@@ 種型號。必填欄位沒有缺失值或重複識別碼；分析保留小數 CPU 請求。作業 j 的提交時間為 r<sub>j</sub>、時長為 d<sub>j</sub>（秒），包含 W<sub>j</sub> 個相同 worker；每個 worker 請求 g<sub>j</sub> 張 GPU 與 c<sub>j</sub> 個 vCPU。每 worker 請求乘以 W<sub>j</sub> 才是整個作業的需求。容量固定；紀錄是資源請求而非實測活動。</p>
+<p>按 worker 數量衡量，多數作業較小：@@QOneSingleWorkerPct@@% 只有一個 worker，@@QOneOneGpuPct@@% 的作業每 worker 請求一張 GPU；兩項平均值分別為 @@QOneMeanWorkers@@ 與 @@QOneMeanWorkerGpus@@。時長差異很大：中位數 @@QOneMedianDuration@@ 秒，第 95 百分位 @@QOnePninetyfiveDuration@@ 小時，最大約 @@QOneMaxDurationDays@@ 天。典型時長掩蓋了長尾。</p>
+<p>完整生命週期 GPU 工作量定義為 H<sub>j</sub> = W<sub>j</sub>g<sub>j</sub>d<sub>j</sub>，單位為 GPU-seconds；除以 3600 得 GPU-hours。總量為 @@QOneWorkMillion@@ 百萬 GPU-hours，經驗 Gini 為 @@QOneGini@@。按 k = ⌊f|𝒥|⌋ 取整，前 1%（@@QOneTopOneCount@@ 個）及 5%（@@QOneTopFiveCount@@ 個）作業分別占 @@QOneTopOneShare@@% 與 @@QOneTopFiveShare@@% 工作量。圖 1 描述集中度與時長尾部，並不構成冪律擬合證據；大作業是否阻礙小作業啟動，須由排程實驗檢驗。</p>
+<figure><img src="figures/fig1_data_patterns.png" alt="GPU 工作量 Lorenz 曲線與時長 CCDF"><figcaption>圖 1。（a）包含原點的 GPU 工作量 Lorenz 曲線，Top-k 使用向下取整。（b）嚴格經驗 CCDF：Pr(d<sub>j</sub> &gt; x)，合併重複時長；對數軸省略終端零值。A100 是 A100-SXM4-80GB 的縮寫。</figcaption></figure>
+</section>
+<section id="imbalance"><h2>1.2 供需失衡（Supply–Demand Imbalance）</h2>
+<p>取 T = max r<sub>j</sub> = @@QOneHorizon@@ 秒（@@QOneHorizonHours@@ 小時），比名義 90 天少 @@QOneWindowDifference@@ 秒。對型號 m，比較全部已提交作業的生命週期工作量與 [0,T) 內容量：</p>
+<div class="formula">ρ<sub>m</sub><sup>GPU</sup> = Σ<sub>j∈𝒥m</sub> W<sub>j</sub>g<sub>j</sub>d<sub>j</sub> / (T Σ<sub>i∈ℐm</sub> G<sub>i</sub><sup>cap</sup>)<br>ρ<sub>m</sub><sup>CPU</sup> = Σ<sub>j∈𝒥m</sub> W<sub>j</sub>c<sub>j</sub>d<sub>j</sub> / (T Σ<sub>i∈ℐm</sub> C<sub>i</sub><sup>cap</sup>)　（1）</div>
+<p>分母與分子均使用秒，且保留延伸到 T 之後的工作量。這些比值表示工作量壓力，不是觀測到的利用率，也不是穩態失穩的證明。表 1 顯示 A10 的壓力明顯較高。</p>
+<table><caption>表 1。完整生命週期工作量與精確窗口容量。工作量單位為百萬 GPU-hours；GPU-s1/s2 為 GPU-series-1/2。</caption><thead><tr><th>型號</th><th>GPU 數</th><th>作業數</th><th>工作量</th><th>ρ<sup>GPU</sup></th><th>ρ<sup>CPU</sup></th></tr></thead><tbody>@@POOL_ROWS@@</tbody></table>
+<p>為區分生命週期工作量與窗口內的重疊需求，定義反事實的「提交時立即開始需求」：</p>
+<div class="formula">D<sub>m</sub>(t) = Σ<sub>j∈𝒥m</sub> W<sub>j</sub>g<sub>j</sub> 1{r<sub>j</sub> ≤ t &lt; r<sub>j</sub>+d<sub>j</sub>}，　D̄<sub>m</sub> = (1/T) ∫<sub>0</sub><sup>T</sup> D<sub>m</sub>(t) dt　（2）</div>
+<p>此模型假設所有作業在提交時啟動，忽略容量限制。精確事件積分得到 A10 平均需求 @@QOneAtenMean@@ 張 GPU，對應實體容量 @@QOneAtenCapacity@@ 張，瞬時峰值 @@QOneAtenPeak@@ 張。平均差額 @@QOneAtenExcess@@ 張並不足以構成擴容方案，因為 CPU、節點放置與時間重疊同樣重要。其他資源池的平均需求較低，也不保證每一時刻都有可用容量。</p>
+<figure><img src="figures/fig1_demand.png" alt="A10 與 A100 的精確每日立即開始需求及實體容量"><figcaption>圖 2。假設立即開始的需求，以精確區間重疊計算每日平均。虛線表示實體容量；每日平均會隱藏瞬時峰值，曲線不是實際調度分配。</figcaption></figure>
+<p>所有節點初始空閒。r<sub>j</sub> = 0 的 @@QOneOriginJobs@@ 個作業是 trace 起點提交批次，不是已在執行的背景服務。排除該批次後，校正觀測時長的到達率在相對 24 小時相位 @@QOnePhasePeak@@ 與 @@QOnePhaseTrough@@ 之間相差 @@QOnePhaseRatio@@ 倍。缺少日曆起點與時區，不能稱為現實中的下午或夜間高峰。補充材料的每日工作量包含作業未來的全部時長，不是當天實際執行的工作量。</p>
+</section>
+<section id="hypotheses"><h2>1.3 瓶頸假說（Bottleneck Hypotheses）</h2>
+<p>對合法非搶占排程，令 ω<sub>j</sub> = s<sub>j</sub> − r<sub>j</sub> 為等待時間，B<sub>m</sub>(t) 為 D<sub>m</sub>(t) 在固定 GPU 容量下驅動的反射流體積壓。GPU 工作量加權等待滿足 Ω<sub>m</sub> = ΣH<sub>j</sub>ω<sub>j</sub>/ΣH<sub>j</sub> ≥ L<sub>m</sub> = ∫<sub>0</sub><sup>∞</sup>B<sub>m</sub>(t)dt/ΣH<sub>j</sub>。包含排空尾段的精確完整生命週期積分給出 A10 的 L<sub>m</sub> = @@QOneAtenWaitBound@@ 小時。這個 Q2 比較基準放鬆 CPU、節點形狀與 gang 約束，不是普通平均等待下界，也不證明調度器最優。證明與六池結果見補充材料；Q3 若改容量或時長，須重新計算。</p>
+<p>GPU-series-1 有 @@QOneOneNodes@@ 個（1 GPU、192 vCPU）節點、@@QOneOneSmallNodes@@ 個（1、128）、@@QOneFourNodes@@ 個（4、192），以及 @@QOneEightNodes@@ 個（8、192）節點。資源池平均 CPU/GPU 比例會掩蓋這些配置差異。共有 @@QOneHighRatioJobs@@ 個作業（@@QOneHighRatioPct@@%；占該池工作量 @@QOneHighRatioWorkPct@@%）超過 8-GPU 節點的 @@QOneRatioThreshold@@ vCPU/GPU 配比。這顯示放置風險，而非實測的擱淺量；補充材料提供機制示例。</p>
+<p>以上證據支持在符合容量約束的排程中，檢驗隊首阻塞、考慮節點配比的放置與相容跨型號容量，衡量等待、分配及公平性。這些假說不證明因果效應或調度器最優。</p>
+</section>
+<footer>資料來源：競賽提供、由 Alibaba Cluster Trace 改編的兩個 CSV；來源與重現資訊見交付說明。Codex 協助核算整合、雙語文本、繪圖與編譯；人工審閱與最終 AI 使用披露仍待團隊確認。歷史資料 byte 雜湊差異及再散布範圍另列於驗收紀錄。</footer>
+</body></html>

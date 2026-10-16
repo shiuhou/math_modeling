@@ -1,0 +1,8 @@
+FCFS: direct M0 complete
+FCFS: B0 exact recovery PASS
+FCFS: K_disabled exact recovery PASS
+FCFS: M1 persisted; 55.36s
+SJF-HOL: direct M0 complete
+SJF-HOL: B0 exact recovery PASS
+SJF-HOL: K_disabled exact recovery PASS
+SJF-HOL: M1 persisted; 62.63s

@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "compiler": "Tectonic 0.17.0",
+  "command": [
+    "tectonic",
+    "--keep-logs",
+    "--keep-intermediates",
+    "document_en.tex"
+  ],
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "q1_values": {
+    "QOneAtenMean": "3,614.54",
+    "QOneAtenCapacity": "2,494",
+    "QOneAtenExcess": "1,120.54",
+    "QOneAtenRho": "2.064",
+    "QOneAhundredPeak": "2,922",
+    "QOneAtenCpu": "7.13"
+  },
+  "q2_q3_claims": "NOT_RUN; archived table figures only",
+  "files": {
+    "document_en.log": "e2595e6efa999998c1a5c82c4d121a59adf6c3fcfe438c7a0505742bb1bfbec4",
+    "q1_values.tex": "946046f9baee9cb5c41484c0885783a0f75a5be6f3ad7d0a1994b3e33f5a4b8b",
+    "pdfinfo.txt": "898ab8d5c13e66429492df7c81625f06124260d6f80a60610193e9844d46ca5b",
+    "fig2_q2_scheduling.pdf": "cc16c2ba8e3d7d9d8cf45c13d84da38dadffb2cafbcef74e95b8bc806eb26876",
+    "fig1_data_patterns.pdf": "bf15f4a908c943b28353a639fd49bdc96bfedbf14b3328ef54d8c29724f8c96c",
+    "document_en.aux": "fe3fd7356400d0df9caf5ef0a2383363bb09b49a5444460b45b64b3a847bcb98",
+    "document_en.out": "4eb5752486df332892208d02b0457df5feea79c4eee5a83aae0071da9ac1af2c",
+    "document_en.pdf": "a9a177e4f9bda34f8997427a497baeaf0e18411420d22d7caf8dbf4454c0d156",
+    "compile.log": "5a00b0dbf991d13ece39568ee0c8ca213c350f5b6738b51f05c7339d5db888cd",
+    "document_en.tex": "4421d5f8894d624a156c6fdfd4bf0ed39b828936fd9cfb7be2f4f906673e4075",
+    "fig3_q3_imbalance.pdf": "4a8b3d2282b7c1346c120e1e54585350cf5263bc8552ab15ba1e8e6f6ea01634"
+  },
+  "page_limit": "PASS",
+  "pages": 9,
+  "submission_ready": false,
+  "format_limitations": [
+    "Archived wide tables still shrink below 11pt; final table layout NOT_RUN",
+    "Team names and final disclosure pending confirmation"
+  ],
+  "visual_review": "Nine rendered pages inspected as contact sheet; no missing assets; final typography pending"
+}

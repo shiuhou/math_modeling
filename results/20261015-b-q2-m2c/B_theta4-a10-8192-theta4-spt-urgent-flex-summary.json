@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "kind": "m2a_pressure_run",
+  "code_commit": "ecd46e32ae77eeea065fff5891d5e22eb710fcfd",
+  "code_dirty": true,
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "model": "A10",
+  "jobs": 8192,
+  "configuration": {
+    "policies": [
+      "SPT-URGENT-FLEX"
+    ],
+    "theta_seconds": 4,
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "placement": "first-fit ascending node_name",
+    "horizon_seconds": 7776000
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "runtime_seconds_total": 39.91213811300986,
+  "peak_rss_kib_process": 535180,
+  "results": [
+    {
+      "policy": "SPT-URGENT-FLEX",
+      "requested_policy": "SPT-URGENT-FLEX",
+      "jobs": 8192,
+      "runtime_seconds": 39.9067764349893,
+      "peak_rss_kib_process": 535180,
+      "scheduler_seconds": 33.093614886005525,
+      "validation_seconds": 6.529413041003863,
+      "metrics_seconds": 0.0012108910013921559,
+      "io_seconds": 0.28254547899996396,
+      "input_seconds": 0.15498471299360972,
+      "metrics": {
+        "jobs": 8192,
+        "mean_wait_hours": 18.189840359157987,
+        "median_wait_hours": 0.005694444444444445,
+        "p95_wait_hours": 76.03011111111111,
+        "p99_wait_hours": 79.62755,
+        "max_wait_hours": 86.83333333333333,
+        "mean_jct_hours": 495.1626769680447,
+        "zero_wait_fraction": 0.473388671875,
+        "mean_bounded_slowdown_60s": 582.1771383811229,
+        "p99_bounded_slowdown_60s": 4720.818166666667,
+        "completed_at_horizon": 7564,
+        "gpu_allocation_rate_at_horizon": 0.5466094368253356,
+        "cpu_allocation_rate_at_horizon": 0.13572743047458283,
+        "final_completion_days": 187.1072337962963
+      },
+      "schedule_sha256": "889ef9208762257aaa74a8f4dd06afca1dd76ea05e98e84fb19ebd8f52aa6714",
+      "reservations": 2529,
+      "event_count": 40890,
+      "max_certificate_updates": 6,
+      "cost": {
+        "planner_calls": 2329361,
+        "candidate_checks": 2329361,
+        "order_builds": 17613,
+        "bypass_candidate_checks": 2322623,
+        "reservation_calls": 2529,
+        "crossing_accepted": 5,
+        "crossing_rejected": 15327,
+        "certificate_updates": 5,
+        "reservation_rejects": 2321165
+      },
+      "validation": "PASS"
+    }
+  ],
+  "outputs": {
+    "SPT-URGENT-FLEX_node_placements.csv.gz": "3791a02caf04e2555c9b6b6b07647a6382c53732628e97ccb3df5df28798ddb0",
+    "SPT-URGENT-FLEX_job_times.csv.gz": "40ef28e62a108bb9191528bf8323d53c956913b384afafde694b5ec1877dddf2",
+    "SPT-URGENT-FLEX_reservations.json": "353f9b11df21fe059190acf88ef8c893daf6cef969f448a02fe793613249b9d0"
+  }
+}

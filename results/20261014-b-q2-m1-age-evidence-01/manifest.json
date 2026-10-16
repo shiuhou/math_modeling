@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261014-b-q2-m1-age-evidence-01",
+  "question_or_claim": "M1 static-review repair: arrival-completion-only urgent age qualification and strict reservation evidence types",
+  "parent_commit": "0add5f1b56caad43048c93b38218b7f0bb1bfe84",
+  "data": {
+    "repo_raw_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "bridge": "results/20261014-b-q2-m1/manifest.json; raw unchanged"
+  },
+  "repairs": {
+    "arrival_completion_only": "urgent eligibility is checked at arrival/completion epochs only when t-submit >= theta; no timer event is synthesized",
+    "shared_timer": "exact submit+theta threshold remains the promotion event",
+    "equivalence": "both modes retain urgent FIFO and immutable promise protection; only trigger timing differs",
+    "reservation_evidence": "reservations and events must be explicit lists of records; null, missing, wrong types, or event/record mismatch fail independent replay"
+  },
+  "counterexamples": {
+    "before": {
+      "young_starts": [
+        0,
+        10,
+        11
+      ],
+      "shared-timer": {
+        "protected_job_name": 1,
+        "issued_time": 5,
+        "promised_R": 20,
+        "fulfillment": {
+          "status": "FULFILLED",
+          "time": 20
+        }
+      },
+      "arrival-completion-only": {
+        "protected_job_name": 1,
+        "issued_time": 1,
+        "promised_R": 20,
+        "fulfillment": {
+          "status": "FULFILLED",
+          "time": 20
+        }
+      },
+      "null_evidence": "INCORRECTLY_ACCEPTED"
+    },
+    "after": {
+      "young_starts": [
+        0,
+        10,
+        1
+      ],
+      "shared-timer": {
+        "protected_job_name": 1,
+        "issued_time": 5,
+        "promised_R": 20,
+        "fulfillment": {
+          "status": "FULFILLED",
+          "time": 20
+        }
+      },
+      "arrival-completion-only": {
+        "protected_job_name": 1,
+        "issued_time": 7,
+        "promised_R": 20,
+        "fulfillment": {
+          "status": "FULFILLED",
+          "time": 20
+        }
+      },
+      "null_evidence": "REJECTED"
+    }
+  },
+  "validation": {
+    "status": "PASS",
+    "checks": [
+      {
+        "command": "python3 scripts/check_repo.py",
+        "exit_code": 0,
+        "status": "PASS",
+        "log": "repo.log"
+      },
+      {
+        "command": "python3 -m unittest discover -s tests -v",
+        "exit_code": 0,
+        "status": "PASS",
+        "log": "root-tests.log"
+      },
+      {
+        "command": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v",
+        "exit_code": 0,
+        "status": "PASS",
+        "log": "problem-tests.log"
+      },
+      {
+        "command": "git diff --check",
+        "exit_code": 0,
+        "status": "PASS",
+        "log": "diff-check.log"
+      }
+    ],
+    "problem_b_tests": 26,
+    "smoke": [
+      {
+        "mode": "shared-timer",
+        "run": "outputs/q2-m1-age-shared-01",
+        "verified": "results/20261014-b-q2-m1-age-evidence-01/shared-verified.json",
+        "status": "PASS"
+      },
+      {
+        "mode": "arrival-completion-only",
+        "run": "outputs/q2-m1-age-history-01",
+        "verified": "results/20261014-b-q2-m1-age-evidence-01/history-verified.json",
+        "status": "PASS"
+      }
+    ],
+    "baseline_regression": {
+      "artifact": "results/20261014-b-q2-m1-age-evidence-01/regression.json",
+      "status": "PASS",
+      "comparisons": 24,
+      "scope": "first 64 jobs per model, FCFS-HOL/SPT-HOL, both event modes, timing/placement/events/reservations/metrics at horizons 7776000 and 7775878"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/before-tests.log",
+      "sha256": "a5139a84cd66631e4849a4c5e6be3168f970a8c95549f290f8b609665f8cc3ab",
+      "bytes": 8534
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/checks.json",
+      "sha256": "bebddfa8f281637d0b9bd8eec4010dfc1f54b96e13be5cfaa8b1ffdf0956c8f7",
+      "bytes": 599
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/compare_review_base.py",
+      "sha256": "6128401d294891d2e9fcf67d9e26da3dfc2b747478cc27649ca501fda0841282",
+      "bytes": 4192
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/diff-check.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "bytes": 1
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/history-smoke.log",
+      "sha256": "0af5c232114ac7eafcf4412a84b33bd52a0ecc70ae8a8d1adf90a0f8e701809e",
+      "bytes": 2629
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/history-verified.json",
+      "sha256": "012989381669d042f7838cd5e9ec493ec7b70bbd49d4904e6b96755019b01f71",
+      "bytes": 6864
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/problem-tests.log",
+      "sha256": "7bbd43ccc4a10d2f8965d3a5bb2e5c7e04e5abf149231cc9f15c164961c4c9c1",
+      "bytes": 3373
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/regression.json",
+      "sha256": "f02c362d3ccf2d173d2aaff040cea0e99b3ea2cbeffaaf45702edff93b00ac3c",
+      "bytes": 7356
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/repo.log",
+      "sha256": "3d300f1f0b97a07249376ede44dfb2c22e3d5d4bd01c9f6e2a56a1172692400d",
+      "bytes": 67
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/root-tests.log",
+      "sha256": "a2068b3a96d2509e7f016e992081c42143ec0cd0cdeeac0abb720dddfea7b716",
+      "bytes": 1667
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/shared-smoke.log",
+      "sha256": "c3f40095d00b6f47142f0ff865d909e7c9aa0778a950506c2401629f73999133",
+      "bytes": 2628
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/shared-verified.json",
+      "sha256": "b02a87aeb74f19c120565fbb233bd8b8e6bc741d2c2fa5acd9c1229362388d4a",
+      "bytes": 6864
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/smoke-evidence.tar.gz",
+      "sha256": "8c459471452fdf35f8ba7feee8afeba1c24a3ea696cdcc1e47929b3b7ce1ba4e",
+      "bytes": 244602
+    },
+    {
+      "path": "results/20261014-b-q2-m1-age-evidence-01/synthetic-evidence.json",
+      "sha256": "150c646f5cf0aa3ff83b7df6b9d067f72ab162c2b57d54031ba36d3f99355e90",
+      "bytes": 3084
+    }
+  ],
+  "open_items": [
+    "Full-trace FCFS/SPT was not rerun in this small static repair; previous full baseline remains preserved.",
+    "M2 FIXED/FLEX and 22-cell performance matrix remain not run.",
+    "Q3 and paper performance claims remain out of scope.",
+    "The user-provided notes/tasks/b-q2 _newest.md remains local untracked and is not an active duplicate task file."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "q1_zh.html": {
+    "status": "PASS",
+    "local_links_checked": 4,
+    "browser_images": "PASS (HTTP/S blocked)"
+  },
+  "supplementary.html": {
+    "status": "PASS",
+    "local_links_checked": 30,
+    "browser_images": "PASS (HTTP/S blocked)"
+  },
+  "pdf": {
+    "status": "PASS",
+    "pages": 2,
+    "bounds": "All text within page",
+    "body_size_pdf_pt": 11.058537000000001
+  },
+  "old_publication_values": {
+    "status": "PASS",
+    "preserved": 46,
+    "added": [
+      "QOneAtenWaitBound"
+    ]
+  },
+  "tex_warnings": {
+    "status": "PASS",
+    "overfull_or_undefined": false
+  },
+  "bundle": {
+    "status": "PASS",
+    "bytes": 1089667,
+    "members": 54,
+    "new_json_and_proof_included": true,
+    "raw_data_included": false
+  }
+}

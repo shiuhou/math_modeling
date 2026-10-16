@@ -1,0 +1,862 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261014-b-q2-m1",
+  "question_or_claim": "Q2 M0/M1 shared DES, node-level placement and single immutable-R reservation safety core",
+  "code": {
+    "commit": "abdbc4ce07c3877ac9fdb1e846a5b9c3b803f401",
+    "dirty": true,
+    "changes": [
+      {
+        "path": "problems/2026_gpu_scheduling/README.md",
+        "sha256": "f3ae47fa181dba4d4ed79778230058883c6ac6cc3f546f6210ca735389d5a2b3",
+        "bytes": 10843
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py",
+        "sha256": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+        "bytes": 4194
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py",
+        "sha256": "a47ae390e66174fbe6e47024b09c87da64202377bb1be220278ed414ee868872",
+        "bytes": 3503
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py",
+        "sha256": "0aa11a7ea66141b4fc23ac67ae3e9c7317b6a7827531b7e7b88f64427f2ebd1e",
+        "bytes": 15320
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py",
+        "sha256": "ec39507f869fbbf63a4d57cb488ad9d63f0e2a4c9d62c51a6d971d437da4f6be",
+        "bytes": 1650
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py",
+        "sha256": "d4d73ecdc227bdc23e094699173646641366abb23aafa3fdca5e508c9c08a3de",
+        "bytes": 9392
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/experiments/run_baselines.py",
+        "sha256": "f7faf8fc2991f4876012ad665035723202b6f9e5f69d10bd2c15876402ed0a05",
+        "bytes": 7578
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/experiments/verify_baseline.py",
+        "sha256": "e10ab547d1f64694ac8567f4843089f4743e2d0e34dda9a1726594578a376dbe",
+        "bytes": 5526
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/tests/test_q2_m1.py",
+        "sha256": "6987f2852f4f964966e0c4db0f0dfec2d9e81e6360021a788d79c98e3fee172d",
+        "bytes": 4796
+      }
+    ]
+  },
+  "data": {
+    "bridge": {
+      "status": "DIFFERENT_SERIALIZATION / SEMANTICALLY_EQUAL",
+      "method": "CSV fieldnames, row counts, ID set equality, then every input field compared by Decimal after ID alignment",
+      "rows": {
+        "nodes": 4278,
+        "jobs": 224112
+      },
+      "sources": {
+        "repo_node": {
+          "path": "problems/2026_gpu_scheduling/data/raw/node_info_df.csv",
+          "sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+          "bytes": 78330
+        },
+        "official_node": {
+          "path": "docs/node_info_df.csv",
+          "sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+          "bytes": 78330
+        },
+        "repo_job": {
+          "path": "problems/2026_gpu_scheduling/data/raw/job_info_clean.csv",
+          "sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+          "bytes": 7796214
+        },
+        "official_job": {
+          "path": "docs/job_info_clean.csv",
+          "sha256": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1",
+          "bytes": 9813075
+        },
+        "repo_problem_pdf": {
+          "path": "problems/2026_gpu_scheduling/docs/2026_MCM_GPU_Scheduling.pdf",
+          "sha256": "fb153a547ed57a3d16ab0929c27cccc5d49fc4e568d9c65a273546057e692967",
+          "bytes": 129812
+        },
+        "official_problem_pdf": {
+          "path": "docs/2026_MCM_GPU_Scheduling.pdf",
+          "sha256": "fb153a547ed57a3d16ab0929c27cccc5d49fc4e568d9c65a273546057e692967",
+          "bytes": 129812
+        }
+      },
+      "fieldnames_equal": true,
+      "node_id_sets_equal": true,
+      "job_id_sets_equal": true,
+      "all_input_fields_decimal_equal": true,
+      "serialization_observation": "Official job CSV uses CRLF, explicit .0 numeric text and a final newline; repo raw has BOM/integer text and no final newline. No raw file was overwritten."
+    },
+    "tracked_runtime": "problems/2026_gpu_scheduling/data/raw",
+    "official_readonly_sources": [
+      "docs/node_info_df.csv",
+      "docs/job_info_clean.csv",
+      "docs/2026_MCM_GPU_Scheduling.pdf"
+    ]
+  },
+  "configuration": {
+    "policies": [
+      "FCFS-HOL",
+      "SPT-HOL",
+      "SPT-FILL",
+      "SGW-FILL",
+      "EASY-TIME",
+      "SPT-URGENT-HOL",
+      "SPT-URGENT-TIME"
+    ],
+    "aliases": {
+      "FCFS": "FCFS-HOL",
+      "SJF-HOL": "SPT-HOL"
+    },
+    "theta_seconds": 4860000,
+    "smoke_theta_seconds": 4,
+    "reservation_k": 200,
+    "placement": "first-fit ascending node_name; complete node-local CPU/GPU gang plan then atomic commit",
+    "events": "completions, arrivals, exact timer threshold, due protected head, ordinary dispatch",
+    "time_safety": "M1 TIME accepts only candidate finish <= immutable promised_R; crossing candidates are conservatively rejected",
+    "horizon_seconds": 7776000,
+    "historical_window_seconds": 7775878,
+    "unit": "seconds; CPU units are 0.01 vCPU"
+  },
+  "command": {
+    "smoke": ".venv/bin/python problems/2026_gpu_scheduling/experiments/run_baselines.py --data problems/2026_gpu_scheduling/data/raw --out outputs/q2-m1-smoke-20261014d --smoke --policies FCFS-HOL SPT-HOL SPT-FILL SGW-FILL EASY-TIME SPT-URGENT-HOL SPT-URGENT-TIME --theta-seconds 4 --reservation-k 200",
+    "smoke_verify": ".venv/bin/python problems/2026_gpu_scheduling/experiments/verify_baseline.py --data problems/2026_gpu_scheduling/data/raw --run outputs/q2-m1-smoke-20261014d --out outputs/q2-m1-smoke-20261014d-verified.json",
+    "full_baseline": ".venv/bin/python problems/2026_gpu_scheduling/experiments/run_baselines.py --horizon-seconds 7776000 --policies FCFS-HOL SPT-HOL --out outputs/q2-m1-full-20261014d",
+    "full_verify": ".venv/bin/python problems/2026_gpu_scheduling/experiments/verify_baseline.py --data problems/2026_gpu_scheduling/data/raw --run outputs/q2-m1-full-20261014d --out outputs/q2-m1-full-20261014d-verified.json"
+  },
+  "validation": {
+    "status": "PASS",
+    "checks": [
+      {
+        "name": "repo checks",
+        "command": "python3 scripts/check_repo.py",
+        "status": "PASS"
+      },
+      {
+        "name": "root tests",
+        "command": "python3 -m unittest discover -s tests -v",
+        "status": "PASS (12 tests)"
+      },
+      {
+        "name": "Problem B tests",
+        "command": "PYTHONPATH=problems/2026_gpu_scheduling/src .venv/bin/python -m unittest discover -s problems/2026_gpu_scheduling/tests -v",
+        "status": "PASS (20 tests)"
+      },
+      {
+        "name": "git diff check",
+        "command": "git diff --check",
+        "status": "PASS"
+      },
+      {
+        "name": "M1 smoke schedule",
+        "status": "PASS",
+        "artifact": "outputs/q2-m1-smoke-20261014d/run.json"
+      },
+      {
+        "name": "M1 smoke independent persistence",
+        "status": "PASS",
+        "artifact": "outputs/q2-m1-smoke-20261014d-verified.json"
+      },
+      {
+        "name": "90-day FCFS-HOL/SPT-HOL baseline",
+        "status": "PASS",
+        "artifact": "outputs/q2-m1-full-20261014d/run.json"
+      },
+      {
+        "name": "90-day independent persistence",
+        "status": "PASS",
+        "artifact": "outputs/q2-m1-full-20261014d-verified.json"
+      }
+    ]
+  },
+  "results": {
+    "full_baseline_metrics": [
+      {
+        "policy": "FCFS-HOL",
+        "gpu_model": "A10",
+        "jobs": 111284,
+        "mean_wait_hours": 900.1285695807325,
+        "median_wait_hours": 1120.08875,
+        "p95_wait_hours": 1408.4777499999998,
+        "p99_wait_hours": 1419.6163,
+        "max_wait_hours": 1423.253888888889,
+        "mean_jct_hours": 999.8983257201794,
+        "zero_wait_fraction": 0.034371517918119404,
+        "mean_bounded_slowdown_60s": 13119.825463189945,
+        "p99_bounded_slowdown_60s": 81715.81733333334,
+        "completed_at_horizon": 54531,
+        "gpu_allocation_rate_at_horizon": 0.9992973902798816,
+        "cpu_allocation_rate_at_horizon": 0.1928473598504985,
+        "final_completion_days": 243.26425925925926
+      },
+      {
+        "policy": "FCFS-HOL",
+        "gpu_model": "A100-SXM4-80GB",
+        "jobs": 80877,
+        "mean_wait_hours": 0.0,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 0.0,
+        "max_wait_hours": 0.0,
+        "mean_jct_hours": 27.24837018284281,
+        "zero_wait_fraction": 1.0,
+        "mean_bounded_slowdown_60s": 1.0,
+        "p99_bounded_slowdown_60s": 1.0,
+        "completed_at_horizon": 80101,
+        "gpu_allocation_rate_at_horizon": 0.6275522536847709,
+        "cpu_allocation_rate_at_horizon": 0.42032065165006466,
+        "final_completion_days": 183.99998842592592
+      },
+      {
+        "policy": "FCFS-HOL",
+        "gpu_model": "A800-SXM4-80GB",
+        "jobs": 3959,
+        "mean_wait_hours": 0.1455264376526059,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 6.020888888888889,
+        "max_wait_hours": 12.250277777777777,
+        "mean_jct_hours": 8.381983806236143,
+        "zero_wait_fraction": 0.9648901237686285,
+        "mean_bounded_slowdown_60s": 2.0779275674695605,
+        "p99_bounded_slowdown_60s": 14.162742091574511,
+        "completed_at_horizon": 3943,
+        "gpu_allocation_rate_at_horizon": 0.5731129056771418,
+        "cpu_allocation_rate_at_horizon": 0.4949255293001631,
+        "final_completion_days": 120.66741898148148
+      },
+      {
+        "policy": "FCFS-HOL",
+        "gpu_model": "GPU-series-1",
+        "jobs": 9643,
+        "mean_wait_hours": 0.02918827128486985,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 0.0,
+        "max_wait_hours": 9.971111111111112,
+        "mean_jct_hours": 396.2892780888843,
+        "zero_wait_fraction": 0.9935704656227315,
+        "mean_bounded_slowdown_60s": 1.1221270359221502,
+        "p99_bounded_slowdown_60s": 1.0,
+        "completed_at_horizon": 8221,
+        "gpu_allocation_rate_at_horizon": 0.6086518616413625,
+        "cpu_allocation_rate_at_horizon": 0.3481351326180812,
+        "final_completion_days": 184.36248842592593
+      },
+      {
+        "policy": "FCFS-HOL",
+        "gpu_model": "GPU-series-2",
+        "jobs": 13633,
+        "mean_wait_hours": 0.04483300325191325,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 1.5134333333333334,
+        "max_wait_hours": 6.991666666666666,
+        "mean_jct_hours": 5.351907931734273,
+        "zero_wait_fraction": 0.9669185065649527,
+        "mean_bounded_slowdown_60s": 1.4993864750957584,
+        "p99_bounded_slowdown_60s": 11.721705004534588,
+        "completed_at_horizon": 13606,
+        "gpu_allocation_rate_at_horizon": 0.569313552260423,
+        "cpu_allocation_rate_at_horizon": 0.3742371035565594,
+        "final_completion_days": 132.53391203703703
+      },
+      {
+        "policy": "FCFS-HOL",
+        "gpu_model": "H800",
+        "jobs": 4716,
+        "mean_wait_hours": 0.0164318278201866,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 0.0,
+        "max_wait_hours": 7.855833333333333,
+        "mean_jct_hours": 4.659088269248893,
+        "zero_wait_fraction": 0.9936386768447837,
+        "mean_bounded_slowdown_60s": 1.123853790648073,
+        "p99_bounded_slowdown_60s": 1.0,
+        "completed_at_horizon": 4705,
+        "gpu_allocation_rate_at_horizon": 0.5581566485010664,
+        "cpu_allocation_rate_at_horizon": 0.5219341792525914,
+        "final_completion_days": 130.8835185185185
+      },
+      {
+        "policy": "FCFS-HOL",
+        "gpu_model": "ALL",
+        "jobs": 224112,
+        "mean_wait_hours": 446.9705059957621,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 1356.5011111111112,
+        "p99_wait_hours": 1416.3043749999997,
+        "max_wait_hours": 1423.253888888889,
+        "mean_jct_hours": 523.9611815446443,
+        "zero_wait_fraction": 0.5174689440993789,
+        "mean_bounded_slowdown_60s": 6515.27951319951,
+        "p99_bounded_slowdown_60s": 77923.69283333332,
+        "completed_at_horizon": 165107,
+        "gpu_allocation_rate_at_horizon": 0.6957122769025215,
+        "cpu_allocation_rate_at_horizon": 0.28925774020372325,
+        "final_completion_days": 243.26425925925926
+      },
+      {
+        "policy": "SPT-HOL",
+        "gpu_model": "A10",
+        "jobs": 111284,
+        "mean_wait_hours": 32.906454035021504,
+        "median_wait_hours": 0.02277777777777778,
+        "p95_wait_hours": 11.086874999999964,
+        "p99_wait_hours": 1542.1810416666613,
+        "max_wait_hours": 3017.2880555555557,
+        "mean_jct_hours": 132.67621017446854,
+        "zero_wait_fraction": 0.10863196865677006,
+        "mean_bounded_slowdown_60s": 1.3929015855345612,
+        "p99_bounded_slowdown_60s": 5.071824733096079,
+        "completed_at_horizon": 107002,
+        "gpu_allocation_rate_at_horizon": 0.9992233791139888,
+        "cpu_allocation_rate_at_horizon": 0.1792678646076574,
+        "final_completion_days": 309.7203240740741
+      },
+      {
+        "policy": "SPT-HOL",
+        "gpu_model": "A100-SXM4-80GB",
+        "jobs": 80877,
+        "mean_wait_hours": 0.0,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 0.0,
+        "max_wait_hours": 0.0,
+        "mean_jct_hours": 27.24837018284281,
+        "zero_wait_fraction": 1.0,
+        "mean_bounded_slowdown_60s": 1.0,
+        "p99_bounded_slowdown_60s": 1.0,
+        "completed_at_horizon": 80101,
+        "gpu_allocation_rate_at_horizon": 0.6275522536847709,
+        "cpu_allocation_rate_at_horizon": 0.42032065165006466,
+        "final_completion_days": 183.99998842592592
+      },
+      {
+        "policy": "SPT-HOL",
+        "gpu_model": "A800-SXM4-80GB",
+        "jobs": 3959,
+        "mean_wait_hours": 0.11484571019617748,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 4.3896722222222415,
+        "max_wait_hours": 14.857777777777779,
+        "mean_jct_hours": 8.351303078779715,
+        "zero_wait_fraction": 0.969689315483708,
+        "mean_bounded_slowdown_60s": 1.3612850262025795,
+        "p99_bounded_slowdown_60s": 6.177342657342672,
+        "completed_at_horizon": 3943,
+        "gpu_allocation_rate_at_horizon": 0.5731129056771418,
+        "cpu_allocation_rate_at_horizon": 0.4949255293001631,
+        "final_completion_days": 120.66741898148148
+      },
+      {
+        "policy": "SPT-HOL",
+        "gpu_model": "GPU-series-1",
+        "jobs": 9643,
+        "mean_wait_hours": 0.4342770518626061,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 14.491944444444444,
+        "max_wait_hours": 76.81805555555556,
+        "mean_jct_hours": 396.69436686946204,
+        "zero_wait_fraction": 0.9502229596598569,
+        "mean_bounded_slowdown_60s": 1.3673079642439638,
+        "p99_bounded_slowdown_60s": 1.9450749866582446,
+        "completed_at_horizon": 8213,
+        "gpu_allocation_rate_at_horizon": 0.6077894948975684,
+        "cpu_allocation_rate_at_horizon": 0.3478721542379781,
+        "final_completion_days": 187.20074074074074
+      },
+      {
+        "policy": "SPT-HOL",
+        "gpu_model": "GPU-series-2",
+        "jobs": 13633,
+        "mean_wait_hours": 0.01574427247609966,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 0.044633333333333414,
+        "max_wait_hours": 7.165,
+        "mean_jct_hours": 5.322819200958459,
+        "zero_wait_fraction": 0.9878970145969339,
+        "mean_bounded_slowdown_60s": 1.040535056361308,
+        "p99_bounded_slowdown_60s": 1.02815340263283,
+        "completed_at_horizon": 13606,
+        "gpu_allocation_rate_at_horizon": 0.569313552260423,
+        "cpu_allocation_rate_at_horizon": 0.3742371035565594,
+        "final_completion_days": 132.53391203703703
+      },
+      {
+        "policy": "SPT-HOL",
+        "gpu_model": "H800",
+        "jobs": 4716,
+        "mean_wait_hours": 0.016315498068042597,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.0,
+        "p99_wait_hours": 0.0,
+        "max_wait_hours": 7.855833333333333,
+        "mean_jct_hours": 4.658971939496748,
+        "zero_wait_fraction": 0.9942748091603053,
+        "mean_bounded_slowdown_60s": 1.120725810732663,
+        "p99_bounded_slowdown_60s": 1.0,
+        "completed_at_horizon": 4705,
+        "gpu_allocation_rate_at_horizon": 0.5581566485010664,
+        "cpu_allocation_rate_at_horizon": 0.5219341792525914,
+        "final_completion_days": 130.8835185185185
+      },
+      {
+        "policy": "SPT-HOL",
+        "gpu_model": "ALL",
+        "jobs": 224112,
+        "mean_wait_hours": 16.361889698751813,
+        "median_wait_hours": 0.0,
+        "p95_wait_hours": 0.6885833333333237,
+        "p99_wait_hours": 363.34756666666533,
+        "max_wait_hours": 3017.2880555555557,
+        "mean_jct_hours": 93.35256524763412,
+        "zero_wait_fraction": 0.553852538016706,
+        "mean_bounded_slowdown_60s": 1.2222901741511278,
+        "p99_bounded_slowdown_60s": 4.1,
+        "completed_at_horizon": 217570,
+        "gpu_allocation_rate_at_horizon": 0.6955655086318177,
+        "cpu_allocation_rate_at_horizon": 0.2823266222853525,
+        "final_completion_days": 309.7203240740741
+      }
+    ],
+    "smoke_run": {
+      "run_json": {
+        "path": "outputs/q2-m1-smoke-20261014d/run.json",
+        "sha256": "fc2cf073010352d17cba2d31b00d0a0f477a6835b7b41a259578084bc2c9da93",
+        "bytes": 9435
+      },
+      "verified": {
+        "path": "outputs/q2-m1-smoke-20261014d-verified.json",
+        "sha256": "f92a839ad5861e2095fe1a7b9f1275f4d5c00a2353fa4dd5f929142e8b41fe32",
+        "bytes": 6435
+      },
+      "allocations": [
+        {
+          "policy": "FCFS-HOL",
+          "path": "outputs/q2-m1-smoke-20261014d/FCFS-HOL_node_placements.csv.gz",
+          "sha256": "ed243b75046e7eb7e8cb1d56ec4d6a7ee23113c06d410e17eadacfc2af03f8c7",
+          "bytes": 3043,
+          "rows": 813
+        },
+        {
+          "policy": "SPT-HOL",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-HOL_node_placements.csv.gz",
+          "sha256": "fb1a6a522cee3c5390a04e29bb8f44fc82850c73fbdb0807d63d4c4333ff0e30",
+          "bytes": 3073,
+          "rows": 813
+        },
+        {
+          "policy": "SPT-FILL",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-FILL_node_placements.csv.gz",
+          "sha256": "5f501013d61911bdb3b763a3144c2fc62e3aa668de3680415c94e788ee59cc3a",
+          "bytes": 3074,
+          "rows": 813
+        },
+        {
+          "policy": "SGW-FILL",
+          "path": "outputs/q2-m1-smoke-20261014d/SGW-FILL_node_placements.csv.gz",
+          "sha256": "d804b4df2f285a67338ebd650a4c08344e851353c66df4a29037ff42ffaaa988",
+          "bytes": 3045,
+          "rows": 813
+        },
+        {
+          "policy": "EASY-TIME",
+          "path": "outputs/q2-m1-smoke-20261014d/EASY-TIME_node_placements.csv.gz",
+          "sha256": "bdfad65c5f60f761a1615903a7dc1e7a390cf66264b2f100f0a266a34a5d76a5",
+          "bytes": 3044,
+          "rows": 813
+        },
+        {
+          "policy": "SPT-URGENT-HOL",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-HOL_node_placements.csv.gz",
+          "sha256": "7ce76fcb0dd6f4f106c3695cbcd7fb2afe8a9c3833c6f63aedf31fa97b0d3991",
+          "bytes": 3080,
+          "rows": 813
+        },
+        {
+          "policy": "SPT-URGENT-TIME",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-TIME_node_placements.csv.gz",
+          "sha256": "40bfeef8177f4fe470529f281922665eebbd01eb98eedf1f419a85e72732f109",
+          "bytes": 3081,
+          "rows": 813
+        }
+      ],
+      "reservation_evidence": [
+        {
+          "policy": "FCFS-HOL",
+          "gpu_model": "A100-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/FCFS-HOL_A100-SXM4-80GB_reservations.json",
+          "sha256": "f4d6a25a00323e1f5cf86641706ec0972d02c8b19db43e825bcbcf2bac497317",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "FCFS-HOL",
+          "gpu_model": "A10",
+          "path": "outputs/q2-m1-smoke-20261014d/FCFS-HOL_A10_reservations.json",
+          "sha256": "b2e03d51802bd4190b3749db94988cb35d42fb7ddc54bf92e7fa2256f89ac212",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "FCFS-HOL",
+          "gpu_model": "A800-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/FCFS-HOL_A800-SXM4-80GB_reservations.json",
+          "sha256": "5f5fd9a9bc555c60532e5cc51bd7a3593872eecbf7798b5ba7c756de1047218f",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "FCFS-HOL",
+          "gpu_model": "GPU-series-1",
+          "path": "outputs/q2-m1-smoke-20261014d/FCFS-HOL_GPU-series-1_reservations.json",
+          "sha256": "11b0a01bc1ed36b3ae14c4abd9dd2c4c3b5516334fd02282835af4e1ce89503a",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "FCFS-HOL",
+          "gpu_model": "GPU-series-2",
+          "path": "outputs/q2-m1-smoke-20261014d/FCFS-HOL_GPU-series-2_reservations.json",
+          "sha256": "7b07d3e8facde1871e8fd82ee5e987b072c4ef28dbcd0de6124825d80867e1aa",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "FCFS-HOL",
+          "gpu_model": "H800",
+          "path": "outputs/q2-m1-smoke-20261014d/FCFS-HOL_H800_reservations.json",
+          "sha256": "f67f6c1dd521052113ef653021a2f52678f2223268516e861660b0ca72a0df9b",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "SPT-HOL",
+          "gpu_model": "A100-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-HOL_A100-SXM4-80GB_reservations.json",
+          "sha256": "17d9f9b2a79926548a97bc204e789980e590761c9400337c1cc98bfd83d4bb46",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "SPT-HOL",
+          "gpu_model": "A10",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-HOL_A10_reservations.json",
+          "sha256": "19c4062baf01204c7a7eaf22c730f4b5067573917b3317f1d649d5f97cc27058",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "SPT-HOL",
+          "gpu_model": "A800-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-HOL_A800-SXM4-80GB_reservations.json",
+          "sha256": "a8aff558e6610c7750eeaec1c209683fa7aa10420ab1d67209c913d39d95434c",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "SPT-HOL",
+          "gpu_model": "GPU-series-1",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-HOL_GPU-series-1_reservations.json",
+          "sha256": "35cdcc9b99d2016b29658a21b681a2df8767c74c50622963b8f3bf7cbfd03e4d",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "SPT-HOL",
+          "gpu_model": "GPU-series-2",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-HOL_GPU-series-2_reservations.json",
+          "sha256": "3145054d65705bbe6b7da81a8d8dd6fff6cfd6eacd1d0198192e6f8a6f9e6f81",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "SPT-HOL",
+          "gpu_model": "H800",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-HOL_H800_reservations.json",
+          "sha256": "fa85981e1dafc143012e88e79fac074b4f29b518ff795e450f3cb10e07367acd",
+          "reservations": 0,
+          "events": 128
+        },
+        {
+          "policy": "SPT-FILL",
+          "gpu_model": "A100-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-FILL_A100-SXM4-80GB_reservations.json",
+          "sha256": "7bd422ee995a2ab18c52fc0ae67d2293d120ee6dab095fc311b277e560c91245",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-FILL",
+          "gpu_model": "A10",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-FILL_A10_reservations.json",
+          "sha256": "d54d15d9ecc9f705ada6d088d10592ee703275c1c9cbabe94442161916885ce8",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-FILL",
+          "gpu_model": "A800-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-FILL_A800-SXM4-80GB_reservations.json",
+          "sha256": "96561c717206fb3f3f6e279fdfbd5c007169e11090a0a39dbe6490164e44cb1f",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-FILL",
+          "gpu_model": "GPU-series-1",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-FILL_GPU-series-1_reservations.json",
+          "sha256": "ca13262bdc8439229b7b11e3b4bc6c6135280def9f3613f7d30d82e305a34f69",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-FILL",
+          "gpu_model": "GPU-series-2",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-FILL_GPU-series-2_reservations.json",
+          "sha256": "e11bd0669d273ca5dca1701a271b20990c13179548b3f3af76340d4995533a2e",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-FILL",
+          "gpu_model": "H800",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-FILL_H800_reservations.json",
+          "sha256": "d4067faddad505ba7e8a0273b6e7e9f478f3bf7440c8e3b4a9bef3cb56881b3b",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SGW-FILL",
+          "gpu_model": "A100-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SGW-FILL_A100-SXM4-80GB_reservations.json",
+          "sha256": "b9508b8ce0fda838c21af0d1d471b980c4dca797251eddc82f0424f20fc599e1",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SGW-FILL",
+          "gpu_model": "A10",
+          "path": "outputs/q2-m1-smoke-20261014d/SGW-FILL_A10_reservations.json",
+          "sha256": "1289e0a92d949739160787ab91b4d0eb876443663a675078cda478a4653aeca1",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SGW-FILL",
+          "gpu_model": "A800-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SGW-FILL_A800-SXM4-80GB_reservations.json",
+          "sha256": "1432447acab30f2f5241fee48cfb041596db32006d68224ed6dd0013308d9107",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SGW-FILL",
+          "gpu_model": "GPU-series-1",
+          "path": "outputs/q2-m1-smoke-20261014d/SGW-FILL_GPU-series-1_reservations.json",
+          "sha256": "240492ff64b45781a39b3b937c54850513d40437a775ac3391d36af018267029",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SGW-FILL",
+          "gpu_model": "GPU-series-2",
+          "path": "outputs/q2-m1-smoke-20261014d/SGW-FILL_GPU-series-2_reservations.json",
+          "sha256": "df6887d8fcb3d910c18de1b417dd4ac07615746ac501578ae31c8113de1cf6ef",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SGW-FILL",
+          "gpu_model": "H800",
+          "path": "outputs/q2-m1-smoke-20261014d/SGW-FILL_H800_reservations.json",
+          "sha256": "ec7eaab396b4e72d87f3658377a925d59362e4a1cc770dfa36a790e57362756d",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "EASY-TIME",
+          "gpu_model": "A100-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/EASY-TIME_A100-SXM4-80GB_reservations.json",
+          "sha256": "8b3035dee061ea6756e0dacb85b7d0964c43b61f04ef840b9df2ea1613b1639e",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "EASY-TIME",
+          "gpu_model": "A10",
+          "path": "outputs/q2-m1-smoke-20261014d/EASY-TIME_A10_reservations.json",
+          "sha256": "42c9576f7f1f7e423a487d00bdd2480d3c67c27298b90801590587b97efe3860",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "EASY-TIME",
+          "gpu_model": "A800-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/EASY-TIME_A800-SXM4-80GB_reservations.json",
+          "sha256": "f5d651b5fe70af6e639762ba9def3feb488132a1a4f624359f5bd200d26b47fa",
+          "reservations": 1,
+          "events": 194
+        },
+        {
+          "policy": "EASY-TIME",
+          "gpu_model": "GPU-series-1",
+          "path": "outputs/q2-m1-smoke-20261014d/EASY-TIME_GPU-series-1_reservations.json",
+          "sha256": "ac8b59e87cd892fc5cceab136a9a3429a5a52d05ba57378f4432df039fbb1125",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "EASY-TIME",
+          "gpu_model": "GPU-series-2",
+          "path": "outputs/q2-m1-smoke-20261014d/EASY-TIME_GPU-series-2_reservations.json",
+          "sha256": "2a1d00f3fca571166da98cd5694338df30bab8d22cf31229c85c14982352a1af",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "EASY-TIME",
+          "gpu_model": "H800",
+          "path": "outputs/q2-m1-smoke-20261014d/EASY-TIME_H800_reservations.json",
+          "sha256": "dd7a11f71a20dea01d4e5f1450686a097f9492e157f6fec1bf5b956706aacf9d",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-HOL",
+          "gpu_model": "A100-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-HOL_A100-SXM4-80GB_reservations.json",
+          "sha256": "863dfad951e417ce455f4ae23b4b52f3a274219be20b2fecad04012d0715ad23",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-HOL",
+          "gpu_model": "A10",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-HOL_A10_reservations.json",
+          "sha256": "d51e7cfcbf118e30e8f90c62048f031d0d6e5cbfc7e0ce47bb9ced8f1c596320",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-HOL",
+          "gpu_model": "A800-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-HOL_A800-SXM4-80GB_reservations.json",
+          "sha256": "0940f7a9c88ac61c6e7cc074068b18d95e168c78594566c24fe99054e29c863b",
+          "reservations": 1,
+          "events": 194
+        },
+        {
+          "policy": "SPT-URGENT-HOL",
+          "gpu_model": "GPU-series-1",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-HOL_GPU-series-1_reservations.json",
+          "sha256": "8afb7958429ec6dbf5989678b8aec71d2ff2fad65f17aeeed83fb64349f67e4a",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-HOL",
+          "gpu_model": "GPU-series-2",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-HOL_GPU-series-2_reservations.json",
+          "sha256": "94a18d0c6645097930d04a0605199df3c12ae3fdca4ebc9bfa6ffaac328574a7",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-HOL",
+          "gpu_model": "H800",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-HOL_H800_reservations.json",
+          "sha256": "eee7febd833d7edf3d6c00093ce7c2072e5657a403eb56c384ae01ba4e162d39",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-TIME",
+          "gpu_model": "A100-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-TIME_A100-SXM4-80GB_reservations.json",
+          "sha256": "c17758876b0cfd9cf8b6147f38f8066aeb35b88b37571b57f5dd89739efcb671",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-TIME",
+          "gpu_model": "A10",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-TIME_A10_reservations.json",
+          "sha256": "2404971b00250c1e9e8e67282795353f6a59f48cf769ed9967fe8751f941f59a",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-TIME",
+          "gpu_model": "A800-SXM4-80GB",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-TIME_A800-SXM4-80GB_reservations.json",
+          "sha256": "3e987501b19fdfb07e2572a0d4fe1c17b6b63c936448f7d1c1c05664e8c2e73c",
+          "reservations": 1,
+          "events": 194
+        },
+        {
+          "policy": "SPT-URGENT-TIME",
+          "gpu_model": "GPU-series-1",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-TIME_GPU-series-1_reservations.json",
+          "sha256": "6f91a4c351d9d104785bb6e4ed0928bfe75e5da11206c71db09d1eafee3b4f14",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-TIME",
+          "gpu_model": "GPU-series-2",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-TIME_GPU-series-2_reservations.json",
+          "sha256": "aff62cfccb5f6c326eb534b1fecd841c70ae6f0360a5ecb3c5f19898368cebd1",
+          "reservations": 0,
+          "events": 192
+        },
+        {
+          "policy": "SPT-URGENT-TIME",
+          "gpu_model": "H800",
+          "path": "outputs/q2-m1-smoke-20261014d/SPT-URGENT-TIME_H800_reservations.json",
+          "sha256": "de76589775ac32f5a4612ee0a5e7edf27940a4f72fca946b7b869571524729c3",
+          "reservations": 0,
+          "events": 192
+        }
+      ]
+    },
+    "full_run": {
+      "run_json": {
+        "path": "outputs/q2-m1-full-20261014d/run.json",
+        "sha256": "720c1646588be586f5bee19e2cf1d17ce2fdf723a06deb63cf8a812b4c917ffe",
+        "bytes": 4593
+      },
+      "verified": {
+        "path": "outputs/q2-m1-full-20261014d-verified.json",
+        "sha256": "0609d563d0efdc06468c26d2e20b3696efd0ba0f898b5d745dd81230f47144e7",
+        "bytes": 1949
+      },
+      "job_times_and_allocations": "outputs/q2-m1-full-20261014d/ (ignored, reproducible from command; hashes are in run.json)"
+    },
+    "synthetic_cases": "problems/2026_gpu_scheduling/tests/test_q2_m1.py"
+  },
+  "open_items": [
+    "Q2 formal performance comparison and M2 FIXED/FLEX are not run",
+    "Q3 and paper claims remain out of scope",
+    "large job_times/node ledgers remain in ignored outputs and need team shared artifact storage before publication",
+    "official source data authorization for redistribution remains team-confirmed item"
+  ]
+}

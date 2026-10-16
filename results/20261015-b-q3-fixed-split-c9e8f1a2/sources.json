@@ -1,0 +1,56 @@
+{
+  "sources": [
+    {
+      "title": "Q3方案選擇",
+      "path": "docs/4.md",
+      "sha256": "6e7caeb71eedc7e5f3f430be4b6d05dcf3cf177f5170c5f7a37bb561a1911cd1",
+      "available": "user-supplied local untracked full text",
+      "review": "全文已讀；原論文未另行廣泛查證",
+      "original_bytes_preserved": true
+    },
+    {
+      "title": "GPU調度文獻適配",
+      "path": "docs/貼上的文字 (1)(2).txt",
+      "sha256": "fd3c4355e3c2397dd414f60e22bdd630d2c51f4e8c69c41cb3694bc2202734cc",
+      "available": "user-supplied local untracked full text",
+      "review": "全文已讀；原論文未另行廣泛查證",
+      "original_bytes_preserved": true
+    },
+    {
+      "title": "Q3反事實分析",
+      "path": "docs/貼上的文字 (2)(2).txt",
+      "sha256": "7dc2ea43f8fa24b34849f9ecd4f493fcfef8e819a5dc79cde16a75a9bc1aec06",
+      "available": "user-supplied local untracked full text",
+      "review": "全文已讀；原論文未另行廣泛查證",
+      "original_bytes_preserved": true
+    },
+    {
+      "title": "deep-research-report_q3",
+      "path": "docs/deep-research-report_q3.md",
+      "sha256": "aec5d2ce60eeed9bb5307d3498727b98b922181d3252886bd5434c8beb01f379",
+      "available": "user-supplied local untracked full text",
+      "review": "全文已讀；原論文未另行廣泛查證",
+      "original_bytes_preserved": true
+    },
+    {
+      "title": "Official Problem B",
+      "path": "problems/2026_gpu_scheduling/docs/2026_MCM_GPU_Scheduling.pdf",
+      "sha256": "fb153a547ed57a3d16ab0929c27cccc5d49fc4e568d9c65a273546057e692967",
+      "available": "tracked at 7075317883808b1cd7f80cadf3980be291c69cf0"
+    },
+    {
+      "title": "Q1 verified lower bound",
+      "path": "results/20261015-b-q1-capacity-bound/q1_capacity_bounds.json",
+      "sha256": "e5378af21574b395e2c59336e1559285f73cc58ca13bbe6faf041185652538d2",
+      "available": "tracked at 7075317883808b1cd7f80cadf3980be291c69cf0"
+    },
+    {
+      "title": "FCFS/SJF-HOL verified baseline",
+      "path": "results/20261014-b-intake-ready/baseline_metrics.json",
+      "sha256": "1f85b42bd5424600b7588411b6f318ffce2d7fd53c532356e8257ccf3a293b30",
+      "available": "tracked at 7075317883808b1cd7f80cadf3980be291c69cf0"
+    }
+  ],
+  "authority": "official question > physical feasibility > verifiable protocol > research-report suggestions",
+  "adoption_revision_exclusion": "problems/2026_gpu_scheduling/docs/q3_model.md"
+}

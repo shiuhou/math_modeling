@@ -1,0 +1,348 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261014-b-q1-publication-42b5a896",
+  "question_or_claim": "Audited Q1 data analysis, bilingual publication and reproducible handoff",
+  "code": {
+    "commit": "00f6f5753b7c6870a524810589c8d190a6892991",
+    "dirty": false,
+    "sha256": {
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "a6f982f412fce33cf91fadef305abc2299d0c76df1aec93f2e845aa1beb0da21",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/q1_publication.py": "444fa7240f6675e7064d4d12ae47c415b3d54f5707218cecca3a46094660496b",
+      "problems/2026_gpu_scheduling/experiments/build_paper.py": "7f9ad69acf0db0f32aaaf195ce4dde774502ea0418d191d60deaaf8aca5ada01",
+      "problems/2026_gpu_scheduling/experiments/generate_figures.py": "c09623da50d96a3eb8bfe60061c81cb8185b1acd17be8b4f40869114664a26e1",
+      "problems/2026_gpu_scheduling/experiments/eda_analysis.py": "0cb89eb7eb9b62ad1249dba5892b1aeeceb9abacd0bbe1ca7d65f8088228d9ab",
+      "problems/2026_gpu_scheduling/experiments/eda_deep.py": "05f0aa3a00ea63fd6f5afb8dd333143e9c730bb18a1c8775de3c6e120bc2a16f",
+      "problems/2026_gpu_scheduling/experiments/verify_q1.py": "7e6c2ee6555d6a847b8a9d0d462a4919a04377c7d87a55d2e4d796cb930e6187",
+      "problems/2026_gpu_scheduling/paper/preamble.tex": "d2cefbf397a784b54d1cabe080d52fc7f2026bb278d203e63b749c2bf89d1f2a",
+      "problems/2026_gpu_scheduling/paper/document_en.tex": "9058153322be91e91d4dcaa0b3d649874d9ea44bc21bd6df1f9f3588b92b50b4",
+      "problems/2026_gpu_scheduling/paper/q1_section.tex": "c579a432ca67011b2e2a9f35e39cf18a10d8f58705b4eb759c889a7b7ee8a823",
+      "problems/2026_gpu_scheduling/paper/q1_summary.tex": "e57935f89ac6f33dcf373df86c08c5cff2dd1edd01aaa7af0e1123665ba43e1f",
+      "problems/2026_gpu_scheduling/paper/q1_zh.html": "ca2dcfee02baeebd71a544cb9d436669a6f820ad21f346a1c43f855c1b27636a",
+      "problems/2026_gpu_scheduling/requirements.txt": "dbe08f50f6124e5037ffc570e9bdf53ec5fef0e80e3506f9ec02b3c5d43f134c",
+      "problems/2026_gpu_scheduling/tests/test_q1.py": "e082fd46a0fc68ee3b9ed8a11d0bcea9e7990e0a5804bd188ea171dde2ca16ec"
+    },
+    "snapshot": "source/ (all participating Q1 sources, including dirty changes)"
+  },
+  "integration_base": "abdbc4ce07c3877ac9fdb1e846a5b9c3b803f401",
+  "data": {
+    "source": "problems/2026_gpu_scheduling/data/raw (tracked in Git)",
+    "sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "historical_byte_identity": "BLOCKED",
+    "redistribution_scope": "BLOCKED"
+  },
+  "configuration": {
+    "horizon": "max submit_time = 7775878 seconds",
+    "daily_bin_seconds": 86400,
+    "top_k": "floor",
+    "ccdf": "strict greater-than with ties grouped",
+    "formula_source": "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py"
+  },
+  "command": [
+    "python",
+    "problems/2026_gpu_scheduling/experiments/build_paper.py",
+    "--scope",
+    "full",
+    "--out",
+    "outputs/q1-final",
+    "--compiler",
+    "TECTONIC_PATH",
+    "--bundle"
+  ],
+  "working_directory": ".",
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "matplotlib": "3.10.8",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "latex": "Tectonic 0.17.0"
+  },
+  "duration_seconds": 5.76882745900366,
+  "validation": {
+    "scope": "Q1 publication engineering and numerical acceptance; not entire paper submission",
+    "q1_acceptance": "PASS",
+    "submission_ready": false,
+    "checks": [
+      {
+        "item": "raw_recalculation",
+        "status": "PASS",
+        "evidence": "reference_comparison.json: 39 statistics and all nine CSVs; byte-identical to Git reference"
+      },
+      {
+        "item": "historical_handoff_numeric_comparison",
+        "status": "PASS",
+        "evidence": "optional_zip_comparison.json; optional, not required for a clone"
+      },
+      {
+        "item": "original_six_q1_tests",
+        "status": "PASS",
+        "evidence": "engineering_checks.json"
+      },
+      {
+        "item": "daily_aggregation",
+        "status": "PASS",
+        "evidence": "publication_checks.json; all 180 bins independently checked, two new boundary-case tests"
+      },
+      {
+        "item": "bilingual_values_and_table",
+        "status": "PASS",
+        "evidence": "publication_checks.json; same macros and six-model rows"
+      },
+      {
+        "item": "q1_pdf_and_figures",
+        "status": "PASS",
+        "evidence": "presentation_checks.json; two pages, one table, two main and five supplementary figures"
+      },
+      {
+        "item": "offline_html",
+        "status": "PASS",
+        "evidence": "html_checks.json"
+      },
+      {
+        "item": "full_compile_and_page_count",
+        "status": "PASS",
+        "evidence": "build_summary.json; nine pages"
+      },
+      {
+        "item": "full_competition_typography",
+        "status": "FAIL",
+        "evidence": "presentation_checks.json; Q2/Q3 inherited small fonts and overflow remain"
+      },
+      {
+        "item": "repository_and_regression_tests",
+        "status": "PASS",
+        "evidence": "engineering_checks.json; 12 root and 18 B tests"
+      },
+      {
+        "item": "clean_clone",
+        "status": "PASS",
+        "evidence": "clean_clone.json; new venv, Git-contained raw, no attachments"
+      },
+      {
+        "item": "delivery_source_reproduction",
+        "status": "PASS",
+        "evidence": "snapshot_reproduction.json; unpacked source outside Git"
+      },
+      {
+        "item": "q2_q3_algorithms_and_raw_unchanged",
+        "status": "PASS",
+        "evidence": "Compared Q2 onward text, archived plot function, data.py, simulator.py, evaluation.py, document_zh.html and both raw CSVs with abdbc4c"
+      },
+      {
+        "item": "full_scheduling_rerun",
+        "status": "NOT_RUN",
+        "evidence": "No shared scheduling algorithm changed; outside Q1 scope"
+      },
+      {
+        "item": "historical_job_byte_identity",
+        "status": "BLOCKED",
+        "evidence": "Original data ZIP unavailable; Git CSV differs from handoff-recorded SHA; numeric agreement does not resolve it"
+      },
+      {
+        "item": "redistribution_scope",
+        "status": "BLOCKED",
+        "evidence": "Awaiting team confirmation; raw data not duplicated in ZIP"
+      },
+      {
+        "item": "team_names_and_final_disclosure",
+        "status": "BLOCKED",
+        "evidence": "Awaiting team confirmation"
+      },
+      {
+        "item": "human_bilingual_and_full_paper_review",
+        "status": "NOT_RUN",
+        "evidence": "Team review required before competition submission"
+      }
+    ]
+  },
+  "unchanged_reference_tables": "results/20261014-b-q1-intake-4a8f8f2b",
+  "results": {
+    "acceptance.json": {
+      "sha256": "200d0c2d4a426e60044408877241fd769ec52774c65694fdd4261a79fc4dafea",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "build_summary.json": {
+      "sha256": "c8d3bf5ac212c49872555aab8bd8809ad0b18577798354017a808f71df72af55",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "bundle.json": {
+      "sha256": "40b7b3a5bdc18acce7a1fd37fe9357506963a1a98d9998d222158126dc033a59",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "check-0.log": {
+      "sha256": "d0511c6648703aa393fcf50768d10d10218b150dad353cc159d0cfd17a0ad972",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "check-1.log": {
+      "sha256": "b8d15222425c42e1baba1cf207f706f937e855944a80576a3096541621abd2d4",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "check-2.log": {
+      "sha256": "1ed726c3a18d4c6e31e5a159a0586efce12068ae4b05336ef68dd435408ab229",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "check-3.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "clean_clone.json": {
+      "sha256": "77c1a0b50981bbe8123c1575ea65e0fa4b41117235960a862d190d92b537308b",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "engineering_checks.json": {
+      "sha256": "e3a56353302fffab48c89ffc64cf07348d6734aed48718e7814711375643be6b",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "font_checks.json": {
+      "sha256": "230c34cdc4740c63b6de902ce3fcdce0fe56fa2ab2775a8bee179a35c78f13e5",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "html_checks.json": {
+      "sha256": "e1422f9d1de5e8f280aea71f51049b1b55b8546d06f8c6245a6e5c319f009312",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "optional_zip_comparison.json": {
+      "sha256": "095901a817d4159574fb0a3cfd87d00c226ba7073d1b2b634f6246fc1a88f664",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "presentation_checks.json": {
+      "sha256": "99d1ac1f622ea838fc0034d630beaa8620c09288791cb7bea7024c355368a7c9",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "publication_checks.json": {
+      "sha256": "bcc1749279ca43cfac3c669c0700c70fc1d5d596e5cfec84b5f6402057de52fd",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "q1_daily_demand.csv": {
+      "sha256": "73227093a9001c124b600c8121f11a2849bd5c45fd892a6af429a98f9647c9f7",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "q1_values.json": {
+      "sha256": "c55666ce1b30d7628f46823ee9809bfb169dd45d5d48bfa4c79b9dea423b64ad",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "reference_comparison.json": {
+      "sha256": "0b9d4b7217ee4e46f2d327cf49fc62ad9d305fa03dcd2fac2aa60c2da91e8b2a",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    },
+    "snapshot_reproduction.json": {
+      "sha256": "c64ce94aa36a7f1670a73e88a40f414aab4ea4b29d04630eb9dcec9a9e4d37e6",
+      "purpose": "Q1 publication acceptance or necessary numerical evidence"
+    }
+  },
+  "generated_artifacts": [
+    {
+      "path": "outputs/q1-final/q1_en.pdf",
+      "sha256": "27a983145290255bb19067f63ccfe481a715aa5ca284f332adf5cdf97d352cba",
+      "storage": "local generated artifact; recreate using B README"
+    },
+    {
+      "path": "outputs/q1-final/q1_zh.html",
+      "sha256": "9e2b2bc3e86eb3adb050287b5269773b47a395892df326c8b661a4048dd00d00",
+      "storage": "local generated artifact; recreate using B README"
+    },
+    {
+      "path": "outputs/q1-final/supplementary.html",
+      "sha256": "d9b9eb89561afebd351027377109ef4c802b6cae5fd8606eab35b4cabccdfd14",
+      "storage": "local generated artifact; recreate using B README"
+    },
+    {
+      "path": "outputs/q1-final/document_en.pdf",
+      "sha256": "5fa812972c88a8721e5c14722c8a73be17fbfbcd1045b9d841b8e3285f770c8f",
+      "storage": "local generated artifact; recreate using B README"
+    },
+    {
+      "path": "outputs/q1-final/Q1_delivery.zip",
+      "sha256": "88efb0d6f75b1a1585e53ad8f1cea8cdaa34d1a08501e86dd5e1f11483aa3848",
+      "storage": "local generated artifact; recreate using B README"
+    },
+    {
+      "path": "outputs/q1-final/figures/fig1_data_patterns.pdf",
+      "sha256": "ae68ed9fb204655ea17067b084cd310b53a02d7320dd0a29f4ead34b793f1e71",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/fig1_data_patterns.png",
+      "sha256": "6a62f00be635d9e53cbe3b438dd6a13d8ecc425d07526eca1157870cff83b263",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/fig1_demand.pdf",
+      "sha256": "5b68ff3b0199728d15ca74690ca3eb63abef3cb365b8b416348e7085a5060714",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/fig1_demand.png",
+      "sha256": "0be164e70f83aa4991ae81dd5d59368f2bc1d28c3047762a2471e0e81cfa13c3",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_daily_arrivals_work.pdf",
+      "sha256": "1107eb6b2f66db70570c63e7615cffcbd68f1accfa819862a1492d51280f3ef3",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_daily_arrivals_work.png",
+      "sha256": "8e577f298b046c48ba14307808cab323ae717e83693a0d3b945a4190f50bc19b",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_model_distributions.pdf",
+      "sha256": "29e5e09215daff30b6f3ba0b8db1c3ff1ce986435b2c47f2e945fcb830ec6a10",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_model_distributions.png",
+      "sha256": "c208cbd9759d7c707ea9a8907ea29d8db394c5f0c610dd9107220ed7d11b499c",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_relative_phase.pdf",
+      "sha256": "1c20e502ed57f8d77d21f4c0b66b838887cd63becf18a812798291a1a7d0262e",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_relative_phase.png",
+      "sha256": "7c65653124654ff56ba83cae740e33e9158522aa7859964ae3c47684e03e65c7",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_resource_shape.pdf",
+      "sha256": "afc5a7d385bd09bf518f81cd8e66abc388acef4b88c6d6b5995c30cb91c71642",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_resource_shape.png",
+      "sha256": "c76bf69476cd3163eb041e0500beef966e4def7b05d99bc7d5a400fad1454832",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_supply_shares.pdf",
+      "sha256": "46b358dd6ac4835f6f506093811b974300a2c49a8f2625bdc5f4abff9f47561c",
+      "storage": "local generated artifact"
+    },
+    {
+      "path": "outputs/q1-final/figures/supplement_supply_shares.png",
+      "sha256": "e0b2b9ea64dedda96a4b9d7ec2097891325d5e499133fd44ec14a2371432d509",
+      "storage": "local generated artifact"
+    }
+  ],
+  "not_applicable": {
+    "seeds": "Deterministic data analysis",
+    "solver": "No optimization solver or new scheduling experiment"
+  },
+  "open_items": [
+    "Historical input job byte identity",
+    "Data redistribution scope",
+    "Team names and final AI disclosure",
+    "Human review",
+    "Inherited Q2/Q3 typography and unverified performance",
+    "Public shared storage for generated delivery artifacts; current ZIP is local and reproducible from Git"
+  ]
+}

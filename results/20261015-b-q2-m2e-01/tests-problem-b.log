@@ -1,0 +1,50 @@
+test_supplied_hand_cases_and_scalar_oracle (test_baseline.SuppliedBaselineTests.test_supplied_hand_cases_and_scalar_oracle) ... ok
+test_saved_ledger_roundtrip_and_corruption (test_baseline_cli.BaselineCLI.test_saved_ledger_roundtrip_and_corruption) ... ok
+test_evaluator_does_not_claim_capacity_validation (test_intake_contracts.IntakeContracts.test_evaluator_does_not_claim_capacity_validation) ... ok
+test_fractional_capacity_and_raw_frame_preservation (test_intake_contracts.IntakeContracts.test_fractional_capacity_and_raw_frame_preservation) ... ok
+test_infeasible_job_is_reported_instead_of_default_zero_times (test_intake_contracts.IntakeContracts.test_infeasible_job_is_reported_instead_of_default_zero_times) ... ok
+test_models_cannot_share_a_pool (test_intake_contracts.IntakeContracts.test_models_cannot_share_a_pool) ... ok
+test_precision_rejected_without_rounding (test_intake_contracts.IntakeContracts.test_precision_rejected_without_rounding) ... ok
+test_replay_rejects_overallocation_and_invalid_node_index (test_intake_contracts.IntakeContracts.test_replay_rejects_overallocation_and_invalid_node_index) ... ok
+test_ccdf_groups_tied_durations (test_q1.Q1Checks.test_ccdf_groups_tied_durations) ... ok
+test_gini_matches_pairwise_definition (test_q1.Q1Checks.test_gini_matches_pairwise_definition) ... ok
+test_lorenz_includes_origin_and_endpoint (test_q1.Q1Checks.test_lorenz_includes_origin_and_endpoint) ... ok
+test_partial_phase_exposure (test_q1.Q1Checks.test_partial_phase_exposure) ... ok
+test_seconds_integral_and_boundary_release (test_q1.Q1Checks.test_seconds_integral_and_boundary_release) ... ok
+test_top_count_is_floor (test_q1.Q1Checks.test_top_count_is_floor) ... ok
+test_cpu_boundaries_and_true_infeasible (test_q2_m1.M1Checks.test_cpu_boundaries_and_true_infeasible) ... ok
+test_crossing_accumulates_and_equal_R_is_allowed (test_q2_m1.M1Checks.test_crossing_accumulates_and_equal_R_is_allowed) ... ok
+test_easy_time_finish_r_and_crossing_backfill (test_q2_m1.M1Checks.test_easy_time_finish_r_and_crossing_backfill) ... ok
+test_easy_time_scans_same_timestamp_and_accepts_finish_equal_r (test_q2_m1.M1Checks.test_easy_time_scans_same_timestamp_and_accepts_finish_equal_r) ... ok
+test_event_mode_is_explicit_and_shared_ticks_are_not_policy_implicit (test_q2_m1.M1Checks.test_event_mode_is_explicit_and_shared_ticks_are_not_policy_implicit) ... ok
+test_fixed_and_flex_crossing_certificates (test_q2_m1.M1Checks.test_fixed_and_flex_crossing_certificates) ... ok
+test_fixed_flex_protected_head_is_not_K_cropped (test_q2_m1.M1Checks.test_fixed_flex_protected_head_is_not_K_cropped) ... ok
+test_flex_can_replace_head_witness_and_easy_nr_uses_flex (test_q2_m1.M1Checks.test_flex_can_replace_head_witness_and_easy_nr_uses_flex) ... ok
+test_history_mode_does_not_promote_young_blocked_job (test_q2_m1.M1Checks.test_history_mode_does_not_promote_young_blocked_job) ... ok
+test_history_promotes_at_next_epoch_in_urgent_fifo_order (test_q2_m1.M1Checks.test_history_promotes_at_next_epoch_in_urgent_fifo_order) ... ok
+test_k_only_counts_bypass_candidates (test_q2_m1.M1Checks.test_k_only_counts_bypass_candidates) ... ok
+test_policy_aliases_and_input_order_are_deterministic (test_q2_m1.M1Checks.test_policy_aliases_and_input_order_are_deterministic) ... ok
+test_pure_planner_and_atomic_gang (test_q2_m1.M1Checks.test_pure_planner_and_atomic_gang) ... ok
+test_reservation_evidence_requires_explicit_lists (test_q2_m1.M1Checks.test_reservation_evidence_requires_explicit_lists) ... ok
+test_time_promise_is_immutable_and_replay_is_independent (test_q2_m1.M1Checks.test_time_promise_is_immutable_and_replay_is_independent) ... ok
+test_urgent_timer_is_exact_and_protected_not_k_cropped (test_q2_m1.M1Checks.test_urgent_timer_is_exact_and_protected_not_k_cropped) ... ok
+test_fake_fixed_and_missing_or_reordered_updates_are_rejected (test_q2_m2b.M2BCertificateReplay.test_fake_fixed_and_missing_or_reordered_updates_are_rejected) ... ok
+test_fixed_then_flex_replays_immutable_initial_witness (test_q2_m2b.M2BCertificateReplay.test_fixed_then_flex_replays_immutable_initial_witness) ... ok
+test_missing_fulfillment_is_rejected_even_with_valid_record (test_q2_m2b.M2BCertificateReplay.test_missing_fulfillment_is_rejected_even_with_valid_record) ... ok
+test_null_reservations_with_issuance_is_not_empty_evidence (test_q2_m2b.M2BCertificateReplay.test_null_reservations_with_issuance_is_not_empty_evidence) ... ok
+test_overlapping_pending_promises_are_rejected (test_q2_m2b.M2BCertificateReplay.test_overlapping_pending_promises_are_rejected) ... ok
+test_scheduler_records_initial_witness_and_sparse_deltas (test_q2_m2b.M2BCertificateReplay.test_scheduler_records_initial_witness_and_sparse_deltas) ... ok
+test_blocked_promise_skips_queue_sort_and_fulfills_at_R (test_q2_m2d.ProtectedHolFastPath.test_blocked_promise_skips_queue_sort_and_fulfills_at_R) ... ok
+test_fulfillment_at_R_continues_same_timestamp_dispatch (test_q2_m2d.ProtectedHolFastPath.test_fulfillment_at_R_continues_same_timestamp_dispatch) ... ok
+test_dense_context_is_released_only_after_protected_start (test_q2_m2d_rss.ReservationContextRelease.test_dense_context_is_released_only_after_protected_start) ... ok
+test_duplicate_fulfillment_and_post_fulfillment_certificate_rejected (test_q2_m2d_rss.ReservationContextRelease.test_duplicate_fulfillment_and_post_fulfillment_certificate_rejected) ... ok
+test_fixed_policy_cannot_forge_flex_certificate (test_q2_m2d_rss.ReservationContextRelease.test_fixed_policy_cannot_forge_flex_certificate) ... ok
+test_fulfillment_requires_immediate_matching_unique_start (test_q2_m2d_rss.ReservationContextRelease.test_fulfillment_requires_immediate_matching_unique_start) ... ok
+test_missing_start_finish_and_forged_final_witness_rejected (test_q2_m2d_rss.ReservationContextRelease.test_missing_start_finish_and_forged_final_witness_rejected) ... ok
+test_demand_key_zero_cpu_and_invalidation (test_q2_m2e.PlacementMemoization.test_demand_key_zero_cpu_and_invalidation) ... ok
+test_exact_uncached_equivalence_with_crossing_and_timers (test_q2_m2e.PlacementMemoization.test_exact_uncached_equivalence_with_crossing_and_timers) ... ok
+
+----------------------------------------------------------------------
+Ran 45 tests in 1.249s
+
+OK

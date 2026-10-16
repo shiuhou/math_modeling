@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "formal_analysis": "PASS",
+  "lower_bound": "PASS",
+  "five_timing_input_match": "PASS",
+  "five_decompositions_close": "PASS",
+  "within_window_gap_nonnegative": "PASS",
+  "small_oracle_tests": {
+    "status": "PASS",
+    "count": 6,
+    "log": "m2f-oracle-tests.log"
+  },
+  "problem_b_regression": {
+    "status": "PASS",
+    "count": 51,
+    "log": "problem-b-tests.log"
+  },
+  "root_tests": {
+    "status": "PASS",
+    "count": 12,
+    "log": "root-tests.log"
+  },
+  "repo_check": {
+    "status": "PASS",
+    "log": "repo-check.log"
+  },
+  "diff_check": {
+    "status": "PASS",
+    "log": "diff-check.log"
+  },
+  "scheduler_rerun": "NOT_RUN",
+  "reservation_replay_rerun": "NOT_RUN (retained M2-E PASS evidence)",
+  "full_111284_trace": "NOT_RUN"
+}

@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "official_32768_time": {
+    "schedule": true,
+    "events": true,
+    "reservations": true
+  },
+  "official_8192_theta4": [
+    {
+      "policy": "TIME",
+      "checks": {
+        "schedule_sha256": true,
+        "events_sha256": true,
+        "reservations_sha256": true
+      },
+      "old_scheduler_profiled_seconds": 46.74568566001835,
+      "new_scheduler_profiled_seconds": 16.14308803799213,
+      "crossing_accepted": 0
+    },
+    {
+      "policy": "FIXED",
+      "checks": {
+        "schedule_sha256": true,
+        "events_sha256": true,
+        "reservations_sha256": true
+      },
+      "old_scheduler_profiled_seconds": 47.826763885008404,
+      "new_scheduler_profiled_seconds": 17.97302461200161,
+      "crossing_accepted": 5
+    },
+    {
+      "policy": "FLEX",
+      "checks": {
+        "schedule_sha256": true,
+        "events_sha256": true,
+        "reservations_sha256": true
+      },
+      "old_scheduler_profiled_seconds": 46.76527514201007,
+      "new_scheduler_profiled_seconds": 19.762793136003893,
+      "crossing_accepted": 5
+    }
+  ],
+  "official_16384": "Full gzip-decoded timing/placement bytes, reservations and events equality in profile-original-16384.json",
+  "synthetic": "45 Problem B tests; uncached vs cached all 9 policies, both event modes",
+  "historical_65536_baselines": {
+    "SPT-FILL": {
+      "schedule_sha256": "7cc447d910164051695f7d3188d070d4aad1569618f874310ab5f86aad2a5067",
+      "current_matches": true,
+      "current_persisted_replay": "PASS"
+    },
+    "SPT-URGENT-HOL": {
+      "schedule_sha256": "42129d2777d68d488cb37469a80275fc16f5c3b140f0846a84a00f2ac5171e18",
+      "current_matches": true,
+      "current_persisted_replay": "PASS"
+    }
+  }
+}

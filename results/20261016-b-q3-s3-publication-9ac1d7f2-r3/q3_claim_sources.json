@@ -1,0 +1,47 @@
+{
+  "commit_scope": {
+    "git_commit_at_execution": "5d197b60856b7a002e21ad4206b365a84faf8a4f",
+    "new_scheduling_runs": 0
+  },
+  "model": {
+    "file": "problems/2026_gpu_scheduling/docs/q3_model.md",
+    "claim": "whole-card pre-start fixed partition, CPU/GPU same-node constraints"
+  },
+  "M0_S0": {
+    "file": "results/20261015-b-q3-fixed-split-c9e8f1a2/metrics.json",
+    "fields": [
+      "FCFS.M0",
+      "FCFS.M1",
+      "SJF-HOL.M0",
+      "SJF-HOL.M1"
+    ],
+    "note": "M1 is renamed S0 in publication text"
+  },
+  "S1_S5": {
+    "file": "results/20261015-b-q3-s2-fixed-split-v1/sensitivity_metrics.json",
+    "fields": [
+      "S1..S5.*.A10",
+      "S1..S5.*.native_A100",
+      "S1..S5.*.ALL",
+      "paired_M0",
+      "paired_S0"
+    ]
+  },
+  "routing": {
+    "file": "results/20261015-b-q3-s2-fixed-split-v1/routing_audit.json",
+    "formula": "SHA256(q3-fixed-split-v1:<job_id>) threshold; S1 subset S0 subset S2"
+  },
+  "metrics": {
+    "file": "paper_ready_metrics.json",
+    "formulas": {
+      "waiting": "start-submit",
+      "jct": "finish-submit",
+      "relative_completion_delay": "finish-submit-original_duration",
+      "paired_finish_delta": "finish_scenario-finish_reference"
+    }
+  },
+  "figure": {
+    "file": "q3_donor_capacity_wait_tradeoff.png",
+    "source": "results/20261015-b-q3-s2-fixed-split-v1/figures/donor_capacity_wait_tradeoff.png"
+  }
+}

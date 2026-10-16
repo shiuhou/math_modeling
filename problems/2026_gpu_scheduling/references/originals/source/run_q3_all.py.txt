@@ -1,0 +1,269 @@
+import pandas as pd
+import numpy as np
+import heapq
+from collections import deque
+import time
+
+node_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/node_info_df.csv")
+job_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/job_info_clean.csv")
+HORIZON = 7776000.0
+
+# Fast simulator for A10 + M MIG-partitioned A100 nodes (where each MIG node has 8*m virtual GPUs and 128 vCPUs)
+# Or general overflow pool where extra virtual/physical GPUs have speedup factor kappa
+def simulate_a10_with_mig_or_overflow(a10_jobs, M_mig_nodes=0, m_slices=2, extra_overflow_nodes=0, kappa_mig=1.0, policy='AMBF-1350', T_cap_hours=1350.0):
+    t0_wall = time.time()
+    jobs_sub = a10_jobs.sort_values(['submit_time', 'job_name']).reset_index(drop=True)
+    n_jobs = len(jobs_sub)
+    submit_times = jobs_sub['submit_time'].values.astype(float)
+    durations = jobs_sub['duration'].values.astype(float)
+    cpu_reqs = jobs_sub['cpu_request'].values.astype(float)
+    worker_nums = jobs_sub['worker_num'].values.astype(int)
+    volumes = worker_nums * durations
+
+    # Base A10 nodes: 2 with 126 CPU, 2492 with 128 CPU
+    free_low = 2
+    free_std = 2492
+    
+    # MIG/Overflow nodes: M_mig_nodes each with (8*m_slices) GPUs and 128.0 CPUs
+    # plus extra_overflow_nodes each with 8 GPUs and 128.0 CPUs
+    n_ext = M_mig_nodes + extra_overflow_nodes
+    if n_ext > 0:
+        ext_gpu_cap = np.array([8 * m_slices]*M_mig_nodes + [8]*extra_overflow_nodes, dtype=int)
+        ext_cpu_cap = np.array([128.0]*M_mig_nodes + [140.0]*extra_overflow_nodes, dtype=float)
+        ext_free_gpu = ext_gpu_cap.copy()
+        ext_free_cpu = ext_cpu_cap.copy()
+        ext_total_free_gpu = int(ext_free_gpu.sum())
+    else:
+        ext_total_free_gpu = 0
+
+    total_free_gpu = free_low + free_std + ext_total_free_gpu
+
+    def can_and_place(j):
+        nonlocal free_low, free_std, ext_total_free_gpu, total_free_gpu
+        w = int(worker_nums[j])
+        c = float(cpu_reqs[j])
+        if w > total_free_gpu:
+            return None
+        # Check how many workers can go on base A10 nodes first (prefer native A10 when free, or if kappa_mig > 1 prefer MIG for long jobs? Prefer native A10 first, then MIG/overflow!)
+        avail_base = (free_low + free_std) if c <= 126.0 else free_std
+        if avail_base >= w:
+            take_low = min(w, free_low) if c <= 126.0 else 0
+            take_std = w - take_low
+            free_low -= take_low
+            free_std -= take_std
+            total_free_gpu -= w
+            return (take_low, take_std, None, 1.0)
+        
+        if n_ext == 0:
+            return None
+            
+        rem_w = w - avail_base
+        if ext_total_free_gpu < rem_w:
+            return None
+        if c > 0:
+            max_w_ext = np.minimum(ext_free_gpu, ((ext_free_cpu + 1e-9) // c).astype(int))
+        else:
+            max_w_ext = ext_free_gpu
+        if max_w_ext.sum() < rem_w:
+            return None
+            
+        # Commit base A10 nodes
+        take_low = free_low if c <= 126.0 else 0
+        take_std = avail_base - take_low
+        free_low -= take_low
+        free_std -= take_std
+        total_free_gpu -= avail_base
+        
+        # Commit ext nodes (pack tightly onto nodes with fewer free GPUs)
+        cand = np.flatnonzero(max_w_ext > 0)
+        order = cand[np.argsort(ext_free_gpu[cand])]
+        ext_alloc = []
+        for idx in order:
+            take = min(rem_w, int(max_w_ext[idx]))
+            ext_free_gpu[idx] -= take
+            ext_free_cpu[idx] -= take * c
+            ext_total_free_gpu -= take
+            total_free_gpu -= take
+            ext_alloc.append((int(idx), take))
+            rem_w -= take
+            if rem_w == 0:
+                break
+        # Effective speedup if placed on MIG/overflow
+        eff_kappa = kappa_mig if avail_base == 0 else 1.0
+        return (take_low, take_std, ext_alloc, eff_kappa)
+
+    def release_resources(j, alloc):
+        nonlocal free_low, free_std, ext_total_free_gpu, total_free_gpu
+        c = float(cpu_reqs[j])
+        take_low, take_std, ext_alloc, _ = alloc
+        free_low += take_low
+        free_std += take_std
+        total_free_gpu += (take_low + take_std)
+        if ext_alloc is not None:
+            for idx, take in ext_alloc:
+                ext_free_gpu[idx] += take
+                ext_free_cpu[idx] = min(ext_cpu_cap[idx], ext_free_cpu[idx] + take * c)
+                ext_total_free_gpu += take
+                total_free_gpu += take
+
+    start_times = np.zeros(n_jobs, dtype=float)
+    finish_times = np.zeros(n_jobs, dtype=float)
+    running_heap = []
+    next_arr_idx = 0
+    cur_t = 0.0
+
+    in_queue = np.zeros(n_jobs, dtype=bool)
+    wait_queue = deque()
+    normal_heap = []
+    arrival_heap = []
+    n_waiting = 0
+    T_cap_sec = T_cap_hours * 3600.0
+
+    while next_arr_idx < n_jobs or n_waiting > 0 or running_heap:
+        if next_arr_idx < n_jobs and submit_times[next_arr_idx] <= cur_t:
+            pass
+        else:
+            next_t = float('inf')
+            if running_heap:
+                next_t = min(next_t, running_heap[0][0])
+            if next_arr_idx < n_jobs:
+                if total_free_gpu == 0 and running_heap:
+                    next_t = running_heap[0][0]
+                else:
+                    next_t = min(next_t, submit_times[next_arr_idx])
+            if next_t == float('inf'):
+                break
+            cur_t = max(cur_t, next_t)
+
+        while running_heap and running_heap[0][0] <= cur_t + 1e-9:
+            fin_t, j_done, alloc = heapq.heappop(running_heap)
+            cur_t = max(cur_t, fin_t)
+            release_resources(j_done, alloc)
+
+        while next_arr_idx < n_jobs and submit_times[next_arr_idx] <= cur_t + 1e-9:
+            j = next_arr_idx
+            in_queue[j] = True
+            n_waiting += 1
+            if policy == 'FCFS-FF':
+                wait_queue.append(j)
+            elif policy == 'SAF-BF':
+                heapq.heappush(normal_heap, (volumes[j], durations[j], j))
+            else: # AMBF
+                prio = (volumes[j] ** 0.7) - 0.01 * submit_times[j]
+                heapq.heappush(normal_heap, (prio, durations[j], j))
+                heapq.heappush(arrival_heap, (submit_times[j], j))
+            next_arr_idx += 1
+
+        if n_waiting == 0 or total_free_gpu == 0:
+            continue
+
+        if policy == 'FCFS-FF':
+            while wait_queue and total_free_gpu > 0:
+                j_head = wait_queue[0]
+                alloc = can_and_place(j_head)
+                if alloc is not None:
+                    wait_queue.popleft()
+                    in_queue[j_head] = False
+                    n_waiting -= 1
+                    eff_dur = durations[j_head] / alloc[3]
+                    start_times[j_head] = cur_t
+                    finish_times[j_head] = cur_t + eff_dur
+                    heapq.heappush(running_heap, (finish_times[j_head], j_head, alloc))
+                else:
+                    break
+        else:
+            popped_blocked = []
+            while n_waiting > 0 and total_free_gpu > 0:
+                use_urgent = False
+                if policy.startswith('AMBF'):
+                    while arrival_heap and not in_queue[arrival_heap[0][1]]:
+                        heapq.heappop(arrival_heap)
+                    if arrival_heap and (cur_t - arrival_heap[0][0] >= T_cap_sec):
+                        use_urgent = True
+                if use_urgent:
+                    arr_t, j_cand = heapq.heappop(arrival_heap)
+                    alloc = can_and_place(j_cand)
+                    if alloc is not None:
+                        in_queue[j_cand] = False
+                        n_waiting -= 1
+                        eff_dur = durations[j_cand] / alloc[3]
+                        start_times[j_cand] = cur_t
+                        finish_times[j_cand] = cur_t + eff_dur
+                        heapq.heappush(running_heap, (finish_times[j_cand], j_cand, alloc))
+                    else:
+                        heapq.heappush(arrival_heap, (arr_t, j_cand))
+                        break
+                else:
+                    while normal_heap and not in_queue[normal_heap[0][2]]:
+                        heapq.heappop(normal_heap)
+                    if not normal_heap:
+                        break
+                    prio, dur, j_cand = heapq.heappop(normal_heap)
+                    alloc = can_and_place(j_cand)
+                    if alloc is not None:
+                        in_queue[j_cand] = False
+                        n_waiting -= 1
+                        eff_dur = durations[j_cand] / alloc[3]
+                        start_times[j_cand] = cur_t
+                        finish_times[j_cand] = cur_t + eff_dur
+                        heapq.heappush(running_heap, (finish_times[j_cand], j_cand, alloc))
+                    else:
+                        popped_blocked.append((prio, dur, j_cand))
+                        if len(popped_blocked) >= 30:
+                            break
+            for item in popped_blocked:
+                heapq.heappush(normal_heap, item)
+
+    wait_times = start_times - submit_times
+    s_clip = np.clip(start_times, 0.0, HORIZON)
+    f_clip = np.clip(finish_times, 0.0, HORIZON)
+    dur_in_horizon = np.maximum(0.0, f_clip - s_clip)
+    used_gpu_sec = np.sum(dur_in_horizon * worker_nums)
+    tot_vgpu_cap = 2494 + (M_mig_nodes * 8 * m_slices) + (extra_overflow_nodes * 8)
+    avail_gpu_sec = float(tot_vgpu_cap) * HORIZON
+
+    return {
+        'M_mig_nodes': M_mig_nodes,
+        'm_slices': m_slices,
+        'extra_overflow_nodes': extra_overflow_nodes,
+        'kappa_mig': kappa_mig,
+        'policy': policy,
+        'tot_vgpu_cap': tot_vgpu_cap,
+        'mean_wait_hr': np.mean(wait_times) / 3600.0,
+        'median_wait_sec': np.median(wait_times),
+        'p95_wait_hr': np.percentile(wait_times, 95) / 3600.0,
+        'max_wait_hr': np.max(wait_times) / 3600.0,
+        'gpu_util_pct': used_gpu_sec / avail_gpu_sec * 100.0,
+        'completed_90d': int(np.sum(finish_times <= HORIZON)),
+        'makespan_days': np.max(finish_times) / 86400.0,
+        'wall_sec': time.time() - t0_wall
+    }
+
+a10_jobs = job_df[job_df['gpu_model']=='A10']
+print("=== RUNNING FAST Q3 EXPERIMENTS ON A10 ===")
+q3_rows = []
+configs = [
+    # Baseline (Isolated A10)
+    (0, 1, 0, 1.0, 'FCFS-FF', 'Baseline: Isolated + FCFS-FF'),
+    (0, 1, 0, 1.0, 'AMBF-1350', 'Alg-Only: Isolated + AMBF'),
+    # Method 3A: Cross-GPU Elastic Overflow (e.g. 90 idle A100/GS2/H800 8-GPU nodes = 720 physical GPUs dynamically lent to A10)
+    (0, 1, 90, 1.0, 'AMBF-1350', '3A-1: Cross-Pool Overflow (720 GPUs, kappa=1.0)'),
+    (0, 1, 90, 1.45, 'AMBF-1350', '3A-2: Cross-Pool Overflow (720 GPUs, kappa=1.45)'),
+    (0, 1, 140, 1.45, 'AMBF-1350', '3A-3: Multi-Pool Overflow (1120 GPUs, kappa=1.45)'),
+    # Method 3B: NVIDIA MIG Hardware Partitioning on A100 nodes (M=48, 64, 72 nodes with m=2 '3g.40gb' or m=3 '2g.20gb')
+    (48, 2, 0, 1.0, 'AMBF-1350', '3B-1: MIG-2x on 48 A100 Nodes (+768 vGPUs)'),
+    (64, 2, 0, 1.0, 'AMBF-1350', '3B-2: MIG-2x on 64 A100 Nodes (+1024 vGPUs)'),
+    (72, 2, 0, 1.0, 'AMBF-1350', '3B-3: MIG-2x on 72 A100 Nodes (+1152 vGPUs)'),
+    (64, 3, 0, 1.0, 'AMBF-1350', '3B-4: MIG-3x on 64 A100 Nodes (+1536 vGPUs)'),
+    (72, 3, 0, 1.0, 'AMBF-1350', '3B-5: MIG-3x on 72 A100 Nodes (+1728 vGPUs)'),
+    # Method 3D: Hybrid MIG-2x (64 A100 nodes = +1024 vGPUs) + Dynamic Elastic Overflow (60 nodes = +480 GPUs, kappa=1.2)
+    (64, 2, 60, 1.2, 'AMBF-1350', '3D: Hybrid MIG-2x (64N) + Elastic Overflow (60N)')
+]
+
+for M_mig, m_sl, ext_ov, kap, pol, label in configs:
+    r = simulate_a10_with_mig_or_overflow(a10_jobs, M_mig, m_sl, ext_ov, kap, pol)
+    r['label'] = label
+    q3_rows.append(r)
+    print(f"{label:48s} | vGPUs={r['tot_vgpu_cap']:4d} | MeanW={r['mean_wait_hr']:6.2f}h | MedW={r['median_wait_sec']:6.1f}s | P95W={r['p95_wait_hr']:6.2f}h | MaxW={r['max_wait_hr']:6.1f}h | Util={r['gpu_util_pct']:5.2f}% | Comp90d={r['completed_90d']:6d} | Mk={r['makespan_days']:5.1f}d ({r['wall_sec']:.2f}s)")
+
+pd.DataFrame(q3_rows).to_csv("artifacts/file_generation/ttl=63d/intermediate/q3_technical_results.csv", index=False)

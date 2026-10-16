@@ -1,0 +1,93 @@
+{
+  "kind": "q3_fixed_split_v1",
+  "scope": "full_trace",
+  "configuration": {
+    "donor_nodes": 60,
+    "route_numerator": 1,
+    "route_denominator": 10,
+    "compatibility": true,
+    "sigma": 1,
+    "horizon_seconds": 7776000,
+    "hash_namespace": "q3-fixed-split-v1"
+  },
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "jobs": 224112,
+  "nodes": 4278,
+  "git_commit": "7075317883808b1cd7f80cadf3980be291c69cf0",
+  "git_dirty": true,
+  "source_sha256": {
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/audit.py": "2f61b263ed04836fe8e838c610bff36d3b332d1149c6597f2f24f20613978d11",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py": "ec39507f869fbbf63a4d57cb488ad9d63f0e2a4c9d62c51a6d971d437da4f6be",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py": "894a68f2614f3436d471764c048e2e6c6dec345b0efefc35e355aa56aa3a6850",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "08ecbf3f84a7c8e5183f1629cca655ababf9c2345125620be38282ce1c564c51",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1_publication.py": "eeed466922d995abe3251e25f4c4e583028deae72d2d58473bec21e9b42df942",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3.py": "a8b95271b5cc5ac1a2a93be39598d73f979f66116a661a9fd0f196ebb9bb84d2",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3_validation.py": "fb3f9a1d678f06d7a8ae1ef0863b5ecbd85aea3471512ee2bbd4e93a8b3d343b",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "75b864ce6be98f08de17da5f1403afc812259181f251c7de5790101cc9a077d8",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": "0196485c89674150b9baccf06c51c210ffedc8df3f26b7274f119523125642da",
+    "problems/2026_gpu_scheduling/experiments/build_paper.py": "489803040431cbc5a0bf1121ec91b9d081b80c92c9836715f9dc04404b6e75e2",
+    "problems/2026_gpu_scheduling/experiments/eda_analysis.py": "0cb89eb7eb9b62ad1249dba5892b1aeeceb9abacd0bbe1ca7d65f8088228d9ab",
+    "problems/2026_gpu_scheduling/experiments/eda_deep.py": "05f0aa3a00ea63fd6f5afb8dd333143e9c730bb18a1c8775de3c6e120bc2a16f",
+    "problems/2026_gpu_scheduling/experiments/generate_figures.py": "c09623da50d96a3eb8bfe60061c81cb8185b1acd17be8b4f40869114664a26e1",
+    "problems/2026_gpu_scheduling/experiments/make_figures.py": "c235250c0c4a9042571324620d495af44dd014bbc6c0cb342298a7efe4509d44",
+    "problems/2026_gpu_scheduling/experiments/run_baselines.py": "f64ff84ceb5197b50429b3ecaffcc22da61366d783d6f699bce1492aca86af61",
+    "problems/2026_gpu_scheduling/experiments/run_q3_fixed_split.py": "7b93b39f058d498e8121e4c5de84f663b71005044cc3c8dac134754772a92f5a",
+    "problems/2026_gpu_scheduling/experiments/verify_baseline.py": "a722c0528447053e4e3c6e2b856d38edd1aca11aa3777798b4beef3c684341be",
+    "problems/2026_gpu_scheduling/experiments/verify_intake.py": "d3537b5fb67f95507f62f179663538b06a276dd55ba489f9525a68b901491f08",
+    "problems/2026_gpu_scheduling/experiments/verify_q1.py": "7e6c2ee6555d6a847b8a9d0d462a4919a04377c7d87a55d2e4d796cb930e6187",
+    "problems/2026_gpu_scheduling/experiments/verify_q3_fixed_split.py": "ba8a526d31a1ad936146290b648605b2046414bf2c9497a62f083058f2c5aeb4",
+    "problems/2026_gpu_scheduling/tests/test_baseline.py": "5f79a19d8b0f80bb5e4b4740da82945af19050cecfeb2693593be6b11819c1c8",
+    "problems/2026_gpu_scheduling/tests/test_baseline_cli.py": "4f153559907b33176abb5a9732f7e8215de04144b028b92ae438d35a2f3eb062",
+    "problems/2026_gpu_scheduling/tests/test_intake_contracts.py": "2c9565556f586237601ce460cdc1894bcd044ffabe864c00740e4783fe47d254",
+    "problems/2026_gpu_scheduling/tests/test_q1.py": "afb9f1e04b91d98f3c5721cf696535dd852464b63c2419b48b39d7371ef83d43",
+    "problems/2026_gpu_scheduling/tests/test_q1_delivery.py": "ad60668f361a3d392f9c28ace3c9112ace5714130b64abf7d4c5891c6d44ab4c",
+    "problems/2026_gpu_scheduling/tests/test_q3.py": "2b0985ee7c971d43e12e2839c2ed291e217bab1736ee8adc2f34fde6258f901e",
+    "problems/2026_gpu_scheduling/docs/q3_model.md": "8ddf78bf1c0214f76242ba7b3f5a4ad87fcaeedc2a50ee51b5e16fe684a2789e"
+  },
+  "command": [
+    "problems/2026_gpu_scheduling/experiments/run_q3_fixed_split.py",
+    "--out",
+    "outputs/b-q3-fixed-split-v1-final",
+    "--historical-baseline",
+    "/home/shiuhou/math_modeling-b-intake-ready/outputs/b-intake-full-final"
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "status": "PASS",
+  "durations_seconds": {
+    "FCFS": 55.35993927399977,
+    "SJF-HOL": 62.62743644102011
+  },
+  "outputs": {
+    "config.json": "cdce724b8bf028cb67b2850f34a00dd6ac41d53de4d20ad83faeb85b4269d65f",
+    "recovery.json": "5cd4adeec4e485a9ce444cb1462d0ce7876b735d673d9ce5fb90ea40d1ad677a",
+    "FCFS_M0_placements.csv.gz": "4084ce697ceb617f8d3ae7bf50004f4d7f1e2a3ecf26d0ec841b680238ff91cf",
+    "SJF-HOL_M0_jobs.csv.gz": "d20208c418682d567bef7b55ff86aaec0bcd1e08635f4ee52f54949d503d2b75",
+    "SJF-HOL_M0_placements.csv.gz": "292ecd954662bb37e2bd02b4bd923896a6d95c80f6266c704334904bf9ed15cd",
+    "FCFS_M1_placements.csv.gz": "12d977e19fd7d23379f5e34156ebdc38b099682b873297c05e4ca7eb1661cddc",
+    "SJF-HOL_M1_jobs.csv.gz": "eb84592e486db524254757373ecb1ed9133d91b4c15847a2d61b3e29446b1133",
+    "FCFS_M0_jobs.csv.gz": "fb16c68dee54c3c9ffbeb041cffd4c1a7f7ed428eab3e48d12b5125d4c891a22",
+    "SJF-HOL_M1_placements.csv.gz": "96503934932e5eacba53f41a658df8f3b09a9b105153f9ac13ad4d3706a6c1ee",
+    "FCFS_M1_jobs.csv.gz": "d996d7912ad5c92048946af22eb9b3dff69b0efa4ee9a4a59c0a652dc8cef77d",
+    "metrics.json": "bccc58ab91c33b150499062e9c802331692de43ef1382ccde81d55fac58ec10b"
+  },
+  "historical_sha256": {
+    "SJF-HOL_job_times.csv.gz": "7932833fd36a4dd28182f5a69bd751ba6687eca5e0659819cc6666a4c87a3420",
+    "baseline_metrics.json": "1f85b42bd5424600b7588411b6f318ffce2d7fd53c532356e8257ccf3a293b30",
+    "data_audit.json": "287ada2369f22468b2c60fc0020ba4ea5acb6af9fdc2bddd6d7e372b742a0e27",
+    "SJF-HOL_node_placements.csv.gz": "9fb681975af86bc05dcec45cc36e111b205da2f7db3b786526c86131ad332436",
+    "FCFS_node_placements.csv.gz": "d0ef6f4dc513b8c1348d3d82f6b82dc3972a9a45ea0e2aa756ec6eb2bdab02a9",
+    "FCFS_job_times.csv.gz": "212741fe2e7d52743a1fc2aff242e24cafacf19fbadbb35d52a5cb6b7a212cd6",
+    "run.json": "ff4c8ce8cad47928f8b7ba03d6bd0bedd435233b8e5316a7fd919fd47bd69e6c"
+  },
+  "total_seconds": 118.15933347700047
+}

@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "body_table_captions_pdf_pt": 11.059,
+  "horizontal_plot_text_pdf_pt": 11.213,
+  "exceptions": "TeX math glyphs 10.909 pt; subscripts/superscripts smaller. Rotated glyph bounding-box sizes are not font sizes.",
+  "no_out_of_page_chars": true,
+  "pages": [
+    {
+      "page": 1,
+      "fonts": {
+        "('IHAIZV+CharterBT-Roman', 11.059)": 1744,
+        "('BZIVMZ+CharterBT-Bold', 14.346)": 50,
+        "('BZIVMZ+CharterBT-Bold', 11.955)": 47,
+        "('IXFAWU+CMMI10', 10.909)": 58,
+        "('TQTHRL+CMMI8', 7.97)": 38,
+        "('YEUUOC+CMR10', 10.909)": 35,
+        "('AKHCZK+CMSY10', 10.909)": 8,
+        "('BMQQDV+DejaVuSans', 11.213)": 172,
+        "('BMQQDV+DejaVuSans', 8.69)": 1,
+        "('BMQQDV+DejaVuSans', 6.762)": 2,
+        "('BMQQDV+DejaVuSans', 8.208)": 1,
+        "('BMQQDV+DejaVuSans', 3.566)": 4,
+        "('BMQQDV+DejaVuSans', 9.173)": 1,
+        "('BMQQDV+DejaVuSans', 6.863)": 2,
+        "('BMQQDV+DejaVuSans', 4.609)": 2,
+        "('BMQQDV+DejaVuSans', 6.493)": 1,
+        "('BMQQDV+DejaVuSans', 4.373)": 4,
+        "('BMQQDV+DejaVuSans', 10.653)": 1,
+        "('BMQQDV+DejaVuSans', 7.849)": 14,
+        "('BMQQDV+DejaVuSans', 7.12)": 2,
+        "('BMQQDV+DejaVuSans', 7.109)": 2,
+        "('BMQQDV+DejaVuSans', 6.874)": 1,
+        "('BMQQDV+DejaVuSans', 4.396)": 1,
+        "('BMQQDV+DejaVuSans', 3.117)": 1,
+        "('BMQQDV+DejaVuSans', 9.397)": 1,
+        "('VDVGTR+CMR8', 7.97)": 13,
+        "('CAFSZL+CMEX10', 11.059)": 6,
+        "('DDIEWW+CMSY8', 7.97)": 10,
+        "('FKPJSN+CMMI6', 5.978)": 5,
+        "('PVTTLK+CMBX10', 10.909)": 1
+      }
+    },
+    {
+      "page": 2,
+      "fonts": {
+        "('IHAIZV+CharterBT-Roman', 11.059)": 1939,
+        "('IXFAWU+CMMI10', 10.909)": 7,
+        "('VDVGTR+CMR8', 7.97)": 6,
+        "('BMQQDV+DejaVuSans', 11.213)": 94,
+        "('BMQQDV+DejaVuSans', 8.69)": 1,
+        "('BMQQDV+DejaVuSans', 6.762)": 1,
+        "('BMQQDV+DejaVuSans', 8.208)": 1,
+        "('BMQQDV+DejaVuSans', 5.842)": 1,
+        "('TQTHRL+CMMI8', 7.97)": 1,
+        "('YEUUOC+CMR10', 10.909)": 26,
+        "('BZIVMZ+CharterBT-Bold', 11.955)": 23
+      }
+    }
+  ]
+}

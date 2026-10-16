@@ -1,0 +1,13 @@
+PASS FCFS/A10: 64 jobs, independent node replay
+PASS FCFS/A100-SXM4-80GB: 64 jobs, independent node replay
+PASS FCFS/A800-SXM4-80GB: 64 jobs, independent node replay
+PASS FCFS/GPU-series-1: 64 jobs, independent node replay
+PASS FCFS/GPU-series-2: 64 jobs, independent node replay
+PASS FCFS/H800: 64 jobs, independent node replay
+PASS SJF-HOL/A10: 64 jobs, independent node replay
+PASS SJF-HOL/A100-SXM4-80GB: 64 jobs, independent node replay
+PASS SJF-HOL/A800-SXM4-80GB: 64 jobs, independent node replay
+PASS SJF-HOL/GPU-series-1: 64 jobs, independent node replay
+PASS SJF-HOL/GPU-series-2: 64 jobs, independent node replay
+PASS SJF-HOL/H800: 64 jobs, independent node replay
+Wrote smoke_first_64_per_model baseline outputs to outputs/b-smoke-01

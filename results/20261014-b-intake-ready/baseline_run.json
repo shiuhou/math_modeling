@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "kind": "baseline_run",
+  "scope": "full_trace",
+  "code": {
+    "commit": "5c933187d3d82d3a3ad8d6225946f32657fcbeff",
+    "dirty": true,
+    "sha256": {
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/audit.py": "2f61b263ed04836fe8e838c610bff36d3b332d1149c6597f2f24f20613978d11",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py": "ec39507f869fbbf63a4d57cb488ad9d63f0e2a4c9d62c51a6d971d437da4f6be",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py": "894a68f2614f3436d471764c048e2e6c6dec345b0efefc35e355aa56aa3a6850",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "23c6afa8cd8e27e8bdbb73e2a4eb694998d4e72e0fb65c9e41bafa0958fa6d49",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "75b864ce6be98f08de17da5f1403afc812259181f251c7de5790101cc9a077d8",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": "0196485c89674150b9baccf06c51c210ffedc8df3f26b7274f119523125642da",
+      "problems/2026_gpu_scheduling/experiments/run_baselines.py": "f64ff84ceb5197b50429b3ecaffcc22da61366d783d6f699bce1492aca86af61"
+    },
+    "snapshot": "source/"
+  },
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "raw_jobs": 224112,
+  "scheduled_jobs": 224112,
+  "configuration": {
+    "horizon_seconds": 7775878,
+    "policies": [
+      "FCFS",
+      "SJF-HOL"
+    ],
+    "audit_only": false,
+    "cpu_scale": 100,
+    "placement": "first-fit by ascending node_name",
+    "events": "all completions, then arrivals, then scheduling; half-open allocation intervals"
+  },
+  "command": [
+    "python",
+    "problems/2026_gpu_scheduling/experiments/run_baselines.py",
+    "--out",
+    "outputs/b-intake-full-final"
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "validation": {
+    "data_accounting": "PASS",
+    "capacity_replay": "PASS",
+    "persisted_replay": "NOT_RUN"
+  },
+  "duration_seconds": 29.471575589006534,
+  "outputs": {
+    "SJF-HOL_job_times.csv.gz": "7932833fd36a4dd28182f5a69bd751ba6687eca5e0659819cc6666a4c87a3420",
+    "baseline_metrics.json": "1f85b42bd5424600b7588411b6f318ffce2d7fd53c532356e8257ccf3a293b30",
+    "data_audit.json": "287ada2369f22468b2c60fc0020ba4ea5acb6af9fdc2bddd6d7e372b742a0e27",
+    "SJF-HOL_node_placements.csv.gz": "9fb681975af86bc05dcec45cc36e111b205da2f7db3b786526c86131ad332436",
+    "FCFS_node_placements.csv.gz": "d0ef6f4dc513b8c1348d3d82f6b82dc3972a9a45ea0e2aa756ec6eb2bdab02a9",
+    "FCFS_job_times.csv.gz": "212741fe2e7d52743a1fc2aff242e24cafacf19fbadbb35d52a5cb6b7a212cd6"
+  }
+}

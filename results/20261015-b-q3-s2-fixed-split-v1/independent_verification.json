@@ -1,0 +1,189 @@
+{
+  "status": "PASS",
+  "checks": {
+    "S1_FCFS": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 317149,
+        "donor_nodes": 60,
+        "borrowed_gpu_cap": 480,
+        "queue_integral_job_seconds": 281463096524,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S1_SJF-HOL": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 315986,
+        "donor_nodes": 60,
+        "borrowed_gpu_cap": 480,
+        "queue_integral_job_seconds": 10164595454,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S2_FCFS": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 316959,
+        "donor_nodes": 60,
+        "borrowed_gpu_cap": 480,
+        "queue_integral_job_seconds": 404688536450,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S2_SJF-HOL": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 315803,
+        "donor_nodes": 60,
+        "borrowed_gpu_cap": 480,
+        "queue_integral_job_seconds": 8854493581,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S3_FCFS": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 317087,
+        "donor_nodes": 30,
+        "borrowed_gpu_cap": 240,
+        "queue_integral_job_seconds": 367138851017,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S3_SJF-HOL": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 315942,
+        "donor_nodes": 30,
+        "borrowed_gpu_cap": 240,
+        "queue_integral_job_seconds": 10259528506,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S4_FCFS": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 317048,
+        "donor_nodes": 90,
+        "borrowed_gpu_cap": 720,
+        "queue_integral_job_seconds": 216006977001,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S4_SJF-HOL": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 315485,
+        "donor_nodes": 90,
+        "borrowed_gpu_cap": 720,
+        "queue_integral_job_seconds": 7720719468,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S5_FCFS": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 317107,
+        "donor_nodes": 60,
+        "borrowed_gpu_cap": 480,
+        "queue_integral_job_seconds": 289155441237,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    },
+    "S5_SJF-HOL": {
+      "status": "PASS",
+      "schedule": {
+        "status": "PASS",
+        "original_jobs": 224112,
+        "native_A100_jobs": 80877,
+        "placements": 315961,
+        "donor_nodes": 60,
+        "borrowed_gpu_cap": 480,
+        "queue_integral_job_seconds": 10075720798,
+        "physical_node_replay": "PASS",
+        "routing_from_raw": "PASS",
+        "job_identity_and_attributes": "PASS",
+        "resource_work_identity": "PASS"
+      },
+      "metrics": "PASS",
+      "paired": "PASS"
+    }
+  },
+  "routing_subset": "PASS",
+  "donor_prefixes": "PASS",
+  "sigma_semantics": "PASS",
+  "seconds": 152.50694000298972
+}

@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "baseline": "PASS",
+  "baseline_scope": "full trace, two policies, 224112 jobs each; independent persisted node/metric replay",
+  "fresh_clone": "PASS",
+  "paper_compile": "PASS",
+  "q2_improved_policies": "NOT_RUN",
+  "q3_experiments": "NOT_RUN",
+  "large_outputs": "Ignored outputs/b-intake-full-final; reproduce with README command. All required data and code are Git-contained.",
+  "source_resolution": "Every baseline source byte hash and archived original byte hash matches validated_source_commit and the clean clone; later acceptance commit only adds evidence.",
+  "repo_checks": "PASS",
+  "root_tests": {
+    "status": "PASS",
+    "count": 12
+  },
+  "problem_tests": {
+    "status": "PASS",
+    "count": 14
+  },
+  "source_traceability": "PASS",
+  "raw_unchanged": "PASS",
+  "paper_pages": 9,
+  "paper_page_limit": "PASS",
+  "paper_submission_format": "NOT_RUN; archived wide tables below 11pt, names/disclosure pending",
+  "kind": "engineering_acceptance",
+  "validated_source_commit": "2cbb000e135158ff9436c66b09a54b0f591ac7e6",
+  "git_diff_check": "PASS",
+  "main": "Unchanged",
+  "branch_base": "feat/b-q2 and feat/b-q3 will share the final evidence commit",
+  "scope": "Cloneable research foundation; not final Q2/Q3 research or submission-ready paper"
+}

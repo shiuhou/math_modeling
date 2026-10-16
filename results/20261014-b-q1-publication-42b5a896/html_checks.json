@@ -1,0 +1,50 @@
+[
+  {
+    "file": "q1_zh.html",
+    "status": "PASS",
+    "offline": true,
+    "images": [
+      {
+        "src": "figures/fig1_data_patterns.png",
+        "loaded": true
+      },
+      {
+        "src": "figures/fig1_demand.png",
+        "loaded": true
+      }
+    ],
+    "local_links_checked": 2,
+    "errors": [],
+    "unresolved_tokens": 0
+  },
+  {
+    "file": "supplementary.html",
+    "status": "PASS",
+    "offline": true,
+    "images": [
+      {
+        "src": "figures/supplement_model_distributions.png",
+        "loaded": true
+      },
+      {
+        "src": "figures/supplement_supply_shares.png",
+        "loaded": true
+      },
+      {
+        "src": "figures/supplement_daily_arrivals_work.png",
+        "loaded": true
+      },
+      {
+        "src": "figures/supplement_relative_phase.png",
+        "loaded": true
+      },
+      {
+        "src": "figures/supplement_resource_shape.png",
+        "loaded": true
+      }
+    ],
+    "local_links_checked": 23,
+    "errors": [],
+    "unresolved_tokens": 0
+  }
+]

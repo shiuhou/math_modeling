@@ -1,0 +1,52 @@
+import sys
+sys.path.append("/tmp")
+import pandas as pd
+import numpy as np
+from q3_helper import simulate_a10_with_mig_or_overflow
+
+job_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/job_info_clean.csv")
+a10_jobs = job_df[job_df['gpu_model']=='A10'].sort_values(['submit_time', 'job_name']).reset_index(drop=True)
+np.random.seed(42)
+
+p_base = 1.00 # $/GPU-hr for A10
+p_alt_raw = 2.40 # weighted average $/GPU-hr of alternative high-end pool adjusted for speedup/slice
+beta_price = 2.2 # price sensitivity
+
+fin_rows = []
+for delta, surcharge, desc in [
+    (0.00, 0.00, "No Pricing Incentive (delta=0%, s=0%)"),
+    (0.25, 0.00, "Mild Discount (delta=25%, s=0%)"),
+    (0.40, 0.00, "Moderate Discount (delta=40%, s=0%)"),
+    (0.50, 0.10, "Peak-Valley Pricing (delta=50%, s=10%)"),
+    (0.60, 0.15, "Aggressive Congestion Pricing (delta=60%, s=15%)")
+]:
+    p_a10_eff = p_base * (1.0 + surcharge)
+    p_alt_eff = p_alt_raw * (1.0 - delta)
+    dur_hrs = a10_jobs['duration'].values / 3600.0
+    # Delay sensitivity: flexible users value avoiding queue congestion
+    delay_val = 0.90 / (1.0 + dur_hrs / 120.0)
+    utility_diff = delay_val - beta_price * (p_alt_eff - p_a10_eff)
+    prob_switch = 0.65 / (1.0 + np.exp(-utility_diff)) if delta > 0 else np.zeros(len(a10_jobs))
+    
+    switched_mask = (np.random.rand(len(a10_jobs)) < prob_switch)
+    rem_a10_jobs = a10_jobs[~switched_mask].copy()
+    sw_a10_jobs = a10_jobs[switched_mask].copy()
+    
+    res_rem = simulate_a10_with_mig_or_overflow(rem_a10_jobs, M_mig_nodes=0, m_slices=1, extra_overflow_nodes=0, kappa_mig=1.0, policy='AMBF-1350')
+    
+    n_tot = len(a10_jobs)
+    n_sw = int(switched_mask.sum())
+    sw_gh = (sw_a10_jobs['worker_num'] * sw_a10_jobs['duration'] / 3600.0).sum()
+    rem_gh = (rem_a10_jobs['worker_num'] * rem_a10_jobs['duration'] / 3600.0).sum()
+    
+    comb_mean_wait = res_rem['mean_wait_hr'] * (1.0 - n_sw / n_tot)
+    rev_million = (rem_gh * p_a10_eff + sw_gh * p_alt_eff) / 1e6
+    print(f"{desc:48s} | SwitchJobs={n_sw/n_tot*100:5.1f}% | SwitchGPUhr={sw_gh/(sw_gh+rem_gh)*100:5.1f}% | A10 Comb MeanW={comb_mean_wait:6.2f}h | RemP95W={res_rem['p95_wait_hr']:6.2f}h | A10 Util={res_rem['gpu_util_pct']:5.2f}% | Rev=${rev_million:5.2f}M")
+    fin_rows.append({
+        'desc': desc, 'delta': delta, 'surcharge': surcharge,
+        'switch_job_pct': n_sw/n_tot*100, 'switch_gh_pct': sw_gh/(sw_gh+rem_gh)*100,
+        'comb_mean_wait_hr': comb_mean_wait, 'rem_p95_wait_hr': res_rem['p95_wait_hr'],
+        'a10_util_pct': res_rem['gpu_util_pct'], 'rev_million': rev_million
+    })
+
+pd.DataFrame(fin_rows).to_csv("artifacts/file_generation/ttl=63d/intermediate/q3_financial_results.csv", index=False)

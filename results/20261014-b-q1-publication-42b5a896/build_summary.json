@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "scope": "full",
+  "created_at_utc": "2026-10-14T11:46:01.374829+00:00",
+  "code": {
+    "commit": "00f6f5753b7c6870a524810589c8d190a6892991",
+    "dirty": false,
+    "sha256": {
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "a6f982f412fce33cf91fadef305abc2299d0c76df1aec93f2e845aa1beb0da21",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/q1_publication.py": "444fa7240f6675e7064d4d12ae47c415b3d54f5707218cecca3a46094660496b",
+      "problems/2026_gpu_scheduling/experiments/build_paper.py": "7f9ad69acf0db0f32aaaf195ce4dde774502ea0418d191d60deaaf8aca5ada01",
+      "problems/2026_gpu_scheduling/experiments/generate_figures.py": "c09623da50d96a3eb8bfe60061c81cb8185b1acd17be8b4f40869114664a26e1",
+      "problems/2026_gpu_scheduling/experiments/eda_analysis.py": "0cb89eb7eb9b62ad1249dba5892b1aeeceb9abacd0bbe1ca7d65f8088228d9ab",
+      "problems/2026_gpu_scheduling/experiments/eda_deep.py": "05f0aa3a00ea63fd6f5afb8dd333143e9c730bb18a1c8775de3c6e120bc2a16f",
+      "problems/2026_gpu_scheduling/experiments/verify_q1.py": "7e6c2ee6555d6a847b8a9d0d462a4919a04377c7d87a55d2e4d796cb930e6187",
+      "problems/2026_gpu_scheduling/paper/preamble.tex": "d2cefbf397a784b54d1cabe080d52fc7f2026bb278d203e63b749c2bf89d1f2a",
+      "problems/2026_gpu_scheduling/paper/document_en.tex": "9058153322be91e91d4dcaa0b3d649874d9ea44bc21bd6df1f9f3588b92b50b4",
+      "problems/2026_gpu_scheduling/paper/q1_section.tex": "c579a432ca67011b2e2a9f35e39cf18a10d8f58705b4eb759c889a7b7ee8a823",
+      "problems/2026_gpu_scheduling/paper/q1_summary.tex": "e57935f89ac6f33dcf373df86c08c5cff2dd1edd01aaa7af0e1123665ba43e1f",
+      "problems/2026_gpu_scheduling/paper/q1_zh.html": "ca2dcfee02baeebd71a544cb9d436669a6f820ad21f346a1c43f855c1b27636a",
+      "problems/2026_gpu_scheduling/requirements.txt": "dbe08f50f6124e5037ffc570e9bdf53ec5fef0e80e3506f9ec02b3c5d43f134c",
+      "problems/2026_gpu_scheduling/tests/test_q1.py": "e082fd46a0fc68ee3b9ed8a11d0bcea9e7990e0a5804bd188ea171dde2ca16ec"
+    },
+    "snapshot": "source/ (all participating Q1 sources, including dirty changes)"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "matplotlib": "3.10.8",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "compiler": "Tectonic 0.17.0",
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "duration_seconds": 5.76882745900366,
+  "q1_build": {
+    "status": "PASS",
+    "command": [
+      "tectonic",
+      "--keep-logs",
+      "--keep-intermediates",
+      "q1_en.tex"
+    ],
+    "pages": 2,
+    "page_limit": "PASS"
+  },
+  "full_build": {
+    "status": "PASS",
+    "command": [
+      "tectonic",
+      "--keep-logs",
+      "--keep-intermediates",
+      "document_en.tex"
+    ],
+    "pages": 9,
+    "page_limit": "PASS"
+  },
+  "validation": {
+    "q1_computation": "PASS",
+    "q1_compile": "PASS",
+    "full_compile": "PASS",
+    "visual_review": "NOT_RUN",
+    "bilingual_human_review": "NOT_RUN"
+  },
+  "full_format_limitations": "Q2/Q3 archived wide tables and headers remain outside Q1 typography acceptance",
+  "open_items": [
+    "Historical input job byte identity",
+    "Data redistribution scope",
+    "Team names and final AI disclosure",
+    "Human review"
+  ],
+  "submission_ready": false,
+  "command": [
+    "python",
+    "problems/2026_gpu_scheduling/experiments/build_paper.py",
+    "--scope",
+    "full",
+    "--out",
+    "outputs/q1-final",
+    "--compiler",
+    "TECTONIC_PATH",
+    "--bundle"
+  ],
+  "compiler_path_note": "Actual machine-specific absolute path redacted; Tectonic 0.17.0. Use --compiler PATH or PATH lookup.",
+  "review_evidence": "acceptance.json (post-build checks; build-time visual/human status remains NOT_RUN)"
+}

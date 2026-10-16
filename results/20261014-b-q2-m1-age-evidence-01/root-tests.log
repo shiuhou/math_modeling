@@ -1,0 +1,17 @@
+test_code_examples_are_not_links (test_repository.RepositoryChecks.test_code_examples_are_not_links) ... ok
+test_existing_ignored_target_is_not_a_portable_link (test_repository.RepositoryChecks.test_existing_ignored_target_is_not_a_portable_link) ... ok
+test_ignore_rules_keep_formal_evidence_and_hide_local_inputs (test_repository.RepositoryChecks.test_ignore_rules_keep_formal_evidence_and_hide_local_inputs) ... ok
+test_invalid_json_and_ambiguous_values_fail (test_repository.RepositoryChecks.test_invalid_json_and_ambiguous_values_fail) ... ok
+test_links_outside_repository_and_absolute_paths_fail (test_repository.RepositoryChecks.test_links_outside_repository_and_absolute_paths_fail) ... ok
+test_missing_link_reports_location_and_fails_cli (test_repository.RepositoryChecks.test_missing_link_reports_location_and_fails_cli) ... ok
+test_non_repository_fails_instead_of_reporting_success (test_repository.RepositoryChecks.test_non_repository_fails_instead_of_reporting_success) ... ok
+test_valid_local_links_directories_and_json (test_repository.RepositoryChecks.test_valid_local_links_directories_and_json) ... ok
+test_cli_rejects_bad_task_before_creating_state (test_team.TeamChecks.test_cli_rejects_bad_task_before_creating_state) ... ok
+test_subprocess_failure_is_not_hidden (test_team.TeamChecks.test_subprocess_failure_is_not_hidden) ... ok
+test_task_names_and_boundaries (test_team.TeamChecks.test_task_names_and_boundaries) ... ok
+test_unchecked_subprocess_keeps_failure_status (test_team.TeamChecks.test_unchecked_subprocess_keeps_failure_status) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.223s
+
+OK

@@ -1,0 +1,58 @@
+[
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/eda_analysis.py",
+      "--out",
+      "outputs/b-q1-raw-replay-4a8f8f2b"
+    ],
+    "status": "PASS",
+    "duration_seconds": 1.0922798329993384,
+    "stdout": "{\n  \"jobs\": 224112,\n  \"nodes\": 4278,\n  \"physical_gpus\": 10412,\n  \"vcpus\": 632636.0,\n  \"gpu_models\": 6,\n  \"first_arrival_seconds\": 0,\n  \"horizon_seconds\": 7775878,\n  \"horizon_hours\": 2159.9661111111113,\n  \"horizon_days\": 89.99858796296296,\n  \"nominal_90day_difference_seconds\": 122,\n  \"missing_required_values\": 0,\n  \"duplicate_job_ids\": 0,\n  \"duplicate_node_ids\": 0,\n  \"fractional_cpu_jobs\": 73,\n  \"zero_cpu_jobs\": 1,\n  \"min_duration_seconds\": 1,\n  \"max_duration_seconds\": 15897599,\n  \"total_gpu_hours\": 24605876.430555556,\n  \"total_cpu_hours\": 646986320.4942334,\n  \"mean_workers\": 1.5388868065967016,\n  \"mean_gpu_per_worker\": 2.002770935960591,\n  \"single_worker_jobs\": 203836,\n  \"one_gpu_per_worker_jobs\": 175744,\n  \"t0_jobs\": 3512,\n  \"t0_gpu_hours\": 5676408.289444445,\n  \"jobs_duration_longer_than_T\": 2340,\n  \"jobs_immediate_finish_after_T\": 5728,\n  \"gini_gpu_work\": 0.9522487370332974,\n  \"gini_duration\": 0.9580329056767265,\n  \"peak_relative_hour\": 16,\n  \"trough_relative_hour\": 4,\n  \"peak_phase_rate\": 151.06666666666666,\n  \"trough_phase_rate\": 66.06666666666666,\n  \"phase_peak_trough_ratio\": 2.286579212916246,\n  \"top_k_rule\": \"floor(n*f), descending full-lifetime GPU work\",\n  \"quantile_rule\": \"linear interpolation (pandas default)\",\n  \"window_rule\": \"[0,T), T=last submission; all supplied rows included in lifetime work\",\n  \"immediate_start_rule\": \"start=submit_time, ignoring resource feasibility; not actual allocation\",\n  \"allocation_rate_status\": \"NOT_IDENTIFIABLE_FROM_SUPPLIED_CSVS\",\n  \"input_sha256\": {\n    \"node_info_df.csv\": \"1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18\",\n    \"job_info_clean.csv\": \"ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0\"\n  }\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/verify_q1.py",
+      "--handoff-zip",
+      "Q1_final_handoff.zip",
+      "--results",
+      "results/20261014-b-q1-intake-4a8f8f2b",
+      "--out",
+      "outputs/b-q1-handoff-verified-4a8f8f2b.json"
+    ],
+    "status": "PASS",
+    "duration_seconds": 0.23145627899793908,
+    "stdout": "PASS: all Q1 statistics and nine handoff tables agree; byte provenance reported separately\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/generate_figures.py",
+      "--results",
+      "results/20261014-b-q1-intake-4a8f8f2b",
+      "--out",
+      "outputs/b-q1-intake-figures-4a8f8f2b"
+    ],
+    "status": "PASS",
+    "duration_seconds": 1.8734389460005332,
+    "stdout": "Generated Q1 fig1_data_patterns.pdf and .png from the raw CSVs and matching Q1 results\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "problems/2026_gpu_scheduling/experiments/generate_figures.py",
+      "--results",
+      "results/20261014-b-q1-intake-4a8f8f2b",
+      "--out",
+      "outputs/b-q1-intake-figures-4a8f8f2b-final"
+    ],
+    "status": "PASS",
+    "duration_seconds": 1.8672948530002031,
+    "stdout": "Generated Q1 fig1_data_patterns.pdf and .png from the raw CSVs and matching Q1 results\n",
+    "stderr": ""
+  }
+]

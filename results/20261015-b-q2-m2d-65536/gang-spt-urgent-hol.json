@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "gang_starvation_diagnostic",
+  "source": "outputs/q2-m2d-rss-65536-20261015/a10-65536-theta604800-spt-urgent-hol/SPT-URGENT-HOL_job_times.csv.gz",
+  "jobs": 65536,
+  "strata": {
+    "short_single_worker": {
+      "n": 51141,
+      "mean_wait_hours": 548.0201088656851,
+      "p99_wait_hours": 1163.4825,
+      "max_wait_hours": 1172.2416666666666
+    },
+    "short_multi_worker": {
+      "n": 283,
+      "mean_wait_hours": 1042.8127885747938,
+      "p99_wait_hours": 1167.6758666666667,
+      "max_wait_hours": 1170.8597222222222
+    },
+    "long_multi_worker": {
+      "n": 122,
+      "mean_wait_hours": 905.1674134790529,
+      "p99_wait_hours": 1172.091647222222,
+      "max_wait_hours": 1172.4272222222223
+    }
+  }
+}

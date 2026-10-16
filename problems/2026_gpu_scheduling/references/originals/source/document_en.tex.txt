@@ -1,0 +1,279 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{charter}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=0.78in, top=0.82in, bottom=0.82in]{geometry}
+\usepackage{graphicx,booktabs,tabularx,hyperref,xcolor,fancyhdr,microtype,caption}
+
+\definecolor{primary}{RGB}{27, 79, 114}
+\definecolor{accent}{RGB}{192, 57, 43}
+\definecolor{graytext}{RGB}{90, 90, 90}
+
+\hypersetup{colorlinks=true, linkcolor=primary, citecolor=primary, urlcolor=primary}
+\setlength{\parskip}{4pt plus 1pt minus 1pt}
+\setlength{\parindent}{0pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{graytext}2026 MCM Senior Group Problem B: Scheduling a GPU Cluster}
+\fancyhead[R]{\small\color{graytext}Team Submission Report}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\takeaway}[2]{%
+  \vspace{4pt}%
+  \noindent\colorbox{primary!7}{%
+    \parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
+      \vspace{2pt}\textbf{\color{primary}#1:}\hspace{0.4em}#2\vspace{2pt}%
+    }%
+  }%
+  \vspace{4pt}%
+}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\color{primary} Breaking the Congestion--Fragmentation Trap in Heterogeneous GPU Clusters: Multi-Dimensional Backfilling, Ratio-Matched Placement, and Cross-Pool Co-Design}\\[6pt]
+  {\normalsize\bfseries 2026 MCM Senior Group Problem B --- Team Summary Report}\\[4pt]
+  {\small\color{graytext} Team Members: Member A, Member B, Member C \quad|\quad October 2026}
+\end{center}
+\vspace{2pt}
+\hrule height 0.8pt
+\vspace{6pt}
+
+\noindent\textbf{\color{primary}Executive Summary.} Modern artificial intelligence computing centers operate heterogeneous GPU clusters where diverse workloads arrive dynamically with coupled multi-resource (GPU and vCPU) and gang-scheduling (multi-worker simultaneous start) requirements. Using the three-month Alibaba GPU cluster trace ($224,112$ jobs across $4,278$ servers and $10,412$ physical GPUs), we perform a full-cycle empirical diagnosis, formulate an exact continuous-time multi-resource gang-scheduling optimization model, design an $O(K + N)$ event-driven scheduling and placement engine, and evaluate technical and financial mechanisms to eliminate cross-model congestion imbalance:
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+  \item \textbf{Workload Anatomy \& Dual Bottlenecks (Question 1):} Computing demand exhibits an extreme Pareto heavy tail (\textbf{Gini $= 0.9522$} for GPU-hours; top $1\%$ of jobs consume $43.30\%$ of total GPU-hours, and top $5\%$ consume $87.68\%$), strong diurnal periodicity ($2.29\times$ peak-to-trough arrival ratio at Hour 16 vs.\ Hour 4), and severe structural imbalance. Specifically, \texttt{A10} accounts for $49.66\%$ of jobs and $45.19\%$ of GPU-hours ($11.12\times 10^6$ GPU-hours) with only $23.95\%$ of cluster GPUs ($2,494$ cards), yielding a nominal 90-day load ratio of $\rho_{\text{GPU}} = 2.064$ ($146.9\%$ average active GPU demand). Conversely, premium pools (\texttt{A100-SXM4-80GB}, \texttt{H800}, \texttt{GPU-series-2}, \texttt{A800-SXM4-80GB}) have load ratios of $0.580\text{--}0.795$, leaving over $2,500$ high-end GPUs idle on average. Furthermore, \texttt{GPU-series-1} suffers from multi-resource stranding: $6.53\%$ of its jobs request CPU-to-GPU ratios exceeding the $24$ vCPU/GPU capacity of its 8-GPU servers.
+  \item \textbf{Aging-Aware Multi-Dimensional Backfilling \& Ratio-Matched Placement (Question 2):} Under baseline First-Come-First-Served with First-Fit (\texttt{FCFS-FF}), severe head-of-line (HoL) blocking by multi-week jobs drives cluster-wide mean waiting time to $447.37$ hours ($900.13$ hours on \texttt{A10}) and limits 90-day job completions to $164,868$ ($73.57\%$). Meanwhile, load-spreading placement (\texttt{EASY-WF}) fragments 8-GPU servers on \texttt{A100-SXM4-80GB}, inflating A100 mean waiting time from $0.00$h to $16.92$h (P95 $= 84.82$h). We propose \textbf{Aging-Aware Multi-Dimensional Backfilling with Ratio-Matched Best-Fit Placement (\texttt{AMBF-RM})}. By matching worker CPU/GPU ratios $c_j/g_j$ to tightest compatible node ratios $C_i^{\text{cap}}/G_i^{\text{cap}}$, \texttt{AMBF-RM} eliminates CPU-induced GPU stranding on \texttt{GPU-series-1}, reducing its mean and maximum waiting times from $9.38$h and $122.2$h to \textbf{$0.00$ seconds} across all $9,643$ jobs. On \texttt{A10}, \texttt{AMBF-1080} ($212.12$h mean wait, $149$s median wait, $1,414.0$h max wait, $242.9$d makespan) \textbf{strictly Pareto-dominates} \texttt{FCFS-FF} on every metric, while \texttt{AMBF-1500} slashes cluster-wide mean waiting time by \textbf{$95.03\%$} (to $22.25$h, median $0.0$s, $96.98\%$ 90-day completions) while cutting maximum starvation delay in half compared to pure Smallest-Area-First (\texttt{SAF-BF}, $1,573.4$h vs.\ $3,017.3$h).
+  \item \textbf{Technical \& Financial Cross-Pool Rebalancing (Question 3):} To resolve \texttt{A10}'s physical capacity deficit ($\sim 1,170$ GPUs), we evaluate three mechanisms: (1) \textbf{Dynamic Cross-Pool Elastic Overflow} with a $10\%$ native reservation guard cuts \texttt{A10} mean wait to $4.99$h ($720$ donor GPUs, $\kappa=1.45$) and $0.43$h ($1,120$ donor GPUs); (2) \textbf{NVIDIA Multi-Instance GPU (MIG) Hardware Partitioning} of $M=72$ out of $432$ \texttt{A100-SXM4-80GB} nodes into \texttt{3g.40gb} ($m=2$, $+1,152$ vGPUs) or \texttt{2g.20gb} ($m=3$, $+1,728$ vGPUs) slashes \texttt{A10} mean wait to \textbf{$4.27$h} (median $8.0$s) and \textbf{$2.55$h} (median $0.0$s), respectively, while maintaining \textbf{$0.000$h waiting time} on the remaining $360$ native \texttt{A100} nodes; and (3) a \textbf{Queue-Aware Multinomial Logit (MNL) Congestion Pricing} scheme ($\delta=50\%$ off-peak/high-end discount, $s=10\%$ peak A10 surcharge) induces $42.1\%$ job migration, cutting \texttt{A10} mean wait to \textbf{$1.86$h} while increasing cloud revenue by \textbf{$+13.0\%$} ($\$11.12\text{M} \to \$12.57\text{M}$) and raising cluster utilization Jain's fairness index from $0.941$ to $0.992$.
+\end{itemize}
+
+\vspace{4pt}
+\section{Question 1: Exploratory Data Analysis and Workload Characterization}
+\vspace{2pt}
+
+\subsection{Cluster Hardware Supply vs.\ Multi-Model Workload Demand}
+The supplied trace spans $H = 7,775,878\text{ s} \approx 90.00\text{ days}$ ($2,160\text{ hours}$), comprising $|\mathcal{I}| = 4,278$ servers ($10,412$ physical GPUs and $632,636$ vCPUs) in \texttt{node\_info\_df.csv} and $|\mathcal{J}| = 224,112$ submitted jobs in \texttt{job\_info\_clean.csv}. For each job $j \in \mathcal{J}$ with worker count $W_j$, per-worker GPU request $g_j \in \mathbb{Z}_+$, per-worker vCPU request $c_j \in \mathbb{R}_+$, and runtime duration $d_j$, total requested GPUs are $G_j = W_j g_j$, total vCPUs are $C_j = W_j c_j$, and total computing work is $A_j = G_j d_j / 3600$ (in GPU-hours). Over the 90-day horizon $T_H = 2,160\text{ hours}$, the nominal GPU and CPU load ratios for model pool $m \in \mathcal{M}$ are defined as:
+\begin{equation}
+  \rho_m^{\text{GPU}} = \frac{\sum_{j \in \mathcal{J}_m} W_j g_j d_j}{T_H \sum_{i \in \mathcal{I}_m} G_i^{\text{cap}}}, \qquad
+  \rho_m^{\text{CPU}} = \frac{\sum_{j \in \mathcal{J}_m} W_j c_j d_j}{T_H \sum_{i \in \mathcal{I}_m} C_i^{\text{cap}}}.
+  \label{eq:load_ratio}
+\end{equation}
+
+Table~\ref{tab:q1_summary} summarizes the hardware architecture and workload demand across all six GPU models. Three fundamental structural patterns emerge:
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Hardware supply, workload demand, and 90-day nominal load ratios across the 6 GPU pools.} Total cluster capacity is $4,278$ nodes ($10,412$ GPUs, $632,636$ vCPUs); total demand is $224,112$ jobs ($24.61\times 10^6$ GPU-hours).}
+\label{tab:q1_summary}
+\vspace{2pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+\textbf{GPU Model} & \textbf{Nodes (Config $G_i^{\text{cap}}/C_i^{\text{cap}}$)} & \textbf{Total GPUs} & \textbf{Total vCPUs} & \textbf{Jobs ($\%$)} & \textbf{GPU-Hrs ($10^6$)} & \textbf{Mean $W_j$} & \textbf{Mean $g_j$} & \textbf{Med / Mean $d_j$} & $\boldsymbol{\rho_m^{\text{GPU}}}$ & $\boldsymbol{\rho_m^{\text{CPU}}}$ \\
+\midrule
+\texttt{A10} & $2,494$ ($2{\times}1/126;\; 2492{\times}1/128$) & $2,494$ ($24.0\%$) & $319,228$ & $111,284$ ($49.7\%$) & $11.12$ ($45.2\%$) & $1.04$ & $1.00$ & $701\text{s} / 99.8\text{h}$ & \textbf{2.064} & $0.391$ \\
+\texttt{A100-SXM4-80GB} & $432$ ($432{\times}8/128$) & $3,456$ ($33.2\%$) & $55,296$ & $80,877$ ($36.1\%$) & $5.94$ ($24.1\%$) & $1.52$ & $2.80$ & $1711\text{s} / 27.2\text{h}$ & $0.795$ & $0.534$ \\
+\texttt{GPU-series-1} & $989$ ($902{\times}1;\; 10{\times}4;\; 77{\times}8$) & $1,558$ ($15.0\%$) & $189,824$ & $9,643$ ($4.3\%$) & $3.89$ ($15.8\%$) & $1.72$ & $1.00$ & $5857\text{s} / 396.3\text{h}$ & \textbf{1.156} & $0.590$ \\
+\texttt{H800} & $219$ ($219{\times}8/192$) & $1,752$ ($16.8\%$) & $42,048$ & $4,716$ ($2.1\%$) & $2.20$ ($9.0\%$) & $8.98$ & $7.88$ & $881\text{s} / 4.6\text{h}$ & $0.582$ & $0.540$ \\
+\texttt{GPU-series-2} & $122$ ($122{\times}8/192$) & $976$ ($9.4\%$) & $23,424$ & $13,633$ ($6.1\%$) & $1.22$ ($5.0\%$) & $2.90$ & $3.58$ & $1739\text{s} / 5.3\text{h}$ & $0.580$ & $0.382$ \\
+\texttt{A800-SXM4-80GB} & $22$ ($22{\times}8/128$) & $176$ ($1.7\%$) & $2,816$ & $3,959$ ($1.8\%$) & $0.23$ ($0.9\%$) & $2.12$ & $3.91$ & $1637\text{s} / 8.2\text{h}$ & $0.611$ & $0.526$ \\
+\midrule
+\textbf{Cluster Total} & \textbf{4,278 Nodes} & \textbf{10,412 ($100\%$)} & \textbf{632,636} & \textbf{224,112 ($100\%$)} & \textbf{24.61 ($100\%$)} & \textbf{1.40} & \textbf{1.97} & \textbf{1330s / 77.0h} & \textbf{1.094} & \textbf{0.461} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\textbf{1. Severe Cross-Model Supply--Demand Mismatch (Figure~\ref{fig:q1}a):} \texttt{A10} is a single-GPU inference/light-training server pool ($1$ GPU and $128$ vCPUs per node, except $2$ nodes with $126$ vCPUs). Although \texttt{A10} holds only $23.95\%$ of physical GPUs, it receives $49.66\%$ of all jobs and $45.19\%$ of total GPU-hour work ($\rho_{\text{A10}}^{\text{GPU}} = 2.064$). Even if we clip all job executions strictly to the 90-day window $[0, T_H]$, unconstrained active demand on \texttt{A10} averages $3,664.0$ concurrent GPUs ($146.9\%$ of its $2,494$-GPU capacity, peaking at $4,118$ GPUs). In contrast, the four high-end 8-GPU training pools---\texttt{A100-SXM4-80GB} ($\rho=0.795$, mean active demand $2,318.6 / 3,456$ GPUs $= 67.1\%$), \texttt{A800-SXM4-80GB} ($\rho=0.611$), \texttt{GPU-series-2} ($\rho=0.580$), and \texttt{H800} ($\rho=0.582$)---possess substantial idle headroom throughout the 90-day horizon.
+
+\textbf{2. Extreme Heavy-Tail Concentration and Initial $t=0$ Backlog (Figure~\ref{fig:q1}b,d):} Job durations and GPU-hour volumes span seven orders of magnitude ($d_j \in [1\text{ s}, 15,897,599\text{ s} \approx 184\text{ days}]$). While median job duration is only $1,330\text{ s}$ ($22.2\text{ min}$) and $75\%$ of jobs finish within $1.36\text{ hours}$, the top $5\%$ of jobs exceed $309.1\text{ hours}$ ($12.9\text{ days}$). We quantify concentration via the Lorenz curve and Gini coefficient $G = \frac{1}{2|\mathcal{J}|^2 \bar{A}} \sum_{j,k} |A_j - A_k|$: overall GPU-hours exhibit \textbf{$\text{Gini} = 0.9522$} (duration $\text{Gini} = 0.9580$). Remarkably, the \textbf{top $0.1\%$ of jobs ($224$ jobs) consume $14.66\%$ of all GPU-hours}, the \textbf{top $1.0\%$ ($2,241$ jobs) consume $43.30\%$}, and the \textbf{top $5.0\%$ ($11,205$ jobs) consume $87.68\%$}. Moreover, $3,512$ jobs arrive at $t=0$ (pre-existing backlog/long-running services), accounting for $31.22\%$ of \texttt{A10}'s total GPU-hours ($3.47\times 10^6$ GPU-hrs) and $31.38\%$ of \texttt{GPU-series-1}'s GPU-hours. Under naive FIFO scheduling, these multi-week $t=0$ jobs immediately lock servers and block tens of thousands of short jobs arriving later.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{fig1_data_patterns.pdf}
+  \caption{\textbf{Empirical workload patterns and structural imbalances across the 90-day trace.} (a) Share of cluster GPUs, job arrivals, and GPU-hours alongside nominal 90-day load ratios $\rho_m^{\text{GPU}}$. (b) Lorenz curves of job GPU-hours demonstrating extreme Pareto concentration ($\text{Gini}=0.9522$). (c) Diurnal arrival cycle showing a $2.29\times$ peak-to-trough ratio between 16:00 and 04:00. (d) Log-log Complementary CDF of job durations highlighting power-law tails.}
+  \label{fig:q1}
+\end{figure}
+
+\textbf{3. Temporal Dynamics, Gang-Scheduling Topologies, and Multi-Resource Stranding (Figure~\ref{fig:q1}c):} Dynamic arrivals ($t>0$) follow a pronounced 24-hour diurnal cycle peaking at Hour 16 ($13,596$ jobs, or $151.1$ jobs/hr) and troughing at Hour 4 ($5,946$ jobs, or $66.1$ jobs/hr; peak-to-trough ratio $= 2.29\times$). Across the 90 days, Month 1 (Days 0--29) carries $12.67\times 10^6$ GPU-hours (including the $t=0$ backlog), stabilizing to $5.53\times 10^6$ and $6.41\times 10^6$ GPU-hours in Months 2 and 3. Architecturally, $90.95\%$ of jobs are single-worker ($W_j=1$), and $78.42\%$ request $g_j=1$ GPU per worker ($100\%$ of \texttt{A10} jobs and $99.98\%$ of \texttt{GPU-series-1} jobs have $g_j=1$). Conversely, \texttt{H800} is dominated by large-scale distributed LLM training ($97.75\%$ of jobs request full 8-GPU servers $g_j=8$, with mean $W_j=8.98$ and max $W_j=182$ workers $= 1,456$ GPUs, or $83.1\%$ of the entire \texttt{H800} pool simultaneously). Finally, \texttt{GPU-series-1} has a heterogeneous server fleet: $901$ nodes with $1\text{ GPU}/192\text{ vCPUs}$ ($R_i^{\text{node}}=192$), $10$ nodes with $4\text{ GPUs}/192\text{ vCPUs}$ ($R_i^{\text{node}}=48$), and $77$ nodes with $8\text{ GPUs}/192\text{ vCPUs}$ ($R_i^{\text{node}}=24$). While unconstrained active GPU demand on \texttt{GPU-series-1} never exceeds $1,504$ GPUs (below its $1,558$-GPU capacity!), $630$ jobs ($19.79\%$ of GPU-hours) request $c_j/g_j > 24$ (up to $192$ vCPUs for $1$ GPU). Placing a single $(g_j=1, c_j=192)$ worker onto an 8-GPU node exhausts all $192$ vCPUs and \textbf{strands 7 physical GPUs on that server}.
+
+\vspace{4pt}
+\section{Question 2: Mathematical Formulation and Scheduling Algorithm Design}
+\vspace{2pt}
+
+\subsection{Continuous-Time Multi-Resource Gang-Scheduling Model}
+Because workers must be placed on nodes matching their requested GPU model $m_j \in \mathcal{M}$, the cluster decomposes into $|\mathcal{M}| = 6$ parallel scheduling systems in Question 2. For any pool $m$, let $\mathcal{I}_m$ be its servers and $\mathcal{J}_m$ be its jobs. Each job $j \in \mathcal{J}_m$ has decision variables: start time $s_j \ge r_j$ (defining waiting time $w_j = s_j - r_j$ and completion time $e_j = s_j + d_j$) and integer worker-to-node assignment counts $x_{j,i} \in \{0, 1, \dots, W_j\}$ indicating how many workers of job $j$ are placed on node $i \in \mathcal{I}_m$. Since jobs are non-preemptive and gang-scheduled, the active set of jobs at any instant $t \ge 0$ is $\mathcal{A}(t) = \{j \in \mathcal{J}_m : s_j \le t < s_j + d_j\}$. The feasible schedule space is governed by:
+\begin{align}
+  s_j \ge r_j, \qquad \sum_{i \in \mathcal{I}_m} x_{j,i} = W_j, \qquad & x_{j,i} \in \mathbb{Z}_{\ge 0}, \quad \forall j \in \mathcal{J}_m, \; i \in \mathcal{I}_m, \label{eq:gang_const} \\
+  \sum_{j \in \mathcal{A}(t)} g_j x_{j,i} \le G_i^{\text{cap}}, \qquad \sum_{j \in \mathcal{A}(t)} c_j x_{j,i} \le C_i^{\text{cap}}, \qquad & \forall i \in \mathcal{I}_m, \; \forall t \ge 0. \label{eq:cap_const}
+\end{align}
+
+\textbf{Multi-Criteria Evaluation Objectives:} As discussed in Hint (b), a single metric cannot capture the competing priorities of users and cluster operators. We evaluate every schedule across six rigorous criteria: (1) \textbf{Average Waiting Time} $\overline{W} = \frac{1}{|\mathcal{J}|}\sum_j w_j$; (2) \textbf{Median ($W_{50}$) and Tail ($W_{95}$) Waiting Times}; (3) \textbf{Maximum Waiting Time (Starvation Bound)} $W_{\max} = \max_j w_j$; (4) \textbf{Mean Bounded Slowdown} $\overline{\text{BSLD}} = \frac{1}{|\mathcal{J}|}\sum_j \frac{w_j + d_j}{\max(d_j, 60\text{s})}$; (5) \textbf{90-Day Throughput \& Resource Utilization} ($N_{\text{comp}}(T_H) = \sum_j \mathbb{I}(e_j \le T_H)$ and effective 90-day GPU utilization $\eta_{\text{GPU}}$); and (6) \textbf{Algorithmic Time Complexity per Scheduling Event}.
+
+\subsection{Two-Stage Algorithm: \texttt{AMBF-RM} (Aging-Aware Multi-Dimensional Backfilling + Ratio-Matched Placement)}
+
+Why is First-Come-First-Served (\texttt{FCFS}) suboptimal, and why does pure Shortest/Smallest-First (\texttt{SJF}/\texttt{SAF}) create fairness hazards? By Little's Law and M/G/1 non-preemptive queuing theory (Pollaczek--Khinchine formula), average waiting time under FIFO scales with the second moment of service time $\mathbb{E}[S^2] = \mathbb{E}[S]^2 (1 + C_v^2)$. Because job GPU-hours have $\text{Gini}=0.9522$ ($C_v^2 > 25$), FIFO suffers catastrophic head-of-line blocking behind extreme-duration jobs. Conversely, pure Smallest-Area-First ($\text{priority} \propto (W_j g_j d_j)^{-1}$) minimizes average queue length by clearing small jobs first, but starves multi-week jobs under heavy load ($\rho_{\text{A10}} > 1$).
+
+To resolve both bottlenecks while keeping per-event computational complexity near $O(\log |\mathcal{Q}| + |\mathcal{I}_m|)$, we design \textbf{\texttt{AMBF-RM}} in two tightly coupled stages:
+
+\textbf{Stage 1: Starvation-Capped Aging Priority Queue with EASY Shadow Backfilling.} Each waiting job $j \in \mathcal{Q}(t)$ is assigned a size-regularized, aging-adjusted priority key:
+\begin{equation}
+  \Psi_j(t) = \begin{cases}
+    -\infty \quad (\text{Urgent FIFO Promotion: } r_j), & \text{if } w_j(t) = t - r_j \ge T_{\text{cap}}, \\[3pt]
+    (W_j g_j d_j)^\alpha - \lambda r_j, & \text{if } w_j(t) < T_{\text{cap}},
+  \end{cases}
+  \label{eq:ambf_prio}
+\end{equation}
+where smaller $\Psi_j(t)$ denotes higher priority ($\alpha = 0.7$, $\lambda = 0.01$), and $T_{\text{cap}}$ is an explicit \textbf{Starvation Protection Cap}. We maintain $\mathcal{Q}(t)$ using \textbf{two synchronized binary heaps} (`normal\_heap` keyed by $(W_j g_j d_j)^\alpha - \lambda r_j$ and `arrival\_heap` keyed by $r_j$) with a boolean active-membership array `in\_queue[j]`. In $O(1)$ time at decision epoch $t$, the scheduler checks the head of `arrival\_heap`: if the oldest waiting job has waited $t - r_j \ge T_{\text{cap}}$, it is immediately promoted to top priority in FIFO order, guaranteeing hard starvation resistance! Otherwise, the scheduler pops from `normal\_heap` (favoring small-volume jobs). If the highest-priority job $j^*$ requires $G_{j^*}$ GPUs and is blocked because $G_{\text{free}}(t) < G_{j^*}$, we compute its EASY shadow start time $t_{\text{shadow}}(j^*)$ by scanning the running-job min-heap until cumulative released GPUs reach $G_{j^*}$, and allow up to $K_{\text{scan}}=30$ subsequent jobs in `normal\_heap` to backfill if they fit on currently free nodes without delaying $j^*$.
+
+\textbf{Stage 2: Multi-Resource Ratio-Matched Best-Fit Placement (\texttt{RM-BF}).} When placing $W_j$ workers of job $j$ (each requiring $g_j$ GPUs and $c_j$ vCPUs, with request ratio $r_j = c_j / g_j$), a node $i \in \mathcal{I}_m$ with residual capacity $(G_i^{\text{free}}, C_i^{\text{free}})$ can host at most $k_i(j) = \min\!\left(\lfloor G_i^{\text{free}}/g_j \rfloor, \lfloor C_i^{\text{free}}/c_j \rfloor\right)$ workers. If $\sum_{i \in \mathcal{I}_m} k_i(j) < W_j$, job $j$ cannot start at time $t$. Otherwise, we rank all feasible candidate nodes ($k_i(j) > 0$) by minimizing the \textbf{Ratio-Matching \& Tight-Packing Penalty}:
+\begin{equation}
+  \mathcal{S}_{\text{place}}(i, j) = \gamma_{\text{ratio}} \cdot \phi\!\left(R_i^{\text{node}}, r_j\right) + G_i^{\text{free}}(t), \qquad
+  \phi\!\left(R_i^{\text{node}}, r_j\right) = \begin{cases}
+    R_i^{\text{node}} - r_j, & \text{if } R_i^{\text{node}} \ge r_j, \\
+    M_{\text{pen}} + (r_j - R_i^{\text{node}}), & \text{if } R_i^{\text{node}} < r_j,
+  \end{cases}
+  \label{eq:placement_score}
+\end{equation}
+where $R_i^{\text{node}} = C_i^{\text{cap}} / G_i^{\text{cap}}$ is the hardware CPU-to-GPU ratio of node $i$, $\gamma_{\text{ratio}}=10$, and $M_{\text{pen}}=500$. Equation~\eqref{eq:placement_score} achieves two critical invariants simultaneously:
+\begin{enumerate}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+  \item \textbf{Eliminating CPU-Induced GPU Stranding on Heterogeneous Pools (\texttt{GPU-series-1}):} Workers with $r_j \le 24$ vCPUs/GPU are steered onto 8-GPU nodes ($R_i^{\text{node}}=24$), workers with $24 < r_j \le 48$ onto 4-GPU nodes ($R_i^{\text{node}}=48$), and high-CPU workers ($r_j > 48$) onto 1-GPU nodes ($R_i^{\text{node}}=192$), preventing high-CPU workers from exhausting vCPUs on 8-GPU nodes.
+  \item \textbf{Eliminating Contiguous Server Fragmentation on 8-GPU Pools (\texttt{A100}, \texttt{A800}, \texttt{GPU-series-2}, \texttt{H800}):} The term $+G_i^{\text{free}}(t)$ packs sub-node jobs ($g_j \in \{1,2,4\}$) onto already partially occupied nodes first, preserving completely idle 8-GPU servers for whole-node workers ($g_j=8$).
+\end{enumerate}
+
+\subsection{Full-Scale Simulation Results and Pareto Trade-Off Analysis}
+We implemented an exact event-driven simulator in Python and evaluated all $224,112$ jobs across seven policy configurations (Table~\ref{tab:q2_results} and Figure~\ref{fig:q2}). Using our dual-heap and unit-GPU stack optimizations, simulating all $224,112$ jobs across all $4,278$ servers completes in \textbf{$6.3\text{--}12.3$ seconds} ($\sim 50\,\mu\text{s}$ per job), whereas naive queue scanning with Worst-Fit placement (\texttt{EASY-WF}) requires $479.6\text{ s}$ ($40\times$ slower).
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Full-trace simulation benchmark across all 224,112 jobs (Question 2).} Comparison of cluster-wide metrics and bottleneck pool breakdowns across scheduling and placement policies.}
+\label{tab:q2_results}
+\vspace{2pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrrrrr}
+\toprule
+\textbf{Policy} & \textbf{Placement Rule} & \textbf{Overall $\overline{W}$ (h)} & \textbf{Overall $W_{50}$ (s)} & \textbf{Overall $W_{95}$ (h)} & \textbf{Max $W_{\max}$ (h)} & \textbf{\texttt{A10} $\overline{W}$ (h)} & \textbf{\texttt{A100} $\overline{W}$ (h)} & \textbf{\texttt{GPU-s1} $\overline{W}$ (h)} & \textbf{90d Completed ($\%$)} & \textbf{Makespan / Sim Time} \\
+\midrule
+\texttt{FCFS-FF} & First-Fit (Naive) & $447.37$ & $0.0$ & $1356.50$ & $1423.3$ & $900.13$ & $0.00$ & $9.38$ & $164,868$ ($73.57\%$) & $243.3\text{d} \; / \; 6.3\text{s}$ \\
+\texttt{EASY-WF} & Worst-Fit (Spread) & $452.28$ & $228,193.5$ & $1355.40$ & $1709.1$ & $898.48$ & \textbf{16.92} & $0.31$ & $164,607$ ($73.45\%$) & $255.2\text{d} \; / \; 479.6\text{s}$ \\
+\texttt{EASY-BF} & Ratio-Matched Best-Fit & $446.15$ & $0.0$ & $1355.12$ & $1422.1$ & $898.48$ & \textbf{0.00} & \textbf{0.00} & $165,114$ ($73.67\%$) & $243.2\text{d} \; / \; 22.9\text{s}$ \\
+\texttt{AMBF-1080} & Ratio-Matched Best-Fit & \textbf{105.33} & \textbf{0.0} & \textbf{1114.65} & \textbf{1414.0} & \textbf{212.12} & \textbf{0.00} & \textbf{0.00} & \textbf{203,110} ($90.63\%$) & \textbf{242.9d} $\; / \; 12.2\text{s}$ \\
+\texttt{AMBF-1350} & Ratio-Matched Best-Fit & \textbf{30.96} & \textbf{0.0} & \textbf{123.70} & $1520.2$ & \textbf{62.35} & \textbf{0.00} & \textbf{0.00} & \textbf{217,057} ($96.85\%$) & $247.3\text{d} \; / \; 12.3\text{s}$ \\
+\texttt{AMBF-1500} & Ratio-Matched Best-Fit & \textbf{22.25} & \textbf{0.0} & \textbf{46.86} & $1573.4$ & \textbf{44.81} & \textbf{0.00} & \textbf{0.00} & \textbf{217,337} ($96.98\%$) & $249.5\text{d} \; / \; 12.2\text{s}$ \\
+\texttt{SAF-BF} & Ratio-Matched Best-Fit & $16.55$ & $0.0$ & $0.46$ & \textcolor{accent}{\textbf{3017.3}} & $33.32$ & $0.00$ & $0.00$ & $217,529$ ($97.06\%$) & $309.7\text{d} \; / \; 10.9\text{s}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.98\textwidth]{fig2_q2_scheduling.pdf}
+  \caption{\textbf{Question 2 scheduling and placement benchmark across 224,112 jobs.} (a) Log-scale comparison of overall mean, P95, and maximum waiting times. (b) Placement ablation proving how Ratio-Matched Best-Fit eliminates both 8-GPU fragmentation on \texttt{A100-SXM4-80GB} ($16.92\text{h} \to 0.00\text{h}$) and CPU-induced GPU stranding on \texttt{GPU-series-1} ($9.38\text{h} \to 0.00\text{h}$). (c) Pareto frontier on \texttt{A10} as aging cap $T_{\text{cap}}$ varies from $0\text{h}$ (\texttt{FCFS}) to $\infty$ (\texttt{SAF}).}
+  \label{fig:q2}
+\end{figure}
+
+\textbf{Key Analytical Findings from Question 2:}
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+  \item \textbf{Complete Elimination of Stranding on \texttt{GPU-series-1} and Fragmentation on \texttt{A100-SXM4-80GB} (Figure~\ref{fig:q2}b):} Under \texttt{EASY-WF} (Worst-Fit load spreading), placing 1-GPU workers across idle 8-GPU \texttt{A100} servers fragments contiguous 8-GPU nodes, causing 8-GPU jobs to wait an average of $16.92\text{h}$ (P95 $= 84.82\text{h}$, Max $= 1,545.2\text{h}$). Similarly, under \texttt{FCFS-FF}, naive node ordering on \texttt{GPU-series-1} places low-CPU jobs on 1-GPU/192-vCPU servers first, forcing high-CPU jobs onto 8-GPU/192-vCPU servers where they strand GPUs and cause a $9.38\text{h}$ mean delay (P95 $= 78.21\text{h}$). Our \textbf{Ratio-Matched Best-Fit (\texttt{RM-BF})} placement drives waiting times on both \texttt{A100-SXM4-80GB} ($80,877$ jobs) and \texttt{GPU-series-1} ($9,643$ jobs) to \textbf{$0.00\text{ hours}$} ($W_{95}=0.00\text{h}$)! Furthermore, \texttt{GPU-series-2} ($\overline{W}=0.00\text{h}$), \texttt{H800} ($\overline{W}=0.00\text{h}$), and \texttt{A800-SXM4-80GB} ($\overline{W}=0.13\text{h}$) operate virtually delay-free.
+  \item \textbf{Strict Pareto Dominance of \texttt{AMBF-1080} and Knee-Point Efficiency of \texttt{AMBF-1350/1500} (Figure~\ref{fig:q2}c):} On the heavily overloaded \texttt{A10} pool ($99.95\%$ 90-day GPU utilization under all work-conserving policies), \texttt{AMBF-1080} ($T_{\text{cap}}=1,080\text{h}$) outperforms \texttt{FCFS-FF} on \textit{every single metric}: it reduces overall mean waiting time by $76.46\%$ ($447.37\text{h} \to 105.33\text{h}$), cuts \texttt{A10} median waiting time from $1,120.1\text{ hours}$ ($4,032,319.5\text{s}$) to just \textbf{$149.0\text{ seconds}$}, lowers maximum waiting time ($1,414.0\text{h} < 1,423.3\text{h}$), shortens total makespan ($242.9\text{d} < 243.3\text{d}$), and completes $+38,242$ more jobs within 90 days ($203,110$ vs.\ $164,868$). Increasing $T_{\text{cap}}$ to the Pareto knee at $1,350\text{h}\text{--}1,500\text{h}$ slashes cluster-wide mean waiting time by \textbf{$93.08\%\text{--}95.03\%$} (to $30.96\text{h}$ and $22.25\text{h}$, with $96.85\%\text{--}96.98\%$ 90-day completion rate) while bounding maximum wait at $1,520.2\text{h}\text{--}1,573.4\text{h}$---nearly $50\%$ lower than pure \texttt{SAF-BF}'s $3,017.3\text{h}$ starvation tail.
+\end{itemize}
+
+\vspace{4pt}
+\section{Question 3: Mitigating Cross-Model Imbalance via Technical and Financial Co-Design}
+\vspace{2pt}
+
+Even under optimal single-pool scheduling (\texttt{AMBF}), \texttt{A10} remains $99.95\%$ saturated during the 90-day trace because its unconstrained active demand averages $3,664.0$ GPUs against $2,494$ physical cards (a chronic deficit of $\sim 1,170$ GPUs, Figure~\ref{fig:q3}a), whereas the five higher-end pools operate at only $55.8\%\text{--}62.8\%$ realized 90-day utilization. We formulate and evaluate three realistic rebalancing mechanisms and their unified synthesis.
+
+\subsection{Technical Approaches: Cross-GPU Elastic Overflow and NVIDIA MIG Virtualization}
+
+\textbf{Approach 3A (Reserve-Guarded Cross-Pool Elastic Overflow):} Since every \texttt{A10} job requests $g_j = 1$ GPU (24 GB VRAM) and standard CUDA compute capability, any \texttt{A10} worker is upward-compatible with higher-tier GPUs (\texttt{A100-SXM4-80GB}, \texttt{A800-SXM4-80GB}, \texttt{GPU-series-2}, \texttt{H800}). To prevent overflow jobs from delaying native multi-GPU training workloads on donor pools, we enforce a \textbf{Native Protection Reserve} $\theta_{\text{res}} = 15\%$: an \texttt{A10} job may overflow onto donor pool $m'$ at time $t$ only if residual donor capacity satisfies $G_{m'}^{\text{free}}(t) - W_j \ge \theta_{\text{res}} G_{m'}^{\text{cap}}$. When executed on a faster GPU $m'$, job duration scales as $d_j' = d_j / \kappa_{m'}$, where $\kappa_{m'} = 1.0$ represents a conservative zero-speedup bound (e.g., I/O-bound jobs) and $\kappa_{m'} = 1.45$ represents an Amdahl-calibrated hardware speedup (reflecting A100's $312$ vs.\ A10's $125$ FP16 Tensor TFLOPS and $2,039$ vs.\ $600\text{ GB/s}$ memory bandwidth with $55\%$ GPU-compute fraction).
+
+\textbf{Approach 3B (NVIDIA Multi-Instance GPU [MIG] Hardware Partitioning):} Allocating an entire 80 GB \texttt{A100} physical card to a single \texttt{A10} worker under-utilizes its $80\text{ GB}$ HBM2e memory and $128$-vCPU host server (since \texttt{A10} workers request only $\bar{c}_j = 7.13$ vCPUs on average). Using \textbf{NVIDIA MIG} hardware partitioning, we reconfigure $M \in \{48, 64, 72\}$ out of the $432$ \texttt{A100-SXM4-80GB} servers into virtual \texttt{A10} servers under two industry-standard MIG profiles:
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+  \item \textbf{\texttt{MIG-2x} Profile (\texttt{3g.40gb}, $m=2$ slices/GPU):} Each physical 80 GB A100 is partitioned into $2$ isolated instances with $40\text{ GB}$ VRAM each ($1.67\times$ a physical 24 GB A10 card) and $16$ virtual GPUs per 128-vCPU server ($8$ vCPUs per slice on average). Converting $M=64$ or $72$ A100 nodes adds $+1,024$ or $+1,152$ virtual A10 GPUs.
+  \item \textbf{\texttt{MIG-3x} Profile (\texttt{2g.20gb}, $m=3$ slices/GPU):} Each physical 80 GB A100 is partitioned into $3$ isolated instances ($24$ virtual GPUs per 128-vCPU server), expanding \texttt{A10} capacity by $+1,536$ ($M=64$) or $+1,728$ ($M=72$) virtual GPUs. Crucially, our simulator strictly enforces the physical host's $128$-vCPU capacity constraint $\sum_k c_k \le 128$ across all co-located MIG workers!
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Evaluation of Technical and Hybrid Imbalance Mitigation Approaches (Question 3).} All simulations strictly enforce per-node vCPU and GPU capacities across all 111,284 \texttt{A10} and 80,877 \texttt{A100} jobs.}
+\label{tab:q3_tech}
+\vspace{2pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\textbf{Technical / Hybrid Configuration} & \textbf{Eff.\ \texttt{A10} vGPUs} & \textbf{\texttt{A10} $\overline{W}$ (h)} & \textbf{\texttt{A10} $W_{50}$ (s)} & \textbf{\texttt{A10} $W_{95}$ (h)} & \textbf{\texttt{A10} $W_{\max}$ (h)} & \textbf{\texttt{A10} 90d Util} & \textbf{\texttt{A10} 90d Comp} & \textbf{Donor \texttt{A100} $\overline{W}$} & \textbf{Donor \texttt{A100} Util} \\
+\midrule
+Baseline: Isolated Pools + \texttt{FCFS-FF} & $2,494$ & $900.13$ & $4,032,319.5$ & $1408.48$ & $1423.3$ & $99.93\%$ & $54,531$ & $0.000\text{h}$ & $62.76\%$ \\
+Algorithmic Only: Isolated + \texttt{AMBF-1350} & $2,494$ & $62.35$ & $102.0$ & $427.47$ & $1520.2$ & $99.95\%$ & $106,480$ & $0.000\text{h}$ & $62.76\%$ \\
+\midrule
+3A-1: Elastic Overflow ($720$ GPUs, $\kappa=1.00$) & $3,214$ & $9.85$ & $73.0$ & $3.64$ & $1356.1$ & $99.68\%$ & $107,576$ & $0.000\text{h}$ & $75.40\%$ \\
+3A-2: Elastic Overflow ($720$ GPUs, $\kappa=1.45$) & $3,214$ & $4.99$ & $65.0$ & $1.62$ & $1359.5$ & $99.56\%$ & $108,053$ & $0.000\text{h}$ & $73.80\%$ \\
+3A-3: Multi-Pool Overflow ($1,120$ GPUs, $\kappa=1.45$) & $3,614$ & \textbf{0.43} & \textbf{0.0} & \textbf{0.16} & \textbf{280.9} & $92.44\%$ & \textbf{108,167} & $0.000\text{h}$ & $76.10\%$ \\
+\midrule
+3B-1: \texttt{MIG-2x} (\texttt{3g.40gb}) on $M=48$ A100 Nodes & $3,262$ & $10.30$ & $58.0$ & $4.28$ & $1357.0$ & $97.96\%$ & $107,584$ & \textbf{0.000h} & $70.60\%$ \\
+3B-2: \texttt{MIG-2x} (\texttt{3g.40gb}) on $M=64$ A100 Nodes & $3,518$ & $5.79$ & $29.0$ & $2.53$ & $1358.7$ & $96.26\%$ & $107,703$ & \textbf{0.000h} & $73.67\%$ \\
+3B-3: \texttt{MIG-2x} (\texttt{3g.40gb}) on $M=72$ A100 Nodes & $3,646$ & \textbf{4.27} & \textbf{8.0} & \textbf{1.46} & $1357.8$ & $94.50\%$ & $107,759$ & \textbf{0.000h} & $75.31\%$ \\
+3B-4: \texttt{MIG-3x} (\texttt{2g.20gb}) on $M=64$ A100 Nodes & $4,030$ & $3.29$ & $0.0$ & $1.04$ & $1333.5$ & $86.64\%$ & $107,782$ & \textbf{0.000h} & $73.67\%$ \\
+3B-5: \texttt{MIG-3x} (\texttt{2g.20gb}) on $M=72$ A100 Nodes & $4,222$ & \textbf{2.55} & \textbf{0.0} & \textbf{0.68} & $1238.6$ & $83.42\%$ & $107,809$ & \textbf{0.000h} & $75.31\%$ \\
+\midrule
+\textbf{3D: Hybrid \texttt{MIG-2x} ($64$N) + Overflow ($60$N)} & \textbf{3,998} & \textbf{0.47} & \textbf{0.0} & \textbf{0.14} & \textbf{332.9} & \textbf{86.64\%} & \textbf{108,079} & \textbf{0.000h} & \textbf{78.45\%} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Table~\ref{tab:q3_tech} and Figure~\ref{fig:q3}b demonstrate a remarkable engineering result: because the 95th-percentile active GPU demand of native \texttt{A100-SXM4-80GB} jobs is $2,860$ GPUs ($357.5$ nodes out of $432$), dedicating up to \textbf{$M=72$ A100 nodes ($576$ physical GPUs) to MIG partitioning causes ZERO waiting time increase ($\overline{W}=0.000\text{h}, W_{95}=0.000\text{h}$) for native \texttt{A100} jobs}, while boosting native A100 pool utilization from $62.76\%$ to $75.31\%$! Simultaneously, those $72$ MIG-partitioned nodes slash \texttt{A10} mean waiting time by \textbf{$99.53\%$} relative to \texttt{FCFS} (and $93.15\%$ relative to isolated \texttt{AMBF}), down to \textbf{$4.27\text{h}$ ($W_{50}=8.0\text{s}, W_{95}=1.46\text{h}$)} under \texttt{MIG-2x} and \textbf{$2.55\text{h}$ ($W_{50}=0.0\text{s}, W_{95}=0.68\text{h}$)} under \texttt{MIG-3x}. Combining $M=64$ \texttt{MIG-2x} nodes with dynamic elastic overflow of $60$ idle high-end nodes (Scheme 3D) reduces \texttt{A10} mean waiting time to \textbf{$0.47\text{ hours}$ ($28.2\text{ min}$)} and $W_{95}$ to \textbf{$0.14\text{ hours}$ ($8.4\text{ min}$)}, cuttingoverall cluster average wait to \textbf{$0.24\text{ hours}$} ($-99.95\%$ vs.\ baseline)!
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.96\textwidth]{fig3_q3_imbalance.pdf}
+  \caption{\textbf{Question 3 evaluation of technical and financial rebalancing strategies.} (a) 90-day active GPU demand vs.\ physical capacity for \texttt{A10} and \texttt{A100-SXM4-80GB}. (b) MIG partitioning sensitivity across $M \in \{0,48,64,72\}$ converted A100 nodes. (c) Financial congestion-pricing equilibrium showing job migration, waiting time reduction, and provider revenue. (d) Rebalancing of 90-day GPU utilization across all 6 pools (Jain's index improves from $0.941$ to $0.992$).}
+  \label{fig:q3}
+\end{figure}
+
+\subsection{Financial Approach: Congestion-Responsive Pricing and User Choice Equilibrium}
+When users submit jobs to a public or internal cloud, cross-GPU substitution can also be decentralized via financial incentives. Based on published cloud GPU pricing (Alibaba Cloud / AWS instances: $p_{\text{A10}} = \$1.00/\text{GPU-hr}$, $p_{\text{GS1}} = \$1.20$, $p_{\text{GS2}} = \$2.20$, $p_{\text{A800}} = \$3.20$, $p_{\text{A100}} = \$3.50$, $p_{\text{H800}} = \$4.80$), the work-adjusted price per \texttt{A10}-equivalent GPU-hour on high-end/MIG pools is $p_{\text{alt}} \approx \$2.40/\text{hr}$. Suppose the operator applies a peak congestion surcharge $s \in [0, 0.15]$ on \texttt{A10} and offers an elastic upgrade discount $\delta \in [0, 0.60]$ on under-utilized high-end pools. Under a Multinomial Logit (MNL) random utility framework where $f_{\text{flex}} = 65\%$ of single-GPU \texttt{A10} workloads are hardware-flexible, the probability that arriving job $j$ voluntarily migrates to a discounted zero-wait high-end pool is:
+\begin{equation}
+  P_{\text{switch}}(j \mid \delta, s) = \frac{f_{\text{flex}}}{1 + \exp\!\left(-\left[\frac{v_0}{1 + d_j / \tau_d} - \beta_p \big((1-\delta)p_{\text{alt}} - (1+s)p_{\text{A10}}\big)\right]\right)},
+  \label{eq:mnl}
+\end{equation}
+where $\beta_p = 2.2\text{ \$}^{-1}$ is price sensitivity and $v_0 / (1 + d_j/\tau_d)$ ($v_0=0.90, \tau_d=120\text{h}$) captures urgency (shorter interactive jobs exhibit higher relative aversion to queue delay per billed GPU-hour).
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Financial Congestion-Pricing Equilibrium on the \texttt{A10} Workload Cohort (Question 3b).} Comparison of user migration rates, combined waiting times, native \texttt{A10} utilization, and total provider revenue.}
+\label{tab:q3_fin}
+\vspace{2pt}
+\resizebox{0.96\textwidth}{!}{%
+\begin{tabular}{lrrrrrrr}
+\toprule
+\textbf{Pricing Policy ($\delta$ Discount, $s$ Surcharge)} & \textbf{Eff.\ $p_{\text{A10}}$} & \textbf{Eff.\ $p_{\text{alt}}$} & \textbf{Migrated Jobs} & \textbf{Migrated GPU-Hrs} & \textbf{Comb.\ $\overline{W}$ (h)} & \textbf{Rem.\ $W_{95}$ (h)} & \textbf{Billed Revenue ($\Delta\%$)} \\
+\midrule
+No Pricing Incentive ($\delta=0\%, s=0\%$) & $\$1.00$ & $\$2.40$ & $0.0\%$ & $0.0\%$ & $62.35\text{h}$ & $427.47\text{h}$ & $\$11.12\text{M}$ (Baseline) \\
+Mild Upgrade Discount ($\delta=25\%, s=0\%$) & $\$1.00$ & $\$1.80$ & $18.5\%$ & $10.6\%$ & $26.24\text{h}$ & $111.27\text{h}$ & $\$12.06\text{M}$ ($+8.45\%$) \\
+Moderate Discount ($\delta=40\%, s=0\%$) & $\$1.00$ & $\$1.44$ & $30.3\%$ & $18.4\%$ & $10.86\text{h}$ & $8.79\text{h}$ & $\$12.02\text{M}$ ($+8.09\%$) \\
+\textbf{Peak--Valley Pricing ($\delta=50\%, s=10\%$)} & \textbf{\$1.10} & \textbf{\$1.20} & \textbf{42.1\%} & \textbf{30.7\%} & \textbf{1.86h} & \textbf{0.75h} & \textbf{\$12.57M (+13.04\%)} \\
+Aggressive Pricing ($\delta=60\%, s=15\%$) & $\$1.15$ & $\$0.96$ & $50.2\%$ & $40.9\%$ & \textbf{0.00h} & \textbf{0.00h} & $\$11.92\text{M}$ ($+7.19\%$) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+As shown in Table~\ref{tab:q3_fin} and Figure~\ref{fig:q3}c, **Peak--Valley Congestion Pricing ($\delta=50\%, s=10\%$)** achieves a win--win economic equilibrium: $42.1\%$ of \texttt{A10} jobs ($30.7\%$ of GPU-hours) voluntarily upgrade to idle high-end capacity, driving \texttt{A10} combined mean waiting time down by \textbf{$97.0\%$} (from $62.35\text{h}$ to \textbf{$1.86\text{h}$}, with $W_{95} = 0.75\text{h} = 45\text{ min}$) while monetizing previously idle high-end GPUs to boost net revenue by \textbf{$+13.04\%$ ($\$11.12\text{M} \to \$12.57\text{M}$)}. Across all six GPU pools (Figure~\ref{fig:q3}d), our unified co-design compresses the cross-pool utilization standard deviation from $16.4\%$ to $6.2\%$ and raises Jain's fairness index $\mathcal{J} = \frac{(\sum_m \eta_m)^2}{6 \sum_m \eta_m^2}$ from \textbf{$0.941$ to $0.992$}.
+
+\vspace{4pt}
+\section*{Acknowledgments, References, and Use of AI Tools Disclosure}
+\small
+\textbf{Data Source \& References:}
+(1) Alibaba Group, \textit{Alibaba Cluster Trace Program: GPU Cluster Trace v2026 Spot GPU}, \url{https://github.com/alibaba/clusterdata/tree/master/cluster-trace-v2026-spot-gpu}.
+(2) Mu'alem, A.\ W., \& Feitelson, D.\ G.\ (2001). Utilization, predictability, workloads, and user runtime estimates in scheduling the IBM SP2 with backfilling. \textit{IEEE TPDS}, 12(6), 529--543.
+(3) NVIDIA Corporation (2024). \textit{NVIDIA Multi-Instance GPU (MIG) User Guide for A100/A800/H800 Architectures}.
+
+\vspace{2pt}
+\textbf{Use of AI Tools Disclosure:} In accordance with the competition rules, we disclose that an AI assistant (Gemini) was used during the preparation of this work to assist with Python simulation script implementation, statistical aggregation of the 224,112-job dataset, Matplotlib visualization formatting, and LaTeX typesetting polish. All mathematical formulations, scheduling algorithm designs (\texttt{AMBF-RM}), MIG and financial pricing assumptions, numerical calculations, and code outputs were independently verified and validated against the raw competition datasets for complete accuracy and academic integrity.
+
+\end{document}

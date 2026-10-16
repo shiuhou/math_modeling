@@ -1,0 +1,129 @@
+{
+  "status": "NOT_RUN",
+  "source": "2026_MCM_Problem_B_Source_Code.zip/document_en.tex, tables q2_results, q3_tech, q3_fin",
+  "original_git_path": "references/originals/source/document_en.tex.txt",
+  "source_sha256": "7662808a9c3399d440ebfabf114471ff661954ea3ba288c5e496a833b48d014f",
+  "scope": "Transcribed historical table values only; not current simulator outputs. No interpolated values.",
+  "q2": [
+    {
+      "policy": "FCFS-FF",
+      "mean_h": 447.37,
+      "p95_h": 1356.5,
+      "max_h": 1423.3,
+      "a10_mean_h": 900.13,
+      "a100_mean_h": 0,
+      "gs1_mean_h": 9.38
+    },
+    {
+      "policy": "EASY-WF",
+      "mean_h": 452.28,
+      "p95_h": 1355.4,
+      "max_h": 1709.1,
+      "a10_mean_h": 898.48,
+      "a100_mean_h": 16.92,
+      "gs1_mean_h": 0.31
+    },
+    {
+      "policy": "EASY-BF",
+      "mean_h": 446.15,
+      "p95_h": 1355.12,
+      "max_h": 1422.1,
+      "a10_mean_h": 898.48,
+      "a100_mean_h": 0,
+      "gs1_mean_h": 0
+    },
+    {
+      "policy": "AMBF-1080",
+      "mean_h": 105.33,
+      "p95_h": 1114.65,
+      "max_h": 1414.0,
+      "a10_mean_h": 212.12,
+      "a100_mean_h": 0,
+      "gs1_mean_h": 0
+    },
+    {
+      "policy": "AMBF-1350",
+      "mean_h": 30.96,
+      "p95_h": 123.7,
+      "max_h": 1520.2,
+      "a10_mean_h": 62.35,
+      "a100_mean_h": 0,
+      "gs1_mean_h": 0
+    },
+    {
+      "policy": "AMBF-1500",
+      "mean_h": 22.25,
+      "p95_h": 46.86,
+      "max_h": 1573.4,
+      "a10_mean_h": 44.81,
+      "a100_mean_h": 0,
+      "gs1_mean_h": 0
+    },
+    {
+      "policy": "SAF-BF",
+      "mean_h": 16.55,
+      "p95_h": 0.46,
+      "max_h": 3017.3,
+      "a10_mean_h": 33.32,
+      "a100_mean_h": 0,
+      "gs1_mean_h": 0
+    }
+  ],
+  "q3_mig": {
+    "nodes": [
+      0,
+      48,
+      64,
+      72
+    ],
+    "mig2_mean_h": [
+      62.35,
+      10.3,
+      5.79,
+      4.27
+    ],
+    "mig3_mean_h": [
+      62.35,
+      null,
+      3.29,
+      2.55
+    ]
+  },
+  "q3_pricing": {
+    "discount_pct": [
+      0,
+      25,
+      40,
+      50,
+      60
+    ],
+    "surcharge_pct": [
+      0,
+      0,
+      0,
+      10,
+      15
+    ],
+    "migration_pct": [
+      0,
+      18.5,
+      30.3,
+      42.1,
+      50.2
+    ],
+    "mean_h": [
+      62.35,
+      26.24,
+      10.86,
+      1.86,
+      0
+    ],
+    "revenue_million_usd": [
+      11.12,
+      12.06,
+      12.02,
+      12.57,
+      11.92
+    ]
+  }
+}

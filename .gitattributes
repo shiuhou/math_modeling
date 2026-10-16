@@ -4,3 +4,12 @@
 *.jpeg binary
 *.pdf binary
 *.zip binary
+
+# ZIP source archives retain exact bytes, including original whitespace.
+problems/2026_gpu_scheduling/references/originals/** -text -whitespace
+
+# Preserve intentional Markdown hard breaks in supplied research originals.
+docs/deep-research-report_q3.md -text whitespace=-blank-at-eol
+"docs/貼上的文字 (2)(2).txt" -text whitespace=-blank-at-eol
+docs/job_info_clean.csv -text -whitespace
+docs/node_info_df.csv -text -whitespace

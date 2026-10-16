@@ -1,0 +1,78 @@
+import pandas as pd
+import numpy as np
+
+node_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/node_info_df.csv")
+job_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/job_info_clean.csv")
+
+print("=== 1. NODE SUMMARY BY GPU MODEL ===")
+node_summary = node_df.groupby(['gpu_model', 'gpu_capacity_num', 'cpu_num']).size().reset_index(name='node_count')
+node_summary['total_gpus'] = node_summary['gpu_capacity_num'] * node_summary['node_count']
+node_summary['total_cpus'] = node_summary['cpu_num'] * node_summary['node_count']
+print(node_summary.to_string(index=False))
+
+model_supply = node_df.groupby('gpu_model').agg(
+    nodes=('node_name', 'count'),
+    total_gpus=('gpu_capacity_num', 'sum'),
+    total_cpus=('cpu_num', 'sum'),
+    max_node_gpu=('gpu_capacity_num', 'max'),
+    max_node_cpu=('cpu_num', 'max')
+).reset_index()
+print("\n=== MODEL SUPPLY TOTALS ===")
+print(model_supply.to_string(index=False))
+
+print("\n=== 2. JOB SUMMARY BY GPU MODEL ===")
+job_df['total_gpu_req'] = job_df['gpu_request'] * job_df['worker_num']
+job_df['total_cpu_req'] = job_df['cpu_request'] * job_df['worker_num']
+job_df['gpu_hours'] = job_df['total_gpu_req'] * job_df['duration'] / 3600.0
+job_df['cpu_hours'] = job_df['total_cpu_req'] * job_df['duration'] / 3600.0
+
+trace_span_sec = job_df['submit_time'].max() - job_df['submit_time'].min()
+trace_span_hours = 7776000.0 / 3600.0 # 90 days = 2160 hours
+print(f"Trace submit_time min: {job_df['submit_time'].min()}, max: {job_df['submit_time'].max()} ({job_df['submit_time'].max()/86400:.2f} days)")
+print(f"Jobs submitted at t=0: {(job_df['submit_time'] == 0).sum()}")
+
+job_summary = job_df.groupby('gpu_model').agg(
+    job_count=('job_name', 'count'),
+    mean_workers=('worker_num', 'mean'),
+    max_workers=('worker_num', 'max'),
+    mean_gpu_req=('gpu_request', 'mean'),
+    max_gpu_req=('gpu_request', 'max'),
+    mean_cpu_req=('cpu_request', 'mean'),
+    max_cpu_req=('cpu_request', 'max'),
+    mean_dur_hr=('duration', lambda x: x.mean()/3600.0),
+    median_dur_sec=('duration', 'median'),
+    p95_dur_hr=('duration', lambda x: np.percentile(x, 95)/3600.0),
+    total_gpu_hours=('gpu_hours', 'sum'),
+    total_cpu_hours=('cpu_hours', 'sum')
+).reset_index()
+
+merged = pd.merge(model_supply, job_summary, on='gpu_model', how='outer')
+merged['avail_gpu_hours_90d'] = merged['total_gpus'] * trace_span_hours
+merged['avail_cpu_hours_90d'] = merged['total_cpus'] * trace_span_hours
+merged['gpu_load_ratio'] = merged['total_gpu_hours'] / merged['avail_gpu_hours_90d']
+merged['cpu_load_ratio'] = merged['total_cpu_hours'] / merged['avail_cpu_hours_90d']
+merged['job_share_pct'] = merged['job_count'] / len(job_df) * 100
+merged['gpu_hr_share_pct'] = merged['total_gpu_hours'] / merged['total_gpu_hours'].sum() * 100
+merged['gpu_cap_share_pct'] = merged['total_gpus'] / merged['total_gpus'].sum() * 100
+
+print("\n=== SUPPLY VS DEMAND BY GPU MODEL (90-DAY HORIZON = 2160 HOURS) ===")
+cols = ['gpu_model', 'nodes', 'total_gpus', 'gpu_cap_share_pct', 'job_count', 'job_share_pct', 'total_gpu_hours', 'gpu_hr_share_pct', 'gpu_load_ratio', 'cpu_load_ratio']
+print(merged[cols].to_string(index=False))
+
+print("\n=== DETAILED JOB STATS BY GPU MODEL ===")
+cols2 = ['gpu_model', 'mean_workers', 'max_workers', 'mean_gpu_req', 'max_gpu_req', 'mean_cpu_req', 'max_cpu_req', 'median_dur_sec', 'mean_dur_hr', 'p95_dur_hr']
+print(merged[cols2].to_string(index=False))
+
+print("\n=== CHECK FEASIBILITY OF WORKERS ON NODES ===")
+for model, grp in job_df.groupby('gpu_model'):
+    nd = node_df[node_df['gpu_model'] == model]
+    # Check if each job's worker can fit on at least one node of that model
+    # Wait: a worker needs gpu_request <= gpu_capacity_num AND cpu_request <= cpu_num on the SAME node!
+    unique_configs = nd[['gpu_capacity_num', 'cpu_num']].drop_duplicates()
+    can_fit = np.zeros(len(grp), dtype=bool)
+    for _, row in unique_configs.iterrows():
+        can_fit |= ((grp['gpu_request'] <= row['gpu_capacity_num']) & (grp['cpu_request'] <= row['cpu_num'])).values
+    unfit = (~can_fit).sum()
+    max_total_gpu = grp['total_gpu_req'].max()
+    tot_model_gpu = nd['gpu_capacity_num'].sum()
+    print(f"Model {model}: unfit_worker_jobs={unfit}, max_job_total_gpu={max_total_gpu} vs cluster_model_gpu={tot_model_gpu}")

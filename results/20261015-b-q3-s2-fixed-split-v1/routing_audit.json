@@ -1,0 +1,26 @@
+{
+  "routed_job_counts": {
+    "S0": 11209,
+    "S1": 5565,
+    "S2": 22455,
+    "S3": 11209,
+    "S4": 11209,
+    "S5": 11209
+  },
+  "nested_routing": {
+    "S1_subset_S0": true,
+    "S0_subset_S2": true,
+    "S5_equals_S0": true
+  },
+  "donor_node_counts": {
+    "30": 30,
+    "60": 60,
+    "90": 90
+  },
+  "donor_node_prefix_sha256": {
+    "30": "15969b7aa9b57baf87c49756d26fca10d7ccc4247a842c9322c4adf6c1e20b9e",
+    "60": "eb608a0f6f9f2a75385c11f0f63eab41c199191164d344a911bb43319032ca52",
+    "90": "e63fd1b5a6b2d0f71c6040a25eebe6034581a284af93332e70af06100b833094"
+  },
+  "donor_prefix_nested": true
+}

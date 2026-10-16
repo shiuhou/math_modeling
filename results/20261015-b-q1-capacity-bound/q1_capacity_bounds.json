@@ -1,0 +1,330 @@
+{
+  "calculation_version": "q1-fixed-pool-fluid-bound-v1",
+  "input_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "code": {
+    "base_commit": "bf2b99881a5f83a57c89db91b0a7689717eda31e",
+    "dirty": true,
+    "q1_py_sha256": "08ecbf3f84a7c8e5183f1629cca655ababf9c2345125620be38282ce1c564c51"
+  },
+  "scope": "All supplied jobs, fixed original model-isolated GPU capacities, full lifetimes and drain tail; CPU/node/gang relaxed",
+  "units": "Areas: GPU*s^2; work/backlog: GPU*s; internal bound: s; display: h",
+  "zero_work_convention": "L=0 when total work is zero (weighted mean undefined)",
+  "precision": "numerator/denominator are authoritative; approximate is display only",
+  "validation": {
+    "event_work_accounting": "PASS",
+    "unit_tests": "NOT_RUN",
+    "historical_job_byte_identity": "BLOCKED",
+    "scheduler_optimality": "NOT_RUN"
+  },
+  "pools": {
+    "A10": {
+      "jobs": 111284,
+      "capacity_gpus": 2494,
+      "total_gpu_seconds": 40028314872,
+      "last_arrival_seconds": 7775874,
+      "last_immediate_finish_seconds": 15897599,
+      "backlog_at_last_finish_gpu_seconds": 387827236,
+      "fluid_empty_seconds": {
+        "numerator": 20018219571,
+        "denominator": 1247,
+        "approximate": 16053103.1042502
+      },
+      "area_before_last_finish_gpu_seconds_squared": {
+        "numerator": 80742058539560634,
+        "denominator": 1,
+        "approximate": 8.074205853956064e+16
+      },
+      "tail_area_gpu_seconds_squared": {
+        "numerator": 37602491245849924,
+        "denominator": 1247,
+        "approximate": 30154363469005.55
+      },
+      "full_area_gpu_seconds_squared": {
+        "numerator": 100722949490077960522,
+        "denominator": 1247,
+        "approximate": 8.077221290302963e+16
+      },
+      "bound_before_tail_hours": {
+        "numerator": 13457009756593439,
+        "denominator": 24016988923200,
+        "approximate": 560.3121107156859
+      },
+      "bound_tail_hours": {
+        "numerator": 9400622811462481,
+        "denominator": 44923777780845600,
+        "approximate": 0.20925717461523632
+      },
+      "lower_bound_seconds": {
+        "numerator": 50361474745038980261,
+        "denominator": 24957654322692,
+        "approximate": 2017876.924405084
+      },
+      "lower_bound_hours": {
+        "numerator": 50361474745038980261,
+        "denominator": 89847555561691200,
+        "approximate": 560.5213678903011
+      }
+    },
+    "A100-SXM4-80GB": {
+      "jobs": 80877,
+      "capacity_gpus": 3456,
+      "total_gpu_seconds": 21369246615,
+      "last_arrival_seconds": 7775878,
+      "last_immediate_finish_seconds": 15897599,
+      "backlog_at_last_finish_gpu_seconds": 0,
+      "fluid_empty_seconds": {
+        "numerator": 15897599,
+        "denominator": 1,
+        "approximate": 15897599.0
+      },
+      "area_before_last_finish_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "tail_area_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "full_area_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "bound_before_tail_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "bound_tail_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "lower_bound_seconds": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "lower_bound_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      }
+    },
+    "GPU-series-1": {
+      "jobs": 9643,
+      "capacity_gpus": 1558,
+      "total_gpu_seconds": 14009905307,
+      "last_arrival_seconds": 7767629,
+      "last_immediate_finish_seconds": 15902477,
+      "backlog_at_last_finish_gpu_seconds": 0,
+      "fluid_empty_seconds": {
+        "numerator": 15902477,
+        "denominator": 1,
+        "approximate": 15902477.0
+      },
+      "area_before_last_finish_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "tail_area_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "full_area_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "bound_before_tail_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "bound_tail_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "lower_bound_seconds": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "lower_bound_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      }
+    },
+    "H800": {
+      "jobs": 4716,
+      "capacity_gpus": 1752,
+      "total_gpu_seconds": 7931572171,
+      "last_arrival_seconds": 7772007,
+      "last_immediate_finish_seconds": 11308336,
+      "backlog_at_last_finish_gpu_seconds": 0,
+      "fluid_empty_seconds": {
+        "numerator": 11308336,
+        "denominator": 1,
+        "approximate": 11308336.0
+      },
+      "area_before_last_finish_gpu_seconds_squared": {
+        "numerator": 928112440138317922,
+        "denominator": 2407446925,
+        "approximate": 385517300.7140408
+      },
+      "tail_area_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "full_area_gpu_seconds_squared": {
+        "numerator": 928112440138317922,
+        "denominator": 2407446925,
+        "approximate": 385517300.7140408
+      },
+      "bound_before_tail_hours": {
+        "numerator": 464056220069158961,
+        "denominator": 34370710260281143515000,
+        "approximate": 1.3501502196346032e-05
+      },
+      "bound_tail_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "lower_bound_seconds": {
+        "numerator": 928112440138317922,
+        "denominator": 19094839033489524175,
+        "approximate": 0.04860540790684571
+      },
+      "lower_bound_hours": {
+        "numerator": 464056220069158961,
+        "denominator": 34370710260281143515000,
+        "approximate": 1.3501502196346032e-05
+      }
+    },
+    "GPU-series-2": {
+      "jobs": 13633,
+      "capacity_gpus": 976,
+      "total_gpu_seconds": 4405554551,
+      "last_arrival_seconds": 7775534,
+      "last_immediate_finish_seconds": 11450930,
+      "backlog_at_last_finish_gpu_seconds": 0,
+      "fluid_empty_seconds": {
+        "numerator": 11450930,
+        "denominator": 1,
+        "approximate": 11450930.0
+      },
+      "area_before_last_finish_gpu_seconds_squared": {
+        "numerator": 986368883938282385070247589,
+        "denominator": 42698319757553460,
+        "approximate": 23100882881.08318
+      },
+      "tail_area_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "full_area_gpu_seconds_squared": {
+        "numerator": 986368883938282385070247589,
+        "denominator": 42698319757553460,
+        "approximate": 23100882881.08318
+      },
+      "bound_before_tail_hours": {
+        "numerator": 986368883938282385070247589,
+        "denominator": 677195196940594304383667256000,
+        "approximate": 0.0014565503246249541
+      },
+      "bound_tail_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "lower_bound_seconds": {
+        "numerator": 986368883938282385070247589,
+        "denominator": 188109776927942862328796460,
+        "approximate": 5.243581168649835
+      },
+      "lower_bound_hours": {
+        "numerator": 986368883938282385070247589,
+        "denominator": 677195196940594304383667256000,
+        "approximate": 0.0014565503246249541
+      }
+    },
+    "A800-SXM4-80GB": {
+      "jobs": 3959,
+      "capacity_gpus": 176,
+      "total_gpu_seconds": 836561634,
+      "last_arrival_seconds": 7770129,
+      "last_immediate_finish_seconds": 10425665,
+      "backlog_at_last_finish_gpu_seconds": 0,
+      "fluid_empty_seconds": {
+        "numerator": 10425665,
+        "denominator": 1,
+        "approximate": 10425665.0
+      },
+      "area_before_last_finish_gpu_seconds_squared": {
+        "numerator": 2701814206058114582161,
+        "denominator": 35442667260,
+        "approximate": 76230555286.32115
+      },
+      "tail_area_gpu_seconds_squared": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "full_area_gpu_seconds_squared": {
+        "numerator": 2701814206058114582161,
+        "denominator": 35442667260,
+        "approximate": 76230555286.32115
+      },
+      "bound_before_tail_hours": {
+        "numerator": 2701814206058114582161,
+        "denominator": 106739912290838050224000,
+        "approximate": 0.025312126908034034
+      },
+      "bound_tail_hours": {
+        "numerator": 0,
+        "denominator": 1,
+        "approximate": 0.0
+      },
+      "lower_bound_seconds": {
+        "numerator": 2701814206058114582161,
+        "denominator": 29649975636343902840,
+        "approximate": 91.12365686892252
+      },
+      "lower_bound_hours": {
+        "numerator": 2701814206058114582161,
+        "denominator": 106739912290838050224000,
+        "approximate": 0.025312126908034034
+      }
+    }
+  },
+  "a10_short_jobs": {
+    "duration_threshold_seconds": 3600,
+    "jobs": 87953,
+    "multiworker_jobs": 377,
+    "max_workers": 32,
+    "node_configurations": [
+      {
+        "gpus_per_node": 1,
+        "vcpus_per_node": 126.0,
+        "nodes": 2
+      },
+      {
+        "gpus_per_node": 1,
+        "vcpus_per_node": 128.0,
+        "nodes": 2492
+      }
+    ]
+  }
+}

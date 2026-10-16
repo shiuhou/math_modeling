@@ -1,0 +1,344 @@
+import pandas as pd
+import numpy as np
+import heapq
+from collections import deque
+import time
+
+node_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/node_info_df.csv")
+job_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/job_info_clean.csv")
+HORIZON = 7776000.0
+
+def simulate_single_pool_q2(nodes_sub, jobs_sub, policy='FCFS-FF', T_cap_hours=1200.0, aging_w=0.01):
+    """
+    Policies:
+      - 'FCFS-FF': Strict FCFS + First-Fit
+      - 'EASY-WF': FCFS with EASY Backfilling + Worst-Fit (Spread)
+      - 'EASY-BF': FCFS with EASY Backfilling + Ratio-Matched Best-Fit
+      - 'SAF-BF':  Smallest Area First + Ratio-Matched Best-Fit
+      - 'AMBF':    Aging-Aware Multi-Dimensional Backfilling + Ratio-Matched Best-Fit (Ours)
+    """
+    t0_wall = time.time()
+    jobs_sub = jobs_sub.sort_values(['submit_time', 'job_name']).reset_index(drop=True)
+    n_jobs = len(jobs_sub)
+    submit_times = jobs_sub['submit_time'].values.astype(float)
+    durations = jobs_sub['duration'].values.astype(float)
+    gpu_reqs = jobs_sub['gpu_request'].values.astype(int)
+    cpu_reqs = jobs_sub['cpu_request'].values.astype(float)
+    worker_nums = jobs_sub['worker_num'].values.astype(int)
+    total_gpus_req = gpu_reqs * worker_nums
+    volumes = total_gpus_req * durations
+
+    nodes_sub = nodes_sub.sort_values(['gpu_capacity_num', 'cpu_num', 'node_name']).reset_index(drop=True)
+    n_nodes = len(nodes_sub)
+    node_gpu_cap = nodes_sub['gpu_capacity_num'].values.astype(int)
+    node_cpu_cap = nodes_sub['cpu_num'].values.astype(float)
+    node_ratio = node_cpu_cap / node_gpu_cap
+
+    free_gpu = node_gpu_cap.copy()
+    free_cpu = node_cpu_cap.copy()
+    total_free_gpu = int(free_gpu.sum())
+
+    is_unit_gpu = (np.all(node_gpu_cap == 1) and np.all(gpu_reqs == 1))
+    if is_unit_gpu:
+        free_low_nodes = list(np.flatnonzero(node_cpu_cap < 128.0))
+        free_std_nodes = list(np.flatnonzero(node_cpu_cap >= 128.0))
+
+    placement_mode = 'FirstFit'
+    if policy.endswith('-WF'):
+        placement_mode = 'WorstFit'
+    elif policy.endswith('-BF') or policy.startswith('AMBF'):
+        placement_mode = 'RatioBestFit'
+
+    def can_and_place(j):
+        nonlocal total_free_gpu
+        w = int(worker_nums[j])
+        g = int(gpu_reqs[j])
+        c = float(cpu_reqs[j])
+        if w * g > total_free_gpu:
+            return None
+        if is_unit_gpu:
+            if c <= 126.0:
+                if len(free_low_nodes) + len(free_std_nodes) < w:
+                    return None
+                alloc = []
+                while len(alloc) < w and free_low_nodes:
+                    alloc.append(free_low_nodes.pop())
+                while len(alloc) < w:
+                    alloc.append(free_std_nodes.pop())
+                total_free_gpu -= w
+                return alloc
+            else:
+                if len(free_std_nodes) < w:
+                    return None
+                alloc = [free_std_nodes.pop() for _ in range(w)]
+                total_free_gpu -= w
+                return alloc
+        else:
+            max_w_gpu = free_gpu // g
+            if c > 0:
+                max_w_cpu = ((free_cpu + 1e-9) // c).astype(int)
+                cap_w = np.minimum(max_w_gpu, max_w_cpu)
+            else:
+                cap_w = max_w_gpu
+            if cap_w.sum() < w:
+                return None
+            cand = np.flatnonzero(cap_w > 0)
+            if placement_mode == 'FirstFit':
+                order = cand
+            elif placement_mode == 'WorstFit':
+                order = cand[np.argsort(-free_gpu[cand])]
+            else:
+                # Ratio-Matched Best-Fit:
+                # 1. Match worker c/g ratio to node_ratio (avoid putting low-CPU jobs on high-CPU/GPU nodes when low-CPU/GPU nodes exist)
+                req_r = c / g
+                ratio_diff = np.where(node_ratio[cand] >= req_r, node_ratio[cand] - req_r, 500.0 + (req_r - node_ratio[cand]))
+                # 2. Pack tightly onto nodes with fewer free GPUs
+                score = ratio_diff * 10.0 + free_gpu[cand]
+                order = cand[np.argsort(score)]
+            alloc = []
+            rem = w
+            for idx in order:
+                take = min(rem, int(cap_w[idx]))
+                free_gpu[idx] -= take * g
+                free_cpu[idx] -= take * c
+                total_free_gpu -= take * g
+                alloc.append((int(idx), take))
+                rem -= take
+                if rem == 0:
+                    break
+            return alloc
+
+    def release_resources(j, alloc):
+        nonlocal total_free_gpu
+        w = int(worker_nums[j])
+        g = int(gpu_reqs[j])
+        c = float(cpu_reqs[j])
+        if is_unit_gpu:
+            for idx in alloc:
+                if node_cpu_cap[idx] < 128.0:
+                    free_low_nodes.append(idx)
+                else:
+                    free_std_nodes.append(idx)
+            total_free_gpu += w
+        else:
+            for idx, take in alloc:
+                free_gpu[idx] += take * g
+                free_cpu[idx] = min(node_cpu_cap[idx], free_cpu[idx] + take * c)
+                total_free_gpu += take * g
+
+    start_times = np.zeros(n_jobs, dtype=float)
+    finish_times = np.zeros(n_jobs, dtype=float)
+    running_heap = []
+    next_arr_idx = 0
+    cur_t = 0.0
+
+    in_queue = np.zeros(n_jobs, dtype=bool)
+    wait_queue = deque()
+    normal_heap = []
+    arrival_heap = []
+    n_waiting = 0
+    T_cap_sec = T_cap_hours * 3600.0
+
+    while next_arr_idx < n_jobs or n_waiting > 0 or running_heap:
+        if next_arr_idx < n_jobs and submit_times[next_arr_idx] <= cur_t:
+            pass
+        else:
+            next_t = float('inf')
+            if running_heap:
+                next_t = min(next_t, running_heap[0][0])
+            if next_arr_idx < n_jobs:
+                if total_free_gpu == 0 and running_heap:
+                    next_t = running_heap[0][0]
+                else:
+                    next_t = min(next_t, submit_times[next_arr_idx])
+            if next_t == float('inf'):
+                break
+            cur_t = max(cur_t, next_t)
+
+        while running_heap and running_heap[0][0] <= cur_t + 1e-9:
+            fin_t, j_done, alloc = heapq.heappop(running_heap)
+            cur_t = max(cur_t, fin_t)
+            release_resources(j_done, alloc)
+
+        while next_arr_idx < n_jobs and submit_times[next_arr_idx] <= cur_t + 1e-9:
+            j = next_arr_idx
+            in_queue[j] = True
+            n_waiting += 1
+            if policy in ['FCFS-FF', 'EASY-WF', 'EASY-BF']:
+                wait_queue.append(j)
+            elif policy == 'SAF-BF':
+                heapq.heappush(normal_heap, (volumes[j], durations[j], j))
+            elif policy.startswith('AMBF'):
+                prio = (volumes[j] ** 0.7) - aging_w * submit_times[j]
+                heapq.heappush(normal_heap, (prio, durations[j], j))
+                heapq.heappush(arrival_heap, (submit_times[j], j))
+            next_arr_idx += 1
+
+        if n_waiting == 0 or total_free_gpu == 0:
+            continue
+
+        if policy == 'FCFS-FF':
+            while wait_queue and total_free_gpu > 0:
+                j_head = wait_queue[0]
+                alloc = can_and_place(j_head)
+                if alloc is not None:
+                    wait_queue.popleft()
+                    in_queue[j_head] = False
+                    n_waiting -= 1
+                    start_times[j_head] = cur_t
+                    finish_times[j_head] = cur_t + durations[j_head]
+                    heapq.heappush(running_heap, (finish_times[j_head], j_head, alloc))
+                else:
+                    break
+
+        elif policy in ['EASY-WF', 'EASY-BF']:
+            while wait_queue and total_free_gpu > 0:
+                j_head = wait_queue[0]
+                alloc = can_and_place(j_head)
+                if alloc is not None:
+                    wait_queue.popleft()
+                    in_queue[j_head] = False
+                    n_waiting -= 1
+                    start_times[j_head] = cur_t
+                    finish_times[j_head] = cur_t + durations[j_head]
+                    heapq.heappush(running_heap, (finish_times[j_head], j_head, alloc))
+                else:
+                    break
+            if len(wait_queue) > 1 and total_free_gpu > 0:
+                j_head = wait_queue[0]
+                req_g_head = int(total_gpus_req[j_head])
+                free_g_acc = total_free_gpu
+                t_shadow = cur_t
+                for fin_t, j_run, _ in sorted(running_heap, key=lambda x: x[0]):
+                    free_g_acc += int(total_gpus_req[j_run])
+                    if free_g_acc >= req_g_head:
+                        t_shadow = fin_t
+                        break
+                extra_free_gpu = free_g_acc - req_g_head
+                idx_scan = 1
+                max_scan = min(len(wait_queue), 200)
+                to_remove = []
+                while idx_scan < max_scan and total_free_gpu > 0:
+                    j_cand = wait_queue[idx_scan]
+                    g_cand = int(total_gpus_req[j_cand])
+                    if g_cand <= total_free_gpu:
+                        if (cur_t + durations[j_cand] <= t_shadow + 1e-9) or (g_cand <= extra_free_gpu):
+                            alloc = can_and_place(j_cand)
+                            if alloc is not None:
+                                if cur_t + durations[j_cand] > t_shadow + 1e-9:
+                                    extra_free_gpu -= g_cand
+                                in_queue[j_cand] = False
+                                n_waiting -= 1
+                                start_times[j_cand] = cur_t
+                                finish_times[j_cand] = cur_t + durations[j_cand]
+                                heapq.heappush(running_heap, (finish_times[j_cand], j_cand, alloc))
+                                to_remove.append(j_cand)
+                    idx_scan += 1
+                for j_rem in to_remove:
+                    wait_queue.remove(j_rem)
+
+        elif policy == 'SAF-BF':
+            popped_blocked = []
+            while normal_heap and total_free_gpu > 0:
+                vol, dur, j_cand = heapq.heappop(normal_heap)
+                alloc = can_and_place(j_cand)
+                if alloc is not None:
+                    in_queue[j_cand] = False
+                    n_waiting -= 1
+                    start_times[j_cand] = cur_t
+                    finish_times[j_cand] = cur_t + durations[j_cand]
+                    heapq.heappush(running_heap, (finish_times[j_cand], j_cand, alloc))
+                else:
+                    popped_blocked.append((vol, dur, j_cand))
+                    if len(popped_blocked) >= 30:
+                        break
+            for item in popped_blocked:
+                heapq.heappush(normal_heap, item)
+
+        elif policy.startswith('AMBF'):
+            popped_blocked = []
+            while n_waiting > 0 and total_free_gpu > 0:
+                while arrival_heap and not in_queue[arrival_heap[0][1]]:
+                    heapq.heappop(arrival_heap)
+                use_urgent = False
+                if arrival_heap and (cur_t - arrival_heap[0][0] >= T_cap_sec):
+                    use_urgent = True
+                if use_urgent:
+                    arr_t, j_cand = heapq.heappop(arrival_heap)
+                    alloc = can_and_place(j_cand)
+                    if alloc is not None:
+                        in_queue[j_cand] = False
+                        n_waiting -= 1
+                        start_times[j_cand] = cur_t
+                        finish_times[j_cand] = cur_t + durations[j_cand]
+                        heapq.heappush(running_heap, (finish_times[j_cand], j_cand, alloc))
+                    else:
+                        heapq.heappush(arrival_heap, (arr_t, j_cand))
+                        break
+                else:
+                    while normal_heap and not in_queue[normal_heap[0][2]]:
+                        heapq.heappop(normal_heap)
+                    if not normal_heap:
+                        break
+                    prio, dur, j_cand = heapq.heappop(normal_heap)
+                    alloc = can_and_place(j_cand)
+                    if alloc is not None:
+                        in_queue[j_cand] = False
+                        n_waiting -= 1
+                        start_times[j_cand] = cur_t
+                        finish_times[j_cand] = cur_t + durations[j_cand]
+                        heapq.heappush(running_heap, (finish_times[j_cand], j_cand, alloc))
+                    else:
+                        popped_blocked.append((prio, dur, j_cand))
+                        if len(popped_blocked) >= 30:
+                            break
+            for item in popped_blocked:
+                heapq.heappush(normal_heap, item)
+
+    wait_times = start_times - submit_times
+    s_clip = np.clip(start_times, 0.0, HORIZON)
+    f_clip = np.clip(finish_times, 0.0, HORIZON)
+    dur_in_horizon = np.maximum(0.0, f_clip - s_clip)
+    used_gpu_sec = np.sum(dur_in_horizon * total_gpus_req)
+    used_cpu_sec = np.sum(dur_in_horizon * (cpu_reqs * worker_nums))
+    avail_gpu_sec = float(node_gpu_cap.sum()) * HORIZON
+    avail_cpu_sec = float(node_cpu_cap.sum()) * HORIZON
+
+    completed_in_horizon = int(np.sum(finish_times <= HORIZON))
+    slowdown = (wait_times + durations) / np.maximum(durations, 60.0)
+
+    return {
+        'model': nodes_sub['gpu_model'].iloc[0],
+        'policy': policy,
+        'n_jobs': n_jobs,
+        'mean_wait_hr': np.mean(wait_times) / 3600.0,
+        'median_wait_sec': np.median(wait_times),
+        'p95_wait_hr': np.percentile(wait_times, 95) / 3600.0,
+        'p99_wait_hr': np.percentile(wait_times, 99) / 3600.0,
+        'max_wait_hr': np.max(wait_times) / 3600.0,
+        'mean_slowdown': np.mean(slowdown),
+        'gpu_util_pct': used_gpu_sec / avail_gpu_sec * 100.0,
+        'cpu_util_pct': used_cpu_sec / avail_cpu_sec * 100.0,
+        'completed_90d': completed_in_horizon,
+        'makespan_days': np.max(finish_times) / 86400.0,
+        'wall_sec': time.time() - t0_wall,
+        'wait_times': wait_times
+    }
+
+models = ['A10', 'A100-SXM4-80GB', 'A800-SXM4-80GB', 'GPU-series-1', 'GPU-series-2', 'H800']
+q2_rows = []
+for pol, tc in [('FCFS-FF', 1200), ('EASY-BF', 1200), ('SAF-BF', 1200), ('AMBF-1080', 1080), ('AMBF-1350', 1350), ('AMBF-1500', 1500)]:
+    waits_all = []
+    tot_comp = 0
+    max_mk = 0.0
+    t_s = time.time()
+    for m in models:
+        r = simulate_single_pool_q2(node_df[node_df['gpu_model']==m], job_df[job_df['gpu_model']==m], policy=pol, T_cap_hours=tc)
+        q2_rows.append({k: v for k, v in r.items() if k != 'wait_times'})
+        waits_all.append(r['wait_times'])
+        tot_comp += r['completed_90d']
+        max_mk = max(max_mk, r['makespan_days'])
+    w_cat = np.concatenate(waits_all)
+    print(f"Q2 [{pol:10s}] Overall: MeanW={np.mean(w_cat)/3600:6.2f}h | MedW={np.median(w_cat):5.1f}s | P95W={np.percentile(w_cat,95)/3600:7.2f}h | MaxW={np.max(w_cat)/3600:7.1f}h | Comp90d={tot_comp:6d} ({tot_comp/len(job_df)*100:5.2f}%) | Makespan={max_mk:5.1f}d | t={time.time()-t_s:.2f}s")
+
+pd.DataFrame(q2_rows).to_csv("artifacts/file_generation/ttl=63d/intermediate/q2_full_table.csv", index=False)

@@ -1,0 +1,198 @@
+import pandas as pd
+import numpy as np
+import heapq
+import time
+
+node_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/node_info_df.csv")
+job_df = pd.read_csv("work/2026_MCM_Senior_GPU_Scheduling/job_info_clean.csv")
+HORIZON = 7776000.0
+
+# 1. Check native A100-SXM4-80GB performance when M nodes (48, 64, 72) are dedicated to MIG
+# Using fast Best-Fit simulator on A100-SXM4-80GB (all nodes have 8 GPUs and 128 vCPUs)
+a100_jobs = job_df[job_df['gpu_model']=='A100-SXM4-80GB'].sort_values(['submit_time', 'job_name']).reset_index(drop=True)
+
+def sim_a100_remaining(n_nodes_rem):
+    n_jobs = len(a100_jobs)
+    submit_times = a100_jobs['submit_time'].values.astype(float)
+    durations = a100_jobs['duration'].values.astype(float)
+    gpu_reqs = a100_jobs['gpu_request'].values.astype(int)
+    cpu_reqs = a100_jobs['cpu_request'].values.astype(float)
+    worker_nums = a100_jobs['worker_num'].values.astype(int)
+    total_gpus_req = gpu_reqs * worker_nums
+    volumes = total_gpus_req * durations
+
+    free_gpu = np.full(n_nodes_rem, 8, dtype=int)
+    free_cpu = np.full(n_nodes_rem, 128.0, dtype=float)
+    total_free_gpu = n_nodes_rem * 8
+
+    start_times = np.zeros(n_jobs, dtype=float)
+    finish_times = np.zeros(n_jobs, dtype=float)
+    running_heap = []
+    normal_heap = []
+    in_queue = np.zeros(n_jobs, dtype=bool)
+    n_waiting = 0
+    next_arr_idx = 0
+    cur_t = 0.0
+
+    def can_and_place(j):
+        nonlocal total_free_gpu
+        w = int(worker_nums[j])
+        g = int(gpu_reqs[j])
+        c = float(cpu_reqs[j])
+        if w * g > total_free_gpu:
+            return None
+        max_w_gpu = free_gpu // g
+        max_w_cpu = ((free_cpu + 1e-9) // c).astype(int) if c > 0 else max_w_gpu
+        cap_w = np.minimum(max_w_gpu, max_w_cpu)
+        if cap_w.sum() < w:
+            return None
+        cand = np.flatnonzero(cap_w > 0)
+        # BestFit: prefer smaller free_gpu
+        order = cand[np.argsort(free_gpu[cand])]
+        alloc = []
+        rem = w
+        for idx in order:
+            take = min(rem, int(cap_w[idx]))
+            free_gpu[idx] -= take * g
+            free_cpu[idx] -= take * c
+            total_free_gpu -= take * g
+            alloc.append((int(idx), take))
+            rem -= take
+            if rem == 0:
+                break
+        return alloc
+
+    while next_arr_idx < n_jobs or n_waiting > 0 or running_heap:
+        if next_arr_idx < n_jobs and submit_times[next_arr_idx] <= cur_t:
+            pass
+        else:
+            next_t = float('inf')
+            if running_heap:
+                next_t = min(next_t, running_heap[0][0])
+            if next_arr_idx < n_jobs:
+                if total_free_gpu == 0 and running_heap:
+                    next_t = running_heap[0][0]
+                else:
+                    next_t = min(next_t, submit_times[next_arr_idx])
+            if next_t == float('inf'):
+                break
+            cur_t = max(cur_t, next_t)
+
+        while running_heap and running_heap[0][0] <= cur_t + 1e-9:
+            fin_t, j_done, alloc = heapq.heappop(running_heap)
+            cur_t = max(cur_t, fin_t)
+            g = int(gpu_reqs[j_done])
+            c = float(cpu_reqs[j_done])
+            for idx, take in alloc:
+                free_gpu[idx] += take * g
+                free_cpu[idx] = min(128.0, free_cpu[idx] + take * c)
+                total_free_gpu += take * g
+
+        while next_arr_idx < n_jobs and submit_times[next_arr_idx] <= cur_t + 1e-9:
+            j = next_arr_idx
+            in_queue[j] = True
+            n_waiting += 1
+            prio = (volumes[j] ** 0.7) - 0.01 * submit_times[j]
+            heapq.heappush(normal_heap, (prio, durations[j], j))
+            next_arr_idx += 1
+
+        if n_waiting == 0 or total_free_gpu == 0:
+            continue
+
+        popped = []
+        while normal_heap and total_free_gpu > 0:
+            prio, dur, j_cand = heapq.heappop(normal_heap)
+            alloc = can_and_place(j_cand)
+            if alloc is not None:
+                in_queue[j_cand] = False
+                n_waiting -= 1
+                start_times[j_cand] = cur_t
+                finish_times[j_cand] = cur_t + durations[j_cand]
+                heapq.heappush(running_heap, (finish_times[j_cand], j_cand, alloc))
+            else:
+                popped.append((prio, dur, j_cand))
+                if len(popped) >= 30:
+                    break
+        for item in popped:
+            heapq.heappush(normal_heap, item)
+
+    wait_times = start_times - submit_times
+    s_clip = np.clip(start_times, 0.0, HORIZON)
+    f_clip = np.clip(finish_times, 0.0, HORIZON)
+    used_gpu_sec = np.sum(np.maximum(0.0, f_clip - s_clip) * total_gpus_req)
+    util = used_gpu_sec / (n_nodes_rem * 8 * HORIZON) * 100.0
+    print(f"A100 Remaining Nodes={n_nodes_rem:3d} (Dedicate M={432-n_nodes_rem:2d} to MIG) | A100 MeanW={np.mean(wait_times)/3600:.3f}h | MedW={np.median(wait_times):.1f}s | P95W={np.percentile(wait_times,95)/3600:.3f}h | A100 GPU Util={util:.2f}%")
+
+print("=== 1. IMPACT ON DONOR A100 POOL WHEN M NODES ARE PARTITIONED VIA MIG ===")
+for M in [0, 48, 64, 72, 88]:
+    sim_a100_remaining(432 - M)
+
+# 2. Method 3C: Financial Incentive & Dynamic Congestion Pricing Model
+# Reference public cloud GPU hourly prices ($/GPU-hour):
+# A10: $1.00, GPU-series-1: $1.20, GPU-series-2: $2.20, A800-80GB: $3.20, A100-80GB: $3.50 (or $1.75 per MIG-2x slice), H800: $4.80
+# Let's model user choice when a discount delta in {0%, 20%, 35%, 50%, 60%} is offered on under-utilized high-end pools / MIG slices,
+# combined with a modest congestion surcharge s in {0%, 15%} on A10 during peak queue periods.
+# Under the Multinomial Logit (MNL) / Random Utility Model:
+# A job j arriving at the A10 pool compares:
+#   Option 0 (Stay in A10 queue): Cost_0 = p_A10 * (1 + s) * G_j * d_j, Expected Wait = W_A10(q)
+#   Option 1 (Switch to discounted high-end / MIG pool): Cost_1 = (1 - delta) * p_alt * G_j * (d_j / kappa), Expected Wait = 0
+# Generalized cost per GPU-hour:
+#   GC_0 = p_A10 * (1 + s) + vot_j * (W_A10 / d_j_hr)
+#   GC_1 = (1 - delta) * (p_alt / kappa)
+# where vot_j ~ LogNormal(mu_vot, sigma_vot) is user j's value of waiting time relative to job duration (or per GPU-hour waiting cost).
+print("\n=== 2. FINANCIAL CONGESTION PRICING & USER MIGRATION EQUILIBRIUM ===")
+from run_q3_all import simulate_a10_with_mig_or_overflow
+
+a10_jobs = job_df[job_df['gpu_model']=='A10'].sort_values(['submit_time', 'job_name']).reset_index(drop=True)
+np.random.seed(42)
+# Value of queue reduction & switching elasticity:
+# At discount delta, the effective price per work-equivalent unit on A100/GS2 (with speedup kappa=1.45 or MIG-2x) is p_eff = 2.40 * (1 - delta).
+# Probability of switching for flexible jobs (assume 65% of A10 jobs are hardware-flexible single-GPU workloads):
+p_base = 1.00 # $/GPU-hr for A10
+p_alt_raw = 2.40 # weighted average $/GPU-hr of alternative pool adjusted for speedup/slice
+beta_price = 2.2 # price sensitivity
+
+fin_rows = []
+for delta, surcharge, desc in [
+    (0.00, 0.00, "No Pricing Incentive (delta=0%, s=0%)"),
+    (0.25, 0.00, "Mild Discount (delta=25%, s=0%)"),
+    (0.40, 0.00, "Moderate Discount (delta=40%, s=0%)"),
+    (0.50, 0.10, "Revenue-Neutral Peak-Valley Pricing (delta=50%, s=10%)"),
+    (0.60, 0.15, "Aggressive Congestion Pricing (delta=60%, s=15%)")
+]:
+    p_a10_eff = p_base * (1.0 + surcharge)
+    p_alt_eff = p_alt_raw * (1.0 - delta)
+    # Logit switching probability among flexible jobs (65% of jobs are flexible; short/medium duration jobs are more delay-sensitive)
+    dur_hrs = a10_jobs['duration'].values / 3600.0
+    # Delay sensitivity term: higher when baseline queue wait is high, scaled by 1/(1 + dur_hrs/48)
+    delay_val = 0.85 / (1.0 + dur_hrs / 72.0)
+    utility_diff = delay_val - beta_price * (p_alt_eff - p_a10_eff)
+    prob_switch = 0.65 / (1.0 + np.exp(-utility_diff))
+    
+    switched_mask = (np.random.rand(len(a10_jobs)) < prob_switch)
+    rem_a10_jobs = a10_jobs[~switched_mask].copy()
+    sw_a10_jobs = a10_jobs[switched_mask].copy()
+    
+    # Simulate remaining A10 jobs on native A10 pool under AMBF-1350
+    res_rem = simulate_a10_with_mig_or_overflow(rem_a10_jobs, M_mig_nodes=0, m_slices=1, extra_overflow_nodes=0, kappa_mig=1.0, policy='AMBF-1350')
+    
+    # Switched jobs go to under-utilized pools (which have >1,500 idle GPUs, so wait time ~ 0.0h)
+    n_tot = len(a10_jobs)
+    n_sw = int(switched_mask.sum())
+    sw_gh = (sw_a10_jobs['worker_num'] * sw_a10_jobs['duration'] / 3600.0).sum()
+    rem_gh = (rem_a10_jobs['worker_num'] * rem_a10_jobs['duration'] / 3600.0).sum()
+    
+    comb_mean_wait = res_rem['mean_wait_hr'] * (1.0 - n_sw / n_tot)
+    # Calculate cloud provider revenue from A10 demand ($M):
+    # Note: under baseline without pricing, only jobs/GPU-hours that can be served within horizon or before user abandonment generate timely revenue;
+    # here we compute total billed revenue from A10 workloads = rem_gh * p_a10_eff + sw_gh * p_alt_eff
+    rev_million = (rem_gh * p_a10_eff + sw_gh * p_alt_eff) / 1e6
+    print(f"{desc:52s} | SwitchJobs={n_sw/n_tot*100:5.1f}% | SwitchGPUhr={sw_gh/(sw_gh+rem_gh)*100:5.1f}% | A10 Comb MeanW={comb_mean_wait:6.2f}h | RemP95W={res_rem['p95_wait_hr']:6.2f}h | A10 Util={res_rem['gpu_util_pct']:5.2f}% | Rev=${rev_million:5.2f}M")
+    fin_rows.append({
+        'desc': desc, 'delta': delta, 'surcharge': surcharge,
+        'switch_job_pct': n_sw/n_tot*100, 'switch_gh_pct': sw_gh/(sw_gh+rem_gh)*100,
+        'comb_mean_wait_hr': comb_mean_wait, 'rem_p95_wait_hr': res_rem['p95_wait_hr'],
+        'a10_util_pct': res_rem['gpu_util_pct'], 'rev_million': rev_million
+    })
+
+pd.DataFrame(fin_rows).to_csv("artifacts/file_generation/ttl=63d/intermediate/q3_financial_results.csv", index=False)

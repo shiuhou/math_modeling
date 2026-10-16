@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "scope": "full_trace",
+  "checks": [
+    {
+      "policy": "FCFS",
+      "jobs": 224112,
+      "ledger_rows": 317241,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "metrics": "PASS"
+    },
+    {
+      "policy": "SJF-HOL",
+      "jobs": 224112,
+      "ledger_rows": 316107,
+      "input_fields": "PASS",
+      "capacity_replay": "PASS",
+      "metrics": "PASS"
+    }
+  ],
+  "run_sha256": "ff4c8ce8cad47928f8b7ba03d6bd0bedd435233b8e5316a7fd919fd47bd69e6c"
+}

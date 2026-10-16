@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "daily_integrals": {
+    "A10": {
+      "status": "PASS",
+      "bins": 90,
+      "all_bins_match_direct_raw_interval_overlap": true,
+      "gpu_seconds": 28106225210,
+      "last_bin_seconds": 86278,
+      "exact_window_mean": 3614.540404311899
+    },
+    "A100-SXM4-80GB": {
+      "status": "PASS",
+      "bins": 90,
+      "all_bins_match_direct_raw_interval_overlap": true,
+      "gpu_seconds": 16864433773,
+      "last_bin_seconds": 86278,
+      "exact_window_mean": 2168.8140905760097
+    }
+  },
+  "shared_html_tex_values": "PASS",
+  "six_model_table_fields_identical": "PASS",
+  "old_q1_values_absent": "PASS"
+}

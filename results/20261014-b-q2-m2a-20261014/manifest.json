@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "kind": "formal",
+  "experiment_id": "20261014-b-q2-m2a-20261014",
+  "question_or_claim": "Q2 M2-A correctness: FIXED/FLEX safe crossing and FIFO-head EASY-NR on the single DES",
+  "parent_commit": "960176cc5c45c59553183ac5d1637120d3475ecb",
+  "scope": "M2-A correctness and bounded engineering cost only; no 22-cell matrix or performance claim",
+  "spec_sources": {
+    "docs/Q2_Algorithm_Audit.md": {
+      "sha256": "b4c783ab89315b9c73b1f510ce0420b9b29feeb70901b7eb45b57759ab5245b4",
+      "bytes": 47094
+    },
+    "docs/Q2_Gang_Scheduling_研究設計與Codex規格.md": {
+      "sha256": "cad596f5c4aa6e770f0e5d6e8fe518a3f666ffa132d8bbdde2df44209c136db7",
+      "bytes": 44583
+    },
+    "docs/Q2_正式實驗協議.md": {
+      "sha256": "d5e5207dff76cc1a72182087ee8f5574c0282620751a03cf1dcd6e40aff54177",
+      "bytes": 25347
+    },
+    "references/q2_pro_review/cross_checks.json": {
+      "sha256": "6892f5d481a0febc674684440231efd1cd63be2877f39480e6c3086ce5c69073",
+      "bytes": 5941
+    },
+    "references/q2_pro_review/full_trace_results.jsonl": {
+      "sha256": "806d37f1de9d99db314c256613cab69912025dd6476c5293ce42af4cfd81f685",
+      "bytes": 23268
+    },
+    "references/q2_pro_review/reconciliation.json": {
+      "sha256": "082f19a9fb135557c8432a42b5ba9004f51aca61f1604512f5795ea303a2c798",
+      "bytes": 38540
+    }
+  },
+  "source_sha256": {
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "6ddc34efff1f9a72465d40385aa4c8162d040dc4fb00f9b319d5605572012337",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": "5f21502c2d4dd51fc496b1f960223f63e7618c64ad3e38cc3fe893dbc4f44dfd",
+    "problems/2026_gpu_scheduling/experiments/run_baselines.py": "dc837861343fc8f8ebca7b0f2a8e9e1dfd0b0d3e3e39280dd968f0795e3600d4",
+    "problems/2026_gpu_scheduling/experiments/verify_baseline.py": "c2baf97b232fd773653bac006b25cc022d619d5bc95959c58c7d3c6ac915ed85",
+    "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py": "13ae1eacc59251fa29c8385195390877a4233b0ddc35ebef47497e0cdeca1a30",
+    "problems/2026_gpu_scheduling/experiments/verify_m2a_pressure.py": "05dd6b2acaa2236a1e6237db40210ce67a554c831779e39cc85088967b9fba9a",
+    "problems/2026_gpu_scheduling/tests/test_q2_m1.py": "4051ce323ae494dde329a697d6233ab2d0322f0e3ea81c08e12180ddc752d4ed"
+  },
+  "data": {
+    "repo_raw_sha256": {
+      "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+    },
+    "raw_unchanged": true,
+    "parent_bridge": "results/20261014-b-q2-m1/manifest.json"
+  },
+  "configuration": {
+    "policies": [
+      "SPT-URGENT-TIME",
+      "SPT-URGENT-FIXED",
+      "SPT-URGENT-FLEX",
+      "EASY-NR"
+    ],
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_modes": [
+      "shared-timer",
+      "arrival-completion-only"
+    ],
+    "placement": "first-fit ascending node_name",
+    "one_pending_reservation_per_pool": true,
+    "time_safety": "TIME rejects crossing; FIXED/FLEX/EASY-NR require sparse replayable certificate"
+  },
+  "implementation": {
+    "fixed": "effective capacity min(current_free, future_free_at_R - head_witness demand); immutable R and fixed witness",
+    "flex": "current first-fit crossing trial then head witness rebuild; FIXED fallback; R unchanged",
+    "easy_nr": "FIFO first blocked head with same FLEX planner, without urgent-only protection",
+    "evidence": "certificate_update events contain plan, mode, version chain, future vector and head witness; no dense per-reservation calendars"
+  },
+  "synthetic_cases": [
+    {
+      "name": "TIME rejects / FIXED accepts crossing",
+      "status": "PASS",
+      "starts": {
+        "TIME": [
+          0,
+          10,
+          10
+        ],
+        "FIXED": [
+          0,
+          10,
+          1
+        ],
+        "FLEX": [
+          0,
+          10,
+          1
+        ]
+      }
+    },
+    {
+      "name": "FIXED rejects / FLEX moves head witness",
+      "status": "PASS",
+      "starts": {
+        "FIXED": [
+          0,
+          10,
+          20
+        ],
+        "FLEX": [
+          0,
+          10,
+          1
+        ]
+      }
+    },
+    {
+      "name": "cumulative safe candidates become unsafe",
+      "status": "PASS",
+      "fixed_starts": [
+        0,
+        10,
+        1,
+        20
+      ],
+      "crossing_accepted": 1,
+      "crossing_rejected_at_least": 1
+    },
+    {
+      "name": "finish equals R",
+      "status": "PASS"
+    },
+    {
+      "name": "protected head not K-cropped",
+      "status": "PASS",
+      "K": 1
+    },
+    {
+      "name": "certificate tamper/deletion",
+      "status": "PASS",
+      "independent_validator": "rejects"
+    }
+  ],
+  "validation": {
+    "status": "PASS",
+    "problem_b_tests": 30,
+    "root_tests": 12,
+    "repo_checks": "PASS (65 files)",
+    "smoke": [
+      {
+        "mode": "shared-timer",
+        "policies": 10,
+        "pools": 6,
+        "jobs_per_pool": 64,
+        "run": "outputs/q2-m2a-smoke-shared-20261014",
+        "verified": "smoke-shared-verified.json",
+        "status": "PASS"
+      },
+      {
+        "mode": "arrival-completion-only",
+        "policies": 10,
+        "pools": 6,
+        "jobs_per_pool": 64,
+        "run": "outputs/q2-m2a-smoke-history-all-20261014",
+        "verified": "smoke-history-verified.json",
+        "status": "PASS"
+      }
+    ],
+    "pressure": [
+      {
+        "theta_seconds": 4860000,
+        "jobs": 4096,
+        "summary": "pressure-theta1350-summary.json",
+        "verified": "pressure-theta1350-verified.json",
+        "status": "PASS"
+      },
+      {
+        "theta_seconds": 4,
+        "jobs": 4096,
+        "summary": "pressure-theta4-summary.json",
+        "verified": "pressure-theta4-verified.json",
+        "status": "PASS"
+      }
+    ]
+  },
+  "resource_recording": {
+    "pressure_outputs": "ignored outputs contain sparse job_times, placements and reservation events; summaries record hashes and costs",
+    "dense_snapshot_policy": "no per-reservation dense calendar; only initial/final vectors and sparse certificate increments",
+    "max_certificate_updates_per_reservation": "1 in A10 pressure runs (fulfillment update excluded from crossing count)"
+  },
+  "artifacts": {
+    "results/20261014-b-q2-m2a-20261014/pressure-theta1350-summary.json": {
+      "sha256": "c2feff343d323d4ce7727e730e84eb757ecf7fb5e596c8be5b13acbdc04d715b",
+      "bytes": 6447
+    },
+    "results/20261014-b-q2-m2a-20261014/pressure-theta1350-verified.json": {
+      "sha256": "2579fec393c71faed1df732bb65c0dde39f40d3ba623178673f4e6586f26abc8",
+      "bytes": 757
+    },
+    "results/20261014-b-q2-m2a-20261014/pressure-theta4-summary.json": {
+      "sha256": "593a7a9395da344781c328233261eb46d23bcfd8305dd3609e1d97895f12cfa0",
+      "bytes": 6465
+    },
+    "results/20261014-b-q2-m2a-20261014/pressure-theta4-verified.json": {
+      "sha256": "2579fec393c71faed1df732bb65c0dde39f40d3ba623178673f4e6586f26abc8",
+      "bytes": 757
+    },
+    "results/20261014-b-q2-m2a-20261014/smoke-history-verified.json": {
+      "sha256": "81c07871d10dbd9a7d4c9d8c14b079e2587baf8b6f3bdf3b52b78cca6df85d68",
+      "bytes": 9725
+    },
+    "results/20261014-b-q2-m2a-20261014/smoke-shared-verified.json": {
+      "sha256": "defcb61208cf4ed0bfb61ca0fda38573850868b02da7f3e37727d29868af9075",
+      "bytes": 9725
+    }
+  },
+  "open_items": [
+    "A10 pressure prefix had no accepted crossing; crossing acceptance is covered by synthetic proofs/tests, not claimed as trace frequency.",
+    "M2 full performance comparison and 22-cell matrix not run.",
+    "Full-trace FIXED/FLEX/EASY-NR not run.",
+    "Q3 and paper performance claims remain out of scope."
+  ]
+}

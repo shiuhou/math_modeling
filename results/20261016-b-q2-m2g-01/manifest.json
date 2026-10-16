@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "kind": "q2_m2g_formal_evidence",
+  "status": "PASS",
+  "git": {
+    "head": "01995bd1319a4233c83bed95dd6e5c857efcdaf2",
+    "dirty_at_assembly": true
+  },
+  "configuration": {
+    "model": "A10",
+    "a10_jobs": 111284,
+    "prefix_jobs": 65536,
+    "theta_seconds": 604800,
+    "event_mode": "shared-timer",
+    "reservation_k": 200,
+    "placement": "first-fit ascending node_name",
+    "horizon_seconds": 7776000,
+    "timeout_seconds": 900,
+    "max_rss_kib": 4194304
+  },
+  "data": {
+    "node_info_df_sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean_sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+    "a10_total_jobs": 111284,
+    "capacity_gpu": 2494
+  },
+  "source": {
+    "g1_code_commit": "01995bd1319a4233c83bed95dd6e5c857efcdaf2",
+    "g2_g3_code_commit": "01995bd1319a4233c83bed95dd6e5c857efcdaf2",
+    "core_source_sha256": {
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/audit.py": "2f61b263ed04836fe8e838c610bff36d3b332d1149c6597f2f24f20613978d11",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py": "ec39507f869fbbf63a4d57cb488ad9d63f0e2a4c9d62c51a6d971d437da4f6be",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py": "a47ae390e66174fbe6e47024b09c87da64202377bb1be220278ed414ee868872",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "23c6afa8cd8e27e8bdbb73e2a4eb694998d4e72e0fb65c9e41bafa0958fa6d49",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "c6cdbcec26722fb395ec2fc877d2dc1f8bad2388e10b18b363df3c1ad453a873",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": "2efefa2ea01f8632d4eeaeae9449918acb751a043e5d9734cef6e81246962af5",
+      "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py": "ed2308d358588fa79a14fac795d529d9775c945a056d4a5766069eb30e962eec"
+    }
+  },
+  "runs": {
+    "G1_65536_SPT-HOL": {
+      "status": "PASS",
+      "benchmark": "g1-65536-benchmark.json",
+      "verified": "g1-65536-verified.json",
+      "evidence_archive": "evidence-g1-65536.tar.gz",
+      "analysis": [
+        "g1-lower_bound.json",
+        "g1-gap_decomposition.json",
+        "g1-input_validation.json"
+      ]
+    },
+    "G2_111284_SPT-HOL": {
+      "status": "PASS",
+      "benchmark": "g2-111284-benchmark.json",
+      "verified": "g2-111284-verified.json",
+      "evidence_archive": "evidence-g2-111284.tar.gz",
+      "analysis": [
+        "g2-lower_bound.json",
+        "g2-gap_decomposition.json",
+        "g2-input_validation.json"
+      ]
+    },
+    "G3_111284_SPT-FILL": {
+      "status": "PASS",
+      "benchmark": "g3-111284-benchmark.json",
+      "verified": "g3-111284-verified.json",
+      "evidence_archive": "evidence-g3-111284.tar.gz",
+      "analysis": [
+        "g3-lower_bound.json",
+        "g3-gap_decomposition.json",
+        "g3-input_validation.json"
+      ]
+    }
+  },
+  "comparison": "comparison.json",
+  "archives": "archives.json",
+  "commands": "commands.sh",
+  "checks": {
+    "capacity_replay": "PASS",
+    "reservation_replay": "PASS_OR_EMPTY_NA",
+    "raw_id_and_attributes": "PASS",
+    "lower_bound_and_decomposition": "PASS",
+    "proof_erratum": "PASS_TEXT_ONLY",
+    "scheduler_modified": "NO",
+    "history_overwritten": "NO",
+    "source_index_count_and_hash": "PASS"
+  },
+  "not_run": [
+    "full 224112-job cluster",
+    "urgent full matrix",
+    "theta=1350h",
+    "EASY-NR",
+    "Q3"
+  ],
+  "limitations": [
+    "theta=168h is exploratory, not optimal",
+    "full A10 means 111284 A10 jobs only",
+    "G1 ordinary SPT-HOL and M2-E five policies have identical core source hashes but different run commits; run provenance is retained"
+  ],
+  "source_index_correction": {
+    "status": "PASS",
+    "cause": "full rows previously used sources.get(policy), which resolved the 65k SPT-HOL/FILL keys",
+    "fix": "row() now receives the explicit timing-source object for each result set",
+    "full_source_row_count": 111284,
+    "full_source_job_id_hash": "502a76d5c8c48ab1a525cbbbe54eb3781a59527b1883d87e78e06b67a2f187e2",
+    "metrics_groups_pairs_unchanged": true,
+    "scheduler_rerun": "NOT_RUN"
+  },
+  "comparison_sha256": "62a77c575e1eed65b65d7699c6f15e687713aa782bae722e33f483a6e1adee8b"
+}

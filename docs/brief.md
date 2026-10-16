@@ -1,62 +1,32 @@
 # 專案入口
 
-本檔集中保存專案現況、題目覆蓋、共用介面及研究依賴；數模規範見 [modeling.md](../modeling.md)，操作流程見 [CONTRIBUTING.md](../CONTRIBUTING.md)。不另建 PROJECT／SPEC／DESIGN／PLAN 副本。
+唯一規範正文見 [modeling.md](../modeling.md)，協作見 [CONTRIBUTING.md](../CONTRIBUTING.md)。沒有另建 SPEC／DESIGN／PLAN 副本；B 題細節與可執行命令集中於 [B README](../problems/2026_gpu_scheduling/README.md)。
 
-## 目前階段與待確認事項
+## 現況與題目覆蓋
 
-| 項目 | 已知狀態 |
+| 項目 | 狀態 |
 | --- | --- |
-| 本輪範圍 | 倉庫初始化；不求解賽題 |
-| 選題 | 待確認；不因手冊同列 A／B 題而自行選題 |
-| 官方來源 | 題目全文、提交指南及正式澄清未提供，尚未核對 |
-| 手冊附錄 | 僅有既有摘要及來源名稱；比賽名稱、期限、頁數與提交要求均待對照原文確認 |
-| 協作方式 | 已確認：隊員各自在自己的電腦 clone，按任務開分支，透過 GitHub PR 整合；worktree 僅供同機多任務選用 |
-| 成員與責任 | GitHub 帳號、主要負責人、審閱者及整合者待確認 |
-| 資料 | 實際檔案、來源、授權、版本、取得方式及公開範圍待確認 |
-| 正式環境 | Python／其他研究語言、依賴、求解器、硬體及資源預算待確認 |
-| 論文工具 | 待確認；現有 Markdown 工作稿只作起點 |
-| 任務追蹤 | 使用 GitHub Issue／PR 與隨 Git 保存的任務筆記；未查核遠端 Issues，若已有則直接引用 |
-| 遠端設定 | 遠端預設分支 `main` 已讀取確認；分支保護、審閱要求、Actions 權限及可見性未查核／未修改 |
+| 題目 | 使用者確認 2026 MCM Senior Problem B，已核對原題 PDF 與兩個 raw CSV |
+| 規則 | 初始空閒、非搶佔、已知 duration、gang 同步、逐節點同 worker CPU/GPU；10 A4 頁英文、至少 11pt、姓名與真實 AI 披露 |
+| 工程 | 一個活動 DES、共享 loader／evaluator、獨立 ledger replay；原 scripts 逐 byte inert 歸檔 |
+| Q1 | feat/b-q1：唯一英文章節、繁中對照、正文／補充圖與獨立交付；數值沿用 39 統計／九表，最終狀態見 [Q1 任務](../notes/tasks/b-q1.md) |
+| Q2 基線 | PASS：FCFS／嚴格 SJF-HOL 全 trace 各 224,112 jobs，節點容量及持久化 metrics 核查；改進算法 NOT_RUN |
+| Q3 | 固定分流 pilot：60 完整 A100 節點、全 trace 10% SHA256 分流、假設 sigma=1；M0 恢復／M1 帳本與反事實核查 PASS，見 [Q3 任務](../notes/tasks/b-q3.md)；相容性與性能 benchmark 未驗證 |
+| 論文 | 跨章 Q1 量綱／需求語義已修正；Q2/Q3 性能數字保留為未驗證歷史主張；編譯與排版狀態見整合驗收，不代表可提交 |
+| 協作 | 各自在自己的電腦 clone；Q2/Q3 研究分支由同一整合提交建立。分工及 reviewer 待確認 |
+| 資料／環境 | raw 保持不變、依賴固定；歷史 job byte 不同的原因未知；公開再散布範圍及全隊正式硬體待確認 |
+| Git | 使用者授權整理後建立／推送 feat/b-q2、feat/b-q3；不推 main、不合併 PR |
 
-初始化檢查時本機為 Linux x86_64、Python 3.12.3、Git 2.43.0。隊員各自電腦的作業系統、工具版本及研究環境待確認；本機快照不代表全隊環境。個人電腦設定與目前平台限制見 [docs/host.md](host.md)。
+## 共用介面與協調
 
-## 題目覆蓋表
+- `read_data(source)` 回傳 nodes/jobs/input hashes；秒、每 worker 需求、0.01 vCPU 整數縮放。
+- `simulate_pool(nodes,jobs,policy)` 是唯一活動 DES；FCFS 或 SJF-HOL，completions → arrivals → scheduling，FF 按 node_name；回傳 jobs/starts/ends/plans。
+- `metrics(result,nodes,horizon)` 是共享 evaluator；全部作業排空等待，分配積分 `[0,H)`、完成 `end<=H`；預設 exact trace 窗口，名義 90 天須顯式設定。BSLD 最低為 1。
+- Q1 build 新增 `--scope q1|full`，預設 full；全文與獨立預覽共用 `q1_section.tex`。整合者將 feat/b-q1 的共用入口變更併入 Q2/Q3，勿複製章節或手抄數字。
+- Q1 兩個 EDA 入口共享 `q1.py`；完整生命週期工作量、immediate-start 假設需求、實際調度分配三者分開。論文共享 Q1 數值由 build 生成，不各章寫死。
+- Q2 研究排序／放置；Q3 研究明示假設的耦合跨池方案；圖與全文由整合者協調。需要改共用 loader／DES／evaluator 介面時，在此記錄並由依賴方透過 PR 審閱，不另起永久引擎。
+- 目前人員分工未指定，不把分支名當成已認領；不同電腦的 Codex 對話與本機 outputs 不會自動同步。
 
-取得正式題目後，依手冊第 2 章逐問填入；以下一行表示資訊缺口，不是已認領的研究任務。
+實際驗收與剩餘缺口見 [整合任務](../notes/tasks/b-intake.md)；正式證據按 [results 約定](../results/README.md) 保存。根目錄工程測試不證明模型正確，基線 PASS 不證明舊改進器／Q3 性能成立。使用者最新要求優先提供 Q2/Q3 開工基礎，本輪不測試或重構舊算法。
 
-| 子問與來源 | 需回答的決策 | 模型／分析輸出 | 驗收條件 | 證據位置 | 狀態 |
-| --- | --- | --- | --- | --- | --- |
-| 待確認（未讀題目全文） | 待確認 | 待確認 | 待確認 | 尚無 | BLOCKED：需選題及正式原文 |
-
-## 共用介面
-
-下列接口在被研究程式依賴前，由相關負責人提出具體內容並審閱；未確認時不視為已有共識。
-
-| 介面 | 狀態／位置 |
-| --- | --- |
-| 原始欄位、型別、單位、識別碼與時間語義 | 待確認；資料來源入口見 [data/README.md](../data/README.md) |
-| 資料切分、決策時序與可用資訊 | 待確認 |
-| 共用 loader、成本／約束與評分器 | 未建立；題意確認後再實作 |
-| 指標定義、方向、分母與失敗樣本處理 | 待確認 |
-| 模型輸入輸出、配置與資源限制 | 待確認 |
-| 正式證據及清單格式 | 本輪提出 [results 約定](../results/README.md)，待團隊審閱；尚無正式實驗 |
-
-## 活動安排與依賴
-
-以下是建議的研究依賴順序，不分派人員、不建立遠端任務。實際認領與進度放在 Issue 或對應任務筆記，此處只保留整體安排。
-
-1. 確認選題、正式題目／澄清、提交規則與 AI 使用限制，補齊題目覆蓋表。
-2. 依題目確認資料授權、版本、環境與資源預算；提出資料／指標／模型介面，完成審閱。
-3. 建立可手算的小案例、獨立檢查與完整基準入口；依隊員授權執行首組可追溯實驗。
-4. 根據基準證據決定必要改進與對照；論文提綱可在選題後並行，數值主張等待正式證據。
-
-## 驗證摘要
-
-| 範圍 | 狀態 | 說明 |
-| --- | --- | --- |
-| 本地倉庫連結、JSON、工具行為及忽略規則 | PASS | 21 份 Markdown／JSON、12 項工程測試通過；完整紀錄見 [初始化任務](../notes/tasks/repo-bootstrap.md) |
-| GitHub Actions | 待查核 | workflow 已隨初始化推送至 main；本表未查核遠端執行結果 |
-| 模型、資料、求解器與正式結果重現 | NOT_RUN | 入口未建立；選題、資料與環境待確認 |
-| 隊員各自電腦的環境與完整測試 | NOT_RUN | 尚未取得各電腦的實際驗證；不需要共用 tmux 終端 |
-
-求解器狀態：不適用，本輪沒有求解器或求解任務。AI 使用：本輪由 Codex 協助倉庫初始化與本地檢查；隊員尚未人工審閱，競賽披露規則待核對。
+Q3 本輪以 disjoint physical partitions 包裝既有 `simulate_pool`，沒有變更共享 DES／loader／evaluator 接口；[正式模型與來源採納表](../problems/2026_gpu_scheduling/docs/q3_model.md) 明示 K、sigma、B、native donor cost 及固定分流。GO 僅表示可進小型敏感性研究，不證明真實硬體可相容或所有作業受益。Q2 分支未整合。

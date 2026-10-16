@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "kind": "m2b_bounded_cost_probe",
+  "status": "INCOMPLETE",
+  "configuration": {
+    "model": "A10",
+    "jobs": [
+      65536
+    ],
+    "theta_seconds": [
+      604800
+    ],
+    "short_theta_seconds": 604800,
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "policies": [
+      "SPT-URGENT-HOL"
+    ],
+    "placement": "first-fit ascending node_name",
+    "horizon_seconds": 7776000,
+    "timeout_seconds": 900.0,
+    "max_rss_kib": 4194304
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "records": [
+    {
+      "status": "RSS_LIMIT",
+      "tag": "a10-65536-theta604800-spt-urgent-hol",
+      "jobs": 65536,
+      "theta_seconds": 604800,
+      "threshold_label": "exploratory-168h",
+      "policy": "SPT-URGENT-HOL",
+      "elapsed_seconds": 586.1551207049924,
+      "observed_peak_rss_kib": 4195872,
+      "returncode": -9,
+      "command": [
+        ".venv/bin/python",
+        "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py",
+        "--data",
+        "problems/2026_gpu_scheduling/data/raw",
+        "--out",
+        "outputs/q2-m2d-hol-fastpath-65536-20261015/a10-65536-theta604800-spt-urgent-hol",
+        "--model",
+        "A10",
+        "--jobs",
+        "65536",
+        "--theta-seconds",
+        "604800",
+        "--reservation-k",
+        "200",
+        "--event-mode",
+        "shared-timer",
+        "--policies",
+        "SPT-URGENT-HOL"
+      ],
+      "stdout_tail": "",
+      "stderr_tail": ""
+    }
+  ],
+  "note": "Each record is an independent child process; no performance claim is made for unrun full trace."
+}

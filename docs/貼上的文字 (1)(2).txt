@@ -1,0 +1,228 @@
+## 核心判斷
+
+**Q3 最值得借鑒的，不是六套完整調度器，而是四個可以分開驗證的思想：異構效能不能視為等價、CPU/GPU 必須聯合匹配、跨池共享必須計算接收池代價，以及公平性應看完成時間而不只是資源占比。**
+
+我的建議是：**Gavel 作為跨型號替代的主要文獻；Synergy 支撐固定 CPU/GPU 需求下的資源匹配；HiveD 支撐共享安全與碎片化分析；Themis 用於評價設計。Volcano 和 Slurm 則引用其具體機制，不把整个平台當成一個可直接比較的演算法。**
+
+另有一個重要邊界：你們題目中的 `duration` 在提交時已知，但這不代表同一作業在其他 GPU 型號上的時長也已知。已有資料契約同時要求固定 worker、固定需求、非搶占，以及逐節點 CPU/GPU 約束；不能為移植文獻而悄悄放寬。Q2_Gang_Scheduling_研究設計與Codex規格
+
+## 一、方法適配表
+
+下表的「實作難度」指**轉譯到現有離散事件模擬器的工作量**，不是部署原系統的耗時；「可借鑒」也不代表已證明能改善本題結果。
+
+| Method | Original assumption | Conflict with MCM setting | Reusable idea | Implementation difficulty |
+|---|---|---|---|---|
+| **Gavel — OSDI 2020** | 使用作業—硬體吞吐量資訊，以不同 GPU 上的時間比例表示配置，再透過**可搶占、分輪調度**實現；支援分散式作業。效能可以由使用者提供或執行時量測，不要求全部事前已知。[USENIX](https://www.usenix.org/system/files/osdi20-narayanan_deepak.pdf) | 沒有跨型號效能資料，也不能透過搶占、遷移來實現時間比例。把配置比例直接取整，不會自動變成合法的非搶占 gang 排程。 | 將**相容性**與**執行效率**分開；把跨 GPU 配置改成啟動前一次性選型；比較等待節省與替代時長代價。 | **中**：相容集合、時長情景及共同資源帳本。原系統重現則**高，且缺少效能輸入**。 |
+| **HiveD — OSDI 2020** | 多租戶以 Virtual Cluster 和分層 cell 預留資源形狀與 affinity，而不只預留 GPU 數；機會式作業可借用其他 VC 的閒置資源，但可能被其 guaranteed jobs 搶占。[USENIX](https://www.usenix.org/conference/osdi20/presentation/zhao-hanyu) | 缺少租戶配額與網路 affinity 層次；更關鍵的是，**不可搶占時不能直接繼承其機會式借用保障**。 | 保護有形狀的資源，而非只有 GPU 數量；比較共享前後接收池的損失；檢查借用是否破壞大型 worker 的節點可放置性。 | 節點級診斷**低至中**；帶預約的共享保護**中至高**；完整 VC／buddy-cell 架構不值得重現。 |
+| **Synergy — OSDI 2022** | **GPU 需求固定，但 CPU／memory 配置可調**；以 profiling 取得資源敏感度，按輪配置，實作包含 lease 終止、checkpoint 與重新入隊。主文聚焦同質 GPU 叢集。[USENIX](https://www.usenix.org/system/files/osdi22-mohan.pdf) | 衝突不在固定 GPU 數，而在**CPU／memory 可調和執行期重配置**；本題沒有資源—效能曲線，也不能任意減少 CPU 請求。 | 保留 CPU/GPU 多維可行性、節點資源形狀與 packing 思想；刪除動態調整需求、profiling 和吞吐量保證。 | 固定需求的聯合可行性**低**；放置消融**中**；原版 TUNE／OPT **高且資料不支持**。 |
+| **Themis — NSDI 2020** | 以應用為單位定義 finish-time fairness；應用提供不同配置的估計效益，透過 GPU leases 和多輪競價分配資源。[USENIX](https://www.usenix.org/system/files/nsdi20-paper-mahajan.pdf) | 缺少應用層分組、獨立份額基準與 placement-sensitive 效能估計；lease 到期收回資源不符合非搶占。 | 借用「共享後誰變慢」的評價視角；對原生作業、轉移作業分別計算完成時間損失與尾部，而不是重現 auction。 | 評價指標**低**；完整 auction／lease 架構**高且不適配**。 |
+| **Volcano — Gang／Predicates／Binpack** | 可配置的 Kubernetes 調度框架；Gang 依 `minAvailable` 判斷共同准入，Predicates 做可行節點過濾，Binpack 做資源裝填；另有 preempt／reclaim 動作。[火山](https://volcano.sh/docs/scheduler/plugins/gang/?utm_source=chatgpt.com) | `minAvailable` 不一定等於全部 workers；啟用搶占／回收可能違規；型號標籤只表達放置要求，不能提供跨型號速度。 | 令 `minAvailable = worker_num`；完整 gang 的暫存規劃與提交；將相容性過濾、放置評分、提交分離。 | 抽象到 DES **低至中**；部署整套 Kubernetes／Volcano **高且非必要**。 |
+| **Slurm — GRES／heterogeneous jobs／backfill** | GRES 可表達 GPU 型號與數量；heterogeneous job 包含不同需求的 components，backfill 協調它們共同配置；回填利用時間限制與資源需求。可採非搶占配置。[Slurm Workload Manager](https://slurm.schedmd.com/heterogeneous_jobs.html?utm_source=chatgpt.com) | heterogeneous job 不等於「同一作業可選任一 GPU 型號」；其 **GANG** 功能是時間切片，與本題語義不同。原生 backfill 還有整節點預留等實作選擇，不能直接當成精確節點級 EASY。[Slurm Workload Manager](https://slurm.schedmd.com/gang_scheduling.html?utm_source=chatgpt.com) | 型號化資源帳本、共同准入、已知時長預約、不延後既有承諾，以及有界候選掃描。 | 資源語義**低**；預約保護**中**；重現 Slurm 內部排程流程不必要。 |
+
+## 二、逐項分析：真正值得轉換的是什麼？
+
+### 1. Gavel：最值得引用，但不能在沒有資料時宣稱「效能感知最佳化」
+
+Gavel 最重要的啟發是：**GPU 數量不是跨型號可比較的服務能力，硬體價值與具體工作負載有關。**它的架構將吞吐量估計、配置政策與實際排程分開；原文 Figure 2 就清楚顯示這三個部分。[USENIX](https://www.usenix.org/system/files/osdi20-narayanan_deepak.pdf)
+
+對本題，適合保留的表達是：
+
+\[
+K_{jg}\in\{0,1\},
+\qquad
+p_{jg}=\alpha_{jg}p_j,
+\]
+
+其中 \(K_{jg}\) 表示作業 \(j\) 是否可使用型號 \(g\)，\(\alpha_{jg}\) 表示相對原始型號的時長倍率。
+
+**這是競賽模型的轉譯，不是 Gavel 原始演算法。**建議額外明示：每個作業在啟動前選定一種 GPU 型號，全部 workers 使用該型號的節點；啟動後不改型號、不移動、不增減 workers。這樣不必再建立混合型號同步訓練的效能模型。
+
+最有用的比較條件是：
+
+\[
+\widehat W_{j,g_j}-\widehat W_{jg}
+>
+(\alpha_{jg}-1)p_j.
+\]
+
+左側是預期等待節省，右側是替代造成的執行時間增加。它回答的是：
+
+> 即使替代型號執行得更慢，是否仍因等待較少而更早完成？
+
+但必須守住兩個界限。
+
+**第一，Gavel 可以在線量測，不等於你們的 CSV 可以在線量測。**只有 trace 而沒有可執行工作負載時，不能藉「Gavel 有 estimator」就補出真實性能矩陣。不同作業的 duration 差異，也不能直接識別同一作業的 GPU 加速比。
+
+**第二，\(\alpha_{jg}=1\) 是「只改相容性、不改時長」的結構反事實。**它不是已測得的效能，也不一定是真實效果的上界。全相容情景可以用來衡量型號限制的模型影響，但不應命名為實際 Gavel 性能。
+
+**本題定位：最優先的 Q3 方法動機與敏感性分析來源。**
+
+### 2. HiveD：應借鑒共享安全，而不是複製拓撲樹
+
+HiveD 對 Q3 的價值不只在「減少碎片」，更在於提醒：**允許共享以後，原本擁有資源的一方可能反而變差。**其 VC/cell 機制保留資源形狀；作者實作文件則明確區分 guaranteed jobs 和可能被搶占的 opportunistic jobs。[USENIX](https://www.usenix.org/conference/osdi20/presentation/zhao-hanyu)
+
+因此，以下說法在本題中不成立：
+
+> 「像 HiveD 一樣借用閒置 GPU，原生作業來了再歸還，所以原生作業不受影響。」
+
+一個最小反例就能否定它：接收池只有一張 GPU；外來作業在 \(t=0\) 開始，執行 100 秒；原生作業在 \(t=1\) 到達。沒有外來作業時，它可立即啟動；借出後，由於不可搶占，它至少等待 99 秒。
+
+所以，**未知未來到達、允許非搶占借用、對所有原生作業零損害**，不能僅靠低優先級標籤同時保證。
+
+可以轉換的方向是：評估固定劃分的代價，或在既有預約下允許非搶占借用；後者只能保護已建立的承諾，不能順勢宣稱保護所有未來到達作業。
+
+另一方面，**沒有網路拓撲，不代表沒有節點形狀問題。**假設接收池有兩台各 8 GPU 的節點，兩個單 GPU 外來作業分散放置後剩 \(7+7\) 張 GPU。此時一個每 worker 需要 8 GPU 的原生作業無法啟動；若兩個外來作業集中在同一節點，另一台完整節點仍可使用。這是節點級碎片，無須虛構 NVLink 或機架資訊。
+
+你們的 A10 原池則有很不同的形狀：2,494 個單 GPU 節點，111,284 個作業中有 110,497 個單 worker。**這使 HiveD 式大型 affinity 問題不宜被預設為 A10 原始等待的主因；但跨池轉移可能在接收池新製造碎片。**Q2_Gang_Scheduling_研究設計與Codex規格
+
+**本題定位：共享代價與接收池碎片化的主要文獻；不繼承其完整 sharing-safety 保證。**
+
+### 3. Synergy：保留多資源匹配，刪除「調整作業需求」的權力
+
+這篇最容易被簡化錯誤。
+
+**Synergy 不是「GPU 加 CPU 的 Best-Fit」而已。**它的關鍵能力是：CPU／memory 配置可以調整；放不下時，TUNE 可以將某些配置退回 GPU-proportional share。這種資源調整是原方法的重要部分，不能只刪掉它，卻保留原論文的吞吐量保障。[USENIX](https://www.usenix.org/system/files/osdi22-mohan.pdf)
+
+本題真正能直接使用的是**固定需求下的合法 worker 槽數**。令節點剩餘 CPU/GPU 為 \(F_m^C(t),F_m^G(t)\)，則
+
+\[
+h_{jm}(t)=
+\min\left\{
+\left\lfloor\frac{F_m^C(t)}{c_j}\right\rfloor,
+\left\lfloor\frac{F_m^G(t)}{q_j}\right\rfloor
+\right\},
+\]
+
+當 \(c_j=0\) 時，省略 CPU 項。對選定型號 \(g\)：
+
+\[
+\operatorname{Fit}(j,g,t)
+\iff
+K_{jg}=1
+\quad\land\quad
+\sum_{m:g_m=g}h_{jm}(t)\ge w_j.
+\]
+
+在同作業 workers 相同、沒有額外拓撲限制的模型中，這是精確判定，而非碎片化代理分數；你們已有 Q2 規格也採用這個槽數邏輯。Q2_Gang_Scheduling_研究設計與Codex規格
+
+例如，**假設**某接收節點有 8 張空閒 GPU、192 vCPU，而外來 worker 固定要求 1 GPU、128 vCPU，那麼它只能容納
+
+\[
+\min(8,\lfloor192/128\rfloor)=1
+\]
+
+個 worker，而不是 8 個。
+
+這對 Q3 很重要：**解除 GPU 型號限制，不等於接收池的所有閒置 GPU 都能轉換為 A10 worker 容量。**
+
+適合做的實驗是固定排序、固定需求，比較放置方式及接收池的可用 worker 槽數。不應為提高裝填率而把 128 vCPU 改成 24 vCPU，也不應從 CPU 分配率較低推斷減配不影響時長。
+
+**本題定位：直接可用的資源可行性思想；不能稱為重現 Synergy-TUNE。**
+
+### 4. Themis：借用公平性問題，不直接借用其公平性公式與拍賣
+
+Themis 的 finish-time fairness 比較的是應用在共享叢集中的完成時間，以及它在**獨占自身叢集份額**時的完成時間；並不等於普通的
+
+\[
+\frac{W_j+p_j}{p_j}.
+\]
+
+它還需要對不同資源配置的完成效果進行估計。[USENIX](https://www.usenix.org/system/files/nsdi20-paper-mahajan.pdf)
+
+對本題，更合適的是固定一個「不替代」基準，對每個相同作業計算：
+
+\[
+\Delta_j
+=
+JCT_j^{\mathrm{substitution}}
+-
+JCT_j^{\mathrm{baseline}}.
+\]
+
+分別觀察原始 A10 作業與接收池原生作業的 \(\Delta_j\)、受損作業比例、額外等待尾部及最大損失。**這是受到 Themis 啟發的共享損失評估，不是原始 Themis 公平性指標。**
+
+尤其要注意：Q3 一旦改變時長，不能只用替代後的時長作 slowdown 分母。分母變大，slowdown 可能變小，即使作業實際更晚完成。配對 JCT 差值可以避免這種誤判。
+
+此外，Themis 的 bid 表達配置效益，不應被當成你們已經取得真實使用者支付意願或價格彈性的證據。[USENIX](https://www.usenix.org/system/files/nsdi20-paper-mahajan.pdf)
+
+**本題定位：評價文獻；不實作 auction、leases 或應用層效益回報介面。**
+
+### 5. Volcano：最值得借的是共同准入；兩個名稱不能誤讀
+
+**`minAvailable` 不是天然等於全部 workers。**要對應題目，必須令最小准入數等於完整 worker 數。Volcano 的 Allocate 有延後提交機制：單個 Pod 找到位置，不代表可以立刻提交，還需滿足所屬作業的 gang 條件。[火山](https://volcano.sh/docs/scheduler/plugins/gang/?utm_source=chatgpt.com)
+
+競賽模擬器可以借用這種「先規劃全部配置，再一次提交」的語義。但資源共同准入不等於實際容器在同一物理時刻開始；你們的 DES 仍應用一個共同 \(s_j\) 明確實現題目的同步啟動。
+
+**Volcano 的 `backfill` action 也不能直接當成 EASY Backfilling。**所查官方文件將它描述為處理沒有明確資源 requests 的 BestEffort Pods，而不是根據已知 duration 保護隊首未來開始時間的 EASY。其 preempt／reclaim 則分別涉及隊列內搶占與跨隊列回收。[火山](https://volcano.sh/docs/scheduler/actions/)
+
+因此，本題適合引用 Gang、Predicates、Binpack 的具體思想；不要僅因配置中出現 `gang, backfill` 就宣稱已實作非搶占安全回填。
+
+**本題定位：模型契約與工程語義的參照，不是一條單獨的效能基線。**
+
+### 6. Slurm：必須分清「異構資源」「異構作業」和「GANG」
+
+**異構資源**是節點有不同型號，使用 typed GRES 表達；**異構作業**則是一個作業包含不同資源需求的 components。後者是「同時需要這些組件」，不是「在 A10 或 A100 中選一個」。Slurm 的 heterogeneous-job backfill 會協調所有 components 共同配置或共同延後。[Slurm Workload Manager](https://slurm.schedmd.com/gres.html?utm_source=chatgpt.com)
+
+對本題，「型號 A 或型號 B」首先是 eligibility／assignment 問題，不需要把相同 workers 改造成不同需求的 heterogeneous components。
+
+最關鍵的術語陷阱是：
+
+> **Slurm 文件中的 GANG 是時間切片、交替 suspend/resume；不是本題單純的全 workers 同步啟動。**
+
+官方文件還明確指出 heterogeneous jobs 不參與這種 GANG 操作。因此，不能因題目寫 gang scheduling，就建議開啟 Slurm GANG。[Slurm Workload Manager](https://slurm.schedmd.com/gang_scheduling.html?utm_source=chatgpt.com)
+
+Slurm 最值得借的是型號化資源與預約回填，但也不要原樣複製所有工程選擇：其文件說明 backfill 為效能考量會預留整個節點。你們若採細粒度 CPU/GPU 證書，必須自行驗證，不能把 Slurm 的存在當成正確性證明。[Slurm Workload Manager](https://slurm.schedmd.com/sched_config.html)
+
+**本題定位：非搶占預約和資源帳本的工程參照，不是跨 GPU 性能模型。**
+
+## 三、Q3 論文最值得引用的四篇
+
+**正文优先前三篇；第四篇在你們確實報告接收池損失與公平性時加入。**
+
+| 優先級 | 可直接使用的文獻資訊 | 在 Q3 中應支撐的具體論點 |
+|---|---|---|
+| **1 — 必引** | Deepak Narayanan et al. **Heterogeneity-Aware Cluster Scheduling Policies for Deep Learning Workloads.** OSDI 2020, pp. 481–498. [USENIX](https://www.usenix.org/conference/osdi20/presentation/narayanan-deepak) | 不同硬體對同一工作負載的價值應透過效能表達；本題缺矩陣，因此採參數化替代時長，而非宣稱已校準的加速比。 |
+| **2 — 強烈推薦** | Jayashree Mohan et al. **Looking Beyond GPUs for DNN Scheduling on Multi-Tenant Clusters.** OSDI 2022, pp. 579–596. [USENIX](https://www.usenix.org/conference/osdi22/presentation/mohan) | 接收池不能只用閒置 GPU 張數衡量；CPU/GPU 聯合配置會限制實際可接收的 worker 數。 |
+| **3 — 強烈推薦** | Hanyu Zhao et al. **HiveD: Sharing a GPU Cluster for Deep Learning with Guarantees.** OSDI 2020, pp. 515–532. [USENIX](https://www.usenix.org/conference/osdi20/presentation/zhao-hanyu) | 共享必須考慮原有使用者的損失與資源形狀，並說明為何本題不能直接繼承可搶占借用的保障。 |
+| **4 — 評價需要時加入** | Kshiteej Mahajan et al. **Themis: Fair and Efficient GPU Cluster Scheduling.** NSDI 2020, pp. 289–304. [USENIX](https://www.usenix.org/conference/nsdi20/presentation/mahajan) | 平均效率改善不能取代群組公平性；應檢查共享造成的完成時間損失及尾部。 |
+
+Volcano 與 Slurm 建議另列為**軟體官方文件**，引用具体页面與查閱日期，不把它們寫成兩篇與上述研究同類的學術論文。
+
+## 四、最適合轉成競賽模型的思想
+
+我推薦的最小主線是：
+
+\[
+\boxed{
+\text{相容集合}
++
+\text{替代時長情景}
++
+\text{固定需求的節點級 Gang 可行性}
++
+\text{接收池損失評估}
+}
+\]
+
+具體做法是**凍結 Q2 調度策略，Q3 先只改 eligibility 與明示的時長情景**，避免同時換排序、換放置、加容量，再把全部收益歸因於異構調配。
+
+第一層保留原始型號隔離；第二層在 \(\alpha=1\) 下放寬指定相容集合，研究純結構效果；第三層加入不同 \(\alpha\)，研究等待節省能否抵消執行代價。所有情景都保留接收池原生作業，按**原始請求型號**追蹤群組，不能把轉走的 A10 作業從 A10 的評價分母剔除。
+
+還有一個整合邊界不能忽略：你們原 Q2 能分池處理，是因為各池節點集合互不重疊。解除隔離後，外來與原生作業必須共用資源帳本；涉及同一節點的多個預約也必須聯合驗證，不能以「每個預約各自有可行配置」代替「所有承諾可同時實現」。Q2_Gang_Scheduling_研究設計與Codex規格
+
+這條主線能產生很明確的研究結果：**在什麼相容範圍、時長倍率與接收池保護條件下，跨型號調配才值得做。**它不需要再發明一個新的 scheduler。
+
+## 五、不應實作的方向
+
+| 不建議方向 | 本題中的具體問題 |
+|---|---|
+| **Gavel／Themis 式分輪搶占、GPU lease 到期回收與執行中遷移** | 用中途重新分配實現收益，已改變 non-preemptive 問題；不能作為同約束下的正式方法。[USENIX](https://www.usenix.org/system/files/osdi20-narayanan_deepak.pdf) |
+| **Synergy 式動態 CPU／memory 減配，或彈性增減 workers** | 前者需要資源—效能資訊且違反固定需求；後者違反固定 worker 數。固定向量 packing 不需要這些權力。[USENIX](https://www.usenix.org/system/files/osdi22-mohan.pdf) |
+| **完整 HiveD 分層拓撲與「借出後隨時歸還」** | 缺少相應 affinity／租戶資料；機會式借用的搶占條件不能刪掉後仍沿用安全主張。[USENIX](https://www.usenix.org/conference/osdi20/presentation/zhao-hanyu) |
+| **以 GPU 型號、理論算力或不同作業 duration 補出“實測”速度矩陣** | 不能識別同一作業的跨型號反事實時長。應使用明示情景，不把假设包装成效能量測。 |
+| **把 GPU 切片／共享直接視為容量倍增** | 這是另一套資源單元與效能模型，不是 eligibility 放寬；缺少相應資料時，不能沿用原 duration 便聲稱增加了等價算力。 |
+| **部署完整 Volcano／Slurm，或將簡化實作命名為原系統基線** | 本題需要驗證 trace 模型，不需要為此重建生產控制平面。應按實際採用的排序、放置、預約與准入機制命名。 |
+
+**最終推薦：以 Gavel 提出異構替代問題，以 Synergy 約束替代的資源可行性，以 HiveD 要求計算共享代價，以 Themis 檢查代價由誰承擔。Volcano／Slurm 負責提供清楚的工程語義，而不是替模型提供不存在的效能資料或理論保證。**
+
+*查核範圍：Gavel、Synergy、Themis 使用論文原文；HiveD 的共享與搶占語義以 USENIX 論文頁和作者官方實作文件核對；Volcano、Slurm 使用所引官方文件。本次是文獻適配分析，未對這些系統做效能重現。*
