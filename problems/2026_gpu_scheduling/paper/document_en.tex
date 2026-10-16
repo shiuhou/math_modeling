@@ -5,46 +5,42 @@
 \thispagestyle{fancy}
 \begin{center}
 \vspace*{0.35in}
-{\LARGE\bfseries\color{primary} Evidence-Based Scheduling of a Heterogeneous GPU Cluster}\\[8pt]
-{\large 2026 MCM Problem B}\\[12pt]
-{\large Team Control Number: \ControlNumber}\\[18pt]
+{\LARGE\bfseries\color{primary} Capacity-Valid Scheduling of a Heterogeneous GPU Cluster}\\[8pt]
+{\large 2026 HKUST-GZ MCM Senior Track --- Problem B}\\[18pt]
 \end{center}
-\takeaway{Submission identity}{Team members, institution, advisor, and final control number are intentionally not filled in this integration draft. The team must confirm them before submission.}
+\takeaway{Submission identity}{Team members: [TEAM TO CONFIRM]. Institution: [TEAM TO CONFIRM]. Advisor: [TEAM TO CONFIRM]. These fields remain pending human confirmation; the team must confirm any identifier required by the official Senior Track portal.}
 \section*{Summary}
-This report studies a heterogeneous GPU cluster through three linked questions. First, the supplied 224,112-job trace is strongly concentrated: the GPU-work Gini coefficient is 0.9522, and the largest 5\% of jobs account for 87.68\% of GPU work. A10 has a lifetime-work/window-capacity ratio of 2.064 and a counterfactual immediate-start mean demand of 3,614.54 GPUs against 2,494 available; these are pressure diagnostics, not measured utilization.
+This report analyzes the supplied heterogeneous GPU trace using one capacity-valid, non-preemptive, gang-scheduling contract. The trace contains 224,112 jobs; GPU work is concentrated (Gini 0.9522), and the largest 5\% account for 87.68\% of GPU work. A10 has lifetime-work/window-capacity ratio 2.064 and counterfactual immediate-start mean demand 3,614.54 GPUs against 2,494 available; these are pressure diagnostics, not measured utilization.
 
-Second, we evaluate capacity-valid, non-preemptive gang scheduling. On the complete 111,284-job A10 trace, ordinary \method{SPT-HOL} has mean waiting 32.906 h versus 34.967 h for \method{SPT-FILL}; the equal-weight GPU-count lower bound is 22.3179305700 h. A separate protected-policy comparison is limited to a verified 65,536-job prefix, where the added reservation policies remain substantially slower in mean waiting. These results support ordinary \method{SPT-HOL} as the current mean-wait candidate for this trace, without claiming dominance or no starvation.
-
-Third, we evaluate a declared fixed-split cross-GPU substitution counterfactual. S0 routes a SHA-256-selected 10\% subset of A10 jobs to 60 dedicated A100 nodes with $\sigma=1$. It reduces A10 mean waiting from 900.129 to 587.875 h under FCFS and from 32.906 to 20.534 h under SJF-HOL, with zero additional native A100 waiting on this trace. The sensitivity study also finds that 20\% routing can worsen FCFS and 90 donor nodes cause measurable native harm. Compatibility and $\sigma$ are assumptions, not hardware benchmarks; unsupported resource-performance assertions are excluded.
+For Question 2, the complete 111,284-job A10 comparison gives ordinary SPT-HOL mean waiting 32.906 h versus SPT-FILL 34.967 h, against the equal-weight job-count lower bound 22.3179305700 h. A separate protected-policy experiment is limited to a verified 65,536-job prefix. For Question 3, a declared fixed-split substitution counterfactual routes a SHA-256-selected 10\% subset to 60 dedicated A100 nodes with $\sigma=1$; it reduces A10 mean waiting on this trace while retaining native-pool harm and duration sensitivity. These are finite, contract-specific observations, not optimality or hardware-performance claims.
 
 \textbf{Keywords:} GPU scheduling; gang placement; heterogeneous resources; head-of-line blocking; fixed-split counterfactuals
 \vfill
-\textit{This is an integration draft. The team must complete the control number, human review, and final AI-use record before submission.}
+\textit{Publication candidate. Final team identity, human review and AI disclosure require confirmation before submission.}
 \end{titlepage}
 \setcounter{page}{2}
 \input{q1_section.tex}
 \input{q2_section.tex}
 \input{q3_section.tex}
-\section{Conclusion and Evidence Limits}
-\label{sec:conclusion}
-The three questions provide complementary evidence rather than one universal scheduler claim. Q1 identifies workload concentration and two lower bounds with different weighting objectives. Q2 converts the diagnosis into a capacity-valid DES comparison: complete-A10 ordinary SPT-HOL is the current mean-wait choice, while protected policies are retained as bounded prefix experiments. Q3 evaluates a fixed, physical, pre-start substitution scenario and keeps both native-pool harm and duration sensitivity visible.
+\section{Conclusion and evidence limits}
+The three questions provide complementary evidence under a declared trace and simulation contract. Q1 identifies workload concentration and two lower bounds with different weighting objectives. Q2 compares ordinary policies on the complete A10 trace and keeps protected policies at their verified prefix scope. Q3 evaluates a fixed, physical, pre-start substitution scenario while retaining native-pool harm and duration sensitivity.
 
-The reported numbers are separated by data set and horizon: Q1 uses the exact observation window $T=7,775,878$ s; scheduling metrics use complete drain; 90-day completion counts use $H=7,776,000$ s. Prefix evidence is never extended to the complete A10 trace without a corresponding saved run. The formal paper contains no unsupported performance, hardware-speed, or optimality claim. Large Q3 delivery archives are retained locally with hashes, but cross-machine availability remains unresolved.
+Q1 uses the exact observation window $T=7,775,878$ s; scheduling waiting and JCT use complete drain; 90-day completion counts use $H=7,776,000$ s. Prefix evidence is not extended to the complete A10 trace. No unsupported performance, hardware-speed, pricing, or optimality claim is used. Large Q3 delivery archives remain local with hashes; cross-machine availability is unresolved.
 
 \section*{References}
 \sloppy
-\begin{enumerate}[label={[\arabic*]}]
-\item COMAP, \emph{2026 MCM Problem B: GPU Scheduling}, repository snapshot, fixed SHA256 \texttt{fb153a547ed57a3d16ab0929c27cccc5d49fc4e568d9c65a273546057e692967}.
-\item Q1 capacity-bound evidence, repository commit \texttt{707531788380}; evidence path: \url{results/20261015-b-q1-capacity-bound/q1_capacity_bounds.json}. Full SHA is in \texttt{paper\_sources.json}.
-\item Q2 cross-review evidence, repository commit \texttt{b91918bb08}; evidence paths: \url{results/20261016-b-q2-m2g-revision-01/} and \url{notes/tasks/b-q2.md}. Full SHA is in \texttt{paper\_sources.json}.
-\item Q3 cross-review publication evidence, repository commit \texttt{170cc37a82}; evidence paths: \url{results/20261016-b-q3-s3-publication-9ac1d7f2-r3/} and \url{notes/tasks/b-q3.md}. Full SHA is in \texttt{paper\_sources.json}.
-\item Claude independent research archive, stable ID \texttt{claude-p1p5-562e82aa}, archive commit \texttt{9aeddd708b}; full SHA and archive hash are in \texttt{paper\_sources.json}; used for provenance cross-reading only, not as a rerun.
-\item COMAP, \emph{MCM/ICM Contest Rules, Registration and Instructions}, official online guidance: \url{https://contest.comap.org/undergraduate/contests/mcm/instructions.php}.
+\begin{enumerate}
+\item HKUST-GZ MCM 2026 Senior Track, Problem B, repository copy: \url{problems/2026_gpu_scheduling/docs/2026_MCM_GPU_Scheduling.pdf}; SHA256 is recorded in \texttt{paper\_sources.json}.
+\item Q1 verified evidence, fixed commit \texttt{7075317883808b1cd7f80cadf3980be291c69cf0}; paths and hashes are in \texttt{paper\_sources.json}.
+\item Q2 cross-review evidence, fixed commit \texttt{b91918bb084848b93de642ad4e3ea0a7d3f25e68}; paths and hashes are in \texttt{paper\_sources.json}.
+\item Q3 cross-review publication evidence, fixed commit \texttt{170cc37a820e830a969cb1b1cd3cadb1e8fdf256}; r4 path \texttt{results/20261016-b-q3-s3-publication-9ac1d7f2-r4/}; r3 is historical.
+\item Claude independent archive, fixed commit \texttt{9aeddd708b29} (full SHA in \texttt{paper\_sources.json}); preserved for provenance and review, not executed in this release.
+\item Submission portal: \url{https://cmt3.research.microsoft.com/HKUSTGZMCM2026}. The repository does not contain the separate Registration and Submission Guidelines PDF; its availability is recorded as BLOCKED pending team confirmation.
 \end{enumerate}
 
 \clearpage
-\section*{Report on Use of AI Tools}
-This section records the actual integration work and is pending team confirmation of the exact final disclosure wording. OpenAI Codex was used to inspect fixed Git commits, organize already saved Q1/Q2/Q3 evidence, draft and typeset this integration document, and run repository/PDF checks. The Claude package was treated as a preserved independent source; its scripts were not executed in this integration. No AI output is treated as experimental evidence without a fixed repository source and human review. Team members remain responsible for all mathematics, data interpretation, citations, source attribution, and final submission decisions.
+\section*{Report on use of AI tools}
+This integration used OpenAI Codex to inspect fixed commits, combine already saved Q1/Q2/Q3 evidence, revise and typeset this candidate, and run repository and PDF checks. The Claude package was preserved as an independent source; its scripts were not executed here. The team must confirm whether ChatGPT, Claude, or other tools were used outside this record and must approve the final wording. No AI output is treated as experimental evidence without a fixed source and human review.
 
-\textbf{Team confirmation required:} verify the team control number, member/institution metadata, the exact AI product/model label required by the contest, and the final human review record before submission.
+\textbf{Submission status: SUBMISSION\_BLOCKED pending team names, institution/advisor fields, human review, and confirmed AI-use record.}
 \end{document}

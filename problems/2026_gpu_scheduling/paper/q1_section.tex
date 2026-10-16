@@ -1,63 +1,18 @@
-\begingroup
-% 11.1 TeX points keeps body/caption glyphs above 11 PDF points after conversion.
-\renewcommand{\normalsize}{\fontsize{11.1pt}{13.3pt}\selectfont}
-\normalsize
-\captionsetup{font=normalsize}
-\section{Question 1: Data Characteristics and Resource Imbalance}
+\section{Question 1: Workload Structure and Capacity Pressure}
 \label{sec:q1}
-\subsection{Data Characteristics}
-The competition's adapted Alibaba trace contains \QOneJobs{} jobs and \QOneNodes{} nodes, providing \QOneGpus{} GPUs and \QOneCpus{} vCPUs across \QOneModels{} models. Required fields have no missing values or duplicate identifiers; fractional CPU requests are retained. Each job $j$ has submission time $r_j$, duration $d_j$ (seconds), and $W_j$ identical workers, each requesting $g_j$ GPUs and $c_j$ vCPUs. Whole-job demand multiplies these per-worker requests by $W_j$. Capacities are fixed; records describe requests, not measured activity.
+The supplied trace contains 224,112 jobs on 4,278 nodes, with 10,412 GPUs and 632,636 vCPUs across six GPU models. For job $j$, let $a_j$ be release time, $p_j$ duration in seconds, $W_j$ worker count, and $(g_j,c_j)$ the per-worker GPU and vCPU requests. A job's submitted GPU work is $H_j=W_jg_jp_j$. These are requests and stated durations, not measured utilization.
 
-Most jobs are small by worker count: \QOneSingleWorkerPct\% have one worker, and \QOneOneGpuPct\% request one GPU per worker; the corresponding means are \QOneMeanWorkers{} and \QOneMeanWorkerGpus{}. Duration is highly dispersed: the median is \QOneMedianDuration{} s, the 95th percentile \QOnePninetyfiveDuration{} h, and the maximum approximately \QOneMaxDurationDays{} days. Typical durations hide the long tail.
+The data are highly concentrated: the empirical GPU-work Gini coefficient is 0.9522, the median duration is 1,330 s, the 95th percentile is 309.09 h, and the maximum is about 184 days. The top 2,241 jobs (1\%) account for 43.30\% of GPU work; the top 11,205 jobs (5\%) account for 87.68\%. The 3,512 jobs released at $a_j=0$ are the trace-origin batch. Because no calendar origin is supplied, relative phases within a 24-hour cycle are not labelled as real-world clock periods.
 
-Define full-lifetime GPU work as $H_j=W_jg_jd_j$ in GPU-seconds; $H_j/3600$ gives GPU-hours. Total work is \QOneWorkMillion{} million GPU-hours, with empirical Gini \QOneGini{}. Using $k=\lfloor f|\mathcal{J}|\rfloor$, the top 1\% (\QOneTopOneCount{} jobs) and 5\% (\QOneTopFiveCount{}) account for \QOneTopOneShare\% and \QOneTopFiveShare\% of work. Figure~\ref{fig:q1} shows concentration and duration tails; neither establishes a fitted power law. Queueing experiments must test whether these large jobs obstruct smaller arrivals.
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=\textwidth]{fig1_data_patterns.pdf}
-\caption{(a) GPU-work Lorenz curve, including the origin; top-$k$ counts use floor rounding. (b) Strict empirical duration CCDF, $\Pr(d_j>x)$, with ties grouped; terminal zero is omitted on log axes. A100 denotes A100-SXM4-80GB.}
-\label{fig:q1}
-\end{figure}
-
-\subsection{Supply--Demand Imbalance}
-Set $T=\max_j r_j=\QOneHorizon$ s (\QOneHorizonHours{} h), \QOneWindowDifference{} s short of nominal 90 days. For model $m$, compare all submitted lifetime work with its capacity over $[0,T)$:
+For model $m$ with capacity $(G_m,C_m)$, the lifetime work to exact observation-window supply ratio is
 \begin{equation}
-\rho_m^{\mathrm{GPU}}=\frac{\sum_{j\in\mathcal{J}_m}W_jg_jd_j}{T\sum_{i\in\mathcal{I}_m}G_i^{\mathrm{cap}}},\qquad
-\rho_m^{\mathrm{CPU}}=\frac{\sum_{j\in\mathcal{J}_m}W_jc_jd_j}{T\sum_{i\in\mathcal{I}_m}C_i^{\mathrm{cap}}}.
-\label{eq:load_ratio}
+ \rho_m^{GPU}=\frac{\sum_{j\in\mathcal J_m}W_jg_jp_j}{T\sum_{i\in\mathcal I_m}G_i},\qquad
+ \rho_m^{CPU}=\frac{\sum_{j\in\mathcal J_m}W_jc_jp_j}{T\sum_{i\in\mathcal I_m}C_i},
 \end{equation}
-Both denominators use seconds, matching the numerators. Work extending beyond $T$ remains included. These ratios measure workload pressure, not observed utilization or proof of steady-state instability. Table~\ref{tab:q1_pool} identifies A10's disproportionate pressure.
+where $T=7,775,878$ s is the exact Q1 observation window. Table~\ref{tab:q1_pool} compares submitted lifetime work with supply; it does not claim an allocation rate or steady-state instability.
 
-\begin{table}[!ht]
-\centering
-\caption{Submitted lifetime work versus exact-window capacity. Work is in million GPU-hours; GPU-s1/s2 abbreviate GPU-series-1/2.}
-\label{tab:q1_pool}
-\label{tab:q1_summary} % Preserve references from the integration baseline.
-\setlength{\tabcolsep}{5pt}
-\input{q1_table.tex}
-\end{table}
+\begin{table}[H]\centering\caption{Submitted lifetime work and exact-window capacity ratios.}\label{tab:q1_pool}\input{q1_table.tex}\end{table}
 
-To distinguish lifetime work from window overlap, define counterfactual immediate-start demand:
-\begin{equation}
-D_m(t)=\sum_{j\in\mathcal{J}_m}W_jg_j\mathbf{1}\{r_j\leq t<r_j+d_j\},\qquad
-\overline{D}_m=\frac{1}{T}\int_0^T D_m(t)\,dt.
-\label{eq:q1_demand}
-\end{equation}
-This assumes submission-time starts and ignores capacity. Exact event integration gives A10 a mean of \QOneAtenMean{} GPUs against \QOneAtenCapacity{} available, with an instantaneous peak of \QOneAtenPeak{}. The mean excess of \QOneAtenExcess{} GPUs is not a sufficient expansion prescription: CPU, node placement and temporal overlap also matter. Lower mean demand elsewhere does not guarantee spare capacity at every instant.
+A counterfactual immediate-start demand curve is $D_m(t)=\sum_jW_jg_j\mathbf 1\{a_j\le t<a_j+p_j\}$. Exact interval integration gives an A10 mean of 3,614.54 GPUs against 2,494 available and an instantaneous peak of 4,103. This is a demand diagnostic under impossible immediate starts, not an observed allocation. GPU-series-1 also illustrates node-shape pressure: 2,478 jobs (25.70\% of that pool, 78.07\% of its work) exceed the 24-vCPU-per-GPU ratio of its 8-GPU nodes. This motivates capacity-valid scheduling tests rather than a placement conclusion from averages alone.
 
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=\textwidth]{fig1_demand.pdf}
-\caption{Counterfactual immediate-start demand, displayed as exact daily overlap averages. Dashed lines show physical capacity. Daily averaging hides instantaneous peaks; these curves are not actual allocation.}
-\label{fig:q1-demand}
-\end{figure}
-
-All nodes are initially idle. The \QOneOriginJobs{} submissions at $r_j=0$ are the trace-origin batch, not already running services. Excluding that batch, exposure-corrected arrival rates differ by \QOnePhaseRatio{} times between relative 24-hour phases \QOnePhasePeak{} and \QOnePhaseTrough{}. With no calendar origin or timezone, these phases cannot identify afternoon or night peaks. Supplementary daily work includes each job's entire future duration, not work executed that day.
-
-\subsection{Bottleneck Hypotheses}
-For a legal nonpreemptive schedule, let $\omega_j=s_j-r_j$ be waiting and $B_m(t)$ the reflected fluid backlog driven by $D_m(t)$ at fixed GPU capacity. Then GPU-work weighted waiting satisfies $\Omega_m=\sum H_j\omega_j/\sum H_j\geq L_m=\int_0^\infty B_m(t)\,dt/\sum H_j$. Exact full-lifetime integration, including the drain tail, gives A10 $L_m=\QOneAtenWaitBound{}$ h. This Q2 benchmark relaxes CPU, node-shape and gang constraints; it is not an ordinary mean-wait bound or proof of scheduler optimality. The proof and six-pool results are supplementary; altered Q3 capacities or durations require recomputation.
-
-GPU-series-1 contains \QOneOneNodes{} nodes with $(1\text{ GPU},192\text{ vCPUs})$, \QOneOneSmallNodes{} with $(1,128)$, \QOneFourNodes{} with $(4,192)$, and \QOneEightNodes{} with $(8,192)$. A pool-average CPU/GPU ratio obscures these configurations. Exactly \QOneHighRatioJobs{} jobs (\QOneHighRatioPct\%; \QOneHighRatioWorkPct\% of pool work) exceed the 8-GPU nodes' \QOneRatioThreshold{} vCPU/GPU ratio. This suggests a placement risk, not measured stranding; the supplementary example illustrates the mechanism.
-
-The evidence motivates capacity-valid tests of head-of-line blocking, node-ratio-aware placement and compatible cross-model capacity, measuring waiting, allocation and fairness. These hypotheses establish neither causal effects nor scheduler optimality.
-\par\endgroup
+Q1 supplies two different lower-bound perspectives used later. The GPU-work weighted waiting bound is 560.521 h for A10 after including the drain tail; its objective weights each job by $H_j$. The Q2 job-count bound instead weights each job equally and is 22.3179305700 h on the complete A10 set. They are not interchangeable estimates of one common optimum. Both relax node shape, CPU coupling, and gang feasibility, so they are theoretical benchmarks rather than scheduler guarantees.

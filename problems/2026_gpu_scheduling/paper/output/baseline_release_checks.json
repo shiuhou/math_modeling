@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "branch": "integration/b-baseline-v1",
+  "base_q3": "170cc37a820e830a969cb1b1cd3cadb1e8fdf256",
+  "merged_q2": "b91918bb084848b93de642ad4e3ea0a7d3f25e68",
+  "paper_candidate_e": "60ce77e971e300efb49d7d9594bdae6dde715a7d",
+  "merge_conflicts": {
+    ".gitattributes": "combined Q3 archive/markdown rules with Q2 CSV byte rules",
+    "problems/2026_gpu_scheduling/experiments/build_paper.py": "retained Q3 richer build/bundle implementation; Q2 simulator and validation code merged separately",
+    "problems/2026_gpu_scheduling/paper/document_en.tex": "selected E paper file then revised for Senior Track; no Q2/Q3 program selected wholesale"
+  },
+  "checks": {
+    "repo_check": "PASS",
+    "git_diff_check": "PASS",
+    "root_tests": "PASS: 12 tests",
+    "problem_b_tests": "PASS: 85 tests, venv /home/shiuhou/mm/venv-baseline-b",
+    "q2_saved_g1_g2_g3": "PASS: verified artifacts status PASS",
+    "q3_saved_14_schedules": "PASS: read-only persisted ID/timing/finish/placement structural checks",
+    "q2_g2_q3_m0_a10": "PASS: 111284 IDs, start/finish and canonical placement rows exact",
+    "new_scheduling_runs": "NOT_RUN"
+  },
+  "pdf": {
+    "path": "problems/2026_gpu_scheduling/paper/output/pdf/problem_b_baseline_v1.pdf",
+    "sha256": "6de1fcfcd452be5bee0017a8b4e54d6c0e5247cd38aec13b14ae5298c538d9aa",
+    "pages": 9,
+    "page_size": "595.28 x 841.89 pts (A4)",
+    "compiler": "bundled Tectonic via XeTeX",
+    "rendered_pages": 9,
+    "render_preview": "all 9 pages rendered with bundled pdftoppm; visual inspection PASS",
+    "font_scan": {
+      "pdffonts_rows": [
+        "IHAIZV+CharterBT-Roman               Type 1C           Custom           yes yes yes      4  0",
+        "BZIVMZ+CharterBT-Bold                Type 1C           Custom           yes yes yes      7  0",
+        "IXFAWU+CMMI12                        Type 1C           Builtin          yes yes yes      8  0",
+        "TQTHRL+CMR12                         Type 1C           Builtin          yes yes yes      9  0",
+        "YEUUOC+CharterBT-Italic              Type 1C           Custom           yes yes yes     10  0",
+        "AKHCZK+CMMI8                         Type 1C           Builtin          yes yes yes     15  0",
+        "VDVGTR+CMEX10                        Type 1C           Builtin          yes yes yes     16  0",
+        "CAFSZL+CMSY8                         Type 1C           Builtin          yes yes yes     17  0",
+        "DDIEWW+CMMI6                         Type 1C           Builtin          yes yes yes     18  0",
+        "FKPJSN+CMR8                          Type 1C           Builtin          yes yes yes     20  0",
+        "PVTTLK+LMMono12-Regular              Type 1C           WinAnsi          yes yes yes     21  0",
+        "JAGKKY+CMBX12                        Type 1C           Builtin          yes yes yes     22  0",
+        "NOMARO+CMSY10                        Type 1C           Builtin          yes yes yes     23  0"
+      ],
+      "pdf_xml_fontspec_sizes": [
+        9,
+        12,
+        16,
+        18,
+        22,
+        26,
+        31
+      ],
+      "body_source_class": "12pt",
+      "formal_tables": "\\normalsize; no \\small/\\footnotesize/\\scriptsize in formal tables",
+      "minimum_body_font": "PASS: 12pt source / 16-unit PDF body text; math subscript fonts are smaller by normal typesetting"
+    },
+    "layout": "PASS: A4, <=10 pages, no overfull hbox, no undefined references; underfull reference boxes remain non-clipping"
+  },
+  "supplement": {
+    "path": "problems/2026_gpu_scheduling/paper/output/code_supplement_baseline_v1.zip",
+    "bytes": 192690,
+    "sha256": "67af9657d32c99efefe22b99ccfdfcbcadbc147e9a57af9fd3d5d8d422bd4342",
+    "limit": "50 MB",
+    "status": "PARTIAL: candidate excludes raw CSV and large schedule archives; large archive cross-machine access BLOCKED"
+  },
+  "release_gates": {
+    "TECHNICAL_BASELINE_READY": "PASS",
+    "PAPER_BASELINE_READY": "PASS",
+    "SUBMISSION_READY": "BLOCKED: team names/institution/advisor, human review, official separate guidelines PDF availability, and final AI-use confirmation"
+  },
+  "evidence_access": {
+    "q3_large_archives": "BLOCKED: local-only persisted outputs; authorized cross-machine storage not supplied",
+    "claude_archive": "fixed and preserved; no scripts executed",
+    "official_guidelines_pdf": "BLOCKED_NOT_IN_REPOSITORY"
+  },
+  "human_review": "NOT_DONE",
+  "ai_disclosure": "DRAFT_REQUIRES_TEAM_CONFIRMATION"
+}

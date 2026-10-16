@@ -1,0 +1,120 @@
+{
+  "schema_version": 2,
+  "integration_branch": "integration/b-baseline-v1",
+  "baseline_base": "170cc37a820e830a969cb1b1cd3cadb1e8fdf256",
+  "controlled_q2": "b91918bb084848b93de642ad4e3ea0a7d3f25e68",
+  "paper_candidate_e": "60ce77e971e300efb49d7d9594bdae6dde715a7d",
+  "source_commits": {
+    "q1": "7075317883808b1cd7f80cadf3980be291c69cf0",
+    "q2": "b91918bb084848b93de642ad4e3ea0a7d3f25e68",
+    "q3": "170cc37a820e830a969cb1b1cd3cadb1e8fdf256",
+    "claude_archive": "9aeddd708b29a07c02988a6c5650913f37aae236"
+  },
+  "official_sources": {
+    "problem_pdf": {
+      "path": "problems/2026_gpu_scheduling/docs/2026_MCM_GPU_Scheduling.pdf",
+      "sha256": "fb153a547ed57a3d16ab0929c27cccc5d49fc4e568d9c65a273546057e692967",
+      "pages": 3,
+      "page_size": "A4"
+    },
+    "submission_portal": "https://cmt3.research.microsoft.com/HKUSTGZMCM2026",
+    "submission_guidelines_pdf": {
+      "status": "BLOCKED_NOT_IN_REPOSITORY",
+      "path": "Registration and Submission Guidelines.pdf",
+      "note": "Separate official PDF was not present in the checked repository/worktrees; team must supply/confirm it."
+    },
+    "checked_rules": {
+      "language": "English",
+      "max_pages": "10 A4",
+      "minimum_font": "11 pt",
+      "members": "all member names",
+      "ai_disclosure": "required at report end",
+      "file_formats": "doc/docx/pdf",
+      "supplement_zip": "<=50 MB",
+      "deadline_beijing": "2026-10-20 23:59"
+    }
+  },
+  "chapters": {
+    "summary": {
+      "file": "problems/2026_gpu_scheduling/paper/document_en.tex",
+      "sources": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "claims": [
+        "scope and limitations only"
+      ]
+    },
+    "q1": {
+      "file": "problems/2026_gpu_scheduling/paper/q1_section.tex",
+      "commit": "7075317883808b1cd7f80cadf3980be291c69cf0",
+      "evidence": [
+        "results/20261014-b-q1-publication-42b5a896/q1_values.json",
+        "results/20261015-b-q1-capacity-bound/q1_capacity_bounds.json"
+      ],
+      "claims": [
+        "224112 jobs",
+        "A10 rho 2.064",
+        "A10 immediate-start mean 3614.54 GPUs",
+        "Gini 0.9522",
+        "GPU-work weighted lower bound 560.5213678903 h"
+      ]
+    },
+    "q2": {
+      "file": "problems/2026_gpu_scheduling/paper/q2_section.tex",
+      "commit": "b91918bb084848b93de642ad4e3ea0a7d3f25e68",
+      "evidence": [
+        "notes/tasks/b-q2.md",
+        "results/20261016-b-q2-m2g-revision-01/revision.json",
+        "results/20261016-b-q2-m2g-revision-01/full_cluster_summary.json",
+        "results/20261016-b-q2-m2g-revision-01/weighted_waiting.json"
+      ],
+      "claims": [
+        "complete A10 SPT-HOL mean waiting 32.906 h",
+        "SPT-FILL mean waiting 34.967 h",
+        "job-count lower bound 22.3179305700 h",
+        "protected analysis limited to 65536 prefix"
+      ]
+    },
+    "q3": {
+      "file": "problems/2026_gpu_scheduling/paper/q3_section.tex",
+      "commit": "170cc37a820e830a969cb1b1cd3cadb1e8fdf256",
+      "evidence": [
+        "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/paper_ready_metrics.json",
+        "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/q3_claim_sources.json",
+        "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/publication_checks.json"
+      ],
+      "claims": [
+        "M0/S0/S1-S5 FCFS and SJF-HOL 14 schedules",
+        "sigma assumption retained",
+        "native S4 harm and denominator retained"
+      ],
+      "historical_r3": "results/20261016-b-q3-s3-publication-9ac1d7f2-r3/"
+    },
+    "claude": {
+      "commit": "9aeddd708b29a07c02988a6c5650913f37aae236",
+      "identity": "claude-p1p5-562e82aa",
+      "role": "independent provenance source; not executed or treated as new experiment"
+    }
+  },
+  "data_identity": {
+    "formal_job_csv_sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+    "formal_node_csv_sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "claude_job_csv_sha256": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1",
+    "note": "Source identities remain distinct; no newline-only explanation."
+  },
+  "evidence_access": {
+    "q1": "fixed evidence committed",
+    "q2": "formal evidence committed and readable",
+    "q3": "paper-ready r4 committed; large schedule archives local only, cross-machine access BLOCKED",
+    "claude": "archive hash-pinned; verification is REVIEW_REPORTED"
+  },
+  "paper_checks": {
+    "e_pdf_before_sha256": "1bc9dc344c969b473307199b9e92df8bdbe5e7d989935717bad8ca2ff21e66a0",
+    "e_pdf_before": "paper/output/pdf/problem_b_integration.pdf",
+    "baseline_pdf": "paper/output/pdf/problem_b_baseline_v1.pdf"
+  },
+  "human_review": "NOT_DONE",
+  "ai_disclosure": "DRAFT_REQUIRES_TEAM_CONFIRMATION"
+}

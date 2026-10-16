@@ -21,9 +21,18 @@ We report worker count $W_j$ separately from waiting $\omega_j=s_j-a_j$, actual 
 
 \begin{table}[!ht]
 \centering
-\caption{Main Q3 results generated from the paper-ready JSON. Native harmed counts are paired against S0 under the same policy.}
-\label{tab:q3_main}
-\input{q3_s3_main_table.tex}
+\caption{All fourteen formal schedules: waiting, tail and native-harm rows from the r4 paper-ready metrics.}
+\label{tab:q3_wait}
+\normalsize
+\input{q3_table_a.tex}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\caption{The same fourteen schedules: JCT and 90-day completion counts. Waiting and JCT use complete drain; completion counts use the 90-day window.}
+\label{tab:q3_completion}
+\normalsize
+\input{q3_table_b.tex}
 \end{table}
 
 \subsection{Benefit, native-pool cost and sensitivity}
@@ -49,4 +58,4 @@ For $\sigma=2$, the effective duration of routed A10 jobs doubles and SJF-HOL is
 \subsection{Conditional recommendation and limitations}
 If the policy requirement is zero additional native A100 waiting on this trace, 60 nodes at 10\% is a tested candidate for either policy; it is not a proven maximum safe capacity or a global optimum. If a small native cost is acceptable, 90 nodes supplies an additional point on the A10--native trade-off. SJF-HOL's lower mean waiting does not remove its tail and completion-fairness losses; all harmed-job counts and positive delay totals remain in the paired evidence.
 
-Compatibility and $\sigma$ are assumptions without an A10/A100 performance matrix. Allocation rates are request occupancy, not measured utilization; GPU-hours across models are not interchangeable compute or monetary units. The experiment adds no physical GPUs, does not implement dynamic sharing, MIG, pricing, RL, migration, or Q2\,$\times$\,Q3 scheduling, and does not prove heuristic optimality. Q1's A10 lower bound is not transferred to substituted schedules. The conclusion is therefore conditional on the declared trace, partitions, hash rule, policy, and duration scenarios.
+Compatibility and $\sigma$ are assumptions without an A10/A100 performance matrix. Allocation rates are request occupancy, not measured utilization; GPU-hours across models are not interchangeable compute or monetary units. The experiment adds no physical GPUs, does not implement untested cross-model mechanisms, migration, or Q2\,$\times$\,Q3 scheduling, and does not prove heuristic optimality. Q1's A10 lower bound is not transferred to substituted schedules. The conclusion is therefore conditional on the declared trace, partitions, hash rule, policy, and duration scenarios.

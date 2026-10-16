@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "candidate": "problem_b_baseline_v1",
+  "paper_candidate_e": "60ce77e971e300efb49d7d9594bdae6dde715a7d",
+  "ruleset": "HKUST-GZ MCM 2026 Senior Track Problem B",
+  "source_commits": {
+    "q1": "7075317883808b1cd7f80cadf3980be291c69cf0",
+    "q2": "b91918bb084848b93de642ad4e3ea0a7d3f25e68",
+    "q3": "170cc37a820e830a969cb1b1cd3cadb1e8fdf256",
+    "claude": "9aeddd708b29a07c02988a6c5650913f37aae236"
+  },
+  "source_scope": "fixed evidence only; no scheduler rerun",
+  "q3_source": "results/20261016-b-q3-s3-publication-9ac1d7f2-r4/",
+  "formal_q3_rows": 14,
+  "q2_wait_symbol": "W_j worker count; omega_j waiting",
+  "tables": "Q3 formal 14 schedules split across q3_table_a.tex and q3_table_b.tex at normalsize",
+  "team_identity": "PENDING_TEAM_CONFIRMATION",
+  "human_review": "NOT_DONE",
+  "ai_disclosure": "DRAFT_REQUIRES_TEAM_CONFIRMATION",
+  "status": "CANDIDATE"
+}

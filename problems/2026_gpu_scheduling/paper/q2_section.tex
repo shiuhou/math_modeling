@@ -1,140 +1,37 @@
-% Canonical standalone Question 2 section.  The surrounding document_en.tex is
-% an integration draft; this file is the Q2-only deliverable.
-\section{Question 2: Capacity-Valid Scheduling and Method Selection}
+\section{Question 2: Capacity-Valid Scheduling}
+\label{sec:q2}
+\subsection{Model and common contract}
+Each GPU model is simulated as a separate pool. A job starts at $s_j\ge a_j$, completes at $f_j=s_j+p_j$, and all $W_j$ workers start simultaneously. If $x_{ji}$ workers of job $j$ use node $i$, feasibility requires
+\begin{equation}
+ g_jx_{ji}\le G_i^{free}(t),\qquad c_jx_{ji}\le C_i^{free}(t),\qquad \sum_i x_{ji}=W_j
+\end{equation}
+for every active time and selected node. The DES is non-preemptive, uses exact integer-second durations, commits a gang placement atomically, and uses first-fit by numeric node ID. All results below use the same raw-data contract, \method{shared-timer} event mode, $K=200$ candidate checks per pool and timestamp, exploratory $\theta=604800$ s, and a 90-day evaluation horizon $H=7,776,000$ s. Waiting and JCT are computed after complete drain; the 90-day count is $f_j\le H$.
 
-\subsection{Model and policy definitions}
-Each GPU model is evaluated as its own pool. Job $j$ has release time $r_j$,
-duration $p_j$, $w_j$ workers, per-worker GPU request $g_j$, and CPU request
-$c_j$. It starts at $s_j\ge r_j$, finishes at $s_j+p_j$, and all workers
-start together. A placement is feasible only when, on every selected node $i$,
-\[
-g_jx_{j,i}\le G_i^{\rm free}(t),\qquad
-c_jx_{j,i}\le C_i^{\rm free}(t),\qquad \sum_i x_{j,i}=w_j .
-\]
-The simulator is non-preemptive, uses exact integer-second durations, and
-commits a gang placement atomically. All comparisons use the same numeric
-First-Fit-by-ID (FF-id), raw CSV, loader ordering, and explicit
-\texttt{shared-timer} event mode.
+Ordinary \method{SPT-HOL} orders arrived jobs by $(p_j,a_j,\mathrm{id}_j)$ and stops when the head is infeasible. \method{SPT-FILL} uses the same order but may inspect later feasible jobs. For the tested fill contract, $K=200$ is a per-pool, per-timestamp bypass budget after a blocking prefix: feasible-prefix checks do not consume it, successful and failed bypass attempts do, retries may do so again, and a successful start does not reset the timestamp budget. The protected policies in the 65,536-job prefix add urgent/reservation mechanisms and are reported as a separate evidence tier; they are not relabelled as ordinary SPT-HOL.
 
-Ordinary \texttt{SPT-HOL} orders arrived jobs by
-$(p_j,r_j,\mathrm{job\_id})$. It has no aging threshold, urgent promotion, or
-reservation; if its head is infeasible, that dispatch epoch stops. Ordinary
-\texttt{SPT-FILL} uses the same order but may inspect later feasible jobs. Its
-\(K=200\) is a per-pool, per-timestamp budget only after a blocking prefix has
-been encountered: feasible prefix checks do not consume it, successful and
-failed bypass attempts both consume it, retries may consume it again, and a
-successful start does not reset the timestamp budget. Shared timer ticks give
-additional dispatch opportunities and can therefore change the observed
-budgeted fill behavior. These statements describe only the tested
-\(K=200\), FF-id, shared-timer configuration; they do not establish behavior
-for an unbounded FILL policy. Ordinary \texttt{SPT-HOL} has no aging protection.
+\subsection{A job-count lower bound and accounting}
+For the complete A10 set, let $C=2,494$, $G_j=W_jg_j$, and $Z(t)=\{j:a_j\le t<a_j+p_j\}$. Let $q(t)$ be the minimum number of jobs removed from $Z(t)$ so the remaining GPU width is at most $C$. Then
+\begin{equation}
+ L_{count}=\frac{1}{3600N}\int q(t)\,dt
+\end{equation}
+provides a lower bound on equal-weight mean waiting. The calculation uses exact half-open event intervals and gives 22.3179305700 h for $N=111,284$. It is a different objective from Q1's GPU-work weighted bound.
 
-The formal A10 runs use $\theta=604800$ seconds (168 hours), $K=200$,
-\texttt{shared-timer}, $H=7,776,000$ seconds, and complete drain. The threshold
-is exploratory, not an optimum, and is an experiment configuration separate
-from ordinary \texttt{SPT-HOL}. Protected urgent policies are reported only
-for the verified 65,536-job A10 prefix.
+For non-preemptive schedules, the waiting variable obeys the requested bookkeeping identity $\omega_j=\min(\omega_j,p_j)+\max(\omega_j-p_j,0)$. We therefore report the within-window gap $[\sum_j\min(\omega_j,p_j)-\int q(t)dt]/(3600N)$ and the beyond-duration term $\sum_j\max(\omega_j-p_j,0)/(3600N)$. This is exact bookkeeping around a capacity relaxation, not a causal allocation of blame or a removable share.
 
-\subsection{Job-count lower bound and exact waiting accounting}
-For A10, let $C=2494$, $G_j=w_jg_j$, and
-\[
-Z(t)=\{j:r_j\le t<r_j+p_j\}.
-\]
-Let $q(t)$ be the minimum number of jobs removed from $Z(t)$ so that the
-remaining GPU width is at most $C$. Then
-\[
-L_{\rm count}=\frac{1}{3600N}\int q(t)\,dt
-\]
-is a valid lower bound on ordinary mean waiting. The integral uses exact
-half-open event intervals and integer GPU-width histograms. If $S(t)$ is the
-actual service set, define $A(t)=S(t)\cap Z(t)$. A delayed job may still run
-after $r_j+p_j$, so $S(t)\subseteq Z(t)$ is false in general. However,
-$Z(t)\setminus A(t)$ is a deletion set leaving a feasible GPU total, so it has
-at least $q(t)$ jobs. Therefore
-\[
-\sum_j\min(W_j,p_j)\ge\int q(t)\,dt,\qquad
-\sum_jW_j\ge\int q(t)\,dt.
-\]
-The tuple $(r,p,s)=(0,2,4)$ illustrates the correction: at $t=5$ the job is
-in $S(t)$ but not in $Z(t)$. Non-preemption gives the exact bookkeeping
-identity $W_j=\min(W_j,p_j)+\max(W_j-p_j,0)$. The resulting three terms are
-accounting around a relaxation, not causal shares or an exact distance to OPT.
+\subsection{Complete A10 comparison}
+The complete A10 evidence has 111,284 jobs and 2,494 nodes. Independent capacity replay passed for both policies. \method{SPT-HOL} has mean waiting 32.906 h, P95 11.087 h, P99 1542.181 h, maximum 3017.288 h, mean JCT 132.676 h, and 107,002 jobs completed within 90 days. \method{SPT-FILL} has mean waiting 34.967 h, P95 15.130 h, P99 1575.462 h, maximum 3015.311 h, mean JCT 134.737 h, and 106,802 90-day completions. The paired mean difference (HOL minus FILL) is -2.060576 h: 55,266 jobs improve, 50,575 worsen, and 5,443 are unchanged; 1,226 jobs that had zero wait under FILL gain positive wait under HOL. The mean advantage is therefore trace-specific and does not establish dominance or no starvation.
 
-\subsection{Complete A10 evidence}
-The complete A10 input has 111,284 jobs and 2,494 nodes. The verified Q2 G2
-SPT-HOL timing and the Q3 M0 SJF-HOL A10 timing have identical 111,284-row
-ID, attribute, start, and finish records (canonical timing hash
-\texttt{378acdbf...18baea8}). The full-cluster table below is read-only Q3
-M0 FCFS/SJF-HOL evidence retrieved from fixed submission
-\texttt{79e93c315f006d67f743b14a1d7faf16b00dd072}; its recorded run source is
-commit \texttt{7075317883808b1cd7f80cadf3980be291c69cf0}. It is not a claim that the
-Q2 engine ran a new 224,112-job trace.
-
-\begin{table}[htbp]
-\centering\small
-\caption{Read-only Q3 M0 full-cluster summary, $H=90$ days; waiting uses complete drain.}
-\begin{tabular}{llrrrrr}
+\begin{table}[H]\centering\caption{Complete-A10 results. Allocation rates use $[0,H)$; waiting/JCT use complete drain.}\label{tab:q2_full}\normalsize
+\begin{tabular}{lrrrrrr}
 \toprule
-Policy & Pool & $n$ & Mean $W$ (h) & P95 (h) & Max (h) & $f\le H$\\
+Policy & Mean $\omega$ & P95 $\omega$ & P99 $\omega$ & Max $\omega$ & Mean JCT & $90$d done\\
 \midrule
-FCFS & A10 &111284&900.129&1408.478&1423.254&54531\\
-FCFS & A100-SXM4-80GB &80877&0.000&0.000&0.000&80101\\
-FCFS & A800-SXM4-80GB &3959&0.146&0.000&12.250&3943\\
-FCFS & GPU-series-1 &9643&0.029&0.000&9.971&8221\\
-FCFS & GPU-series-2 &13633&0.045&0.000&6.992&13606\\
-FCFS & H800 &4716&0.016&0.000&7.856&4705\\
-FCFS & ALL &224112&446.971&1356.501&1423.254&165107\\
-SJF-HOL & A10 &111284&32.906&11.087&3017.288&107002\\
-SJF-HOL & A100-SXM4-80GB &80877&0.000&0.000&0.000&80101\\
-SJF-HOL & A800-SXM4-80GB &3959&0.115&0.000&14.858&3943\\
-SJF-HOL & GPU-series-1 &9643&0.434&0.000&76.818&8213\\
-SJF-HOL & GPU-series-2 &13633&0.016&0.000&7.165&13606\\
-SJF-HOL & H800 &4716&0.016&0.000&7.856&4705\\
-SJF-HOL & ALL &224112&16.362&0.689&3017.288&217570\\
+\method{SPT-HOL} & 32.906 & 11.087 & 1542.181 & 3017.288 & 132.676 & 107,002\\
+\method{SPT-FILL} & 34.967 & 15.130 & 1575.462 & 3015.311 & 134.737 & 106,802\\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{tabular}\end{table}
 
-For the A10 group, the job-count lower bound is
-$8,941,062,908$ job-seconds, or $22.3179305700$ h. The Q1 fixed-pool
-GPU-work-weighted lower bound is $560.5213678903$ h. With fixed
-$H_j=w_jg_jp_j$ weights, the three persisted A10 timings give:
+\subsection{Protected-prefix evidence}
+The protected-policy comparison is limited to the first 65,536 A10 jobs with the same $\theta$, $K$, event mode and horizon. Its count lower bound is 24.9181888580 h. The ordinary baselines have means 30.332 h (HOL) and 31.042 h (FILL); protected means are 556.492 h (urgent HOL), 350.528 h (urgent TIME), 350.088 h (urgent FIXED), and 349.715 h (urgent FLEX). FIXED and FLEX accept 62 and 133 crossing candidates and improve mean waiting relative to TIME by 0.439 and 0.813 h, while still producing both improved and worsened jobs. This is prefix evidence and cannot be extrapolated to full A10 or the full cluster.
 
-\begin{table}[htbp]
-\centering
-\caption{Ordinary and GPU-work-weighted A10 waiting; the two objectives need not rank policies alike.}
-\begin{tabular}{lrrr}
-\toprule
-Policy & Mean job wait (h) & $\sum H_jW_j/\sum H_j$ (h) & Mean / job-count LB\\
-\midrule
-FCFS &900.129&619.352&40.33\\
-SPT-HOL &32.906&677.690&1.47\\
-SPT-FILL&34.967&677.496&1.57\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Thus SPT-HOL is the current ordinary-mean candidate, while the weighted
-objective reverses the FCFS versus SPT ordering in this trace. Neither metric
-alone establishes general optimality. The lower bound is conservative because
-it relaxes CPU, node shape, and gang placement.
-
-\subsection{Bounded protected-policy analysis and method choice}
-On the verified 65,536-job A10 prefix, the ordinary means are 30.332 h
-(SPT-HOL) and 31.042 h (SPT-FILL). URGENT-HOL/TIME/FIXED/FLEX are respectively
-556.492/350.528/350.088/349.715 h; FIXED/FLEX accepted 62/133 crossings.
-These are prefix protection-cost results only, not full-cluster or full-A10
-urgent results. The FILL G3 cost record has 314,756 order builds. The
-cross-review supplied 307,844 budget-exhausted events, giving 97.804% of
-order-build records, but that ratio is a candidate-attempt diagnostic, not
-97.804% of waiting time; the G3 archive does not independently persist that
-event count.
-
-For ordinary mean waiting, SPT-HOL is the current main candidate. SPT-FILL is
-retained as a useful immediate-start baseline, and protected policies remain
-valid safety or tail-preference experiments. SPT-HOL still has harmed jobs and
-a slightly larger maximum wait than FILL; no dominance or general starvation
-guarantee is claimed. All source hashes, row/ID checks, derived summaries,
-and missing external full-cluster timing retention are recorded in
-\texttt{results/20261016-b-q2-m2g-revision-01/}. The surrounding integrated
-paper remains a draft; this file is the canonical Q2-only section.
+The cross-review revision also reports GPU-work-weighted mean waits for the same complete A10 timings: 619.352 h (FCFS), 677.690 h (SPT-HOL), and 677.496 h (SPT-FILL), using $H_j=W_jg_jp_j$ as weights. Thus the weighted objective reverses the FCFS-versus-SPT ordering seen under equal-job mean waiting. The complete-A10 evidence supports ordinary \method{SPT-HOL} as the current mean-wait main candidate, with \method{SPT-FILL} retained as a useful baseline for immediate feasible starts. The protected tier remains a bounded safety experiment rather than a selected production policy.
