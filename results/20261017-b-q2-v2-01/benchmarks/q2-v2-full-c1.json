@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "kind": "m2b_bounded_cost_probe",
+  "status": "PASS",
+  "configuration": {
+    "model": "A10",
+    "jobs": [
+      111284
+    ],
+    "theta_seconds": [
+      604800
+    ],
+    "short_theta_seconds": 604800,
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "policies": [
+      "SPT-HEAD-TIME"
+    ],
+    "placement": "first-fit ascending node_name",
+    "horizon_seconds": 7776000,
+    "timeout_seconds": 900.0,
+    "max_rss_kib": 4194304
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "records": [
+    {
+      "jobs": 111284,
+      "theta_seconds": 604800,
+      "threshold_label": "exploratory-168h",
+      "policy": "SPT-HEAD-TIME",
+      "child_output": "a10-111284-theta604800-spt-head-time",
+      "child_wall_seconds": 652.7144291980076,
+      "child_summary_sha256": "b49aea30ebdcfb6443060486dc756ff7a51a485f82408f1e84bfc9c9c30fbdb4",
+      "peak_rss_kib_process": 2187224,
+      "scheduler_seconds": 374.9804593740264,
+      "validation_seconds": 269.11326182598714,
+      "metrics_seconds": 0.012554193963296711,
+      "io_seconds": 7.796928813972045,
+      "input_seconds": 0.17812012898502871,
+      "runtime_seconds": 651.9099544250057,
+      "schedule_sha256": "f2544b13c79747ee1cc51ca1f07b281fff817bb5ea3c1c5b532d27c2673333a5",
+      "reservations": 100205,
+      "cost": {
+        "planner_calls": 61893349,
+        "candidate_checks": 61893349,
+        "current_plan_cache_hits": 61099385,
+        "current_plan_evaluations": 1206376,
+        "current_plan_cache_peak_entries": 24,
+        "order_builds": 314889,
+        "dispatch_timestamps": 314889,
+        "bypass_candidate_checks": 61784446,
+        "candidate_attempts": 61784446,
+        "unique_candidate_ids": 106363,
+        "repeated_candidate_attempts": 61678083,
+        "budget_exhausted": 307963,
+        "protected_hol_blocked": 0,
+        "protected_hol_fastpath": 0,
+        "protected_hol_commits": 0,
+        "reservation_calls": 100205,
+        "crossing_accepted": 0,
+        "crossing_rejected": 2780581,
+        "certificate_updates": 0,
+        "reservation_rejects": 61782065
+      },
+      "metrics": {
+        "jobs": 111284,
+        "mean_wait_hours": 32.92381685846822,
+        "median_wait_hours": 0.04972222222222222,
+        "p95_wait_hours": 10.932708333333297,
+        "p99_wait_hours": 1541.5865916666664,
+        "max_wait_hours": 3017.7277777777776,
+        "mean_jct_hours": 132.69357299791525,
+        "zero_wait_fraction": 0.050150965098307035,
+        "mean_bounded_slowdown_60s": 1.683963354926137,
+        "p99_bounded_slowdown_60s": 6.854635046113306,
+        "completed_at_horizon": 106999,
+        "gpu_allocation_rate_at_horizon": 0.9994261879745958,
+        "cpu_allocation_rate_at_horizon": 0.1793059460133529,
+        "final_completion_days": 309.73864583333335,
+        "duration_strata": {
+          "quantile_bounds_seconds": [
+            1.0,
+            701.0,
+            158350.29999999987,
+            8836180.719999997,
+            15897599.0
+          ],
+          "bands": {
+            "q00_q50": {
+              "count": 55628,
+              "duration_min_seconds": 1,
+              "duration_max_seconds": 700,
+              "mean_wait_hours": 0.04263036999752323,
+              "p95_wait_hours": 0.12916666666666668,
+              "zero_wait_fraction": 0.046487380455885526
+            },
+            "q50_q90": {
+              "count": 44527,
+              "duration_min_seconds": 701,
+              "duration_max_seconds": 158323,
+              "mean_wait_hours": 0.39468767389573867,
+              "p95_wait_hours": 1.325,
+              "zero_wait_fraction": 0.01704583735710917
+            },
+            "q90_q99": {
+              "count": 10016,
+              "duration_min_seconds": 158362,
+              "duration_max_seconds": 8835855,
+              "mean_wait_hours": 255.3554282314963,
+              "p95_wait_hours": 1896.7225,
+              "zero_wait_fraction": 0.1706269968051118
+            },
+            "q99_q100": {
+              "count": 1113,
+              "duration_min_seconds": 8837771,
+              "duration_max_seconds": 15897599,
+              "mean_wait_hours": 976.0182981431566,
+              "p95_wait_hours": 2852.7253888888886,
+              "zero_wait_fraction": 0.47349505840071876
+            }
+          }
+        }
+      },
+      "validation": "PASS"
+    }
+  ],
+  "note": "Each record is an independent child process; no performance claim is made for unrun full trace."
+}
