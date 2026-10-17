@@ -44,3 +44,24 @@
 ## 驗證與限制
 
 已測：CPU=0、多 GPU worker、gang 原子性、node tie、同刻事件、規劃失敗不改資源、低比例 fallback、重跑可重現、FF-id 預設 timing/placement 回歸。未跑其他 GPU 池大型矩陣；未修改 Q2/Q3 演算法、main、baseline tag 或 V1 論文。候選是否納入正式模型仍需 reviewer 檢查與後續跨池整合。
+
+
+## GS1-V2-R1（2026-10-18）
+
+上文為 a20d73f 的歷史結果，不覆寫原證據。本輪修訂與正式採納判斷以
+[修訂勘誤與比較](../../results/20261018-b-gs1-placement-v2-r1/errata.md) 為準。
+
+修正 fallback 相同比例的反向 node tie-break；舊八組先通過嚴格持久化驗證，
+再串行執行兩組 ratio（各 900秒／4GiB RSS 上限），沒有重跑八格矩陣。
+新 ratio 在 FCFS、SPT 分別改善 62、480 作業，均無受損，9643 作業全部零等待。
+這是固定 GS1 實例的可行構造，不是一般最優；建議保留 GS1 專用候選，ff-id 預設不變。
+
+H=7776000 的完成數、allocation 由十份保存 timing 後處理，完整排空等待不變。
+原 H=7767629 的 manifest 和八組文件全部保留原 bytes；來源與程式 hash、成本、
+逐 ID timing／placement 差異、分層、故障注入與回放紀錄保存在同一修訂目錄。
+CPU 分層以 vCPU/GPU 呈現，cpu_units=0.01 vCPU。
+
+舊驗證器的 PASS 範圍較弱；本輪 raw ID 唯一性、逐欄身份、精確整數、正確時長、
+重複 pair 拒絕、原子 gang、同刻釋放、每次資源上下界及最後歸還均經獨立回放。
+新舊 ratio 的 timing 改變 15／13 作業、placement 改變 1347／1299 作業。
+來源雜湊與個別指標請查修訂目錄，不從舊總結推論。

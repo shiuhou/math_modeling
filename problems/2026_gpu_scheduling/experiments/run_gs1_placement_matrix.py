@@ -80,11 +80,11 @@ def pair_summary(a, b, policy, out):
     # regression.  Bins are descriptive, not tuned thresholds.
     base = a[["job_name", "cpu_units", "gpu_request", "worker_num"]]
     joined = joined.merge(base, on="job_name", how="left")
-    joined["cpu_gpu_ratio"] = joined.cpu_units / joined.gpu_request
-    joined["cpu_gpu_ratio_bin"] = pd.cut(joined.cpu_gpu_ratio, [-1, 0, 100, 400, 10**9],
-                                          labels=["0", "(0,100]", "(100,400]", ">400"])
+    joined["cpu_gpu_ratio"] = joined.cpu_units / 100 / joined.gpu_request
+    joined["vcpu_per_gpu_bin"] = pd.cut(joined.cpu_gpu_ratio, [-1, 0, 1, 4, 10**9],
+                                          labels=["0", "(0,1]", "(1,4]", ">4"])
     strata = []
-    for column in ("cpu_gpu_ratio_bin", "worker_num", "gpu_request"):
+    for column in ("vcpu_per_gpu_bin", "worker_num", "gpu_request"):
         for key, sub in joined.groupby(column, observed=True):
             d = sub.wait_ratio - sub.wait_ff
             strata.append({"dimension": column, "level": str(key), "jobs": len(sub),
@@ -96,42 +96,12 @@ def pair_summary(a, b, policy, out):
 
 
 def replay_ledger(pool, jobs, times_path, placements_path):
-    """Replay persisted timing/placement files without using simulator plans."""
-    times = pd.read_csv(times_path)
-    ledger = pd.read_csv(placements_path)
-    expected = set(int(x) for x in jobs.job_name)
-    if set(times.job_name) != expected or set(ledger.job_name) != expected:
-        return {"status": "FAIL", "reason": "incomplete job IDs"}
-    plans = {int(j): [(int(node), int(w)) for _, node, w in g.itertuples(index=False, name=None)]
-             for j, g in ledger.groupby("job_name")}
-    free_g = pool.gpu_capacity_num.to_numpy(dtype=np.int64).copy()
-    free_c = pool.cpu_units.to_numpy(dtype=np.int64).copy()
-    node_index = {int(name): i for i, name in enumerate(pool.node_name)}
-    by_job = jobs.set_index("job_name")
-    events = sorted([(int(r.finish), 0, int(r.job_name)) for r in times.itertuples()] +
-                    [(int(r.start), 1, int(r.job_name)) for r in times.itertuples()])
-    for t, kind, jid in events:
-        row = by_job.loc[jid]
-        q, c = int(row.gpu_request), int(row.cpu_units)
-        entries = plans[jid]
-        if kind == 0:
-            for node, w in entries:
-                i = node_index[int(node)]
-                free_g[i] += int(w) * q
-                free_c[i] += int(w) * c
-        else:
-            if sum(int(w) for _, w in entries) != int(row.worker_num):
-                return {"status": "FAIL", "reason": f"worker count {jid}"}
-            for node, w in entries:
-                i = node_index[int(node)]
-                if int(w) * q > int(free_g[i]) or int(w) * c > int(free_c[i]):
-                    return {"status": "FAIL", "reason": f"capacity {jid}"}
-            for node, w in entries:
-                i = node_index[int(node)]
-                free_g[i] -= int(w) * q
-                free_c[i] -= int(w) * c
-    ok = np.array_equal(free_g, pool.gpu_capacity_num.to_numpy(dtype=np.int64)) and np.array_equal(free_c, pool.cpu_units.to_numpy(dtype=np.int64))
-    return {"status": "PASS" if ok else "FAIL", "final_gpu": free_g.tolist(), "final_cpu": free_c.tolist()}
+    """Strict persisted adapter; the sole formal validator performs replay."""
+    from gpu_scheduling.validation import validate_persisted
+    try:
+        return validate_persisted(pool, jobs, times_path, placements_path)
+    except (ValueError, AssertionError, KeyError) as exc:
+        return {'status': 'FAIL', 'reason': str(exc)}
 
 
 def main():

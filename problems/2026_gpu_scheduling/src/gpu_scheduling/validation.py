@@ -10,27 +10,99 @@ def _snapshot_hash(gpu, cpu) -> str:
     payload = {"gpu": [int(x) for x in gpu], "cpu": [int(x) for x in cpu]}
     return hashlib.sha256(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode()).hexdigest()
 
-def validate(nodes: pd.DataFrame,jobs: pd.DataFrame,s: np.ndarray,e: np.ndarray,plans: list) -> None:
-    """Independent node-by-node event replay from the final allocation ledger."""
-    if len(s)!=len(jobs) or len(e)!=len(jobs) or len(plans)!=len(jobs):
+def validate(nodes: pd.DataFrame, jobs: pd.DataFrame, s: np.ndarray, e: np.ndarray, plans: list) -> None:
+    """Independent atomic gang replay; completions precede starts at ties."""
+    if len(s) != len(jobs) or len(e) != len(jobs) or len(plans) != len(jobs):
         raise AssertionError('Incomplete timing or placement ledger')
-    if not np.all(s>=jobs.submit_time.to_numpy()) or not np.all(e-s==jobs.duration.to_numpy()):
+    for values in (s, e):
+        if any(isinstance(x, (bool, np.bool_)) or not isinstance(x, (int, np.integer)) for x in values):
+            raise AssertionError('Integer timing required')
+    if not (jobs.duration > 0).all() or not np.all(s >= jobs.submit_time.to_numpy()) or not np.all(e-s == jobs.duration.to_numpy()):
         raise AssertionError('Timing contract')
-    ledgers=[[] for _ in range(len(nodes))]
-    cols=jobs[['gpu_request','cpu_units','worker_num','gpu_model']]
-    for j,(q,c,w,g) in enumerate(cols.itertuples(index=False,name=None)):
-        if sum(n for _,n in plans[j])!=w:raise AssertionError('Worker count')
-        for m,n in plans[j]:
-            if not isinstance(m,(int,np.integer)) or not isinstance(n,(int,np.integer)) or not 0<=m<len(nodes) or n<=0 or nodes.gpu_model.iloc[m]!=g:raise AssertionError('Placement contract')
-            ledgers[m].append((int(s[j]),1,n*q,n*c))
-            ledgers[m].append((int(e[j]),0,-n*q,-n*c))
-    for m,ledger in enumerate(ledgers):
-        gu=cu=0
-        for _,_,dg,dc in sorted(ledger):
-            gu+=dg;cu+=dc
-            if not(0<=gu<=int(nodes.gpu_capacity_num.iloc[m]) and 0<=cu<=int(nodes.cpu_units.iloc[m])):
-                raise AssertionError(f'Independent capacity replay failed: node {m}')
-        if gu!=0 or cu!=0:raise AssertionError('Final allocation is not zero')
+    capg = [int(x) for x in nodes.gpu_capacity_num]
+    capc = [int(x) for x in nodes.cpu_units]
+    freeg, freec = capg.copy(), capc.copy()
+    demands = []
+    for j, (q, c, w, model) in enumerate(jobs[['gpu_request','cpu_units','worker_num','gpu_model']].itertuples(index=False, name=None)):
+        seen = set(); demand = []
+        for m, count in plans[j]:
+            if (not isinstance(m, (int,np.integer)) or not isinstance(count, (int,np.integer))
+                or isinstance(count, (bool,np.bool_)) or not 0 <= m < len(nodes)
+                or count <= 0 or m in seen or nodes.gpu_model.iloc[m] != model):
+                raise AssertionError('Placement contract: invalid or duplicate node')
+            seen.add(m)
+            demand.append((int(m), int(count)*int(q), int(count)*int(c)))
+        if sum(count for _, count in plans[j]) != w:
+            raise AssertionError('Worker count')
+        demands.append(demand)
+    running = set()
+    events = sorted([(int(t), 0, j) for j,t in enumerate(e)] + [(int(t), 1, j) for j,t in enumerate(s)])
+    for _, kind, j in events:
+        if kind == 0:
+            if j not in running:
+                raise AssertionError('Completion without running gang')
+            running.remove(j)
+            for m,g,c in demands[j]:
+                freeg[m] += g; freec[m] += c
+        else:
+            if j in running or any(g > freeg[m] or c > freec[m] for m,g,c in demands[j]):
+                raise AssertionError('Independent capacity replay failed')
+            running.add(j)
+            for m,g,c in demands[j]:
+                freeg[m] -= g; freec[m] -= c
+        # Only touched nodes can change; all other bounds remain invariant.
+        if any(not (0 <= freeg[m] <= capg[m] and 0 <= freec[m] <= capc[m]) for m,_,_ in demands[j]):
+            raise AssertionError('Resource bounds')
+    if running or freeg != capg or freec != capc:
+        raise AssertionError('Final allocation is not zero')
+
+
+def validate_persisted(nodes, jobs, times_path, placements_path):
+    """Strict CSV adapter to validate(), using raw attributes, never reported demand.
+
+    Decimal parsing precedes int conversion; no truncation or float rounding.
+    """
+    from decimal import Decimal, InvalidOperation
+    def read(path, columns):
+        frame = pd.read_csv(path, dtype=str, keep_default_na=False)
+        if not set(columns) <= set(frame):
+            raise ValueError('Missing required fields')
+        for col in columns:
+            if col == 'gpu_model':
+                continue
+            parsed = []
+            for value in frame[col]:
+                try:
+                    d = Decimal(value)
+                except InvalidOperation as exc:
+                    raise ValueError('Non-numeric field') from exc
+                if not d.is_finite() or d != d.to_integral_value() or abs(d) >= 2**63:
+                    raise ValueError('Non-finite, fractional or out-of-range integer')
+                parsed.append(int(d))
+            frame[col] = pd.Series(parsed, dtype='int64')
+        return frame
+    attrs = ['job_name','gpu_model','submit_time','duration','worker_num','gpu_request','cpu_units']
+    times = read(times_path, attrs + ['start','finish','wait'])
+    ledger = read(placements_path, ['job_name','node_name','workers'])
+    raw = jobs.sort_values('job_name').reset_index(drop=True)
+    times = times.sort_values('job_name').reset_index(drop=True)
+    if len(times) != len(raw) or times.job_name.duplicated().any() or set(times.job_name) != set(raw.job_name):
+        raise ValueError('Timing ID multiplicity/set mismatch')
+    for col in attrs:
+        if not np.array_equal(times[col].to_numpy(), raw[col].to_numpy()):
+            raise ValueError('Raw attribute mismatch: ' + col)
+    if not np.array_equal(times.wait.to_numpy(), (times.start-times.submit_time).to_numpy()):
+        raise ValueError('Reported wait mismatch')
+    if ledger.duplicated(['job_name','node_name']).any() or (ledger.workers <= 0).any():
+        raise ValueError('Duplicate placement pair or nonpositive workers')
+    if set(ledger.job_name) != set(raw.job_name) or not set(ledger.node_name) <= set(nodes.node_name):
+        raise ValueError('Placement ID mismatch')
+    node_index = {int(name): i for i,name in enumerate(nodes.node_name)}
+    groups = {int(j): [(node_index[int(n)], int(w)) for n,w in g[['node_name','workers']].itertuples(index=False,name=None)] for j,g in ledger.groupby('job_name')}
+    plans = [groups[int(j)] for j in raw.job_name]
+    validate(nodes, raw, times.start.to_numpy(), times.finish.to_numpy(), plans)
+    return {'status':'PASS', 'jobs':len(raw), 'ledger_rows':len(ledger),
+            'input_identity':'PASS', 'timing':'PASS', 'atomic_capacity_replay':'PASS', 'final_allocation_zero':'PASS'}
 
 
 def validate_reservations(nodes: pd.DataFrame, jobs: pd.DataFrame, result: dict, *, progress=None) -> None:

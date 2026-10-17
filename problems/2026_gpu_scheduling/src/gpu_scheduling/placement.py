@@ -56,10 +56,10 @@ def plan_first_fit(
 
 
 def _ratio_cmp(a: int, b: int, cpu_cap: np.ndarray, gpu_cap: np.ndarray) -> int:
-    """Compare original CPU/GPU ratios exactly, then node name/index."""
+    """Compare only original CPU/GPU ratios exactly; ties return zero."""
     left = int(cpu_cap[a]) * int(gpu_cap[b])
     right = int(cpu_cap[b]) * int(gpu_cap[a])
-    return (left > right) - (left < right) or ((a > b) - (a < b))
+    return (left > right) - (left < right)
 
 
 def plan_ratio_matching(
@@ -77,7 +77,9 @@ def plan_ratio_matching(
 
     The ratio is a sorting heuristic only.  Feasibility always comes from the
     current integer worker-slot count, so a low-ratio node remains a valid
-    fallback when it can host workers.  All comparisons use cross-products.
+    fallback when it can host workers. All comparisons use Python integer
+    cross-products. Arrays MUST be sorted by numeric node_name; order is a
+    permutation of those indices, not a physical reordering of the arrays.
     """
     if workers <= 0:
         raise ValueError("worker count must be positive")
