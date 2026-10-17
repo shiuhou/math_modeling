@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "kind": "m2a_pressure_run",
+  "code_commit": "4ee2c6bfa98cf7177ff976abe73b122889437f46",
+  "code_dirty": true,
+  "source_sha256": {
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py": "865719ce95834e70f8d1067e5c4c22e8c1cc003f4ce65a0a995e8bbd1d4181bf",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/audit.py": "2f61b263ed04836fe8e838c610bff36d3b332d1149c6597f2f24f20613978d11",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py": "0be5b9c1a69ca015e1e86e2c2cda2fba7623383aab4080692faa4a71132dc2e2",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py": "ec39507f869fbbf63a4d57cb488ad9d63f0e2a4c9d62c51a6d971d437da4f6be",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py": "a47ae390e66174fbe6e47024b09c87da64202377bb1be220278ed414ee868872",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py": "08ecbf3f84a7c8e5183f1629cca655ababf9c2345125620be38282ce1c564c51",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1_publication.py": "eeed466922d995abe3251e25f4c4e583028deae72d2d58473bec21e9b42df942",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3.py": "a8b95271b5cc5ac1a2a93be39598d73f979f66116a661a9fd0f196ebb9bb84d2",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3_validation.py": "fb3f9a1d678f06d7a8ae1ef0863b5ecbd85aea3471512ee2bbd4e93a8b3d343b",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "e877b2558b6c7c007b0a29bea78c593b566537c0a960f7b68aaea8acefbc5816",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py": "2efefa2ea01f8632d4eeaeae9449918acb751a043e5d9734cef6e81246962af5",
+    "problems/2026_gpu_scheduling/experiments/run_m2a_pressure.py": "8dce9dd321e50cef59beb52693bdb8353192e99e58c4a178ee21534d6177dcdf"
+  },
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "model": "A10",
+  "jobs": 65536,
+  "configuration": {
+    "policies": [
+      "SPT-HEAD-TIME"
+    ],
+    "theta_seconds": 604800,
+    "reservation_k": 200,
+    "event_mode": "shared-timer",
+    "diagnostics": true,
+    "placement": "first-fit ascending node_name",
+    "horizon_seconds": 7776000
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "runtime_seconds_total": 358.36246402503457,
+  "peak_rss_kib_process": 1316540,
+  "results": [
+    {
+      "policy": "SPT-HEAD-TIME",
+      "requested_policy": "SPT-HEAD-TIME",
+      "jobs": 65536,
+      "runtime_seconds": 358.33914554695366,
+      "peak_rss_kib_process": 1316540,
+      "scheduler_seconds": 199.2575158320251,
+      "validation_seconds": 154.4725543159875,
+      "metrics_seconds": 0.007647241000086069,
+      "io_seconds": 4.591051229974255,
+      "input_seconds": 0.1649640139658004,
+      "metrics": {
+        "jobs": 65536,
+        "mean_wait_hours": 30.35245744917128,
+        "median_wait_hours": 0.04555555555555556,
+        "p95_wait_hours": 49.322916666666664,
+        "p99_wait_hours": 1252.3962083333342,
+        "max_wait_hours": 1869.7697222222223,
+        "mean_jct_hours": 156.48498767852783,
+        "zero_wait_fraction": 0.071533203125,
+        "mean_bounded_slowdown_60s": 1.7046366255627734,
+        "p99_bounded_slowdown_60s": 7.25,
+        "completed_at_horizon": 63410,
+        "gpu_allocation_rate_at_horizon": 0.9886969632467717,
+        "cpu_allocation_rate_at_horizon": 0.18089423653763198,
+        "final_completion_days": 261.9070601851852,
+        "duration_strata": {
+          "quantile_bounds_seconds": [
+            1.0,
+            455.0,
+            365855.5,
+            10953785.850000024,
+            15897599.0
+          ],
+          "bands": {
+            "q00_q50": {
+              "count": 32757,
+              "duration_min_seconds": 1,
+              "duration_max_seconds": 454,
+              "mean_wait_hours": 0.038406311797648,
+              "p95_wait_hours": 0.12116666666666585,
+              "zero_wait_fraction": 0.05641542265775254
+            },
+            "q50_q90": {
+              "count": 26225,
+              "duration_min_seconds": 455,
+              "duration_max_seconds": 365836,
+              "mean_wait_hours": 1.4410055396674082,
+              "p95_wait_hours": 2.552722222222215,
+              "zero_wait_fraction": 0.03321258341277407
+            },
+            "q90_q99": {
+              "count": 5898,
+              "duration_min_seconds": 365875,
+              "duration_max_seconds": 10943185,
+              "mean_wait_hours": 276.539102897404,
+              "p95_wait_hours": 1445.6299305555544,
+              "zero_wait_fraction": 0.2617836554764327
+            },
+            "q99_q100": {
+              "count": 656,
+              "duration_min_seconds": 10959494,
+              "duration_max_seconds": 15897599,
+              "mean_wait_hours": 486.43685467479673,
+              "p95_wait_hours": 1813.1536805555556,
+              "zero_wait_fraction": 0.6478658536585366
+            }
+          }
+        }
+      },
+      "schedule_sha256": "459534bcf55c920024f86f84055b250536cd1b53ca2123468758333b8053d55e",
+      "reservations": 57827,
+      "event_count": 488811,
+      "max_certificate_updates": 1,
+      "cost": {
+        "planner_calls": 35560870,
+        "candidate_checks": 35560870,
+        "current_plan_cache_hits": 35160804,
+        "current_plan_evaluations": 637369,
+        "current_plan_cache_peak_entries": 15,
+        "order_builds": 183209,
+        "dispatch_timestamps": 183209,
+        "bypass_candidate_checks": 35496475,
+        "candidate_attempts": 35496475,
+        "unique_candidate_ids": 60912,
+        "repeated_candidate_attempts": 35435563,
+        "budget_exhausted": 176549,
+        "protected_hol_blocked": 0,
+        "protected_hol_fastpath": 0,
+        "protected_hol_commits": 0,
+        "reservation_calls": 57827,
+        "crossing_accepted": 0,
+        "crossing_rejected": 1066266,
+        "certificate_updates": 0,
+        "reservation_rejects": 35495334
+      },
+      "validation": "PASS"
+    }
+  ],
+  "outputs": {
+    "SPT-HEAD-TIME_reservations.json": "621da24c85426bff47cbc6e7aaad83e7758e5c41bee8f0661c01928d8ba3c8f9",
+    "phase_log.jsonl": "fdf7be2b2787406e0b646e72ee15e71dcbbddda4529dca03bff9065d3ce656b7",
+    "SPT-HEAD-TIME_node_placements.csv.gz": "04aa52fee9ea2a2be5c07d874197f23d98d131d8b2822fefd057ba629346a295",
+    "SPT-HEAD-TIME_job_times.csv.gz": "298f8b42c703a8f3290c6aee63bc089982d9a05a9f7a1d958bb3e7f53d4bf388"
+  }
+}
