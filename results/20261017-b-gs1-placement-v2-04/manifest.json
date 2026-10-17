@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "gs1_placement_matrix",
+  "base": "2026-mcm-b-baseline-v1",
+  "gpu_model": "GPU-series-1",
+  "jobs": 9643,
+  "nodes": 989,
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "configuration": {
+    "theta_seconds": 604800,
+    "event_mode": "shared-timer",
+    "horizon_seconds": 7767629,
+    "initial_state": "all nodes idle",
+    "completion": "full drain",
+    "main_matrix": [
+      "FCFS-HOL/ff-id",
+      "FCFS-HOL/ratio",
+      "SPT-HOL/ff-id",
+      "SPT-HOL/ratio"
+    ],
+    "ff_sensitivity": [
+      17,
+      29
+    ]
+  },
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3"
+  },
+  "code": {
+    "base_commit": "4ee2c6bfa98cf7177ff976abe73b122889437f46",
+    "working_tree_dirty": true,
+    "sha256": {
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py": "7f0ef19ba7bc56f17acc42d11663e58f199829ee5d720ad8fdba135501708418",
+      "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py": "a2d03fafa2828f8cf890c25e79e5dde28b9fb0a07535d2b6aec1c1a9cf3dd7dc",
+      "problems/2026_gpu_scheduling/experiments/run_gs1_placement_matrix.py": "bea75a2cd95ab84e39bc7478b441c54171fe0575c8197a59b88869547798f8ac"
+    }
+  }
+}

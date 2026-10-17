@@ -61,6 +61,7 @@ tests/                  手算、容量、輸入／指標及持久化核查
 - [evaluation.py](src/gpu_scheduling/evaluation.py)：唯一共享評價器。等待／JCT 包含全部作業直至排空；分位數 linear；BSLD 為 `max(1,JCT/max(duration,60s))`。分配率只積分 `[0,H)`，完成數 `finish <= H`；預設 `H = 最後提交時刻`，名義 90 天需顯式 `--horizon-seconds 7776000`。
 - [validation.py](src/gpu_scheduling/validation.py)：獨立節點 CPU/GPU ledger 回放；微型 scalar oracle 僅供測試，不是第二套正式引擎。
 - [run_baselines.py](experiments/run_baselines.py)：唯一基線／M1／M2-A 流程，記錄 `run.json`、來源 commit／dirty snapshot／雜湊、資料、參數、環境、耗時、全部 metrics、job times、node placements 及 reservation/event/certificate evidence；[verify_baseline.py](experiments/verify_baseline.py) 在另一程序從持久化明細核查，不信任 metrics 自報成功。`--theta-seconds`、`--reservation-k` 與 `--event-mode` 均明示配置。
+- [run_gs1_placement_matrix.py](experiments/run_gs1_placement_matrix.py)：GS1 異質節點 placement v2 的唯一凍結入口；執行 FCFS-HOL／SPT-HOL × `ff-id`／`ratio` 及 seed 17／29 的 FF 敏感性，共八組，固定 `shared-timer`、`theta=604800` 秒與完整排空，並寫入 paired strata、persisted ledger 和獨立 replay。`ratio` 只排序原始 CPU/GPU 形狀，真正可行性仍由 worker slots 判定；預設 simulator placement 保持 `ff-id`。
 
 Q2 M1 工程 smoke（只做正確性與持久化驗收，不是性能結論）：
 
