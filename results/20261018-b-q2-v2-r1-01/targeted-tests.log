@@ -1,0 +1,9 @@
+test_cpu_limited_multworker_and_finish_equal_R (test_q2_v2.HeadTimeChecks.test_cpu_limited_multworker_and_finish_equal_R) ... ok
+test_diagnostics_do_not_change_schedule (test_q2_v2.HeadTimeChecks.test_diagnostics_do_not_change_schedule) ... ok
+test_promise_is_not_revoked_by_short_arrival_and_k_not_reset (test_q2_v2.HeadTimeChecks.test_promise_is_not_revoked_by_short_arrival_and_k_not_reset) ... ok
+test_cross_epoch_rechecks_are_not_same_epoch_redundancy (test_q2_v2_diagnostics.DiagnosticScope.test_cross_epoch_rechecks_are_not_same_epoch_redundancy) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.016s
+
+OK

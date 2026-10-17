@@ -74,3 +74,26 @@ ignored `outputs/q2-v2-*`，沒有複製進 Git。
 
 已執行並 PASS：3 個 V2 定向測試、Problem B 全部 88 tests、repo checks、root
 tests、`git diff --check`。未執行新的完整 224,112-job 叢集矩陣或參數搜索。
+
+## Q2-V2-R1 勘誤與採納凍結（2026-10-18）
+
+修訂入口：`results/20261018-b-q2-v2-r1-01/`。原 14 組結果、manifest、
+raw CSV 和 simulator 完全不變；本輪正式 scheduler 新運行數為 0。
+
+- `unique_candidate_ids` 是 pool run 全程不同 bypass 候選數；repeated 包含跨
+  timestamp 重查，不能量化同刻冗餘／浪費或等待因果份額。同刻統計 NOT_AVAILABLE。
+- `dispatch_timestamps` 的程式定義是 dispatch 呼叫數；不能以 order_builds
+  代替唯一時間戳。diagnostics=False 時兩個 ID 統計為 null，其餘 counter 仍累計。
+- 原表 wall 實為 policy runtime；R1 改從 benchmark 讀真正 child wall，
+  同時列 scheduler／reservation validator／I/O+hash，各欄不是 CPU time。
+  原 65k「2.8 倍」及候選差值取位改以新精確生成表為準；所有歷史數值未改。
+- 普通 HOL 維持主方案；K/timer 納入限定範圍穩健性；HEAD-TIME 保留實驗選項。
+  完整 A10 HEAD-TIME 的 P99 略降、Mean/Max 略增，不稱全面尾部改善或 Pareto 支配。
+  普通 HOL 不含 aging，168h 僅是 shared-timer 配置。
+- 14 組本機 timing、placement、reservation/events、phase log 的 hash 與原
+  summary 完全相符。索引和 14 份 summary 入庫；大型帳本仍 LOCAL_ONLY，無共享位置。
+- 驗證範圍勘誤：原 runner PASS 為程序內獨立容量／預約驗證，未找到另一次
+  persisted replay 報告（MISSING）。前述「持久化 replay PASS」不應沿用。
+  本輪 hash 核查不冒充物理可行性回放，既有安全測試也不等同無飢餓保證。
+
+新增跨 timestamp 小型計數測試；驗收與日誌見修訂目錄 checks.json。
