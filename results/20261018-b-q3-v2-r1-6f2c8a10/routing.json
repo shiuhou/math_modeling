@@ -1,0 +1,201 @@
+{
+  "shape_limit_cpu_per_gpu": 16,
+  "subset_verified": true,
+  "sigma_and_policy_selected_ids_invariant": true,
+  "excluded_n": 605,
+  "r0_n": 11209,
+  "retained_n": 10604,
+  "excluded_fraction_of_r0_jobs": 0.053974484789008834,
+  "units": "original work: GPU-seconds / vCPU-seconds; original duration: seconds; gang: workers",
+  "groups": {
+    "R0": {
+      "n": 11209,
+      "id_sha256": "05a5193be78a5e559ca321b09dccf6a9babc5d59173fb1536bb4e58159321b26",
+      "duration_seconds": {
+        "n": 11209,
+        "mean": 355057.7423498974,
+        "min": 3.0,
+        "p50": 695.0,
+        "p95": 2191433.600000003,
+        "p99": 8834037.000000004,
+        "max": 15897599.0
+      },
+      "gang_workers": {
+        "n": 11209,
+        "mean": 1.0403247390489785,
+        "min": 1.0,
+        "p50": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "max": 32.0
+      },
+      "gang_counts": {
+        "1": 11116,
+        "2": 33,
+        "3": 11,
+        "4": 11,
+        "5": 8,
+        "6": 2,
+        "7": 2,
+        "8": 7,
+        "9": 7,
+        "10": 2,
+        "11": 2,
+        "13": 1,
+        "14": 1,
+        "16": 2,
+        "25": 1,
+        "27": 1,
+        "32": 2
+      },
+      "cpu_per_gpu": {
+        "n": 11209,
+        "mean": 7.225533053796057,
+        "min": 1.0,
+        "p50": 4.0,
+        "p95": 20.0,
+        "p99": 64.0,
+        "max": 128.0
+      },
+      "gpu_work": {
+        "original_seconds": 3983089366.0,
+        "r0_original_seconds_denominator": 3983089366.0,
+        "fraction_of_r0_original": 1.0,
+        "all_A10_original_seconds_denominator": 40028314872.0,
+        "fraction_of_all_A10_original": 0.09950679609513591,
+        "effective_seconds_if_routed_sigma1": 3983089366.0,
+        "effective_seconds_if_routed_sigma2": 7966178732.0
+      },
+      "cpu_work": {
+        "original_seconds": 97429767351.0,
+        "r0_original_seconds_denominator": 97429767351.0,
+        "fraction_of_r0_original": 1.0,
+        "all_A10_original_seconds_denominator": 970212044266.0,
+        "fraction_of_all_A10_original": 0.10042110683619589,
+        "effective_seconds_if_routed_sigma1": 97429767351.0,
+        "effective_seconds_if_routed_sigma2": 194859534702.0
+      }
+    },
+    "retained_Rshape": {
+      "n": 10604,
+      "id_sha256": "e1e9837ce1ae7e063fe58ec5b44283b6ce4b6208495dff1734ab07a3af51ad24",
+      "duration_seconds": {
+        "n": 10604,
+        "mean": 209394.06582421728,
+        "min": 4.0,
+        "p50": 579.0,
+        "p95": 712356.6500000006,
+        "p99": 5804333.439999972,
+        "max": 15897599.0
+      },
+      "gang_workers": {
+        "n": 10604,
+        "mean": 1.0401735194266315,
+        "min": 1.0,
+        "p50": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "max": 32.0
+      },
+      "gang_counts": {
+        "1": 10512,
+        "2": 33,
+        "3": 11,
+        "4": 11,
+        "5": 8,
+        "6": 2,
+        "7": 2,
+        "8": 7,
+        "9": 7,
+        "10": 2,
+        "11": 2,
+        "13": 1,
+        "14": 1,
+        "16": 2,
+        "25": 1,
+        "32": 2
+      },
+      "cpu_per_gpu": {
+        "n": 10604,
+        "mean": 5.067333081855903,
+        "min": 1.0,
+        "p50": 4.0,
+        "p95": 8.0,
+        "p99": 16.0,
+        "max": 16.0
+      },
+      "gpu_work": {
+        "original_seconds": 2223270922.0,
+        "r0_original_seconds_denominator": 3983089366.0,
+        "fraction_of_r0_original": 0.5581775144133183,
+        "all_A10_original_seconds_denominator": 40028314872.0,
+        "fraction_of_all_A10_original": 0.05554245611161585,
+        "effective_seconds_if_routed_sigma1": 2223270922.0,
+        "effective_seconds_if_routed_sigma2": 4446541844.0
+      },
+      "cpu_work": {
+        "original_seconds": 15124651838.0,
+        "r0_original_seconds_denominator": 97429767351.0,
+        "fraction_of_r0_original": 0.15523645646727252,
+        "all_A10_original_seconds_denominator": 970212044266.0,
+        "fraction_of_all_A10_original": 0.015589016779772445,
+        "effective_seconds_if_routed_sigma1": 15124651838.0,
+        "effective_seconds_if_routed_sigma2": 30249303676.0
+      }
+    },
+    "excluded_R0_minus_Rshape": {
+      "n": 605,
+      "id_sha256": "d908ce99ff68744706a327cdbaa6ea1565b437850daaf9552084d761ebc3a1dc",
+      "duration_seconds": {
+        "n": 605,
+        "mean": 2908144.727272727,
+        "min": 3.0,
+        "p50": 537842.0,
+        "p95": 13531482.799999982,
+        "p99": 15897599.0,
+        "max": 15897599.0
+      },
+      "gang_workers": {
+        "n": 605,
+        "mean": 1.0429752066115703,
+        "min": 1.0,
+        "p50": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "max": 27.0
+      },
+      "gang_counts": {
+        "1": 604,
+        "27": 1
+      },
+      "cpu_per_gpu": {
+        "n": 605,
+        "mean": 45.05289256198347,
+        "min": 20.0,
+        "p50": 48.0,
+        "p95": 76.79999999999927,
+        "p99": 96.0,
+        "max": 128.0
+      },
+      "gpu_work": {
+        "original_seconds": 1759818444.0,
+        "r0_original_seconds_denominator": 3983089366.0,
+        "fraction_of_r0_original": 0.44182248558668163,
+        "all_A10_original_seconds_denominator": 40028314872.0,
+        "fraction_of_all_A10_original": 0.043964339983520055,
+        "effective_seconds_if_routed_sigma1": 1759818444.0,
+        "effective_seconds_if_routed_sigma2": 3519636888.0
+      },
+      "cpu_work": {
+        "original_seconds": 82305115513.0,
+        "r0_original_seconds_denominator": 97429767351.0,
+        "fraction_of_r0_original": 0.8447635435327275,
+        "all_A10_original_seconds_denominator": 970212044266.0,
+        "fraction_of_all_A10_original": 0.08483209005642345,
+        "effective_seconds_if_routed_sigma1": 82305115513.0,
+        "effective_seconds_if_routed_sigma2": 164610231026.0
+      }
+    }
+  },
+  "effective_work_note": "Excluded jobs execute natively at original work under R-shape; their doubled work is only applicable when routed by R0 sigma2."
+}

@@ -1,0 +1,67 @@
+{
+  "tested_source_commit_before_publication": "d460fdb348b58085aafd830be84d30f4d8821e9d",
+  "new_source_sha256": {
+    "problems/2026_gpu_scheduling/experiments/analyze_q3_v2_tradeoffs.py": "6d18427d07a365b61403960fc66a4c51a8b2cb84ae9fa91bb9e920aaaaff21dd",
+    "problems/2026_gpu_scheduling/tests/test_q3_v2_tradeoffs.py": "6ed783d64e022bc3c52660682e4aa57a3150acfee99aca6af2c28a2ba4d6adba"
+  },
+  "sources_and_result_hashes": "PASS",
+  "V1_and_S5_metrics_manifest_hashes": "PASS",
+  "tracked_changes_only_activity_note": "PASS",
+  "raw_CSV_hashes": "PASS (manifest source audit)",
+  "old_results_manifests_q3_DES_paper": "UNCHANGED against starting HEAD",
+  "new_scheduling_runs": 0,
+  "full_problem_scheduler_test_suite": "NOT_RUN: zero scheduling scope; current tests are only postprocessing and root tests",
+  "checks": {
+    "postprocess_tests": {
+      "command": [
+        "python (existing Problem B environment)",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "problems/2026_gpu_scheduling/tests",
+        "-p",
+        "test_q3_v2_tradeoffs.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "postprocess_tests.log",
+      "log_sha256": "e3cace9a5b9c570d831e8f9ea926a6d10626c45b89e8514a62676e1e7b061cde"
+    },
+    "root_tests": {
+      "command": [
+        "python (existing Problem B environment)",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "root_tests.log",
+      "log_sha256": "547699b8cd21b7dd2b69a408c94d91c0a49fabf7ea27c1304e6554e733e702a3"
+    },
+    "repo_check": {
+      "command": [
+        "python3",
+        "scripts/check_repo.py"
+      ],
+      "exit_code": 0,
+      "log": "repo_check.log",
+      "log_sha256": "cb243b6d10454a68f28391511a3a5352e4067e1003571deb4aec31e19769e778"
+    },
+    "diff_check": {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "diff_check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "staged_scope_check": "PASS: only activity note, new postprocessor/tests and new R1 result directory"
+}

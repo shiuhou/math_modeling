@@ -1,0 +1,19 @@
+test_committed_numeric_evidence_uses_fixed_groups (test_q3_v2_tradeoffs.TradeoffTests.test_committed_numeric_evidence_uses_fixed_groups) ... ok
+test_discrete_duplicate_scenario_rejected (test_q3_v2_tradeoffs.TradeoffTests.test_discrete_duplicate_scenario_rejected) ... ok
+test_discrete_missing_scenario_rejected (test_q3_v2_tradeoffs.TradeoffTests.test_discrete_missing_scenario_rejected) ... ok
+test_discrete_worst_keeps_option_and_policy (test_q3_v2_tradeoffs.TradeoffTests.test_discrete_worst_keeps_option_and_policy) ... ok
+test_duplicate_ids_rejected (test_q3_v2_tradeoffs.TradeoffTests.test_duplicate_ids_rejected) ... ok
+test_empty_harmed_group_is_null (test_q3_v2_tradeoffs.TradeoffTests.test_empty_harmed_group_is_null) ... ok
+test_missing_column_not_default_zero (test_q3_v2_tradeoffs.TradeoffTests.test_missing_column_not_default_zero) ... ok
+test_missing_ids_rejected (test_q3_v2_tradeoffs.TradeoffTests.test_missing_ids_rejected) ... ok
+test_nan_rejected (test_q3_v2_tradeoffs.TradeoffTests.test_nan_rejected) ... ok
+test_pair_signed_mean_and_conditional_denominator (test_q3_v2_tradeoffs.TradeoffTests.test_pair_signed_mean_and_conditional_denominator) ... ok
+test_published_route_work_conserves_original_work (test_q3_v2_tradeoffs.TradeoffTests.test_published_route_work_conserves_original_work) ... ok
+test_reordering_pairs_by_id (test_q3_v2_tradeoffs.TradeoffTests.test_reordering_pairs_by_id) ... ok
+test_reverse_does_not_negate_positive_total (test_q3_v2_tradeoffs.TradeoffTests.test_reverse_does_not_negate_positive_total) ... ok
+test_wait_and_finish_harmed_denominators_are_distinct (test_q3_v2_tradeoffs.TradeoffTests.test_wait_and_finish_harmed_denominators_are_distinct) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.015s
+
+OK

@@ -1,0 +1,10 @@
+{
+  "method": "git merge-tree --write-tree --name-only HEAD origin/main (read-only index/worktree; merge tree object only)",
+  "head_before_publication": "d460fdb348b58085aafd830be84d30f4d8821e9d",
+  "base": "8f2e99ccae31c9559fa726884fda2637d1c0f921",
+  "conflicts": [
+    "results/README.md"
+  ],
+  "resolution": "NOT_ATTEMPTED; deferred to V2 integration task",
+  "draft": true
+}
