@@ -1,0 +1,30 @@
+{
+  "Rshape_sigma1": {
+    "FCFS": {
+      "status": "PASS",
+      "output": "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma1_FCFS",
+      "wall_seconds": 35.29857364704367,
+      "native_invariance": "PASS"
+    },
+    "SJF-HOL": {
+      "status": "PASS",
+      "output": "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma1_SJF-HOL",
+      "wall_seconds": 36.42920098901959,
+      "native_invariance": "PASS"
+    }
+  },
+  "Rshape_sigma2": {
+    "FCFS": {
+      "status": "PASS",
+      "output": "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma2_FCFS",
+      "wall_seconds": 35.30096942197997,
+      "native_invariance": "PASS"
+    },
+    "SJF-HOL": {
+      "status": "PASS",
+      "output": "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma2_SJF-HOL",
+      "wall_seconds": 36.02937495999504,
+      "native_invariance": "PASS"
+    }
+  }
+}

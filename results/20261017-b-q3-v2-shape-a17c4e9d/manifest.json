@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "kind": "q3_v2_r_shape",
+  "status": "PASS",
+  "candidate": "R-shape",
+  "base_tag": "2026-mcm-b-baseline-v1",
+  "base_commit": "4ee2c6bfa98cf7177ff976abe73b122889437f46",
+  "current_commit": "4ee2c6bfa98cf7177ff976abe73b122889437f46",
+  "current_dirty": true,
+  "data_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "jobs": 224112,
+  "nodes": 4278,
+  "horizon_seconds": 7776000,
+  "shape_limit_cpu_per_gpu": 16.0,
+  "duration_cutoff_seconds": 701,
+  "policies": [
+    "FCFS",
+    "SJF-HOL"
+  ],
+  "sigma_values": [
+    1,
+    2
+  ],
+  "r0_reference": {
+    "sigma1": {
+      "path": "outputs/b-q3-fixed-split-v1-final",
+      "run_json_sha256": "313ce6aea4827910358cb65ee78640c2d028c3d40619b760acd3586136646279",
+      "provenance": "copied from verified V1 persisted artifact; source code hash matches baseline q3.py"
+    },
+    "sigma2": {
+      "path": "outputs/q3-v2-r0-sigma2/S5_*",
+      "source_schedule_sha256": {
+        "FCFS": {
+          "jobs": "e6085714fc70417c0b9fb357baaed6c1a71f833a6b3b11619d77aa46cd0fdcec",
+          "placements": "22fffea4e64fcf559a2280e30e2c19601600651dbdf6f5d73aba1c822d8be82a"
+        },
+        "SJF-HOL": {
+          "jobs": "d91782322e4acda6208d0d30624cea4e0de1dbf742996c73f7316bcf1d1b8230",
+          "placements": "b5e8e29855d6ab3ea6c23e21be756476e9313ef4ef3ae839f8bb0171e3d62bb1"
+        }
+      },
+      "provenance": "copied byte-for-byte from verified V1 sensitivity output"
+    }
+  },
+  "v1_source_preserved": true,
+  "new_scheduling_runs": 4,
+  "cost": {
+    "wall_seconds": 143.24441337003373,
+    "peak_rss_mb": 762.2734375,
+    "serial": true
+  },
+  "output_root": "outputs/q3-v2-shape-a17c4e9d",
+  "command": [
+    "problems/2026_gpu_scheduling/experiments/run_q3_v2_shape.py",
+    "--out",
+    "results/20261017-b-q3-v2-shape-a17c4e9d",
+    "--output-root",
+    "outputs/q3-v2-shape-a17c4e9d"
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "candidate_B": "IMPLEMENTATION_DEFERRED: no safe arrival callback in current q3.route entry point",
+  "readme_sha256": "5b12b8ebed12c3d574ec17fc214c187f01baec3f2229af06bb2e5dfef3730c0f",
+  "independent_verification_sha256": "4a65e4e4f08381fe39233253be39fa48983bb36b34b7405f7deb702ccf751c25",
+  "candidate_B_spec_sha256": "7e84fa4b255c5c19c9fc3f996e13db1fb8a470f24b53f467c3b45c885ea3678f",
+  "source_sha256": {
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3_v2.py": "049bfccf2bc1d91fffdf537b2cd7b6a4eeb69df7bbd636c21d21d5b3581ea0af",
+    "problems/2026_gpu_scheduling/experiments/run_q3_v2_shape.py": "9664ca60cbcf06e0e14b01a0eb210d6748caf9683073f0cbe4068c51e5f1695c",
+    "problems/2026_gpu_scheduling/experiments/verify_q3_v2_shape.py": "ac9246c26b37f4fc214d85cc2274975f626efd0bd309edccac85f635fb9f01cf",
+    "problems/2026_gpu_scheduling/configs/q3_v2_shape.json": "4c772802690f9d3ac853f0713038d9097d84ecca97123474b3d4534a258878af",
+    "problems/2026_gpu_scheduling/docs/q3_v2_model.md": "8f7b574446302ee47f6dc69b2997a68d3f4c00889a19cfe8bc025f7fd037800e",
+    "problems/2026_gpu_scheduling/tests/test_q3_v2_shape.py": "4e4f7908d324409de83fb9b611198703af326bf3e3b169a576e5ff405d68e0a0",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3.py": "a8b95271b5cc5ac1a2a93be39598d73f979f66116a661a9fd0f196ebb9bb84d2",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3_validation.py": "fb3f9a1d678f06d7a8ae1ef0863b5ecbd85aea3471512ee2bbd4e93a8b3d343b"
+  },
+  "results_sha256": {
+    "results/20261017-b-q3-v2-shape-a17c4e9d/README.md": "5b12b8ebed12c3d574ec17fc214c187f01baec3f2229af06bb2e5dfef3730c0f",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/Rshape_sigma1_FCFS_metrics.json": "39ca6ad7265ace9eacfe69bcaf06584c1e80e2430a515ef58855f7dd9781857f",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/Rshape_sigma1_SJF-HOL_metrics.json": "4b0b5fcf1e690f8ef045d4e5215eb4d7b5ab3cbe2d72968a329c241c71c33c98",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/Rshape_sigma2_FCFS_metrics.json": "56231a200637d646f517fe005348a174979c05b7ea150420cfcd9bf15271911c",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/Rshape_sigma2_SJF-HOL_metrics.json": "38e99e50b1dad13f6d6fb809dc44f4efde6d4c796b6bd85e8a71e0a2b7b3626d",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/candidate_B_spec.json": "7e84fa4b255c5c19c9fc3f996e13db1fb8a470f24b53f467c3b45c885ea3678f",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/frozen_config.json": "1f14585c3468f2f8ae3e0233995f127eae88d44622b1085b17bd7be1dfd27b7c",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/independent_verification.json": "4a65e4e4f08381fe39233253be39fa48983bb36b34b7405f7deb702ccf751c25",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/scenario_status.json": "daf8eff34290aaaa80283ef05e760a628cfe45b081305c67a90ddf50303fb235",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/shape_audit.json": "7682fc54e3b22f8f3479537c9cb0f6d47e834935e6078ad326ca9e3611f2107c",
+    "results/20261017-b-q3-v2-shape-a17c4e9d/shape_metrics.json": "0ab2e915b61e9858faa522297356aea1df2f7e350f3f45e38a89ab9f3259fa7e"
+  },
+  "delivery": {
+    "status": "BLOCKED",
+    "path": "outputs/Q3_v2_shape_a17c4e9d_evidence.zip",
+    "bytes": 22995288,
+    "sha256": "797a6ceb7c9dff27992e79264728c92e83cd6f8b85492d38d7b70b6cf1cbdb64",
+    "contains": "four persisted R-shape timing and placement directories",
+    "cross_machine_shared_storage": false
+  },
+  "protected_scope": {
+    "v1_q3_source_unchanged": true,
+    "v1_paper_unchanged": true,
+    "historical_results_unchanged": true,
+    "q3_py_modified": false,
+    "shared_des_modified": false,
+    "main_modified": false,
+    "tag_modified": false
+  },
+  "validation": {
+    "full_trace_runs": "PASS: four serial cases; each <900 seconds",
+    "independent_replay": "PASS: independent_verification.json",
+    "synthetic_tests": "PASS: test_q3_v2_shape.py (7 tests)",
+    "native_invariance": "PASS: all four timing and placement comparisons against same-sigma R0",
+    "route_and_shape": "PASS: V1 eligibility/hash replay plus derived 16 CPU/GPU rule",
+    "candidate_B": "IMPLEMENTATION_DEFERRED with specification and minimal interface",
+    "cross_machine_delivery": "BLOCKED: no authorized shared storage",
+    "repo_check": "PASS: scripts/check_repo.py (309 files)",
+    "root_tests": "PASS: root unittest (12 tests)",
+    "problem_tests": "PASS: Problem B unittest (92 tests)",
+    "diff_check": "PASS: git diff --check"
+  }
+}

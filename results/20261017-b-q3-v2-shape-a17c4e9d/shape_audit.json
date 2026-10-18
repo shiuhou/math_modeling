@@ -1,0 +1,12 @@
+{
+  "donor_nodes": 60,
+  "donor_node_count": 60,
+  "derived_cpu_per_gpu_limit": 16.0,
+  "donor_cpu_values": [
+    128
+  ],
+  "donor_gpu_values": [
+    8
+  ],
+  "criterion": "cpu_request / gpu_request <= donor capacity CPU/GPU ratio"
+}

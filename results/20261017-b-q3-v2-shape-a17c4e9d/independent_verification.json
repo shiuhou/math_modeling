@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "checks": {
+    "Rshape_sigma1_FCFS": {
+      "status": "PASS",
+      "jobs": 224112,
+      "routed_jobs": 10604,
+      "physical_replay": "PASS",
+      "route_replay": "PASS"
+    },
+    "Rshape_sigma1_SJF-HOL": {
+      "status": "PASS",
+      "jobs": 224112,
+      "routed_jobs": 10604,
+      "physical_replay": "PASS",
+      "route_replay": "PASS"
+    },
+    "Rshape_sigma2_FCFS": {
+      "status": "PASS",
+      "jobs": 224112,
+      "routed_jobs": 10604,
+      "physical_replay": "PASS",
+      "route_replay": "PASS"
+    },
+    "Rshape_sigma2_SJF-HOL": {
+      "status": "PASS",
+      "jobs": 224112,
+      "routed_jobs": 10604,
+      "physical_replay": "PASS",
+      "route_replay": "PASS"
+    }
+  },
+  "shape_threshold": 16.0,
+  "seconds": 39.73757073195884
+}

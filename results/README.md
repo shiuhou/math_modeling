@@ -21,3 +21,14 @@ Q3 大型逐作業／節點帳本仍受跨機共享限制，保留 `BLOCKED`／�
 ## JSON 清單約定
 
 正式清單使用 `kind: "formal"`，`validation.status` 僅可為 `PASS`、`FAIL`、`NOT_RUN` 或 `BLOCKED`。`NOT_RUN` 表示未執行，`BLOCKED` 表示有明確外部限制；未知值不可填零或假成功。完整欄位規範與示例保留於 [manifest.example.json](manifest.example.json) 及各正式清單。
+
+## V2 Candidate Integration evidence
+
+- Fixed source commits: GS1 `ffdcc7609969094bc1ceaeef650d99b0beae8208`, Q2 `fcd7bafdb002221b42e11ce8ba2dbcfe57fcd0cd`, Q3 `56ea09021d5ad5088ad5ed7242d8fab0c3115667`.
+- Q2 persisted replay evidence is under `20261018-b-q2-v2-r1-01/evidence_index.json`; its per-case status and missing/local-only files are authoritative.
+- GS1 evidence: `20261018-b-gs1-placement-v2-r1/`; Q3 R-shape evidence: `20261018-b-q3-v2-r1-6f2c8a10/`.
+- The V2 integration record distinguishes source integration, persisted replay, V1 runtime recovery, selected V2 runtime validation, paper validation, evidence distribution and submission readiness.
+
+## Q3-V2 R-shape bounded study
+
+[Q3-V2 R-shape 結果](20261017-b-q3-v2-shape-a17c4e9d/README.md) 以 `2026-mcm-b-baseline-v1`／`4ee2c6bfa98cf7177ff976abe73b122889437f46` 為基準，固定 60 台 A100 接收節點，完成 FCFS／SJF-HOL × sigma 1/2 四組完整 trace。Candidate B 因現有 `q3.route()` 缺少安全逐到達 callback，標記 `IMPLEMENTATION_DEFERRED`，不報告虛假 full-trace 數字。大型 evidence 跨機交付為 `BLOCKED`。

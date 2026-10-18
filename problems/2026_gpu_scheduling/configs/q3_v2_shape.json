@@ -1,0 +1,13 @@
+{
+  "candidate": "R-shape",
+  "donor_nodes": 60,
+  "route_numerator": 1,
+  "route_denominator": 10,
+  "compatibility": true,
+  "sigma_values": [1, 2],
+  "horizon_seconds": 7776000,
+  "hash_namespace": "q3-fixed-split-v1",
+  "shape_rule": "cpu_request / gpu_request <= derived donor CPU/GPU capacity ratio",
+  "shape_threshold_source": "selected 60 A100-SXM4-80GB rows in node_info_df.csv",
+  "candidate_B": "IMPLEMENTATION_DEFERRED"
+}
