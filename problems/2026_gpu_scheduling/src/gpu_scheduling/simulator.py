@@ -22,16 +22,17 @@ from .validation import validate
 POLICY_ALIASES = {
     "FCFS": "FCFS-HOL", "SJF-HOL": "SPT-HOL", "FCFS-HOL": "FCFS-HOL",
     "SPT-HOL": "SPT-HOL", "SPT-FILL": "SPT-FILL", "SGW-FILL": "SGW-FILL",
+    "SPT-HEAD-TIME": "SPT-HEAD-TIME",
     "EASY-TIME": "EASY-TIME", "EASY-NR": "EASY-NR",
     "SPT-URGENT-HOL": "SPT-URGENT-HOL", "SPT-URGENT-TIME": "SPT-URGENT-TIME",
     "SPT-URGENT-FIXED": "SPT-URGENT-FIXED", "SPT-URGENT-FLEX": "SPT-URGENT-FLEX",
 }
 M1_POLICIES = frozenset(POLICY_ALIASES.values()) - {"FCFS-HOL", "SPT-HOL"}
-FILL_POLICIES = frozenset({"SPT-FILL", "SGW-FILL", "EASY-TIME", "EASY-NR", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX"})
+FILL_POLICIES = frozenset({"SPT-FILL", "SGW-FILL", "EASY-TIME", "EASY-NR", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX", "SPT-HEAD-TIME"})
 URGENT_POLICIES = frozenset({"SPT-URGENT-HOL", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX"})
 FLEX_POLICIES = frozenset({"EASY-NR", "SPT-URGENT-FLEX"})
 FIXED_POLICIES = frozenset({"SPT-URGENT-FIXED"})
-TIME_POLICIES = frozenset({"EASY-TIME", "SPT-URGENT-TIME"})
+TIME_POLICIES = frozenset({"EASY-TIME", "SPT-URGENT-TIME", "SPT-HEAD-TIME"})
 EVENT_MODES = frozenset({"arrival-completion-only", "shared-timer"})
 
 
@@ -103,6 +104,7 @@ def simulate_pool(
     theta_seconds: int = 4_860_000,
     reservation_k: int = 200,
     event_mode: str = "shared-timer",
+    diagnostics: bool = True,
     progress=None,
 ) -> dict:
     """Simulate one GPU-model pool with node-local gang placement.
@@ -150,6 +152,11 @@ def simulate_pool(
     running: dict[int, tuple[int, list[tuple[int, int]]]] = {}
     arrivals = finished = decisions = peak_queue = bypass_checks_total = 0
     order_builds = 0
+    dispatch_timestamps = 0
+    candidate_attempts = 0
+    unique_candidate_ids: set[int] = set()
+    repeated_candidate_attempts = 0
+    budget_exhausted = 0
     crossing_accepted = crossing_rejected = certificate_updates = reservation_rejects = 0
     protected_hol_blocked = protected_hol_fastpath = protected_hol_commits = 0
     state_version = 0
@@ -401,7 +408,9 @@ def simulate_pool(
 
     def dispatch(now: int) -> None:
         nonlocal decisions, bypass_checks_total, peak_queue, order_builds
+        nonlocal dispatch_timestamps, candidate_attempts, repeated_candidate_attempts, budget_exhausted
         nonlocal protected_hol_blocked, protected_hol_fastpath, protected_hol_commits
+        dispatch_timestamps += 1
         if policy in ("FCFS-HOL", "SPT-HOL"):
             while waiting:
                 j = waiting[0] if policy == "FCFS-HOL" else waiting[0][3]
@@ -476,10 +485,16 @@ def simulate_pool(
                 # scan. Protected heads are handled above and are never here.
                 if bypass_mode and attempts >= reservation_k:
                     event("budget_exhausted", now, K=int(reservation_k))
+                    budget_exhausted += 1
                     return
                 if bypass_mode:
                     attempts += 1
                     bypass_checks_total += 1
+                    candidate_attempts += 1
+                    if diagnostics:
+                        if j in unique_candidate_ids:
+                            repeated_candidate_attempts += 1
+                        unique_candidate_ids.add(int(j))
                 decisions += 1
                 seen.add(j)
                 proposal = safe_plan(j, now)
@@ -496,6 +511,12 @@ def simulate_pool(
                         blocked = False
                         continue
                     urgent_head = j in urgent
+                    if policy == "SPT-HEAD-TIME" and reservation is None and j == ordered[0]:
+                        build_reservation(j, now)
+                        # The protected SPT head is exempt from K.  Continue
+                        # this same timestamp to inspect only safe backfill.
+                        blocked = False
+                        continue
                     if policy in URGENT_POLICIES and urgent_head and reservation is None:
                         build_reservation(j, now)
                         blocked = policy == "SPT-URGENT-HOL"
@@ -582,7 +603,12 @@ def simulate_pool(
                  "current_plan_evaluations": int(placement_cache.misses),
                  "current_plan_cache_peak_entries": int(placement_cache.peak_entries),
                  "order_builds": int(order_builds),
+                 "dispatch_timestamps": int(dispatch_timestamps),
                  "bypass_candidate_checks": int(bypass_checks_total),
+                 "candidate_attempts": int(candidate_attempts),
+                 "unique_candidate_ids": int(len(unique_candidate_ids)) if diagnostics else None,
+                 "repeated_candidate_attempts": int(repeated_candidate_attempts) if diagnostics else None,
+                 "budget_exhausted": int(budget_exhausted),
                  "protected_hol_blocked": int(protected_hol_blocked),
                  "protected_hol_fastpath": int(protected_hol_fastpath),
                  "protected_hol_commits": int(protected_hol_commits),

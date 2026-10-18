@@ -1,0 +1,20 @@
+{
+  "targeted_tests": {
+    "status": "PASS",
+    "count": 4,
+    "log": "targeted-tests.log"
+  },
+  "root_tests": {
+    "status": "PASS",
+    "count": 12,
+    "log": "root-tests.log"
+  },
+  "repo_check": {
+    "status": "PASS",
+    "log": "repo-check.log"
+  },
+  "diff_check": "PASS",
+  "formal_scheduler_runs": 0,
+  "new_physical_replays": "NOT_RUN",
+  "historical_results_raw_core_unchanged": "PASS"
+}
