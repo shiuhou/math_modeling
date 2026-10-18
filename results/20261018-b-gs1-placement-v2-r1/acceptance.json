@@ -1,0 +1,24 @@
+{
+  "revision": "GS1-V2-R1",
+  "status": "PASS",
+  "old_eight_strict_replay": "PASS",
+  "new_two_strict_replay": "PASS",
+  "new_full_runs": 2,
+  "per_run_900s_4GiB": "PASS",
+  "original_evidence_byte_identity": "PASS",
+  "source_hashes_match_executed_code": "PASS",
+  "ff_default_and_seed_small_regression": "PASS",
+  "targeted_tests": 5,
+  "fault_variants": 16,
+  "problem_tests": 94,
+  "root_tests": 12,
+  "repo_check": "PASS",
+  "diff_check": "PASS",
+  "window_wait_invariance": "PASS",
+  "not_run": [
+    "other_pool_large_matrices",
+    "full_cluster_performance",
+    "paper_compilation"
+  ],
+  "baseline_tag": "4ee2c6bfa98cf7177ff976abe73b122889437f46"
+}

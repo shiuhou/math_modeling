@@ -1,0 +1,32 @@
+{
+  "FCFS-HOL": {
+    "status": "PASS",
+    "command": [
+      "/home/shiuhou/mm/math_modeling-b-q2/.venv/bin/python",
+      "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/experiments/revise_gs1_placement.py",
+      "--out",
+      "/home/shiuhou/mm/math_modeling-b-gang-placement/results/20261018-b-gs1-placement-v2-r1",
+      "--child",
+      "FCFS-HOL"
+    ],
+    "wall_seconds": 7.603660097985994,
+    "sampled_peak_rss_bytes": 135446528,
+    "peak_rss_bytes": 153628672,
+    "returncode": 0
+  },
+  "SPT-HOL": {
+    "status": "PASS",
+    "command": [
+      "/home/shiuhou/mm/math_modeling-b-q2/.venv/bin/python",
+      "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/experiments/revise_gs1_placement.py",
+      "--out",
+      "/home/shiuhou/mm/math_modeling-b-gang-placement/results/20261018-b-gs1-placement-v2-r1",
+      "--child",
+      "SPT-HOL"
+    ],
+    "wall_seconds": 7.946097874024417,
+    "sampled_peak_rss_bytes": 135282688,
+    "peak_rss_bytes": 153600000,
+    "returncode": 0
+  }
+}
