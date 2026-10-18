@@ -50,7 +50,7 @@ def save_frame(out, frame, ledger):
 def load_reference(case):
     base = CASES[case]['base']
     if base == 'M0':
-        root=V1_ROOT; j=root/'SJF-HOL_M0_jobs.csv.gz'; p=root/'SJF-HOL_M0_placements.csv.gz'
+        root=V1_ROOT; policy=CASES[case]['policy']; j=root/f'{policy}_M0_jobs.csv.gz'; p=root/f'{policy}_M0_placements.csv.gz'
     elif base == 'R0-sigma1':
         root=V1_ROOT; j=root/'SJF-HOL_M1_jobs.csv.gz'; p=root/'SJF-HOL_M1_placements.csv.gz'
     elif base == 'R0-sigma2':
