@@ -7,6 +7,7 @@ reservation and event ledgers and applies the independent validators.
 from __future__ import annotations
 import argparse, hashlib, json
 from pathlib import Path
+import tempfile
 import pandas as pd
 from gpu_scheduling.data import read_data
 from gpu_scheduling.validation import validate_persisted, validate_reservations
@@ -50,9 +51,20 @@ def main():
     jobs = raw_jobs[raw_jobs.gpu_model == "A10"].head(n).copy()
     nodes = raw_nodes[raw_nodes.gpu_model == "A10"].sort_values("node_name").reset_index(drop=True)
     persisted = json.loads(reservation_path.read_text())
-    # Formal CSV adapter checks identity, timing arithmetic and node-level replay.
-    base = validate_persisted(nodes, jobs, times_path, placement_path)
     times = pd.read_csv(times_path)
+    # R1 artifacts predate the strict validator's explicit wait/cpu_units
+    # columns.  Derive only those adapter columns from the saved raw fields;
+    # never alter the source artifact or fill a missing promise/event ledger.
+    required = {"job_name", "gpu_model", "submit_time", "duration", "worker_num", "gpu_request", "cpu_request", "start", "finish"}
+    if not required <= set(times):
+        raise ValueError(f"missing timing fields: {sorted(required - set(times))}")
+    times["cpu_units"] = (times["cpu_request"] * 100).round().astype("int64")
+    times["wait"] = times["start"] - times["submit_time"]
+    with tempfile.TemporaryDirectory(prefix="q2-persisted-adapter-") as tmp:
+        adapted_times = Path(tmp) / "job_times.csv"
+        times.to_csv(adapted_times, index=False)
+        # Formal CSV adapter checks identity, timing arithmetic and node-level replay.
+        base = validate_persisted(nodes, jobs, adapted_times, placement_path)
     times = times.sort_values("job_name", kind="stable").reset_index(drop=True)
     ledger = pd.read_csv(placement_path)
     node_index = {int(name): i for i, name in enumerate(nodes.node_name)}
@@ -68,12 +80,26 @@ def main():
     replay_result.update({"starts": starts.tolist(), "ends": ends.tolist(), "plans": [[list(x) for x in p] for p in plans], "policy": persisted.get("policy", cfg["policies"][0])})
     validate_reservations(nodes, sim_jobs, replay_result)
     expected_artifacts = {a["path"].split("/", 1)[1]: a for a in evidence["artifacts"]}
-    actual_artifacts = {
-        evidence["artifacts"][0]["path"].split("/", 1)[1]: sha(reservation_path),
-        evidence["artifacts"][1]["path"].split("/", 1)[1]: sha(output_root / "phase_log.jsonl"),
-        evidence["artifacts"][2]["path"].split("/", 1)[1]: sha(placement_path),
-        evidence["artifacts"][3]["path"].split("/", 1)[1]: sha(times_path),
+    artifact_paths = {
+        "reservations": reservation_path,
+        "phase_log": times_path.parent / "phase_log.jsonl",
+        "placements": placement_path,
+        "timing": times_path,
     }
+    actual_artifacts = {}
+    for key, artifact in expected_artifacts.items():
+        name = Path(key).name
+        if "reservations" in name:
+            path = artifact_paths["reservations"]
+        elif name == "phase_log.jsonl":
+            path = artifact_paths["phase_log"]
+        elif "node_placements" in name:
+            path = artifact_paths["placements"]
+        elif "job_times" in name:
+            path = artifact_paths["timing"]
+        else:
+            raise AssertionError(f"unknown evidence artifact: {key}")
+        actual_artifacts[key] = sha(path)
     for key, value in actual_artifacts.items():
         expected = expected_artifacts[key]["expected_sha256"]
         if value != expected:
