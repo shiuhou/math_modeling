@@ -1,0 +1,417 @@
+{
+  "schema": "v2-q2-persisted-replay-1",
+  "integration_commit": "3214f0618e534c8ac4048c0eb1330fd97205da47",
+  "scope": "read-only replay of persisted Q2 artifacts; no scheduler invocation; artifacts remain LOCAL_ONLY",
+  "historical_account_validity": "PASS for all 14 persisted artifacts under integrated validators",
+  "merged_runtime_equivalence": "NOT_RUN in this section (see v2_runtime_equivalence.json)",
+  "original_evidence_index_separate_persisted_replay": "MISSING/NOT_AVAILABLE",
+  "cases": [
+    {
+      "case": "65k-A1",
+      "status": "PASS",
+      "jobs": 65536,
+      "job_id_count": 65536,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-65k-a1/a10-65536-theta604800-spt-fill/SPT-FILL_reservations.json": "3157dffcddea6a7ae401dfb754e467d551a9304fa914629442e684615cd40ad1",
+        "q2-v2-65k-a1/a10-65536-theta604800-spt-fill/phase_log.jsonl": "4f9cfa7a69b23fd04c732e025f068a363ce18fd404f08a552b89aa4a3ac90077",
+        "q2-v2-65k-a1/a10-65536-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "28a0e5e8df08922765a635f9874d22d25d5a5adf3de5a74769eb4e9582ab50a0",
+        "q2-v2-65k-a1/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "f44d0339a52573cf923598cfe5bfe49cf6931f5ab9fb8e328f253f5796fc1517"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 65536,
+        "ledger_rows": 67016,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "65k-A2",
+      "status": "PASS",
+      "jobs": 65536,
+      "job_id_count": 65536,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-65k-a2/a10-65536-theta604800-spt-fill/SPT-FILL_reservations.json": "e348a1f36fde779af63b9fa436561dbed52ad3e2e034926399cef4fc29413ce5",
+        "q2-v2-65k-a2/a10-65536-theta604800-spt-fill/phase_log.jsonl": "76f25df8a2eef280d648574d9247183c62801f586996dc76fd360736582f11f7",
+        "q2-v2-65k-a2/a10-65536-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "dba5b4f71519bca560866a4acd830c20fc64d6d1750aa7a1b10b6ee0a67dfd8c",
+        "q2-v2-65k-a2/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "339053722f18f542c1060c9c10c6dfaaab110156458f69098e212767af7b2246"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 65536,
+        "ledger_rows": 67016,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "65k-A3",
+      "status": "PASS",
+      "jobs": 65536,
+      "job_id_count": 65536,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_reservations.json": "f032789c8480e76390e3f62b0df0df5634f61100ceaf442b057f8214a967ec8a",
+        "q2-v2-65k-a3/a10-65536-theta604800-spt-fill/phase_log.jsonl": "88961762ab2a968416d17f3837caf2d7498566e4a252e1ad09c75ea83d783bd6",
+        "q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "e9a6552151b420b1c49d656a5c19a8a7411648ac98627af213e93d1c95eee603",
+        "q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "142bfb3e32b236c066e0ffb61a9822703e82cc4df139e531bf93e108ea3398b2"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 65536,
+        "ledger_rows": 67016,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "65k-A4",
+      "status": "PASS",
+      "jobs": 65536,
+      "job_id_count": 65536,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-65k-a4/a10-65536-theta604800-spt-fill/SPT-FILL_reservations.json": "da28f9880ce96a313ffc2265520c6ae47bf5c254a19479a3ed08f4ef97ccec30",
+        "q2-v2-65k-a4/a10-65536-theta604800-spt-fill/phase_log.jsonl": "cfa3649f8b2913c0f8a44f1f4e887f07cb7675ca86e64ec05e7b9dedb89eff1f",
+        "q2-v2-65k-a4/a10-65536-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "f9f4018fad44aa3929b353c73a98cd76f236df270431c7827473150345394410",
+        "q2-v2-65k-a4/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "defa8c6574ea68cc50a84d1d256429f161970c951aa780ac47cb2d62f24b3037"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 65536,
+        "ledger_rows": 67016,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "65k-C1",
+      "status": "PASS",
+      "jobs": 65536,
+      "job_id_count": 65536,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-65k-c1/a10-65536-theta604800-spt-head-time/SPT-HEAD-TIME_reservations.json": "621da24c85426bff47cbc6e7aaad83e7758e5c41bee8f0661c01928d8ba3c8f9",
+        "q2-v2-65k-c1/a10-65536-theta604800-spt-head-time/phase_log.jsonl": "fdf7be2b2787406e0b646e72ee15e71dcbbddda4529dca03bff9065d3ce656b7",
+        "q2-v2-65k-c1/a10-65536-theta604800-spt-head-time/SPT-HEAD-TIME_node_placements.csv.gz": "04aa52fee9ea2a2be5c07d874197f23d98d131d8b2822fefd057ba629346a295",
+        "q2-v2-65k-c1/a10-65536-theta604800-spt-head-time/SPT-HEAD-TIME_job_times.csv.gz": "298f8b42c703a8f3290c6aee63bc089982d9a05a9f7a1d958bb3e7f53d4bf388"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 65536,
+        "ledger_rows": 67016,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "65k-H1",
+      "status": "PASS",
+      "jobs": 65536,
+      "job_id_count": 65536,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-65k-h1/a10-65536-theta604800-spt-hol/phase_log.jsonl": "88b751d9ff3ca752986ec1543daf0a00987d51d4d876cf450460edad7ea447cf",
+        "q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_reservations.json": "967c1f85297b9c41ed727c9c5321706a3f20f767a6d8a136fde11489dd6ff751",
+        "q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_node_placements.csv.gz": "8c0917a62b0c988f5edb59fbd9e6a8bc9a6480d9cdb1f0eb45d0dfb5b481309a",
+        "q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_job_times.csv.gz": "3b8db32fc72bb27600d3481d0b2affe588d4a90a5d04a127bf4d2b7963843357"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 65536,
+        "ledger_rows": 67016,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "65k-H2",
+      "status": "PASS",
+      "jobs": 65536,
+      "job_id_count": 65536,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-65k-h2/a10-65536-theta604800-spt-hol/phase_log.jsonl": "016b98381e0ea738d9a72db7ac6705a4203d5a90fa078e653445b55ec704c826",
+        "q2-v2-65k-h2/a10-65536-theta604800-spt-hol/SPT-HOL_reservations.json": "0f680dd5f3ea9eb97edcdcc80a9f48e42cb5dacc0a4202cba251342609b01ef8",
+        "q2-v2-65k-h2/a10-65536-theta604800-spt-hol/SPT-HOL_node_placements.csv.gz": "2af4915c10323eb2f31c60dd19f5e51b7c20b5a263d2e1ab3faf5ddde0ec77fc",
+        "q2-v2-65k-h2/a10-65536-theta604800-spt-hol/SPT-HOL_job_times.csv.gz": "861e34afe3dfe281a381b6714fca98e92ddd7ebc91c0670a390dd96c4922048e"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 65536,
+        "ledger_rows": 67016,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "full-A1",
+      "status": "PASS",
+      "jobs": 111284,
+      "job_id_count": 111284,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-full-a1/a10-111284-theta604800-spt-fill/SPT-FILL_reservations.json": "224960bf011a8860a30fbb0fd7394ec6bf80f068feb66299abdf7b0d5fed7bfc",
+        "q2-v2-full-a1/a10-111284-theta604800-spt-fill/phase_log.jsonl": "f8c54a0d43017575dc924d177623f587c625fb1afee7eabfcd120e0b257f1cb0",
+        "q2-v2-full-a1/a10-111284-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "9e427b84d42ce592251ccc0081272b8e0cf62295bc10cf53674ab02db1171dd8",
+        "q2-v2-full-a1/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "f1fb0a5775180d710daa71bd288a83d8debc36d08b4cf79fb8c35a08ca141764"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 111284,
+        "ledger_rows": 115370,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "full-A2",
+      "status": "PASS",
+      "jobs": 111284,
+      "job_id_count": 111284,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-full-a2/a10-111284-theta604800-spt-fill/SPT-FILL_reservations.json": "7528fa938097999e7de4d778be0f9da2c37196e329c59f6c12bc4ccca0f3022e",
+        "q2-v2-full-a2/a10-111284-theta604800-spt-fill/phase_log.jsonl": "540cefcc794815df489957f086b76fa827a774b678ba07e35dd656389120ed05",
+        "q2-v2-full-a2/a10-111284-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "658a575c420701fb1ea5454f32ed6cd3ce37382e4f88b9cb59829a144579b503",
+        "q2-v2-full-a2/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "d0602452997fa548ec0a35278dfb82559ba9be0efddcb0ff73fa33fe0760eeb3"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 111284,
+        "ledger_rows": 115370,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "full-A3",
+      "status": "PASS",
+      "jobs": 111284,
+      "job_id_count": 111284,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-full-a3/a10-111284-theta604800-spt-fill/SPT-FILL_reservations.json": "7fb2313afd663421652c71859001dd52fcee5479895ca0471e026a9c7e06322e",
+        "q2-v2-full-a3/a10-111284-theta604800-spt-fill/phase_log.jsonl": "0598f0e272fec9f3967a2461f1a88271cdacaa1325dc62e1dc9f1839a2bc9a8e",
+        "q2-v2-full-a3/a10-111284-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "7f46e27e014437f5fbf376f437f810a71f3b0905f4e1d51bd42efe0b652c443e",
+        "q2-v2-full-a3/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "eae97b898cebcd70a6179fe50aae917a1f72feb74a4c362920523fa5ac225b67"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 111284,
+        "ledger_rows": 115370,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "full-A4",
+      "status": "PASS",
+      "jobs": 111284,
+      "job_id_count": 111284,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-full-a4/a10-111284-theta604800-spt-fill/SPT-FILL_reservations.json": "573711325fcbb7153a8df423960dce5746510b7ae2db1133d77d982bf896f30d",
+        "q2-v2-full-a4/a10-111284-theta604800-spt-fill/phase_log.jsonl": "83f898c35b4a586698edb021264e5bd911079356fab9d75fd438de6ad5ebd075",
+        "q2-v2-full-a4/a10-111284-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "0f943342690c32cc712f9378c0e8cba9fa9d7429df2aad28337aa24d53f2a439",
+        "q2-v2-full-a4/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "28b8b486a493137e41583fa70e2dc19ce456a2431bfec0692f36996119e3ccf3"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 111284,
+        "ledger_rows": 115370,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "full-C1",
+      "status": "PASS",
+      "jobs": 111284,
+      "job_id_count": 111284,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_reservations.json": "509b7b682019310bbe4c3e8a98a3c788cbb10bcf070ea1fee4956fc361f1ecbd",
+        "q2-v2-full-c1/a10-111284-theta604800-spt-head-time/phase_log.jsonl": "b80f38042c7504bbea83dfeaf77349136959ac9fd5c0765d0e5b5fe798c186eb",
+        "q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_node_placements.csv.gz": "0c8b20f54fee04ea01a97d3e2d0d601afb0140d503f87cb7f68ee07c5cc3f3a7",
+        "q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_job_times.csv.gz": "05ecbea9324a3c71dfc2ffcde6b056d3b5c2d2da269ecd1a71f75af2b50435aa"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 111284,
+        "ledger_rows": 115370,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "full-H1",
+      "status": "PASS",
+      "jobs": 111284,
+      "job_id_count": 111284,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-full-h1/a10-111284-theta604800-spt-hol/phase_log.jsonl": "b169beee3ad542d220d0c14bcc5f9345323b2b97f3b3ab1a60093e4f70f47811",
+        "q2-v2-full-h1/a10-111284-theta604800-spt-hol/SPT-HOL_reservations.json": "0e6aa0f464b1eeb3d54df4d1c956690ffee5d6cfad4b386dfe5ec0ecff09b465",
+        "q2-v2-full-h1/a10-111284-theta604800-spt-hol/SPT-HOL_node_placements.csv.gz": "548215a82939282896882090fe2e9b0d1a0051e611ed8d30c850cbf9249ad473",
+        "q2-v2-full-h1/a10-111284-theta604800-spt-hol/SPT-HOL_job_times.csv.gz": "1a9c37a58b69cb5bded158728fa86da96f8f9d9999b9020059369e304a139b89"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 111284,
+        "ledger_rows": 115370,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    },
+    {
+      "case": "full-H2",
+      "status": "PASS",
+      "jobs": 111284,
+      "job_id_count": 111284,
+      "nodes": 2494,
+      "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+      "input_hashes": {
+        "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+        "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+      },
+      "artifact_hashes": {
+        "q2-v2-full-h2/a10-111284-theta604800-spt-hol/phase_log.jsonl": "acc013d53c61a03ed1edada634d275eb3400fe80d71f8515b05e7a5149bdb31c",
+        "q2-v2-full-h2/a10-111284-theta604800-spt-hol/SPT-HOL_reservations.json": "75979575642183f83d1da9b8e02cf7816f263b16377cf21e8d83e18fc0154ee9",
+        "q2-v2-full-h2/a10-111284-theta604800-spt-hol/SPT-HOL_node_placements.csv.gz": "652655b1028a4fa11d0bb53c9f40d3ff746fdfe7069f0b204e89e98cd6c0f909",
+        "q2-v2-full-h2/a10-111284-theta604800-spt-hol/SPT-HOL_job_times.csv.gz": "a4828ff746346d2ebbd3ff98c80287a82909b49c46011ffdc48f292dbe340789"
+      },
+      "csv_validation": {
+        "status": "PASS",
+        "jobs": 111284,
+        "ledger_rows": 115370,
+        "input_identity": "PASS",
+        "timing": "PASS",
+        "atomic_capacity_replay": "PASS",
+        "final_allocation_zero": "PASS"
+      },
+      "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+      "source_availability": "LOCAL_ONLY"
+    }
+  ],
+  "all_status": "PASS"
+}

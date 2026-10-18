@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "candidate": "V2 bounded integration candidate",
+  "base_paper_v1": "problems/2026_gpu_scheduling/paper/output/pdf/problem_b_baseline_v1.pdf",
+  "fixed_main": "8f2e99ccae31c9559fa726884fda2637d1c0f921",
+  "baseline_tag": "2026-mcm-b-baseline-v1 -> 4ee2c6bfa98cf7177ff976abe73b122889437f46",
+  "source_commits": {
+    "q1_gs1_formal": "ffdcc7609969094bc1ceaeef650d99b0beae8208",
+    "q2": "fcd7bafdb002221b42e11ce8ba2dbcfe57fcd0cd",
+    "q3": "56ea09021d5ad5088ad5ed7242d8fab0c3115667",
+    "v2_integration": "generated at commit time"
+  },
+  "raw_inputs": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "chapters": {
+    "q1": {"file": "paper/q1_section.tex", "fixed_commit": "7075317883808b1cd7f80cadf3980be291c69cf0", "role": "formal Q1 evidence; unchanged"},
+    "q2": {"file": "paper/q2_section.tex", "fixed_commit": "fcd7bafdb002221b42e11ce8ba2dbcfe57fcd0cd", "role": "formal Q2 evidence; unchanged"},
+    "q3": {"file": "paper/q3_section.tex", "fixed_commit": "56ea09021d5ad5088ad5ed7242d8fab0c3115667", "role": "formal Q3 candidate evidence; bounded claims"},
+    "v2_runtime": {"file": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json", "role": "seven fresh merged-runtime cases; exact per-ID/resource/placement comparisons"},
+    "q2_replay": {"file": "results/20261019-b-v2-integration-candidate/q2_persisted_replay.json", "role": "14 read-only persisted artifact validations; LOCAL_ONLY"}
+  },
+  "paper_candidate": {
+    "tex": "paper/output/document_v2_candidate.tex",
+    "pdf": "paper/output/pdf/problem_b_v2_candidate.pdf",
+    "sha256": "6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92",
+    "pages": 9,
+    "page_size": "A4",
+    "compiler": "Tectonic 0.17.0",
+    "visual_preview": "/tmp/v2preview-20261019/page-1.png ... page-9.png"
+  },
+  "limits": [
+    "No new scheduler, parameter search, or full-trace claim",
+    "Q2 persisted artifacts remain local-only; original cross-machine replay remains unavailable",
+    "Substitution-v2 Candidate B is implementation-deferred",
+    "Team identity, human review, and final AI-use record require confirmation"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "case": "65k-H1",
+  "status": "PASS",
+  "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+  "validator_source_commit": "integration/b-v2-candidate working tree",
+  "input_hashes": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "jobs": 65536,
+  "job_id_count": 65536,
+  "nodes": 2494,
+  "timing_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
+  "placement_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_node_placements.csv.gz",
+  "reservation_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_reservations.json",
+  "artifact_hashes": {
+    "q2-v2-65k-h1/a10-65536-theta604800-spt-hol/phase_log.jsonl": "88b751d9ff3ca752986ec1543daf0a00987d51d4d876cf450460edad7ea447cf",
+    "q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_reservations.json": "967c1f85297b9c41ed727c9c5321706a3f20f767a6d8a136fde11489dd6ff751",
+    "q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_node_placements.csv.gz": "8c0917a62b0c988f5edb59fbd9e6a8bc9a6480d9cdb1f0eb45d0dfb5b481309a",
+    "q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_job_times.csv.gz": "3b8db32fc72bb27600d3481d0b2affe588d4a90a5d04a127bf4d2b7963843357"
+  },
+  "csv_validation": {
+    "status": "PASS",
+    "jobs": 65536,
+    "ledger_rows": 67016,
+    "input_identity": "PASS",
+    "timing": "PASS",
+    "atomic_capacity_replay": "PASS",
+    "final_allocation_zero": "PASS"
+  },
+  "reservation_event_count": 196608,
+  "reservation_count": 0,
+  "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+  "source_availability": "LOCAL_ONLY"
+}
