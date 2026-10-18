@@ -143,7 +143,7 @@ def main():
         physical=physical_replay(nodes,jobs,frame,ledger)
     report=describe(nodes,frame,config); metric_check=verify_metrics(nodes,frame,config,report)
     ref,refled=load_reference(args.case)
-    gs,gsled=gs1_reference()
+    gs,gsled=gs1_reference() if spec['placement']=='ratio-gs1' else (ref,refled)
     base_ids=set(frame.job_name)
     gs_ids=set(jobs[jobs.gpu_model==TARGET_POOL].job_name)
     non_gs=base_ids-gs_ids
