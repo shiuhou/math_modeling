@@ -1,0 +1,99 @@
+\section{Question 2: Capacity-valid scheduling}
+\label{sec:r2q2}
+\subsection{Contract and Algorithm 1}
+Each GPU model is simulated as its own pool. A job starts at $s_j\ge a_j$, completes at $f_j=s_j+p_j$, and all $W_j$ workers start together. At a proposed start time, a placement $x_{ji}$ is admitted only if the \emph{pre-start} residual capacities satisfy
+\begin{equation}
+ g_jx_{ji}\le G_i^{free}(t),\qquad c_jx_{ji}\le C_i^{free}(t),\qquad \sum_i x_{ji}=W_j.
+\end{equation}
+The resulting full-time model is instead the active-job constraint $\sum_{j:s_j\le t<f_j}g_jx_{ji}\le G_i^{cap}$ and its CPU analogue. Thus a single job's check against residual capacity is not written as a whole-cluster dynamic constraint. Durations are exact integer seconds; gang admission is atomic, non-preemptive and non-migrating.
+
+\takeaway{Algorithm 1 (SPT-HOL)}{For each model pool, insert only arrived jobs into a shortest-processing-time heap keyed by $(p_j,a_j,\mathrm{id}_j)$. Examine the heap head. If it is infeasible on the current residual nodes, stop dispatching this pool at this timestamp (head-of-line blocking). If feasible, scan nodes in the selected placement order, verify every worker slot's GPU and CPU residual, then admit all workers atomically and schedule one completion event. For GPU-series-1 only, the formal C0 case uses a CPU/GPU-ratio node order before the same full slot check; every other pool uses ascending-ID first fit. Advance to the next arrival or completion and repeat.}
+
+The historical program label \texttt{SJF-HOL} means this same method; the paper name is uniformly \method{SPT-HOL}. \method{SPT-FILL} uses the same key but may inspect later feasible jobs under the fixed $K=200$ bypass budget. A heap insertion or removal costs $O(\log n)$; a dispatch also scans candidate nodes and worker slots, and ratio placement orders the candidate nodes by shape. Multiple starts at one timestamp can repeat these scans, so an $O(\log n)$ event claim would be incomplete. Saved schedules were independently checked by route, physical-capacity and metric validators.
+
+The simultaneous-release mechanism has a precise necessary condition. If $f^-$ is the number of free worker slots immediately before an event, $\Delta f$ is the number released by jobs finishing at that event, and $k$ is the next job width, admission requires
+\begin{equation}
+ f^-+\Delta f\ge k.
+\end{equation}
+Only with a continuously feasible single-worker backlog and zero free slots after the preceding dispatch does this reduce to $\Delta f\ge k$. A finite $K$ candidate budget can leave $f^->0$, so the reduction is not generally valid. This is a mechanism explanation for some zero-wait observations, not the unique proved cause of HOL's result and not a starvation-free guarantee.
+
+\begin{table}[H]\centering
+\caption{Six-pool SPT-HOL results from formal integrated case C0, whose GPU-series-1 placement is ratio and whose other pools use FF-id. Waiting uses complete drain; allocation and completion use $[0,H)$ with $H=7,776,000$ s.}
+\label{tab:r2pools}
+\begin{tabular}{lrrrrrr}
+\toprule
+Pool & Jobs & GPUs & Mean wait (h) & Median/P99 (h) & GPU/CPU alloc. & $90$d done\\
+\midrule
+A10 &111,284&2,494&32.906&0.023/1542.181&99.922\%/17.927\%&107,002\\
+A100-SXM4-80GB&80,877&3,456&0.000&0.000/0.000&62.755\%/42.032\%&80,101\\
+GPU-series-1&9,643&1,558&0.000&0.000/0.000&60.867\%/34.814\%&8,221\\
+GPU-series-2&13,633&976&0.016&0.000/0.045&56.931\%/37.424\%&13,606\\
+H800&4,716&1,752&0.016&0.000/0.000&55.816\%/52.193\%&4,705\\
+A800-SXM4-80GB&3,959&176&0.115&0.000/4.390&57.311\%/49.493\%&3,943\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:r2pools} is generated from formal case C0; its exact metadata and ledger paths are recorded in the R2 supplement. The C0 A10 timing is identical by job ID to B2, so changing GS1 placement does not change the A10 values.
+
+\subsection{A count lower bound and exact accounting}
+For the complete A10 set let $C=2,494$, $G_j=W_jg_j$, $Z(t)=\{j:a_j\le t<a_j+p_j\}$, and let $q(t)$ be the minimum number of jobs removed from $Z(t)$ so that the remaining GPU width is at most $C$. For a schedule, let $S(t)=\{j:s_j\le t<f_j\}$ and $A(t)=S(t)\cap Z(t)$. At any $t$, at least $q(t)$ jobs in $Z(t)$ cannot be simultaneously active, hence $|Z(t)\setminus A(t)|\ge q(t)$. Integrating and using the waiting identity gives
+\begin{equation}
+\sum_j\min(\omega_j,p_j)=\int |Z(t)\setminus A(t)|\,dt\ge\int q(t)\,dt,
+\qquad \sum_j\omega_j\ge\int q(t)\,dt,
+\end{equation}
+so $L_{count}=(3600N)^{-1}\int q(t)dt=22.3179305700$ h is a lower bound on equal-weight mean waiting. For the observed schedule,
+\begin{equation}
+\omega_j=\min(\omega_j,p_j)+\max(\omega_j-p_j,0).
+\end{equation}
+The exact full-A10 SPT-HOL JSON accounting is
+\begin{center}
+\texttt{\{capacity\_lb:22.3179305700, within\_window\_gap:8.3361103922, beyond\_duration:2.2524130728, mean:32.9064540350\}}.
+\end{center}
+These are accounting terms around a relaxation, not causal shares or an exact OPT gap. The conservative certificates $\bar\omega/L$ are 1.4744 for ordinary job mean and 1.2090 for GPU-work-weighted mean (the latter compares 677.689933 h with the 560.521368 h weighted bound); they are for this fixed instance and different objectives.
+
+\subsection{A10 comparison and worker strata}
+For the same complete 111,284-job A10 population and fixed native GPU-work weights $H_j=W_jg_jp_j$, the three formal schedules give:
+\begin{table}[H]\centering
+\caption{Complete A10 waiting comparison. Each row reports ordinary mean, P99, maximum, and the fixed-$H_j$ GPU-work-weighted mean.}
+\label{tab:r2a10}
+\begin{tabular}{lrrrrr}
+\toprule
+Policy (case) & Mean (h) & P99 (h) & Max (h) & $H$-weighted mean (h)\\
+\midrule
+FCFS (B1) &900.129&1419.616&1423.254&619.352\\
+SPT-HOL (C0) &32.906&1542.181&3017.288&677.690\\
+SPT-FILL (full-A1) &34.967&1575.462&3015.311&677.496\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The FCFS, SPT-HOL, and SPT-FILL rows are respectively formal cases B1, C0, and full-A1; the full-H1 schedule supplies the HOL side of the worker strata. Exact repository paths and hashes for these four sources are recorded in the R2 supplement.
+
+SPT-HOL is the average-wait choice on this fixed trace: it lowers ordinary mean waiting by 2.061 h relative to SPT-FILL and lowers P99 by 33.280 h, but its maximum is 1.978 h higher. The management trade-off becomes clearer under the fixed GPU-work objective: the ranking reverses, with SPT-FILL at 677.496 h versus SPT-HOL at 677.690 h. Thus ``lower average but a higher extreme'' and ``different ranking after weighting'' are both observed facts, not dominance claims.
+
+\begin{table}[H]\centering
+\caption{Formal full-A10 HOL/FILL worker strata. The paired difference is HOL minus FILL; negative means lower HOL waiting. P99 values in the two small strata are reported but marked unstable.}
+\label{tab:r2strata}
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Stratum & Jobs & HOL mean & FILL mean & HOL P99 & FILL P99 & $\Delta$ mean & Improve / worsen / same\\
+ & & \multicolumn{2}{c}{(h)} & \multicolumn{2}{c}{(h)} & (h) & (count)\\
+\midrule
+$W=1$ &110,497&33.125&32.805&1553.319&1539.480&+0.320&54,489/50,566/5,442\\
+$W=2$--8 &637&1.529&186.767&15.603$^\dagger$&1952.714$^\dagger$&$-185.237$&628/8/1\\
+$W\ge9$ &150&4.997&982.722&36.186$^\dagger$&2907.896$^\dagger$&$-977.725$&149/1/0\\
+\bottomrule
+\end{tabular}
+\smallskip\noindent$^\dagger$ Small stratum; P99 is unstable. Source: formal full-H1 and full-A1 schedules.
+\end{table}
+
+The strata show why a pooled mean can hide policy preference: HOL is much better for multi-worker jobs, whereas FILL has slightly lower mean and P99 for the dominant single-worker stratum. The paired full-trace totals are 55,266 improved, 50,575 worsened and 5,443 unchanged for HOL minus FILL, with mean difference $-2.060576$ h. These values are from the same A10 IDs and are not imported from a prototype.
+
+For the fixed GS1 pool, C0's ratio placement is a constructive zero-wait schedule: all 9,643/9,643 jobs have zero waiting and mean waiting 0 h, while the FF-id baselines are 0.029188 h (FCFS, B1) and 0.434277 h (SPT-HOL, B2). Since mean waiting is nonnegative, 0 is the optimum for this fixed GS1 instance. The ratio rule is not generalized to other heterogeneous pools.
+
+\subsection{Second-round policy evidence}
+SPT-HEAD-TIME is a bounded policy with a precise implementation definition. When the SPT head is blocked, the code builds a reservation for the first future release event at which the head has a node-level placement witness. While that reservation is active, a backfill candidate is admitted only when it is currently feasible and its finish time is no later than the promised release; a candidate that crosses the promise is rejected by the TIME rule. The $K=200$ budget counts candidate attempts only after the blocked head has started a bypass scan. Under the shared-timer event mode, timer thresholds at each arrival plus $\theta$ create additional dispatch events; for this policy they do not mark jobs urgent. These statements follow the implementation recorded in the R2 supplement, which gives the exact source lines and saved summary.
+
+On the full A10 trace, this second-round case (full-C1, $\theta=168$ h, $K=200$, shared timer) changes mean waiting from 32.906454 to 32.923817 h, P99 from 1542.181042 to 1541.586592 h, and maximum from 3017.288056 to 3017.727778 h; its higher cost is not hidden by a single tail statistic. The K/timer and HEAD-TIME results support a bounded mechanism interpretation, not starvation freedom or a general performance theorem. The urgent policies remain prefix-only and are not promoted to the complete-trace recommendation.
