@@ -1,0 +1,27 @@
+\input{r1_preamble.tex}
+\begin{document}
+\begin{center}
+{\Large\bfseries\color{primary} Capacity-Valid Scheduling of a Heterogeneous GPU Cluster}\\[3pt]
+{\large 2026 HKUST-GZ MCM Senior Track -- Problem B}\\[5pt]
+\end{center}
+\takeaway{Main findings}{The trace is concentrated and A10 is pressure-limited under immediate starts. On the complete A10 set, SPT-HOL gives 32.906 h mean waiting versus 34.967 h for SPT-FILL and is 1.4744 times its equal-job lower bound. Ratio placement constructs zero waiting for all 9,643 GS1 jobs in the fixed instance. For substitution, R0 is preferred for SPT-HOL at $\sigma=1$ on A10 JCT, while R-shape has the lower FCFS JCT at both tested speeds and removes 605 shape-incompatible candidates; the choice is conditional on native-pool cost and duration risk.}
+\textbf{Data and validation.} We use the supplied 224,112-job trace, exact integer-second durations, six model pools, non-preemptive gang starts, and complete drain for waiting/JCT. Allocation rates use the fixed 90-day window. We independently checked original IDs and requested fields, replayed node-level CPU/GPU ledgers, verified full drain and fixed-window counts, and recomputed the published metrics from saved schedules. The seven merged V2 cases and fourteen persisted Q2 replays were already validated; this revision performs no scheduler rerun.
+
+\input{r1_q1.tex}
+\input{r1_q2.tex}
+\input{r1_q3.tex}
+
+\section{Conclusion, limits, and provenance}
+The three questions answer different decisions. Q1 separates submitted work, immediate-start demand, and simulated allocation. Q2 provides a capacity-valid SPT-HOL contract, a count lower bound, a zero-wait GS1 construction, and complete-A10 tail and cost evidence. Q3 compares fixed physical partitions and speed assumptions while retaining native harm and duration sensitivity. These are finite trace results: allocation is request occupancy, GPU-hours across models are not interchangeable hardware or monetary units, and no heuristic optimality, speed guarantee, or dynamic substitution policy is claimed. Candidate B remains deferred. The original job ZIP bytes are not in this repository; the available historical-hash file is parsed-equivalent to the formal-run CSV but has different BOM/newline serialization, as recorded in the supplement provenance.
+
+\section*{References}
+\begin{enumerate}
+\item HKUST-GZ MCM 2026 Senior Track, Problem B, repository copy (official question PDF; hash in the source index).
+\item Graham, R. L. (1966), ``Bounds on multiprocessing timing anomalies,'' \emph{SIAM Journal on Applied Mathematics}, 14(2), 416--429. Used only as scheduling background; the reported lower bound is derived for this trace.
+\item Feitelson, D. G. (2015), \emph{Workload Modeling for Computer Systems Performance Evaluation}. Used for workload-trace terminology and the distinction between demand and allocation.
+\item SchedMD, ``Backfill scheduling'' documentation. Used to distinguish a feasible-fill bypass from SPT head-of-line blocking.
+\end{enumerate}
+
+\section*{Use of AI Tools}
+ChatGPT and OpenAI Codex were used for research discussion, source and data inspection, mathematical-notation assistance, read-only post-processing, plot generation, code and evidence cross-review, and English drafting/typesetting. Claude was used in the earlier research record for independent prototype analysis and cross-review; its archive was preserved and its unverified prototype numbers were not used as formal results. The formal scheduler runs, saved-ledger replays, metric recomputation, and final submission decisions remain team responsibilities. The team must complete the human review and confirm the final identity and wording before submission.
+\end{document}

@@ -15,11 +15,29 @@
     "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
   },
   "chapters": {
-    "q1": {"file": "paper/q1_section.tex", "fixed_commit": "7075317883808b1cd7f80cadf3980be291c69cf0", "role": "formal Q1 evidence; unchanged"},
-    "q2": {"file": "paper/q2_section.tex", "fixed_commit": "fcd7bafdb002221b42e11ce8ba2dbcfe57fcd0cd", "role": "formal Q2 evidence; unchanged"},
-    "q3": {"file": "paper/q3_section.tex", "fixed_commit": "56ea09021d5ad5088ad5ed7242d8fab0c3115667", "role": "formal Q3 candidate evidence; bounded claims"},
-    "v2_runtime": {"file": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json", "role": "seven fresh merged-runtime cases; exact per-ID/resource/placement comparisons"},
-    "q2_replay": {"file": "results/20261019-b-v2-integration-candidate/q2_persisted_replay.json", "role": "14 read-only persisted artifact validations; LOCAL_ONLY"}
+    "q1": {
+      "file": "paper/q1_section.tex",
+      "fixed_commit": "7075317883808b1cd7f80cadf3980be291c69cf0",
+      "role": "formal Q1 evidence; unchanged"
+    },
+    "q2": {
+      "file": "paper/q2_section.tex",
+      "fixed_commit": "fcd7bafdb002221b42e11ce8ba2dbcfe57fcd0cd",
+      "role": "formal Q2 evidence; unchanged"
+    },
+    "q3": {
+      "file": "paper/q3_section.tex",
+      "fixed_commit": "56ea09021d5ad5088ad5ed7242d8fab0c3115667",
+      "role": "formal Q3 candidate evidence; bounded claims"
+    },
+    "v2_runtime": {
+      "file": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+      "role": "seven fresh merged-runtime cases; exact per-ID/resource/placement comparisons"
+    },
+    "q2_replay": {
+      "file": "results/20261019-b-v2-integration-candidate/q2_persisted_replay.json",
+      "role": "14 read-only persisted artifact validations; LOCAL_ONLY"
+    }
   },
   "paper_candidate": {
     "tex": "paper/output/document_v2_candidate.tex",
@@ -35,5 +53,71 @@
     "Q2 persisted artifacts remain local-only; original cross-machine replay remains unavailable",
     "Substitution-v2 Candidate B is implementation-deferred",
     "Team identity, human review, and final AI-use record require confirmation"
-  ]
+  ],
+  "paper_content_r1": {
+    "status": "candidate",
+    "tex": "paper/output/document_paper_content_r1.tex",
+    "pdf": "paper/output/problem_b_paper_content_r1.pdf",
+    "pages": 6,
+    "page_size": "A4",
+    "font_size_pt": 11,
+    "compiler": "Tectonic 0.17.0",
+    "source_files": [
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/document_paper_content_r1.tex",
+        "bytes": 3733,
+        "sha256": "bb5d94e4c445ee81a3216e7506fff6678a2a38c9fd4b5670b2de35d58a33e9d9"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_preamble.tex",
+        "bytes": 1286,
+        "sha256": "db514b1ffd607f11130cccb4fa2d6b06725286a4b69c64e71d53497be37c8756"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_q1.tex",
+        "bytes": 4076,
+        "sha256": "bafaaa5fed49797c25fc253d9661b2cb497492db41814fcc24c9565a50392839"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_q2.tex",
+        "bytes": 5896,
+        "sha256": "29b8795bc219d12faea7f18056b504e4b8dccb5f52271f4ad3d5a8d17a33a53c"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_q3.tex",
+        "bytes": 4813,
+        "sha256": "3993fdf1cbe6e893117dac244016b1f2ec31ff7ef6857f07c1a4a2ddbfb38fcc"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r1.pdf",
+        "bytes": 212992,
+        "sha256": "fae37b0211e415de3669ba344c7094513b3984041f62ab065e510425bb236cbe"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_figures/fig1_demand.pdf",
+        "bytes": 13144,
+        "sha256": "21b1fa58ea404a9d765064bcfcf2345dfd867866a3e865bb6643ad90d6eade9e"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_figures/fig1_data_patterns.pdf",
+        "bytes": 39830,
+        "sha256": "a0559ea4a0ba072567197082072a4e161855efd68ab15d1cba75eff12a6f834b"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/figures/q3_donor_capacity_wait_tradeoff.png",
+        "bytes": 114120,
+        "sha256": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/PAPER_CONTENT_R1_README.md",
+        "bytes": 1096,
+        "sha256": "007702bc53e67258959418165979f6bbe4e1564e28f21c670d5cd6595187855f"
+      }
+    ],
+    "mapping": "results/20261019-paper-content-r1/paper_content_mapping.md",
+    "old_candidate_preserved": true,
+    "old_candidate_pdf_sha256": "6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92"
+  },
+  "raw_input_comparison": "results/20261019-paper-content-r1/input_comparison.json",
+  "node_hash_source": "results/20261019-paper-content-r1/r1_metrics.json is generated from the actual formal node source; node_info_df.csv hash remains 1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18"
 }
