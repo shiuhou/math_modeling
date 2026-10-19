@@ -15,7 +15,7 @@ The simultaneous-release mechanism has a precise necessary condition. If $f^-$ i
 \begin{equation}
  f^-+\Delta f\ge k.
 \end{equation}
-Only with a continuously feasible single-worker backlog and zero free slots after the preceding dispatch does this reduce to $\Delta f\ge k$. A finite $K$ candidate budget can leave $f^->0$, so the reduction is not generally valid. This is a mechanism explanation for some zero-wait observations, not the unique proved cause of HOL's result and not a starvation-free guarantee.
+Only with a continuously feasible single-worker backlog and zero free slots after the preceding dispatch does this reduce to $\Delta f\ge k$. A finite $K$ candidate budget can leave $f^->0$, so the reduction is not generally valid. Multiple-worker jobs may wait when free slots cannot accumulate into a gang-sized release; HOL can allow free slots to accumulate while the head is blocked. This is a mechanism explanation, not the unique proved cause of HOL's result and not a starvation-free guarantee.
 
 \begin{table}[H]\centering
 \caption{Six-pool SPT-HOL results from formal integrated case C0, whose GPU-series-1 placement is ratio and whose other pools use FF-id. Waiting uses complete drain; allocation and completion use $[0,H)$ with $H=7,776,000$ s.}
@@ -46,11 +46,11 @@ so $L_{count}=(3600N)^{-1}\int q(t)dt=22.3179305700$ h is a lower bound on equal
 \begin{equation}
 \omega_j=\min(\omega_j,p_j)+\max(\omega_j-p_j,0).
 \end{equation}
-The exact full-A10 SPT-HOL JSON accounting is
-\begin{center}
-\texttt{\{capacity\_lb:22.3179305700, within\_window\_gap:8.3361103922, beyond\_duration:2.2524130728, mean:32.9064540350\}}.
-\end{center}
-These are accounting terms around a relaxation, not causal shares or an exact OPT gap. The conservative certificates $\bar\omega/L$ are 1.4744 for ordinary job mean and 1.2090 for GPU-work-weighted mean (the latter compares 677.689933 h with the 560.521368 h weighted bound); they are for this fixed instance and different objectives.
+The exact full-A10 accounting, shown with display rounding, is
+\begin{equation}
+32.9064540350 = 22.3179305700 + 8.3361103922 + 2.2524130728\ \mathrm{h}.
+\end{equation}
+The first term is the count lower bound, the second is the within-window accounting gap, and the third is waiting beyond a job's own duration. The displayed sum is rounded to the shown precision; these are accounting terms rather than causal shares. The conservative certificates $\bar\omega/L$ are 1.4744 for ordinary job mean and 1.2090 for GPU-work-weighted mean (the latter compares 677.689933 h with the 560.521368 h weighted bound); they are for this fixed instance and different objectives.
 
 \subsection{A10 comparison and worker strata}
 For the same complete 111,284-job A10 population and fixed native GPU-work weights $H_j=W_jg_jp_j$, the three formal schedules give:

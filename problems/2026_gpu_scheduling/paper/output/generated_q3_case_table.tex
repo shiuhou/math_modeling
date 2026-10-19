@@ -1,0 +1,16 @@
+\begin{table}[H]\centering
+\caption{SPT-HOL fixed-split evidence generated from the formal C0--C4 case records. Each row records the case, policy, placement, routing, speed, cohort, and source fields used for the displayed values. Native harm is the number of native A100 jobs with positive additional waiting relative to C0; the last column is the harmed A10 count.}
+\label{tab:r2q3main}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}Xrrrrr}
+\toprule
+Case / policy / placement / routing / $\sigma$ / cohort / source field & A10 JCT (h) & All JCT (h) & $90$d done & Native harm & A10 harmed\\
+\midrule
+C0 / SPT-HOL / ratio+FF-id / none / $\sigma=--$ / ALL / metrics.cohorts.ALL; fields mean\_jct\_hours, completed\_at\_horizon; original\_A10.mean\_jct\_hours & 132.676210 & 93.333879 & 217,578 & 0 & 0\\
+C1 / SPT-HOL / ratio+FF-id / Hash-10\% / $\sigma=1$ / ALL / metrics.cohorts.ALL; fields mean\_jct\_hours, completed\_at\_horizon; original\_A10.mean\_jct\_hours & 120.303488 & 87.190138 & 217,822 & 0 & 49772\\
+C2 / SPT-HOL / ratio+FF-id / Hash-10\% / $\sigma=2$ / ALL / metrics.cohorts.ALL; fields mean\_jct\_hours, completed\_at\_horizon; original\_A10.mean\_jct\_hours & 134.809736 & 94.393293 & 217,529 & 0 & 56422\\
+C3 / SPT-HOL / ratio+FF-id / Shape-filtered / $\sigma=1$ / ALL / metrics.cohorts.ALL; fields mean\_jct\_hours, completed\_at\_horizon; original\_A10.mean\_jct\_hours & 124.128360 & 89.089399 & 217,809 & 0 & 46803\\
+C4 / SPT-HOL / ratio+FF-id / Shape-filtered / $\sigma=2$ / ALL / metrics.cohorts.ALL; fields mean\_jct\_hours, completed\_at\_horizon; original\_A10.mean\_jct\_hours & 129.670773 & 91.841513 & 217,621 & 0 & 55465\\
+\bottomrule
+\end{tabularx}
+\smallskip\noindent Source for all JCT/completion cells: \texttt{results/20261019-b-v2-integration-candidate/v2\_runtime\_equivalence.json}, case key C0--C4; harm cells: paired SJF-HOL/A10 rows against M0 in the saved paired artifact.
+\end{table}

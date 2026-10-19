@@ -174,5 +174,90 @@
     "old_candidates_preserved": true,
     "old_candidate_pdf_sha256": "6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92",
     "notes": "C0 ratio placement is used for the Q2 six-pool table; C0--C4 are used for the Q3 substitution table. New numeric values are read-only post-processing of formal CSVs and saved schedules/ledgers."
+  },
+  "paper_content_r2_correctness_patch": {
+    "status": "candidate",
+    "base_head": "d6f10254bbc81a102420629496de2871e3a4b4e1",
+    "tex": "paper/output/document_paper_content_r2.tex",
+    "generated_q3_table": "paper/output/generated_q3_case_table.tex",
+    "pdf": "paper/output/problem_b_paper_content_r2_correctness_patch.pdf",
+    "sha256": "64a51ff48dab4d93e51129a3a7856abb864b96e013bc231fe433fb345a55c4f9",
+    "pages": 8,
+    "page_size": "A4",
+    "font_size_pt": 11,
+    "compiler": "Tectonic 0.17.0",
+    "source_files": [
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/document_paper_content_r2.tex",
+        "bytes": 4202,
+        "sha256": "f7101db6d8c2f4712be4cc5615f324e1be14a93aed9c1b966b20bfe4cf682f2b"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_preamble.tex",
+        "bytes": 1280,
+        "sha256": "a3f92e250306064ff812fe0ddc03e574b5cf844429b04b9f3fc9c73e26f528d4"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_q2.tex",
+        "bytes": 9954,
+        "sha256": "8cd09a7e7349b7a7d791fd8155c281905b6850c2dfdafb946cdd5d6a13ed7903"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_q3.tex",
+        "bytes": 5005,
+        "sha256": "80b33cd5ffe87ebbd47dab41e349b02e0d431f6299667d0441b7db1f60e838dc"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/generated_q3_case_table.tex",
+        "bytes": 1941,
+        "sha256": "2222743a928c4e19af6df38de9c096aeb9cfb119d344ba8c37119667b804f52b"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/PAPER_CONTENT_R2_CORRECTNESS_PATCH_README.md",
+        "bytes": 953,
+        "sha256": "176ef862ae8aa7dcc81456aeb614b02c771bbbdc9bc1320eedeb6a1ca3674015"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r2_correctness_patch.pdf",
+        "bytes": 220585,
+        "sha256": "64a51ff48dab4d93e51129a3a7856abb864b96e013bc231fe433fb345a55c4f9"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/generate_q3_case_table.py",
+        "bytes": 4820,
+        "sha256": "b44ae614fbeb7ef625bf6e552a75dbba6ed7745f9027a0ec41ab87314e1fb02c"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/verify_correctness_patch.py",
+        "bytes": 12021,
+        "sha256": "0cb9bddec4ee1b7f17aa6ee9b05c4ee723b139adba043f196eb6d99ca43c69ba"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/old_r2_failures.json",
+        "bytes": 3664,
+        "sha256": "9609667f20a8ba32321ac8b1826ab7ed9080b258d9b9463b7892d3b6413a9eda"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/q3_case_metrics.json",
+        "bytes": 3205,
+        "sha256": "4ab29fb4136ddf9ea01ba1aa3800f6a880aa6ea09d8f443fc938a26f782f30d6"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/correctness_patch_acceptance.json",
+        "bytes": 12169,
+        "sha256": "6ae6894c220a4c297904782f2ba23ed44763e50d9bb60f978f15d57257cb4d18"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/page_review.md",
+        "bytes": 1876,
+        "sha256": "41aa1f2e3de7d3f75eac901b59039b1f84e123ee461b27868cd2371cb7029c18"
+      }
+    ],
+    "acceptance": "results/20261019-paper-content-r2-correctness-patch/correctness_patch_acceptance.json",
+    "page_review": "results/20261019-paper-content-r2-correctness-patch/page_review.md",
+    "old_r2_preserved": true,
+    "old_r2_pdf_sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f",
+    "no_scheduler_or_replay_rerun": true,
+    "notes": "All C0--C4 Table 5 JCT/completion values are generated from v2_runtime_equivalence.json case keys; allocation rates use partition-own and full-pool contribution labels separately."
   }
 }
