@@ -20,9 +20,9 @@ def table(caption,label,columns,header,rows,note=''):
 
 def generate(root,out):
     out.mkdir(parents=True,exist_ok=True)
-    runtime={r['case']:r for r in json.loads((root/RUNTIME).read_text())['cases']}
-    r2=json.loads((root/R2).read_text())
-    pairs={r['case']:r for r in json.loads((root/PAIRS).read_text())['records']}
+    runtime={r['case']:r for r in json.loads((root/RUNTIME).read_text(encoding='utf-8'))['cases']}
+    r2=json.loads((root/R2).read_text(encoding='utf-8'))
+    pairs={r['case']:r for r in json.loads((root/PAIRS).read_text(encoding='utf-8'))['records']}
     records=[]
     options={'C0':'No substitution','C1':'Hash-10%','C2':'Hash-10%','C3':'Shape-filtered','C4':'Shape-filtered'}
     for case in options:
@@ -40,23 +40,23 @@ def generate(root,out):
     # Keep both parts under Table 5, with readable full-size columns.
     s+=r'\addtocounter{table}{-1}'+'\n'
     s+=table('Fixed-split results: (b) harm relative to the No-substitution baseline. A10 harm means a later completion; native A100 harm means increased waiting.','tab:q3harm','lrrr',r'Scenario & $\sigma$ & \shortstack{Native A100\\increased-wait jobs} & \shortstack{A10 later-\\completion jobs}',harm,'Both parts use SPT-HOL, GS1 ratio placement, and FF-id in the other pools. Substitution scenarios dedicate 60 A100 nodes to foreign jobs. No substitution keeps the full native pools and has no foreign partition.')
-    (out/'table5.tex').write_text(s)
+    (out/'table5.tex').write_text(s,encoding='utf-8',newline='\n')
     labels={'A10':'A10','A100-SXM4-80GB':'A100','GPU-series-1':'GS1','GPU-series-2':'GS2','H800':'H800','A800-SXM4-80GB':'A800'}
     rows=[]
     for pool,label in labels.items():
         r=r2['q2_c0_six_pool'][pool]
         rows.append([label,f"{r['jobs']:,}",f"{r['gpus']:,}",f"{r['mean_wait_h']:.3f}",f"{r['median_wait_h']:.3f}/{r['p99_wait_h']:.3f}",f"{r['gpu_alloc']*100:.3f}\\%/{r['cpu_alloc']*100:.3f}\\%",f"{r['done90']:,}"])
-    (out/'table2.tex').write_text(table('Six-pool SPT-HOL results. GS1 uses ratio; other pools use FF-id. Waiting uses complete drain; allocation and completion use $H=7{,}776{,}000$ s.','tab:r2pools','lrrrrrr',r'Pool & Jobs & GPUs & \shortstack{Mean\\wait (h)} & \shortstack{Median/P99\\wait (h)} & \shortstack{GPU/CPU\\allocation} & \shortstack{90-day\\done}',rows,'A100 and A800 denote the SXM4-80GB models; GS1 and GS2 denote GPU-series-1 and GPU-series-2. Allocation integrates $[0,H)$; a completion at $H$ is included.'))
+    (out/'table2.tex').write_text(table('Six-pool SPT-HOL results. GS1 uses ratio; other pools use FF-id. Waiting uses complete drain; allocation and completion use $H=7{,}776{,}000$ s.','tab:r2pools','lrrrrrr',r'Pool & Jobs & GPUs & \shortstack{Mean\\wait (h)} & \shortstack{Median/P99\\wait (h)} & \shortstack{GPU/CPU\\allocation} & \shortstack{90-day\\done}',rows,'A100 and A800 denote the SXM4-80GB models; GS1 and GS2 denote GPU-series-1 and GPU-series-2. Allocation integrates $[0,H)$; a completion at $H$ is included.'),encoding='utf-8',newline='\n')
     q2=r2['q2_a10_three_policy']; rows=[]
     for policy,key in [('FCFS','FCFS_B1'),('SPT-HOL','SPT-HOL_C0'),('SPT-FILL','SPT-FILL_full-A1')]:
         r=q2[key];rows.append([policy]+[f'{r[k]:.3f}' for k in ['mean_wait_h','p99_wait_h','max_wait_h','gpu_work_weighted_mean_wait_h']])
-    (out/'table3.tex').write_text(table('Complete A10 waiting comparison using the same 111,284 jobs and fixed native GPU-work weights.','tab:r2a10','lrrrr',r'Policy & Mean (h) & P99 (h) & Max (h) & \shortstack{GPU-work-weighted\\mean (h)}',rows))
+    (out/'table3.tex').write_text(table('Complete A10 waiting comparison using the same 111,284 jobs and fixed native GPU-work weights.','tab:r2a10','lrrrr',r'Policy & Mean (h) & P99 (h) & Max (h) & \shortstack{GPU-work-weighted\\mean (h)}',rows),encoding='utf-8',newline='\n')
     rows=[]
     for key,label in [('W=1',r'$W=1$'),('W=2-8',r'$W=2$--8'),('W>=9',r'$W\ge9$')]:
         r=r2['q2_worker_strata'][key];dagger='' if key=='W=1' else r'$^\dagger$'
         rows.append([label,f"{r['jobs']:,}",f"{r['hol_mean_wait_h']:.3f}",f"{r['fill_mean_wait_h']:.3f}",f"{r['hol_p99_wait_h']:.3f}"+dagger,f"{r['fill_p99_wait_h']:.3f}"+dagger,f"${r['paired_diff_h']:+.3f}$",r'\shortstack{'+r' / '.join([f"{r['improved_hol']:,}",f"{r['worsened_hol']:,}"])+r'\\ / '+f"{r['unchanged']:,}"+'}'])
-    (out/'table4.tex').write_text(table('HOL/FILL worker strata: waiting in hours; paired difference is HOL minus FILL.','tab:r2strata','lrrrrrrr',r'Stratum & Jobs & \shortstack{HOL\\mean} & \shortstack{FILL\\mean} & \shortstack{HOL\\P99} & \shortstack{FILL\\P99} & \shortstack{Paired\\mean} & \shortstack{Improve / worsen\\/ same (jobs)}',rows,r'$^\dagger$ Small strata; P99 is unstable. The groups use the same complete A10 population.'))
-    fcfs=list(csv.DictReader((root/FCFS).open()))
+    (out/'table4.tex').write_text(table('HOL/FILL worker strata: waiting in hours; paired difference is HOL minus FILL.','tab:r2strata','lrrrrrrr',r'Stratum & Jobs & \shortstack{HOL\\mean} & \shortstack{FILL\\mean} & \shortstack{HOL\\P99} & \shortstack{FILL\\P99} & \shortstack{Paired\\mean} & \shortstack{Improve / worsen\\/ same (jobs)}',rows,r'$^\dagger$ Small strata; P99 is unstable. The groups use the same complete A10 population.'),encoding='utf-8',newline='\n')
+    fcfs=list(csv.DictReader((root/FCFS).open(encoding='utf-8',newline='')))
     wins={}
     for policy in ['FCFS','SPT-HOL']:
         vals={}
@@ -80,9 +80,9 @@ def generate(root,out):
     macros+=r'\newcommand{\FCFSratio}{'+f'{ratio:.2f}'+'}\n'
     macros+=r'\newcommand{\BaselineWait}{'+f"{records[0]['values']['a10_wait']:.3f}"+'}\n'
     macros+=r'\newcommand{\HashWait}{'+f"{records[1]['values']['a10_wait']:.3f}"+'}\n'
-    (out/'claims.tex').write_text(macros)
+    (out/'claims.tex').write_text(macros,encoding='utf-8',newline='\n')
     sources={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in [RUNTIME,R2,PAIRS,FCFS]}
-    (out/'numerical_source_map.json').write_text(json.dumps({'records':records,'winners':wins,'fcfs_hol_mean_ratio':ratio,'sources_sha256':sources},indent=2)+'\n')
+    (out/'numerical_source_map.json').write_text(json.dumps({'records':records,'winners':wins,'fcfs_hol_mean_ratio':ratio,'sources_sha256':sources},indent=2)+'\n',encoding='utf-8',newline='\n')
     return records
 
 if __name__=='__main__':

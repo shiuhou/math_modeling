@@ -15,20 +15,24 @@ def main():
     with tempfile.TemporaryDirectory(prefix='tables-',dir=ROOT) as tmp:
         mod.generate(ROOT,Path(tmp))
         for f in (src/'generated').glob('*.tex'):
-            assert (Path(tmp)/f.name).read_bytes()==f.read_bytes(),f.name
-    r=json.loads((ROOT/'results/20261019-paper-content-r2/r2_metrics.json').read_text())
+            # LF and CRLF serialize identical TeX. Preserve all other bytes,
+            # including numbers, spacing and signs; do not relax value checks.
+            actual=(Path(tmp)/f.name).read_bytes().replace(b'\r\n',b'\n')
+            expected=f.read_bytes().replace(b'\r\n',b'\n')
+            assert actual==expected,f.name
+    r=json.loads((ROOT/'results/20261019-paper-content-r2/r2_metrics.json').read_text(encoding='utf-8'))
     n=sum(x['jobs'] for x in r['q2_worker_strata'].values());assert n==111284
     for prefix,key in [('hol','SPT-HOL_C0'),('fill','SPT-FILL_full-A1')]:
         avg=sum(x['jobs']*x[f'{prefix}_mean_wait_h'] for x in r['q2_worker_strata'].values())/n
         assert math.isclose(avg,r['q2_a10_three_policy'][key]['mean_wait_h'],rel_tol=0,abs_tol=1e-12)
     assert sum(x[k] for x in r['q2_worker_strata'].values() for k in ['improved_hol','worsened_hol','unchanged'])==n
     total=sum(x['done90'] for x in r['q2_c0_six_pool'].values())
-    data=json.loads((ROOT/'results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json').read_text())
+    data=json.loads((ROOT/'results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json').read_text(encoding='utf-8'))
     c0=next(x for x in data['cases'] if x['case']=='C0')
     assert total==c0['metrics']['cohorts']['ALL']['completed_at_horizon']==217578
     cases={x['case']:x for x in data['cases']}
-    pairs=json.loads((ROOT/'results/20261020-final-publication/saved_timing_checks.json').read_text())
-    historical=list(csv.DictReader((ROOT/'results/20261018-b-q3-v2-r1-6f2c8a10/paired.csv').open()))
+    pairs=json.loads((ROOT/'results/20261020-final-publication/saved_timing_checks.json').read_text(encoding='utf-8'))
+    historical=list(csv.DictReader((ROOT/'results/20261018-b-q3-v2-r1-6f2c8a10/paired.csv').open(encoding='utf-8',newline='')))
     for row in pairs['records']:
         selector=row['historical_selector'];case=row['case']
         match=[x for x in historical if x['policy']==selector['policy'] and x['option']==selector['option'] and x['reference']=='M0' and (case=='C0' or float(x['sigma'])==selector['sigma'])]

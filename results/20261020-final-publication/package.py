@@ -56,7 +56,7 @@ def main():
             key=str(f.relative_to(stage))
             if key in copied and copied[key]['package_sha256']!=sha(f):
                 copied[key]['package_sha256']=sha(f);copied[key]['transformation']='same numeric values; digests regenerated for portable evidence copies'
-        manifest={'core_commit':'990846fc89bf714d8e88e458d028d1f0d22712a4','publication_source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'publication_identity':'exact included source hashes; source commit above; artifact commit recorded in handoff','files':copied,'excluded':['raw CSV','large timings and node ledgers','Git metadata','virtual environments','caches','credentials','standalone font files','third-party official documents'],'full_matrix_this_task':'NOT_RUN','source_mutations':'none in core; portable wrappers and publication only'}
+        manifest={'core_commit':'990846fc89bf714d8e88e458d028d1f0d22712a4','publication_source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'publication_identity':'exact included source hashes; source commit above; artifact commit recorded in handoff','files':copied,'excluded':['raw CSV','large timings and node ledgers','Git metadata','virtual environments','caches','credentials','standalone font files','third-party official documents'],'full_matrix_this_task':'NOT_RUN','source_mutations':'none in scheduling core; optional resource telemetry in analysis tool; portable wrappers and publication I/O only'}
         (stage/'package_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
         # Static packaging safety and independence checks.
         for f in stage.rglob('*'):

@@ -21,6 +21,26 @@ python3 -m venv .venv
 .venv/bin/python -I reproduce.py --help
 ```
 
+On Windows PowerShell, extract the ZIP first, open a terminal in its root, and use:
+
+```powershell
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -X utf8 -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -X utf8 -I smoke.py
+.\.venv\Scripts\python.exe -X utf8 -I check_evidence.py
+.\.venv\Scripts\python.exe -X utf8 -I reproduce.py --help
+```
+
+No activation script or execution-policy change is needed. For later commands,
+replace `.venv/bin/python` with `.\.venv\Scripts\python.exe -X utf8`.
+The Windows-specific CRLF and missing-`resource` failure modes were reproduced
+and checked on Linux; native Windows execution has not been performed here.
+The bound/decomposition calculations and all small tests remain enabled when
+`resource` is absent; only peak-memory telemetry is unavailable (`null`).
+Generated tables use UTF-8/LF; evidence comparison permits LF/CRLF differences
+only and still rejects changed numerical values. Package SHA-256 values continue
+to identify exact distributed bytes, without newline normalization.
+
 The smoke runs the included, existing small unit tests for atomic gangs, CPU/GPU
 co-location, ratio placement, routing, and lower bounds, followed by three CLI
 runs on a five-job synthetic fixture. It never reads the official full trace.

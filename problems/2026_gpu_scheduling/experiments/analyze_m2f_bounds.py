@@ -14,7 +14,6 @@ import hashlib
 import io
 import json
 import math
-import resource
 import subprocess
 import tarfile
 import time
@@ -25,6 +24,11 @@ from typing import Iterable
 import pandas as pd
 
 from gpu_scheduling.data import read_data
+
+try:
+    import resource
+except ModuleNotFoundError:  # Windows: optional execution telemetry only.
+    resource = None
 
 
 POLICIES = (
@@ -387,7 +391,8 @@ def run(args: argparse.Namespace) -> dict:
         )
 
     elapsed = time.perf_counter() - started
-    peak_rss_kib = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    peak_rss_kib = (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+                    if resource is not None else None)
     result = {
         "schema_version": 1,
         "kind": "q2_m2f_bounds_and_gap_decomposition",
