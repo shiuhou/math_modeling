@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/problem-b-portability-ahonhd3t/check_evidence.py", line 46, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/tmp/problem-b-portability-ahonhd3t/check_evidence.py", line 18, in main
+    assert (Path(tmp)/f.name).read_bytes()==f.read_bytes(),f.name
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: table5.tex

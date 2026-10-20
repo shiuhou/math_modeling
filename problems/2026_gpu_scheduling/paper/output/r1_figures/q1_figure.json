@@ -1,0 +1,45 @@
+{
+  "scope": "Q1 supplementary",
+  "input_sha256": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "results_sha256": {
+    "command_log.json": "35d39b06a57aefd22f38dcbab460619dbfc2609560d3dc56cf1c5c33227beba0",
+    "concentration.csv": "a3898b0c4a1ee685c10be8a6b8e819a3eefc39f25e96b2446e65658f754d7cfd",
+    "daily_arrivals.csv": "9c86d4920953bab83bbee889bd9fb9ebb41e581a7e861bc5d9966e7c63fe6387",
+    "duration_quantiles.csv": "d43c0caf60e68591a47a1758de5a887cc0194411025425782fd487107d17bac0",
+    "figure_check.json": "c1008502521c100d113a0d352117291a77d9ed22ef1e4ec4ebbbb236201b8b2d",
+    "handoff_comparison.json": "389decbe6306ea53db085348973a988ddc521e62fd921b3c537a06ed28432b74",
+    "immediate_start_demand.csv": "1820ca9eba10ba484874ea40629eec3c01f3eb62eeb0741af8db46f48ab9a2bf",
+    "manifest.json": "d1e275d0b3f3a42ad5a55904a40e22750567e96f090eb54ab01fbf1152ef8dcb",
+    "node_configurations.csv": "5312d24cebc50b674af06d98033063b9f33566ee6fa5610c667ff7bc45c079f7",
+    "pool_summary.csv": "00699b13c32de2d46667709b4ba6b88c7dea2caf0e76c7c35ef98899f5c96a1d",
+    "q1_results.json": "e0b7397e4fdd83aa06d948c4eea5ca381c8c923be34e689ae164127ff9c3d8c8",
+    "relative_24h_phase.csv": "0a77ea2c5ac5be640a8dd940e608163c6734709c21b13bbf3517d1228332174f",
+    "resource_shape.csv": "2d7f9a04485c39c648d8fa2f2ff7c58954fdc93ebe5a749afda98102c58cb26e",
+    "thirty_day_blocks.csv": "5d2c950939334bd42e5373da3b97210c33e82cc6ef931caf6bc10b67986bb9cd"
+  },
+  "main_width_inches": 6.7,
+  "main_label_points": 11.2,
+  "lorenz_origin": [
+    0,
+    0
+  ],
+  "ccdf": "strict P(duration > d), ties grouped; terminal zero omitted on log axes",
+  "top_k_rule": "floor(n*f), descending full-lifetime GPU work",
+  "daily_demand": "Exact event integral within each bin; final partial day retained",
+  "q2_q3": "NOT_RUN; optional archived figures only",
+  "files": {
+    "supplement_daily_arrivals_work.pdf": "0d82d092b8005f25be0e6cde447ac269e36395fd506cbe82b2f803465c28c096",
+    "supplement_daily_arrivals_work.png": "d358b612069a80ceef0b75f8389c0cf22dd6647d911576ac0681ff8861473591",
+    "supplement_model_distributions.pdf": "6a1283eb16967ead0a6fba7248f0005ffaf2d1ef50c6ac9df857e71990a348c2",
+    "supplement_model_distributions.png": "411a51b37978a5750c564fd61eb151a21efc3191accb22cfe2c8f9c7801b3cd2",
+    "supplement_relative_phase.pdf": "2ead89cc1fc0ce4fa0f06a74be29c9b47ecd541994e7dedeaf3a5041d1d45c95",
+    "supplement_relative_phase.png": "ae3080f4f11314c40334e828040d1adf52b52ef79171d8c9b17cc31c3f9ba0e5",
+    "supplement_resource_shape.pdf": "7478ac0aa4026ef252805f7a661df0eb85ec533f794f24e9912a085ee6d8d829",
+    "supplement_resource_shape.png": "625b6f3a4b8f12c6d0271eb0915177146979eef74a5337d10021e5c0d99a2ee9",
+    "supplement_supply_shares.pdf": "155b267b06b2191aa9d6b53c409b57a43e87589b751f7881e5e933b558e31b66",
+    "supplement_supply_shares.png": "bc06641dab9d90519fefb1e78c6dea664c643f4ca6d266088b9053af4804d3c3"
+  }
+}

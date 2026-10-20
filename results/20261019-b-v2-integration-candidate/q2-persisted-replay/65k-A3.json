@@ -1,0 +1,35 @@
+{
+  "case": "65k-A3",
+  "status": "PASS",
+  "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+  "validator_source_commit": "integration/b-v2-candidate working tree",
+  "input_hashes": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "jobs": 65536,
+  "job_id_count": 65536,
+  "nodes": 2494,
+  "timing_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+  "placement_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz",
+  "reservation_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_reservations.json",
+  "artifact_hashes": {
+    "q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_reservations.json": "f032789c8480e76390e3f62b0df0df5634f61100ceaf442b057f8214a967ec8a",
+    "q2-v2-65k-a3/a10-65536-theta604800-spt-fill/phase_log.jsonl": "88961762ab2a968416d17f3837caf2d7498566e4a252e1ad09c75ea83d783bd6",
+    "q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_node_placements.csv.gz": "e9a6552151b420b1c49d656a5c19a8a7411648ac98627af213e93d1c95eee603",
+    "q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz": "142bfb3e32b236c066e0ffb61a9822703e82cc4df139e531bf93e108ea3398b2"
+  },
+  "csv_validation": {
+    "status": "PASS",
+    "jobs": 65536,
+    "ledger_rows": 67016,
+    "input_identity": "PASS",
+    "timing": "PASS",
+    "atomic_capacity_replay": "PASS",
+    "final_allocation_zero": "PASS"
+  },
+  "reservation_event_count": 247229,
+  "reservation_count": 0,
+  "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+  "source_availability": "LOCAL_ONLY"
+}

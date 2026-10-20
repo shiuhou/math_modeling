@@ -1,0 +1,237 @@
+{
+  "scope": "paper content R2 read-only postprocessing; no scheduler or replay rerun",
+  "q1_type_stats": {
+    "all": {
+      "jobs": 224112,
+      "duration_le_1h": {
+        "jobs": 158562,
+        "fraction": 0.7075123152709359,
+        "gpu_work_fraction": 0.007211794144231139
+      },
+      "duration_gt_24h": {
+        "jobs": 20831,
+        "fraction": 0.09294906118369387,
+        "gpu_work_fraction": 0.9235022865695831
+      },
+      "single_worker_fraction": 0.9095273791675591,
+      "multi_worker": {
+        "jobs": 20276,
+        "fraction": 0.09047262083244093,
+        "worker_num_min": 2,
+        "median": 4.0,
+        "p95": 28.0,
+        "max": 249,
+        "counts_2_8": 16559,
+        "counts_ge_9": 3717
+      }
+    },
+    "A10": {
+      "jobs": 111284,
+      "duration_le_1h": {
+        "jobs": 87953,
+        "fraction": 0.7903472197261062,
+        "gpu_work_fraction": 0.0017624708465893773
+      },
+      "duration_gt_24h": {
+        "jobs": 11926,
+        "fraction": 0.10716724776248159,
+        "gpu_work_fraction": 0.9941730718930875
+      },
+      "single_worker_fraction": 0.992928004025736,
+      "multi_worker": {
+        "jobs": 787,
+        "fraction": 0.0070719959742640455,
+        "worker_num_min": 2,
+        "median": 4.0,
+        "p95": 17.699999999999932,
+        "max": 60,
+        "counts_2_8": 637,
+        "counts_ge_9": 150
+      }
+    }
+  },
+  "q2_a10_three_policy": {
+    "FCFS_B1": {
+      "jobs": 111284,
+      "mean_wait_h": 900.1285695807325,
+      "p99_wait_h": 1419.6163,
+      "max_wait_h": 1423.253888888889,
+      "gpu_work_weighted_mean_wait_h": 619.3518653009497,
+      "gpu_work_total": 40028314872
+    },
+    "SPT-HOL_C0": {
+      "jobs": 111284,
+      "mean_wait_h": 32.906454035021504,
+      "p99_wait_h": 1542.1810416666613,
+      "max_wait_h": 3017.2880555555557,
+      "gpu_work_weighted_mean_wait_h": 677.6899332378641,
+      "gpu_work_total": 40028314872
+    },
+    "SPT-HOL_B2": {
+      "jobs": 111284,
+      "mean_wait_h": 32.906454035021504,
+      "p99_wait_h": 1542.1810416666613,
+      "max_wait_h": 3017.2880555555557,
+      "gpu_work_weighted_mean_wait_h": 677.6899332378641,
+      "gpu_work_total": 40028314872
+    },
+    "SPT-FILL_full-A1": {
+      "jobs": 111284,
+      "mean_wait_h": 34.967030093674246,
+      "p99_wait_h": 1575.461516666666,
+      "max_wait_h": 3015.3105555555558,
+      "gpu_work_weighted_mean_wait_h": 677.495535269614,
+      "gpu_work_total": 40028314872
+    },
+    "SPT-HOL_full-H1": {
+      "jobs": 111284,
+      "mean_wait_h": 32.906454035021504,
+      "p99_wait_h": 1542.1810416666613,
+      "max_wait_h": 3017.2880555555557,
+      "gpu_work_weighted_mean_wait_h": 677.689933237864,
+      "gpu_work_total": 40028314872
+    }
+  },
+  "q2_worker_strata": {
+    "W=1": {
+      "jobs": 110497,
+      "hol_mean_wait_h": 33.125226041833216,
+      "fill_mean_wait_h": 32.80534660317575,
+      "hol_p99_wait_h": 1553.3190222222163,
+      "fill_p99_wait_h": 1539.4800444444404,
+      "paired_diff_h": 0.31987943865745977,
+      "improved_hol": 54489,
+      "worsened_hol": 50566,
+      "unchanged": 5442,
+      "p99_note": "stable n>=10000"
+    },
+    "W=2-8": {
+      "jobs": 637,
+      "hol_mean_wait_h": 1.5292996685853828,
+      "fill_mean_wait_h": 186.76655546834118,
+      "hol_p99_wait_h": 15.602811111111105,
+      "fill_p99_wait_h": 1952.7139555555555,
+      "paired_diff_h": -185.23725579975581,
+      "improved_hol": 628,
+      "worsened_hol": 8,
+      "unchanged": 1,
+      "p99_note": "small stratum; P99 is unstable"
+    },
+    "W>=9": {
+      "jobs": 150,
+      "hol_mean_wait_h": 4.9971000000000005,
+      "fill_mean_wait_h": 982.7219833333334,
+      "hol_p99_wait_h": 36.18579999999982,
+      "fill_p99_wait_h": 2907.8956305555544,
+      "paired_diff_h": -977.7248833333333,
+      "improved_hol": 149,
+      "worsened_hol": 1,
+      "unchanged": 0,
+      "p99_note": "small stratum; P99 is unstable"
+    }
+  },
+  "q2_case_sources": {
+    "FCFS_B1": {
+      "path": "/home/shiuhou/mm/math_modeling-b-v2-candidate/outputs/v2-integration-runtime-20261019/B1/jobs.csv.gz",
+      "bytes": 4533713,
+      "sha256": "dda4bc8ed5d6c83702d6154a39d149cef35e674d17b54e8d0b401cfc4cf7790c"
+    },
+    "SPT-HOL_C0": {
+      "path": "/home/shiuhou/mm/math_modeling-b-v2-candidate/outputs/v2-integration-runtime-20261019/C0/jobs.csv.gz",
+      "bytes": 4458652,
+      "sha256": "add5d0a0d91eb0bec6f25e07b2c2f8ee7e5397529451b73c3207f4e402a0aea7"
+    },
+    "SPT-HOL_B2": {
+      "path": "/home/shiuhou/mm/math_modeling-b-v2-candidate/outputs/v2-integration-runtime-20261019/B2/jobs.csv.gz",
+      "bytes": 4459780,
+      "sha256": "f2733d615e1bf85986f52eacaf96b70e1482763cfca2dabfc6aae3745a247ad2"
+    },
+    "SPT-FILL_full-A1": {
+      "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-a1/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+      "bytes": 1747526,
+      "sha256": "f1fb0a5775180d710daa71bd288a83d8debc36d08b4cf79fb8c35a08ca141764"
+    },
+    "SPT-HOL_full-H1": {
+      "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-h1/a10-111284-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
+      "bytes": 1740600,
+      "sha256": "1a9c37a58b69cb5bded158728fa86da96f8f9d9999b9020059369e304a139b89"
+    }
+  },
+  "a10_c0_b2_timing_equal": true,
+  "q2_c0_six_pool": {
+    "A10": {
+      "jobs": 111284,
+      "gpus": 2494,
+      "mean_wait_h": 32.906454035021504,
+      "median_wait_h": 0.02277777777777778,
+      "p99_wait_h": 1542.1810416666613,
+      "gpu_alloc": 0.9992233791139888,
+      "cpu_alloc": 0.1792678646076574,
+      "done90": 107002
+    },
+    "A100-SXM4-80GB": {
+      "jobs": 80877,
+      "gpus": 3456,
+      "mean_wait_h": 0.0,
+      "median_wait_h": 0.0,
+      "p99_wait_h": 0.0,
+      "gpu_alloc": 0.6275522536847709,
+      "cpu_alloc": 0.42032065165006466,
+      "done90": 80101
+    },
+    "A800-SXM4-80GB": {
+      "jobs": 3959,
+      "gpus": 176,
+      "mean_wait_h": 0.11484571019617748,
+      "median_wait_h": 0.0,
+      "p99_wait_h": 4.3896722222222415,
+      "gpu_alloc": 0.5731129056771418,
+      "cpu_alloc": 0.4949255293001631,
+      "done90": 3943
+    },
+    "GPU-series-1": {
+      "jobs": 9643,
+      "gpus": 1558,
+      "mean_wait_h": 0.0,
+      "median_wait_h": 0.0,
+      "p99_wait_h": 0.0,
+      "gpu_alloc": 0.6086718475959735,
+      "cpu_alloc": 0.34813841927746714,
+      "done90": 8221
+    },
+    "GPU-series-2": {
+      "jobs": 13633,
+      "gpus": 976,
+      "mean_wait_h": 0.01574427247609966,
+      "median_wait_h": 0.0,
+      "p99_wait_h": 0.044633333333333414,
+      "gpu_alloc": 0.569313552260423,
+      "cpu_alloc": 0.3742371035565594,
+      "done90": 13606
+    },
+    "H800": {
+      "jobs": 4716,
+      "gpus": 1752,
+      "mean_wait_h": 0.016315498068042597,
+      "median_wait_h": 0.0,
+      "p99_wait_h": 0.0,
+      "gpu_alloc": 0.5581566485010664,
+      "cpu_alloc": 0.5219341792525914,
+      "done90": 4705
+    }
+  },
+  "q2_c0_metadata": {
+    "path": "/home/shiuhou/mm/math_modeling-b-v2-candidate/outputs/v2-integration-runtime-20261019/C0/run_metadata.json",
+    "bytes": 11774,
+    "sha256": "f27744056fef56e4973d0b0ab1be21c4707dd8030d42bdb11f618b16fda2c68c"
+  },
+  "head_time_source": {
+    "code_path": "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py",
+    "lines": "202-251, 428-432, 477-520, 540-577, 600-604",
+    "full_formal_summary": {
+      "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-c1/a10-111284-theta604800-spt-head-time/summary.json",
+      "bytes": 6603,
+      "sha256": "b49aea30ebdcfb6443060486dc756ff7a51a485f82408f1e84bfc9c9c30fbdb4"
+    }
+  }
+}

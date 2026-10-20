@@ -1,0 +1,111 @@
+{
+  "created_at": "2026-10-19T11:47:17+08:00",
+  "scope": "paper content revision only; no scheduler rerun",
+  "compiler": "/home/shiuhou/mm/math_modeling/.codex/b-intake-tools/tectonic 0.17.0",
+  "pdfinfo": "6 pages A4; 11pt class",
+  "visual_preview": "temporary six-page PNG render inspected and removed after visual QA",
+  "old_candidate_pdf": {
+    "path": "problems/2026_gpu_scheduling/paper/output/pdf/problem_b_v2_candidate.pdf",
+    "bytes": 172513,
+    "sha256": "6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92"
+  },
+  "v1_pdf": {
+    "path": "problems/2026_gpu_scheduling/paper/output/pdf/problem_b_baseline_v1.pdf",
+    "bytes": 170481,
+    "sha256": "6de1fcfcd452be5bee0017a8b4e54d6c0e5247cd38aec13b14ae5298c538d9aa"
+  },
+  "new_files": [
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/document_paper_content_r1.tex",
+      "bytes": 3733,
+      "sha256": "bb5d94e4c445ee81a3216e7506fff6678a2a38c9fd4b5670b2de35d58a33e9d9"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/r1_preamble.tex",
+      "bytes": 1286,
+      "sha256": "db514b1ffd607f11130cccb4fa2d6b06725286a4b69c64e71d53497be37c8756"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/r1_q1.tex",
+      "bytes": 4076,
+      "sha256": "bafaaa5fed49797c25fc253d9661b2cb497492db41814fcc24c9565a50392839"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/r1_q2.tex",
+      "bytes": 5896,
+      "sha256": "29b8795bc219d12faea7f18056b504e4b8dccb5f52271f4ad3d5a8d17a33a53c"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/r1_q3.tex",
+      "bytes": 4813,
+      "sha256": "3993fdf1cbe6e893117dac244016b1f2ec31ff7ef6857f07c1a4a2ddbfb38fcc"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/PAPER_CONTENT_R1_README.md",
+      "bytes": 1096,
+      "sha256": "007702bc53e67258959418165979f6bbe4e1564e28f21c670d5cd6595187855f"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r1.pdf",
+      "bytes": 212992,
+      "sha256": "fae37b0211e415de3669ba344c7094513b3984041f62ab065e510425bb236cbe"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/r1_figures/fig1_demand.pdf",
+      "bytes": 13144,
+      "sha256": "21b1fa58ea404a9d765064bcfcf2345dfd867866a3e865bb6643ad90d6eade9e"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/r1_figures/fig1_data_patterns.pdf",
+      "bytes": 39830,
+      "sha256": "a0559ea4a0ba072567197082072a4e161855efd68ab15d1cba75eff12a6f834b"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/r1_figures/supplement_daily_arrivals_work.pdf",
+      "bytes": 16499,
+      "sha256": "0d82d092b8005f25be0e6cde447ac269e36395fd506cbe82b2f803465c28c096"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/r1_figures/supplement_resource_shape.pdf",
+      "bytes": 18612,
+      "sha256": "7478ac0aa4026ef252805f7a661df0eb85ec533f794f24e9912a085ee6d8d829"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/output/figures/q3_donor_capacity_wait_tradeoff.png",
+      "bytes": 114120,
+      "sha256": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6"
+    },
+    {
+      "path": "problems/2026_gpu_scheduling/paper/paper_sources_v2.json",
+      "bytes": 5323,
+      "sha256": "4e34d947d79d0bdeae0eb3267de14fcd7401d8be802a4b0cae5f042a4f7b830d"
+    },
+    {
+      "path": "results/20261019-paper-content-r1/input_comparison.json",
+      "bytes": 1288,
+      "sha256": "12c5ba26d5c6ee317cbfebbd8c6ff79120d375f6bee627d07497dad245fb8fae"
+    },
+    {
+      "path": "results/20261019-paper-content-r1/r1_metrics.json",
+      "bytes": 9641,
+      "sha256": "1437c0e7120f81c69907d31c75c2f9732449807efb8f9128f7f94155b009b560"
+    },
+    {
+      "path": "results/20261019-paper-content-r1/paper_content_mapping.md",
+      "bytes": 1551,
+      "sha256": "135d0534eff94f1b4d1c4bc3a6e23bf1f52f260bce6e54f733be7b5dd759b410"
+    }
+  ],
+  "checks": {
+    "tectonic": "PASS",
+    "pages_le_10": "PASS",
+    "a4": "PASS",
+    "font_class_at_least_11pt": "PASS",
+    "visual_page_review": "PASS",
+    "overfull_hbox": "PASS",
+    "input_comparison": "PASS",
+    "scheduler_rerun": "NOT_RUN_BY_DESIGN",
+    "human_review": "NOT_DONE",
+    "team_identity": "PENDING_TEAM_CONFIRMATION"
+  }
+}

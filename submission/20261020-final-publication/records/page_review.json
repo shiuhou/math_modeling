@@ -1,0 +1,93 @@
+{
+  "pdf_sha256": "f18bc18bd2ebb70f8af6a06dcb1feb076cd334ba426177f9d04608765390b3b0",
+  "pages": [
+    {
+      "page": 1,
+      "render_sha256": "b8ed48f8f500b4c4ca7231af57219d64d58178a5fc2914ade9bc9c4ae47c2b71",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Confirmed explicit Hash-10%, sigma=1 context for about 45% later completions; names and Table 1 remain clear.",
+      "final_render_matches_inspected_render": true,
+      "same_as_previous_render": false
+    },
+    {
+      "page": 2,
+      "render_sha256": "b3b635f57aba3f20bcc7faf811eb9f76a1d6e0243a7ca1a2706f5099923b84fd",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Demand and distribution figures; full-size decimal axis ticks and clear legends.",
+      "final_render_matches_inspected_render": true,
+      "same_as_previous_render": true
+    },
+    {
+      "page": 3,
+      "render_sha256": "f34336e136d4b02d97e5d3588acd60fb4873c1fdb9f94368b2974fd7a06d763a",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Historical SJF-HOL alias sentence removed; Algorithm 1, gang condition and Table 2 remain clear.",
+      "final_render_matches_inspected_render": true,
+      "same_as_previous_render": false
+    },
+    {
+      "page": 4,
+      "render_sha256": "a2a34e2f1898c453ba29ea1c561b57bdf42c974c100ec51c9f804daaa6c9da66",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Lower-bound equations and accounting equality; Tables 3/4 readable at full size.",
+      "final_render_matches_inspected_render": true,
+      "same_as_previous_render": true
+    },
+    {
+      "page": 5,
+      "render_sha256": "9a501d2b7d1199973840f3b816426b82359f2640ebeaebf06289b62f09f60670",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "GS1 optimum, HEAD-TIME, Q3 assumptions and Table 5(a) including A10 wait.",
+      "final_render_matches_inspected_render": true,
+      "same_as_previous_render": true
+    },
+    {
+      "page": 6,
+      "render_sha256": "2e68ff2ea9fd6e24423315a7e964e46d351c9782912377cc858d09a7ce7dd167",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Table 5(b), explicit harm baseline, scenario comparisons and allocation denominators.",
+      "final_render_matches_inspected_render": true,
+      "same_as_previous_render": true
+    },
+    {
+      "page": 7,
+      "render_sha256": "588be2180136362249a7e0a9480efe1b86544248b101eeabcc637d2a6bc85975",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Figure 3 two-line native A100 axis label fully visible; negative cases, limits, references.",
+      "final_render_matches_inspected_render": true,
+      "same_as_previous_render": true
+    },
+    {
+      "page": 8,
+      "render_sha256": "c1955ef8588cd6728e5a9d4533758abe26c719003a2684853382c1821764927a",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "User-supplied AI disclosure is complete and last; no clipping; technical visual inspection is separate from team signoff.",
+      "final_render_matches_inspected_render": true,
+      "same_as_previous_render": false
+    }
+  ],
+  "ordinary_minimum_pdf_points": 11.058536529541016,
+  "math_scripts": "Only individually enumerated Computer Modern sub/superscripts are exempt. All figure ticks and legends are >=11 pt.",
+  "defects_resolved": [
+    "Reset table/caption type sizes fixed to >=11 actual PDF points; main math fonts made scalable.",
+    "Figure 2 log ticks use full-size decimal labels.",
+    "Figure 3 long rotated label was clipped in the first render; wrapped and recompiled."
+  ],
+  "human_review": "NOT_RUN"
+}

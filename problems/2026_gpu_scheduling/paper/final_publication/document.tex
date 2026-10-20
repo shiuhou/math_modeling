@@ -1,0 +1,33 @@
+\input{preamble.tex}
+\input{generated/claims.tex}
+\begin{document}
+\begin{center}
+{\Large\bfseries\color{primary} Capacity-Valid Scheduling of a Heterogeneous GPU Cluster}\\[3pt]
+{\large 2026 HKUST-GZ MCM Senior Track -- Problem B}\\[5pt]
+\textbf{Team falcons}\\[3pt]
+SHI U Hou, Ziyao Zhang, Beichen Ji, Sirui Zheng\\[3pt]
+HKUST(GZ)
+\end{center}
+\takeaway{Main findings}{In the supplied finite trace, A10 is the main sustained capacity-pressure pool. We use node-level gang checks with SPT-HOL and ratio placement in GS1. HOL strongly benefits multi-worker A10 jobs, while FILL has slightly lower mean waiting for single-worker jobs. GS1 ratio gives zero waiting for all 9,643 jobs in this instance. Under the tested compatibility assumption and $\sigma=1$, dedicating 60 A100 nodes with Hash-10\% routing reduces A10 mean waiting from \BaselineWait{} to \HashWait{} h, with no added native A100 waiting. In this scenario, about 45\% of A10 jobs finish later although the mean wait falls. Slower substitution retains trade-offs. \WinnerClaim{} These conditional choices balance mean delay, tail risk, native harm, and donor occupancy; $\sigma$ is a scenario assumption, not a measured speed.}
+\textbf{Data and validation.} We use the supplied 224,112-job trace, exact integer-second durations, six model pools, non-preemptive gang starts, and complete drain for waiting/JCT. Allocation rates use the fixed 90-day window. Original IDs and requested fields, node-level CPU/GPU ledgers, full drain, fixed-window counts, and independently recomputed metrics were checked against saved formal schedules.
+
+\input{q1.tex}
+\input{q2.tex}
+\input{q3.tex}
+
+\section{Conclusion and limitations}
+The three questions answer different decisions. Q1 separates submitted work, immediate-start demand, and simulated allocation. Q2 provides a capacity-valid SPT-HOL contract, a count lower bound, a zero-wait GS1 construction, and complete-A10 tail and cost evidence. Q3 compares fixed physical partitions and evaluated speed assumptions while retaining native harm and duration sensitivity. These are finite trace results: allocation is request occupancy, GPU-hours across models are not interchangeable hardware or monetary units, and no heuristic optimality, speed guarantee, or dynamic substitution policy is claimed. An online completion-cost routing rule remains future work.
+
+\textbf{Strengths and limitations.} Strengths are exact integer-second accounting, node-level CPU/GPU gang checks, saved-ledger replay, and separate ordinary and GPU-work objectives. Limitations are the finite trace, request-based occupancy rather than device telemetry, unbenchmarked cross-GPU compatibility and speed assumptions, and fixed-policy rather than dynamic substitution. The reported choices are conditional on the evaluated cases and do not establish a universal optimum.
+
+\section*{References}
+\begin{enumerate}
+\item HKUST-GZ MCM 2026 Senior Track, Problem B, ``Scheduling a GPU Cluster,'' official problem statement.
+\item Graham, R. L. (1966), ``Bounds on multiprocessing timing anomalies,'' \emph{SIAM Journal on Applied Mathematics}, 14(2), 416--429. Used only as scheduling background; the reported lower bound is derived for this trace.
+\item Feitelson, D. G. (2015), \emph{Workload Modeling for Computer Systems Performance Evaluation}. Used for workload-trace terminology and the distinction between demand and allocation.
+\item SchedMD, ``Backfill scheduling'' documentation. Used to distinguish a feasible-fill bypass from SPT head-of-line blocking.
+\end{enumerate}
+
+\section*{Use of AI Tools}
+The team designed the models, chose the evaluation criteria, and made all methodological decisions. We used ChatGPT and OpenAI Codex as programming, data-processing, and writing aids (code drafting and review, post-processing, plotting, and English editing and typesetting). Claude was consulted during model development; it proposed candidate lower-bound and decomposition arguments and the ratio-placement idea, and reviewed our derivations. The team adopted these suggestions only after deriving and verifying them. All reported numbers come from the team's own scheduler implementation and saved schedules, validated by independent replay checks; no AI prototype output is reported as a result. The team checked all AI-assisted content, calculations, code, and references for correctness and plagiarism, and takes full responsibility for this report.
+\end{document}

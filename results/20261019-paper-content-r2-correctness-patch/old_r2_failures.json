@@ -1,0 +1,76 @@
+{
+  "candidate_pdf": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r2.pdf",
+  "candidate_pdf_sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f",
+  "method": "read-only old-PDF extraction compared with formal persisted metrics; no scheduler/replay run",
+  "checks": [
+    {
+      "id": "A3/F1-winner",
+      "status": "FAIL",
+      "source_field": "results/20261018-b-q3-v2-r1-6f2c8a10/main_table.csv: ALL.mean_jct_hours; R0/R-shape, FCFS, sigma=1/2 plus C0--C4 metrics.cohorts.original_A10.mean_jct_hours",
+      "expected": {
+        "FCFS_sigma1": "Hash-10% < Shape-filtered",
+        "FCFS_sigma2": "Shape-filtered < Hash-10%",
+        "SPT-HOL_sigma1": "Hash-10% < Shape-filtered"
+      },
+      "pdf_actual_quote": "Thus Shape-filtered has the lower FCFS JCT at both measured speeds",
+      "comparison": "FAIL: sigma=1 formal FCFS is 368.910053 < 402.914382 for Hash-10% vs Shape-filtered; the PDF claim reverses that point."
+    },
+    {
+      "id": "A3/G-C0-completion",
+      "status": "FAIL",
+      "source_field": "outputs/v2-integration-runtime-20261019/C0/run_metadata.json: metrics.cohorts.ALL.completed_at_horizon; metrics.cohorts.ALL.mean_jct_hours",
+      "expected": {
+        "ALL.completed_at_horizon": 217578,
+        "ALL.mean_jct_hours": 93.33387935124699
+      },
+      "pdf_actual": {
+        "Table 2 sum": 217578,
+        "Table 5 No substitution 90d done": 217570,
+        "Table 5 No substitution All JCT": 93.353
+      },
+      "pdf_actual_quote": "No substitution ... All JCT 93.353 ... 217,570",
+      "comparison": "FAIL: Table 2 sum agrees with formal C0, but Table 5 uses stale completion and JCT values."
+    },
+    {
+      "id": "E1-allocation-denominator",
+      "status": "FAIL",
+      "source_field": "outputs/v2-integration-runtime-20261019/C1/run_metadata.json and C3/C4 metrics.physical A100-SXM4-80GB/A100-foreign gpu_allocation_rate_at_horizon",
+      "expected": {
+        "C1": {
+          "native_partition_rate": 0.7287703591177983,
+          "foreign_partition_rate": 0.682727447702332,
+          "native_full_pool_contribution": 0.6275522536847707,
+          "foreign_full_pool_contribution": 0.09482325662532388,
+          "weighted_all_rate": 0.7223755103100946
+        },
+        "C2": {
+          "native_partition_rate": 0.7287703591177983,
+          "foreign_partition_rate": 0.6694789657278807,
+          "native_full_pool_contribution": 0.6275522536847707,
+          "foreign_full_pool_contribution": 0.09298318968442787,
+          "weighted_all_rate": 0.7205354433691986
+        },
+        "C3": {
+          "native_partition_rate": 0.7287703591177983,
+          "foreign_partition_rate": 0.4492318029835391,
+          "native_full_pool_contribution": 0.6275522536847707,
+          "foreign_full_pool_contribution": 0.06239330596993598,
+          "weighted_all_rate": 0.6899455596547066
+        },
+        "C4": {
+          "native_partition_rate": 0.7287703591177983,
+          "foreign_partition_rate": 0.6284135288065844,
+          "native_full_pool_contribution": 0.6275522536847707,
+          "foreign_full_pool_contribution": 0.08727965677869227,
+          "weighted_all_rate": 0.714831910463463
+        }
+      },
+      "pdf_actual": {
+        "Hash sigma1": "0.7224 (native 0.6276 plus foreign 0.0948)",
+        "Shape sigma1": "0.6899 (0.7288 native plus 0.4492 foreign)",
+        "Shape sigma2": "0.7148 (0.7288 plus 0.6284)"
+      },
+      "comparison": "FAIL: full-pool contributions and partition-own rates are mixed in the same parenthetical labels; formal partition-own rates are Hash sigma1 native 0.728770 and foreign 0.682727."
+    }
+  ]
+}

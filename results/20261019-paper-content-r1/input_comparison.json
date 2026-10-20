@@ -1,0 +1,56 @@
+{
+  "inputs": {
+    "formal_run": {
+      "bytes": 7796214,
+      "sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+      "bom": true,
+      "crlf": 0,
+      "lf": 224112,
+      "bare_cr": 0
+    },
+    "historical_hash": {
+      "bytes": 9813075,
+      "sha256": "735bc06c3986b1d0c5932236f8685b7204463829118fc6a1d37030e253ed38e1",
+      "bom": false,
+      "crlf": 224113,
+      "lf": 224113,
+      "bare_cr": 0
+    }
+  },
+  "field_names": {
+    "formal_run": [
+      "job_name",
+      "gpu_model",
+      "cpu_request",
+      "gpu_request",
+      "worker_num",
+      "submit_time",
+      "duration"
+    ],
+    "historical_hash": [
+      "job_name",
+      "gpu_model",
+      "cpu_request",
+      "gpu_request",
+      "worker_num",
+      "submit_time",
+      "duration"
+    ]
+  },
+  "row_counts": {
+    "formal_run": 224112,
+    "historical_hash": 224112
+  },
+  "comparison": {
+    "field_names_equal": true,
+    "ids_equal": true,
+    "only_formal": 0,
+    "only_historical": 0,
+    "semantic_mismatch_count_sampled_or_total": 0,
+    "semantic_equal_all": true,
+    "mismatches": [],
+    "byte_identity": "DIFFERENT",
+    "interpretation": "IDs and all parsed fields are Decimal-semantic equal; only serialization bytes differ."
+  },
+  "id_field": "job_name"
+}

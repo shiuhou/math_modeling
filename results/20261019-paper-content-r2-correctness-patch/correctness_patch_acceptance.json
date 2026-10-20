@@ -1,0 +1,302 @@
+{
+  "baseline": {
+    "head": "d6f10254bbc81a102420629496de2871e3a4b4e1",
+    "pdf": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r2.pdf",
+    "sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f",
+    "expected_sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f"
+  },
+  "old_r2_failures": {
+    "candidate_pdf": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r2.pdf",
+    "candidate_pdf_sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f",
+    "method": "read-only old-PDF extraction compared with formal persisted metrics; no scheduler/replay run",
+    "checks": [
+      {
+        "id": "A3/F1-winner",
+        "status": "FAIL",
+        "source_field": "results/20261018-b-q3-v2-r1-6f2c8a10/main_table.csv: ALL.mean_jct_hours; R0/R-shape, FCFS, sigma=1/2 plus C0--C4 metrics.cohorts.original_A10.mean_jct_hours",
+        "expected": {
+          "FCFS_sigma1": "Hash-10% < Shape-filtered",
+          "FCFS_sigma2": "Shape-filtered < Hash-10%",
+          "SPT-HOL_sigma1": "Hash-10% < Shape-filtered"
+        },
+        "pdf_actual_quote": "Thus Shape-filtered has the lower FCFS JCT at both measured speeds",
+        "comparison": "FAIL: sigma=1 formal FCFS is 368.910053 < 402.914382 for Hash-10% vs Shape-filtered; the PDF claim reverses that point."
+      },
+      {
+        "id": "A3/G-C0-completion",
+        "status": "FAIL",
+        "source_field": "outputs/v2-integration-runtime-20261019/C0/run_metadata.json: metrics.cohorts.ALL.completed_at_horizon; metrics.cohorts.ALL.mean_jct_hours",
+        "expected": {
+          "ALL.completed_at_horizon": 217578,
+          "ALL.mean_jct_hours": 93.33387935124699
+        },
+        "pdf_actual": {
+          "Table 2 sum": 217578,
+          "Table 5 No substitution 90d done": 217570,
+          "Table 5 No substitution All JCT": 93.353
+        },
+        "pdf_actual_quote": "No substitution ... All JCT 93.353 ... 217,570",
+        "comparison": "FAIL: Table 2 sum agrees with formal C0, but Table 5 uses stale completion and JCT values."
+      },
+      {
+        "id": "E1-allocation-denominator",
+        "status": "FAIL",
+        "source_field": "outputs/v2-integration-runtime-20261019/C1/run_metadata.json and C3/C4 metrics.physical A100-SXM4-80GB/A100-foreign gpu_allocation_rate_at_horizon",
+        "expected": {
+          "C1": {
+            "native_partition_rate": 0.7287703591177983,
+            "foreign_partition_rate": 0.682727447702332,
+            "native_full_pool_contribution": 0.6275522536847707,
+            "foreign_full_pool_contribution": 0.09482325662532388,
+            "weighted_all_rate": 0.7223755103100946
+          },
+          "C2": {
+            "native_partition_rate": 0.7287703591177983,
+            "foreign_partition_rate": 0.6694789657278807,
+            "native_full_pool_contribution": 0.6275522536847707,
+            "foreign_full_pool_contribution": 0.09298318968442787,
+            "weighted_all_rate": 0.7205354433691986
+          },
+          "C3": {
+            "native_partition_rate": 0.7287703591177983,
+            "foreign_partition_rate": 0.4492318029835391,
+            "native_full_pool_contribution": 0.6275522536847707,
+            "foreign_full_pool_contribution": 0.06239330596993598,
+            "weighted_all_rate": 0.6899455596547066
+          },
+          "C4": {
+            "native_partition_rate": 0.7287703591177983,
+            "foreign_partition_rate": 0.6284135288065844,
+            "native_full_pool_contribution": 0.6275522536847707,
+            "foreign_full_pool_contribution": 0.08727965677869227,
+            "weighted_all_rate": 0.714831910463463
+          }
+        },
+        "pdf_actual": {
+          "Hash sigma1": "0.7224 (native 0.6276 plus foreign 0.0948)",
+          "Shape sigma1": "0.6899 (0.7288 native plus 0.4492 foreign)",
+          "Shape sigma2": "0.7148 (0.7288 plus 0.6284)"
+        },
+        "comparison": "FAIL: full-pool contributions and partition-own rates are mixed in the same parenthetical labels; formal partition-own rates are Hash sigma1 native 0.728770 and foreign 0.682727."
+      }
+    ]
+  },
+  "new_pdf": {
+    "path": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r2_correctness_patch.pdf",
+    "sha256": "64a51ff48dab4d93e51129a3a7856abb864b96e013bc231fe433fb345a55c4f9",
+    "pages": 8,
+    "page_size": "A4"
+  },
+  "checks": {
+    "A3_F1_winner": {
+      "status": "PASS",
+      "source_field": "main_table.csv FCFS rows; v2_runtime_equivalence.json metrics.cohorts.original_A10",
+      "expected": {
+        "FCFS_sigma1": true,
+        "FCFS_sigma2": true,
+        "SPT-HOL_sigma1": true,
+        "SPT-HOL_sigma2": true,
+        "FCFS_two_point_max_shape": true,
+        "SPT-HOL_two_point_max_shape": true
+      },
+      "pdf_actual": {
+        "sentence_count_after_linewrap_normalization": 2,
+        "fcfs_sigma1": [
+          687.6448252918459,
+          756.1252745228425
+        ],
+        "fcfs_sigma2": [
+          831.4555450069693,
+          761.6676872136954
+        ],
+        "spt_hol_sigma1": [
+          120.3034876057854,
+          124.12835993693811
+        ],
+        "spt_hol_sigma2": [
+          134.80973557145083,
+          129.67077262779117
+        ]
+      },
+      "comparison": "All per-sigma and two-point maximum comparisons agree."
+    },
+    "A3_G_C0_metrics": {
+      "status": "PASS",
+      "source_field": "v2_runtime_equivalence.json case keys C0--C4: metrics.cohorts.ALL.mean_jct_hours, completed_at_horizon, original_A10.mean_jct_hours; generated table record JSON",
+      "expected": {
+        "C0": {
+          "a10_jct": 132.67621017446854,
+          "all_jct": 93.33387935124699,
+          "done": 217578,
+          "native_harm": 0,
+          "a10_harm": 0
+        },
+        "C1": {
+          "a10_jct": 120.3034876057854,
+          "all_jct": 87.19013846127531,
+          "done": 217822,
+          "native_harm": 0,
+          "a10_harm": 49772
+        },
+        "C2": {
+          "a10_jct": 134.80973557145083,
+          "all_jct": 94.39329268153621,
+          "done": 217529,
+          "native_harm": 0,
+          "a10_harm": 56422
+        },
+        "C3": {
+          "a10_jct": 124.12835993693811,
+          "all_jct": 89.08939906534827,
+          "done": 217809,
+          "native_harm": 0,
+          "a10_harm": 46803
+        },
+        "C4": {
+          "a10_jct": 129.67077262779117,
+          "all_jct": 91.84151342731413,
+          "done": 217621,
+          "native_harm": 0,
+          "a10_harm": 55465
+        }
+      },
+      "pdf_actual": {
+        "table2_pool_done": {
+          "A10": 107002,
+          "A100-SXM4-80GB": 80101,
+          "GPU-series-1": 8221,
+          "GPU-series-2": 13606,
+          "H800": 4705,
+          "A800-SXM4-80GB": 3943
+        },
+        "table2_sum": 217578,
+        "table5": {
+          "C0": {
+            "a10_jct": 132.67621,
+            "all_jct": 93.333879,
+            "done": 217578,
+            "native_harm": 0,
+            "a10_harm": 0
+          },
+          "C1": {
+            "a10_jct": 120.303488,
+            "all_jct": 87.190138,
+            "done": 217822,
+            "native_harm": 0,
+            "a10_harm": 49772
+          },
+          "C2": {
+            "a10_jct": 134.809736,
+            "all_jct": 94.393293,
+            "done": 217529,
+            "native_harm": 0,
+            "a10_harm": 56422
+          },
+          "C3": {
+            "a10_jct": 124.12836,
+            "all_jct": 89.089399,
+            "done": 217809,
+            "native_harm": 0,
+            "a10_harm": 46803
+          },
+          "C4": {
+            "a10_jct": 129.670773,
+            "all_jct": 91.841513,
+            "done": 217621,
+            "native_harm": 0,
+            "a10_harm": 55465
+          }
+        }
+      },
+      "comparison": "Table 2 sum equals C0 completion count and every Table 5 row matches its case record."
+    },
+    "E1_allocation_denominator": {
+      "status": "PASS",
+      "source_field": "C1--C4 run_metadata.json metrics.physical A100-SXM4-80GB and A100-foreign gpu_allocation_rate_at_horizon",
+      "expected": {
+        "C1": {
+          "native_partition_rate": 0.7287703591177983,
+          "foreign_partition_rate": 0.682727447702332,
+          "native_full_pool_contribution": 0.6275522536847707,
+          "foreign_full_pool_contribution": 0.09482325662532388,
+          "weighted_all_rate": 0.7223755103100946,
+          "weighted_identity": true,
+          "partition_rates_in_pdf": true,
+          "full_contributions_in_pdf": true
+        },
+        "C2": {
+          "native_partition_rate": 0.7287703591177983,
+          "foreign_partition_rate": 0.6694789657278807,
+          "native_full_pool_contribution": 0.6275522536847707,
+          "foreign_full_pool_contribution": 0.09298318968442787,
+          "weighted_all_rate": 0.7205354433691986,
+          "weighted_identity": true,
+          "partition_rates_in_pdf": true,
+          "full_contributions_in_pdf": true
+        },
+        "C3": {
+          "native_partition_rate": 0.7287703591177983,
+          "foreign_partition_rate": 0.4492318029835391,
+          "native_full_pool_contribution": 0.6275522536847707,
+          "foreign_full_pool_contribution": 0.06239330596993598,
+          "weighted_all_rate": 0.6899455596547067,
+          "weighted_identity": true,
+          "partition_rates_in_pdf": true,
+          "full_contributions_in_pdf": true
+        },
+        "C4": {
+          "native_partition_rate": 0.7287703591177983,
+          "foreign_partition_rate": 0.6284135288065844,
+          "native_full_pool_contribution": 0.6275522536847707,
+          "foreign_full_pool_contribution": 0.08727965677869227,
+          "weighted_all_rate": 0.7148319104634631,
+          "weighted_identity": true,
+          "partition_rates_in_pdf": true,
+          "full_contributions_in_pdf": true
+        }
+      },
+      "pdf_actual_quote": "Partition-own rates are computed within each partition; full-pool contributions satisfy U_all=(2976 U_native + 480 U_foreign)/3456.",
+      "comparison": "Partition-own rates and full-pool contributions are labeled separately and capacity-weighted totals agree."
+    },
+    "C_gang_wording": {
+      "status": "PASS",
+      "source_field": "r2_q2.tex generated source",
+      "pdf_actual_quote": "Multiple-worker jobs may wait ... HOL can allow free slots to accumulate ... not a starvation-free guarantee."
+    },
+    "C_decomposition": {
+      "status": "PASS",
+      "source_field": "formal A10 accounting JSON used in R2 metrics",
+      "expected": "32.9064540350 = 22.3179305700 + 8.3361103922 + 2.2524130728",
+      "pdf_actual": "32.9064540350 = 22.3179305700 + 8.3361103922 + 2.2524130728"
+    },
+    "font_and_layout": {
+      "status": "PASS",
+      "source_field": "final PDF pdftohtml XML and page render",
+      "expected": "11pt body/header/footer; A4; <=10 pages; figure text checked at final embedded size",
+      "pdf_actual": {
+        "pages": 8,
+        "body_header_pdf_units": 16,
+        "figure_pdf_units": [
+          17,
+          12,
+          9
+        ],
+        "visual_pages": "1--8 inspected",
+        "compile_warning": "inputenc ignored with utf8 based engines"
+      },
+      "comparison": "Body and header/footer use the 11pt class/header setting; figure embedded sizes are recorded separately, with mathematical subscripts excluded from the body-size check."
+    }
+  },
+  "modified_sources": [
+    "problems/2026_gpu_scheduling/paper/output/document_paper_content_r2.tex",
+    "problems/2026_gpu_scheduling/paper/output/r2_preamble.tex",
+    "problems/2026_gpu_scheduling/paper/output/r2_q2.tex",
+    "problems/2026_gpu_scheduling/paper/output/r2_q3.tex",
+    "problems/2026_gpu_scheduling/paper/output/generated_q3_case_table.tex",
+    "results/20261019-paper-content-r2-correctness-patch/verify_correctness_patch.py"
+  ],
+  "manual_review": [
+    "Team identity and final human wording/sign-off remain pending; no identity was inferred.",
+    "Figure text is readable in final renders; plot-native embedded font sizes are recorded separately from body/header/footer size."
+  ]
+}

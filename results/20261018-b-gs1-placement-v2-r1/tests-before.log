@@ -1,0 +1,167 @@
+test_fallback_tie (test_gs1_revision.RevisionChecks.test_fallback_tie) ... FAIL
+test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) ...
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='duplicate_pair') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='duration') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='fraction') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_cpu') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_gpu') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_worker') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_submit') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_duration') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='nan') ... ERROR
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='missing_column') ... FAIL
+  test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='unknown_node') ... ERROR
+test_valid_same_time_release (test_gs1_revision.RevisionChecks.test_valid_same_time_release) ... ok
+
+======================================================================
+ERROR: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='nan')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+                     ^^^^^^^^^^^^^^^^^^^^
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 27, in replay
+    return replay_ledger(nodes,jobs,t,l)['status']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/experiments/run_gs1_placement_matrix.py", line 112, in replay_ledger
+    [(int(r.start), 1, int(r.job_name)) for r in times.itertuples()])
+      ^^^^^^^^^^^^
+ValueError: cannot convert float NaN to integer
+
+======================================================================
+ERROR: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='unknown_node')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+                     ^^^^^^^^^^^^^^^^^^^^
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 27, in replay
+    return replay_ledger(nodes,jobs,t,l)['status']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/experiments/run_gs1_placement_matrix.py", line 126, in replay_ledger
+    i = node_index[int(node)]
+        ~~~~~~~~~~^^^^^^^^^^^
+KeyError: 99
+
+======================================================================
+FAIL: test_fallback_tie (test_gs1_revision.RevisionChecks.test_fallback_tie)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 14, in test_fallback_tie
+    self.assertEqual(p.nodes, ((0,1),))
+AssertionError: Tuples differ: ((1, 1),) != ((0, 1),)
+
+First differing element 0:
+(1, 1)
+(0, 1)
+
+- ((1, 1),)
+?   ^
+
++ ((0, 1),)
+?   ^
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='duplicate_pair')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='duration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='fraction')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_cpu')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_gpu')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_worker')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_submit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='raw_duration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+======================================================================
+FAIL: test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) (fault='missing_column')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/shiuhou/mm/math_modeling-b-gang-placement/problems/2026_gpu_scheduling/tests/test_gs1_revision.py", line 49, in test_fault_injection
+    self.assertEqual(self.replay(n,j,t,l), 'FAIL')
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.071s
+
+FAILED (failures=10, errors=2)

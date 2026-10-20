@@ -1,0 +1,289 @@
+{
+  "schema_version": 1,
+  "candidate": "V2 bounded integration candidate",
+  "base_paper_v1": "problems/2026_gpu_scheduling/paper/output/pdf/problem_b_baseline_v1.pdf",
+  "fixed_main": "8f2e99ccae31c9559fa726884fda2637d1c0f921",
+  "baseline_tag": "2026-mcm-b-baseline-v1 -> 4ee2c6bfa98cf7177ff976abe73b122889437f46",
+  "source_commits": {
+    "q1_gs1_formal": "ffdcc7609969094bc1ceaeef650d99b0beae8208",
+    "q2": "fcd7bafdb002221b42e11ce8ba2dbcfe57fcd0cd",
+    "q3": "56ea09021d5ad5088ad5ed7242d8fab0c3115667",
+    "v2_integration": "generated at commit time"
+  },
+  "raw_inputs": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "chapters": {
+    "q1": {
+      "file": "paper/q1_section.tex",
+      "fixed_commit": "7075317883808b1cd7f80cadf3980be291c69cf0",
+      "role": "formal Q1 evidence; unchanged"
+    },
+    "q2": {
+      "file": "paper/q2_section.tex",
+      "fixed_commit": "fcd7bafdb002221b42e11ce8ba2dbcfe57fcd0cd",
+      "role": "formal Q2 evidence; unchanged"
+    },
+    "q3": {
+      "file": "paper/q3_section.tex",
+      "fixed_commit": "56ea09021d5ad5088ad5ed7242d8fab0c3115667",
+      "role": "formal Q3 candidate evidence; bounded claims"
+    },
+    "v2_runtime": {
+      "file": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+      "role": "seven fresh merged-runtime cases; exact per-ID/resource/placement comparisons"
+    },
+    "q2_replay": {
+      "file": "results/20261019-b-v2-integration-candidate/q2_persisted_replay.json",
+      "role": "14 read-only persisted artifact validations; LOCAL_ONLY"
+    }
+  },
+  "paper_candidate": {
+    "tex": "paper/output/document_v2_candidate.tex",
+    "pdf": "paper/output/pdf/problem_b_v2_candidate.pdf",
+    "sha256": "6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92",
+    "pages": 9,
+    "page_size": "A4",
+    "compiler": "Tectonic 0.17.0",
+    "visual_preview": "/tmp/v2preview-20261019/page-1.png ... page-9.png"
+  },
+  "limits": [
+    "No new scheduler, parameter search, or full-trace claim",
+    "Q2 persisted artifacts remain local-only; original cross-machine replay remains unavailable",
+    "Substitution-v2 Candidate B is implementation-deferred",
+    "Team identity, human review, and final AI-use record require confirmation"
+  ],
+  "paper_content_r1": {
+    "status": "candidate",
+    "tex": "paper/output/document_paper_content_r1.tex",
+    "pdf": "paper/output/problem_b_paper_content_r1.pdf",
+    "pages": 6,
+    "page_size": "A4",
+    "font_size_pt": 11,
+    "compiler": "Tectonic 0.17.0",
+    "source_files": [
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/document_paper_content_r1.tex",
+        "bytes": 3733,
+        "sha256": "bb5d94e4c445ee81a3216e7506fff6678a2a38c9fd4b5670b2de35d58a33e9d9"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_preamble.tex",
+        "bytes": 1286,
+        "sha256": "db514b1ffd607f11130cccb4fa2d6b06725286a4b69c64e71d53497be37c8756"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_q1.tex",
+        "bytes": 4076,
+        "sha256": "bafaaa5fed49797c25fc253d9661b2cb497492db41814fcc24c9565a50392839"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_q2.tex",
+        "bytes": 5896,
+        "sha256": "29b8795bc219d12faea7f18056b504e4b8dccb5f52271f4ad3d5a8d17a33a53c"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_q3.tex",
+        "bytes": 4813,
+        "sha256": "3993fdf1cbe6e893117dac244016b1f2ec31ff7ef6857f07c1a4a2ddbfb38fcc"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r1.pdf",
+        "bytes": 212992,
+        "sha256": "fae37b0211e415de3669ba344c7094513b3984041f62ab065e510425bb236cbe"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_figures/fig1_demand.pdf",
+        "bytes": 13144,
+        "sha256": "21b1fa58ea404a9d765064bcfcf2345dfd867866a3e865bb6643ad90d6eade9e"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r1_figures/fig1_data_patterns.pdf",
+        "bytes": 39830,
+        "sha256": "a0559ea4a0ba072567197082072a4e161855efd68ab15d1cba75eff12a6f834b"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/figures/q3_donor_capacity_wait_tradeoff.png",
+        "bytes": 114120,
+        "sha256": "11d0e1cb5b6560bf74d340002dff929382bd35056840b44f35d4fe443eecd2e6"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/PAPER_CONTENT_R1_README.md",
+        "bytes": 1096,
+        "sha256": "007702bc53e67258959418165979f6bbe4e1564e28f21c670d5cd6595187855f"
+      }
+    ],
+    "mapping": "results/20261019-paper-content-r1/paper_content_mapping.md",
+    "old_candidate_preserved": true,
+    "old_candidate_pdf_sha256": "6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92"
+  },
+  "raw_input_comparison": "results/20261019-paper-content-r1/input_comparison.json",
+  "node_hash_source": "results/20261019-paper-content-r1/r1_metrics.json is generated from the actual formal node source; node_info_df.csv hash remains 1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+  "paper_content_r2": {
+    "status": "candidate",
+    "tex": "paper/output/document_paper_content_r2.tex",
+    "pdf": "paper/output/problem_b_paper_content_r2.pdf",
+    "sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f",
+    "pages": 7,
+    "page_size": "A4",
+    "font_size_pt": 11,
+    "compiler": "Tectonic 0.17.0",
+    "source_files": [
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/document_paper_content_r2.tex",
+        "bytes": 4120,
+        "sha256": "0a3aca6b787ef8ac08fb2913c5123959041fac8dfc0d3c427018ebe05c15a693"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_preamble.tex",
+        "bytes": 1286,
+        "sha256": "db514b1ffd607f11130cccb4fa2d6b06725286a4b69c64e71d53497be37c8756"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_q1.tex",
+        "bytes": 3939,
+        "sha256": "2cd2f829458656f165e22d9997acd76e19f3a9373f862f39a52a104db571ad4b"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_q2.tex",
+        "bytes": 9698,
+        "sha256": "8474e372de10bfed101adaf2f01254ad56a76724e4603390a7cceb6b155df79b"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_q3.tex",
+        "bytes": 5379,
+        "sha256": "9e37dacadeb176275c92b5ded9ba783b72ef63c1c81c2bb5ea4cc0e93fc1f9e5"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r2.pdf",
+        "bytes": 218110,
+        "sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/PAPER_CONTENT_R2_README.md",
+        "bytes": 947,
+        "sha256": "4c2f41fec89e61db884419a922f6a8058f303d4a577812b631f2a0f946c4afa6"
+      }
+    ],
+    "metrics": "results/20261019-paper-content-r2/r2_metrics.json",
+    "mapping": "results/20261019-paper-content-r2/r2_mapping.md",
+    "acceptance": "results/20261019-paper-content-r2/r2_acceptance.md",
+    "build_provenance": "results/20261019-paper-content-r2/r2_build_provenance.json",
+    "no_scheduler_or_replay_rerun": true,
+    "old_candidates_preserved": true,
+    "old_candidate_pdf_sha256": "6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92",
+    "notes": "C0 ratio placement is used for the Q2 six-pool table; C0--C4 are used for the Q3 substitution table. New numeric values are read-only post-processing of formal CSVs and saved schedules/ledgers."
+  },
+  "paper_content_r2_correctness_patch": {
+    "status": "candidate",
+    "base_head": "d6f10254bbc81a102420629496de2871e3a4b4e1",
+    "tex": "paper/output/document_paper_content_r2.tex",
+    "generated_q3_table": "paper/output/generated_q3_case_table.tex",
+    "pdf": "paper/output/problem_b_paper_content_r2_correctness_patch.pdf",
+    "sha256": "64a51ff48dab4d93e51129a3a7856abb864b96e013bc231fe433fb345a55c4f9",
+    "pages": 8,
+    "page_size": "A4",
+    "font_size_pt": 11,
+    "compiler": "Tectonic 0.17.0",
+    "source_files": [
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/document_paper_content_r2.tex",
+        "bytes": 4202,
+        "sha256": "f7101db6d8c2f4712be4cc5615f324e1be14a93aed9c1b966b20bfe4cf682f2b"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_preamble.tex",
+        "bytes": 1280,
+        "sha256": "a3f92e250306064ff812fe0ddc03e574b5cf844429b04b9f3fc9c73e26f528d4"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_q2.tex",
+        "bytes": 9954,
+        "sha256": "8cd09a7e7349b7a7d791fd8155c281905b6850c2dfdafb946cdd5d6a13ed7903"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/r2_q3.tex",
+        "bytes": 5005,
+        "sha256": "80b33cd5ffe87ebbd47dab41e349b02e0d431f6299667d0441b7db1f60e838dc"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/generated_q3_case_table.tex",
+        "bytes": 1941,
+        "sha256": "2222743a928c4e19af6df38de9c096aeb9cfb119d344ba8c37119667b804f52b"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/PAPER_CONTENT_R2_CORRECTNESS_PATCH_README.md",
+        "bytes": 953,
+        "sha256": "176ef862ae8aa7dcc81456aeb614b02c771bbbdc9bc1320eedeb6a1ca3674015"
+      },
+      {
+        "path": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r2_correctness_patch.pdf",
+        "bytes": 220585,
+        "sha256": "64a51ff48dab4d93e51129a3a7856abb864b96e013bc231fe433fb345a55c4f9"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/generate_q3_case_table.py",
+        "bytes": 4820,
+        "sha256": "b44ae614fbeb7ef625bf6e552a75dbba6ed7745f9027a0ec41ab87314e1fb02c"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/verify_correctness_patch.py",
+        "bytes": 12021,
+        "sha256": "0cb9bddec4ee1b7f17aa6ee9b05c4ee723b139adba043f196eb6d99ca43c69ba"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/old_r2_failures.json",
+        "bytes": 3664,
+        "sha256": "9609667f20a8ba32321ac8b1826ab7ed9080b258d9b9463b7892d3b6413a9eda"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/q3_case_metrics.json",
+        "bytes": 3205,
+        "sha256": "4ab29fb4136ddf9ea01ba1aa3800f6a880aa6ea09d8f443fc938a26f782f30d6"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/correctness_patch_acceptance.json",
+        "bytes": 12169,
+        "sha256": "6ae6894c220a4c297904782f2ba23ed44763e50d9bb60f978f15d57257cb4d18"
+      },
+      {
+        "path": "results/20261019-paper-content-r2-correctness-patch/page_review.md",
+        "bytes": 1876,
+        "sha256": "41aa1f2e3de7d3f75eac901b59039b1f84e123ee461b27868cd2371cb7029c18"
+      }
+    ],
+    "acceptance": "results/20261019-paper-content-r2-correctness-patch/correctness_patch_acceptance.json",
+    "page_review": "results/20261019-paper-content-r2-correctness-patch/page_review.md",
+    "old_r2_preserved": true,
+    "old_r2_pdf_sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f",
+    "no_scheduler_or_replay_rerun": true,
+    "notes": "All C0--C4 Table 5 JCT/completion values are generated from v2_runtime_equivalence.json case keys; allocation rates use partition-own and full-pool contribution labels separately."
+  },
+  "final_publication": {
+    "status": "READY_FOR_TEAM_REVIEW",
+    "source_commit": "618720013f6d45e2cec193c9f015cf7ebe224f03",
+    "tex": "problems/2026_gpu_scheduling/paper/final_publication/document.tex",
+    "pdf": {
+      "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Report.pdf",
+      "bytes": 124551,
+      "sha256": "f18bc18bd2ebb70f8af6a06dcb1feb076cd334ba426177f9d04608765390b3b0"
+    },
+    "code_zip": {
+      "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Code.zip",
+      "bytes": 473953,
+      "sha256": "037068a12f98cf6ff1b36db08edda273c048ead3e0d3320f3d2bb6ea3a207704"
+    },
+    "pages": 8,
+    "numeric_checks": "submission/20261020-final-publication/records/pdf_numeric_checks.json",
+    "manifest": "submission/20261020-final-publication/submission_manifest.json",
+    "identity": "confirmed user messages; public distribution authorized",
+    "human_review": "NOT_RUN",
+    "actually_submitted": "NOT_RUN",
+    "AI_disclosure": "user-supplied final wording",
+    "previous_review": "submission/20261020-final-publication/history/a8a0b92",
+    "code_source_commit": "76ace221463a8930ff4bd782e8744c1a24bb7113",
+    "code_compatibility_checks": "submission/20261020-final-publication/records/windows_compatibility/after/checks.json",
+    "previous_code_package": "submission/20261020-final-publication/history/216dd3c"
+  }
+}

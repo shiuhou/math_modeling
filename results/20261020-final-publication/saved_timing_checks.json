@@ -1,0 +1,193 @@
+{
+  "scope": "Read-only timing postprocessing; zero scheduler calls; zero ledger replay",
+  "C0_B2_cohort_equality": {
+    "A10": {
+      "jobs": 111284,
+      "fields": [
+        "submit_time",
+        "original_duration",
+        "worker_num",
+        "gpu_request",
+        "cpu_units",
+        "start",
+        "finish"
+      ],
+      "equal": true,
+      "canonical_sha256": "5df4bd7460cd8a683606b352e14575c603560bd1d400a390c98a2aff14813af1"
+    },
+    "A100-SXM4-80GB": {
+      "jobs": 80877,
+      "fields": [
+        "submit_time",
+        "original_duration",
+        "worker_num",
+        "gpu_request",
+        "cpu_units",
+        "start",
+        "finish"
+      ],
+      "equal": true,
+      "canonical_sha256": "f2da3e8dd5d198216653b9fd9210bcad4306dfb60024cbf1b8c910e2fe30c9f0"
+    }
+  },
+  "historical_M0_bridge": "Formal integration records verify B2 against M0 and C0 against the same non-GS1 reference. The added exact per-ID C0/B2 comparison is restricted to A10 and native A100; no full-cluster equivalence claimed.",
+  "B2_sha256": "f2733d615e1bf85986f52eacaf96b70e1482763cfca2dabfc6aae3745a247ad2",
+  "formal_source": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+  "formal_source_sha256": "305eb4d62db07068ed44fe32ec20aded14087876ceb926e65d525606bdc44451",
+  "records": [
+    {
+      "case": "C0",
+      "source": "outputs/v2-integration-runtime-20261019/C0/jobs.csv.gz",
+      "sha256": "add5d0a0d91eb0bec6f25e07b2c2f8ee7e5397529451b73c3207f4e402a0aea7",
+      "baseline": "C0",
+      "baseline_sha256": "add5d0a0d91eb0bec6f25e07b2c2f8ee7e5397529451b73c3207f4e402a0aea7",
+      "a10_later_finish_count": 0,
+      "native_a100_wait_increase_count": 0,
+      "historical_pair_match": true,
+      "historical_pair_source": "results/20261018-b-q3-v2-r1-6f2c8a10/paired.csv",
+      "historical_selector": {
+        "policy": "SJF-HOL",
+        "option": "M0",
+        "sigma": null,
+        "reference": "M0"
+      },
+      "allocation": {}
+    },
+    {
+      "case": "C1",
+      "source": "outputs/v2-integration-runtime-20261019/C1/jobs.csv.gz",
+      "sha256": "b43950db4fa028de4f84b5b397ace8108385cb2e3eb4a38c8bf780882b5140ef",
+      "baseline": "C0",
+      "baseline_sha256": "add5d0a0d91eb0bec6f25e07b2c2f8ee7e5397529451b73c3207f4e402a0aea7",
+      "a10_later_finish_count": 49772,
+      "native_a100_wait_increase_count": 0,
+      "historical_pair_match": true,
+      "historical_pair_source": "results/20261018-b-q3-v2-r1-6f2c8a10/paired.csv",
+      "historical_selector": {
+        "policy": "SJF-HOL",
+        "option": "R0",
+        "sigma": 1,
+        "reference": "M0"
+      },
+      "allocation": {
+        "A100-SXM4-80GB": {
+          "capacity": 2976,
+          "window_gpu_seconds": 16864748898,
+          "own_rate": 0.7287703591177983,
+          "full_pool_contribution": 0.6275522536847709,
+          "source_field": "sum(max(0,min(finish,H)-start)*worker_num*gpu_request)"
+        },
+        "A100-foreign": {
+          "capacity": 480,
+          "window_gpu_seconds": 2548266544,
+          "own_rate": 0.682727447702332,
+          "full_pool_contribution": 0.09482325662532388,
+          "source_field": "sum(max(0,min(finish,H)-start)*worker_num*gpu_request)"
+        },
+        "full_pool_rate": 0.7223755103100947
+      }
+    },
+    {
+      "case": "C2",
+      "source": "outputs/v2-integration-runtime-20261019/C2/jobs.csv.gz",
+      "sha256": "721b30d394823d571be54f6d0b8deb46362a935c9d576cdad28ad6144b10cba9",
+      "baseline": "C0",
+      "baseline_sha256": "add5d0a0d91eb0bec6f25e07b2c2f8ee7e5397529451b73c3207f4e402a0aea7",
+      "a10_later_finish_count": 56422,
+      "native_a100_wait_increase_count": 0,
+      "historical_pair_match": true,
+      "historical_pair_source": "results/20261018-b-q3-v2-r1-6f2c8a10/paired.csv",
+      "historical_selector": {
+        "policy": "SJF-HOL",
+        "option": "R0",
+        "sigma": 2,
+        "reference": "M0"
+      },
+      "allocation": {
+        "A100-SXM4-80GB": {
+          "capacity": 2976,
+          "window_gpu_seconds": 16864748898,
+          "own_rate": 0.7287703591177983,
+          "full_pool_contribution": 0.6275522536847709,
+          "source_field": "sum(max(0,min(finish,H)-start)*worker_num*gpu_request)"
+        },
+        "A100-foreign": {
+          "capacity": 480,
+          "window_gpu_seconds": 2498816850,
+          "own_rate": 0.6694789657278807,
+          "full_pool_contribution": 0.09298318968442787,
+          "source_field": "sum(max(0,min(finish,H)-start)*worker_num*gpu_request)"
+        },
+        "full_pool_rate": 0.7205354433691987
+      }
+    },
+    {
+      "case": "C3",
+      "source": "outputs/v2-integration-runtime-20261019/C3/jobs.csv.gz",
+      "sha256": "5ef578404f3c3015e87d0e31423166fca9c654dbabc716c1da4cb76ad72fdf1f",
+      "baseline": "C0",
+      "baseline_sha256": "add5d0a0d91eb0bec6f25e07b2c2f8ee7e5397529451b73c3207f4e402a0aea7",
+      "a10_later_finish_count": 46803,
+      "native_a100_wait_increase_count": 0,
+      "historical_pair_match": true,
+      "historical_pair_source": "results/20261018-b-q3-v2-r1-6f2c8a10/paired.csv",
+      "historical_selector": {
+        "policy": "SJF-HOL",
+        "option": "R-shape",
+        "sigma": 1,
+        "reference": "M0"
+      },
+      "allocation": {
+        "A100-SXM4-80GB": {
+          "capacity": 2976,
+          "window_gpu_seconds": 16864748898,
+          "own_rate": 0.7287703591177983,
+          "full_pool_contribution": 0.6275522536847709,
+          "source_field": "sum(max(0,min(finish,H)-start)*worker_num*gpu_request)"
+        },
+        "A100-foreign": {
+          "capacity": 480,
+          "window_gpu_seconds": 1676748720,
+          "own_rate": 0.4492318029835391,
+          "full_pool_contribution": 0.06239330596993599,
+          "source_field": "sum(max(0,min(finish,H)-start)*worker_num*gpu_request)"
+        },
+        "full_pool_rate": 0.6899455596547068
+      }
+    },
+    {
+      "case": "C4",
+      "source": "outputs/v2-integration-runtime-20261019/C4/jobs.csv.gz",
+      "sha256": "074ee55eca6ddc828e51f2cba6de90c8dd0c4cde4673f62183703b3969a30e12",
+      "baseline": "C0",
+      "baseline_sha256": "add5d0a0d91eb0bec6f25e07b2c2f8ee7e5397529451b73c3207f4e402a0aea7",
+      "a10_later_finish_count": 55465,
+      "native_a100_wait_increase_count": 0,
+      "historical_pair_match": true,
+      "historical_pair_source": "results/20261018-b-q3-v2-r1-6f2c8a10/paired.csv",
+      "historical_selector": {
+        "policy": "SJF-HOL",
+        "option": "R-shape",
+        "sigma": 2,
+        "reference": "M0"
+      },
+      "allocation": {
+        "A100-SXM4-80GB": {
+          "capacity": 2976,
+          "window_gpu_seconds": 16864748898,
+          "own_rate": 0.7287703591177983,
+          "full_pool_contribution": 0.6275522536847709,
+          "source_field": "sum(max(0,min(finish,H)-start)*worker_num*gpu_request)"
+        },
+        "A100-foreign": {
+          "capacity": 480,
+          "window_gpu_seconds": 2345540928,
+          "own_rate": 0.6284135288065844,
+          "full_pool_contribution": 0.08727965677869227,
+          "source_field": "sum(max(0,min(finish,H)-start)*worker_num*gpu_request)"
+        },
+        "full_pool_rate": 0.7148319104634631
+      }
+    }
+  ]
+}

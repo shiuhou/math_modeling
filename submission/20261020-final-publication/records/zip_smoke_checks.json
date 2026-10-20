@@ -1,0 +1,97 @@
+{
+  "zip_sha256": "037068a12f98cf6ff1b36db08edda273c048ead3e0d3320f3d2bb6ea3a207704",
+  "zip_bytes": 473953,
+  "members": 181,
+  "status": "PASS",
+  "clean_extraction": "PASS",
+  "manifest_member_hashes": "PASS",
+  "repository_source_hashes": "PASS",
+  "code_supplement_source_commit": "76ace221463a8930ff4bd782e8744c1a24bb7113",
+  "publication_source_commit": "618720013f6d45e2cec193c9f015cf7ebe224f03",
+  "environment": "Linux; previously verified standalone venv; fresh ZIP extraction; blocked resource import reproduces the Windows failure mode",
+  "native_windows_test": "NOT_RUN",
+  "existing_small_tests": 31,
+  "synthetic_CLI_cases": [
+    {
+      "case": "C0",
+      "jobs": 5
+    },
+    {
+      "case": "C3",
+      "jobs": 5
+    },
+    {
+      "case": "full-A1",
+      "jobs": 2
+    }
+  ],
+  "checks": [
+    {
+      "check": "evidence_lf",
+      "command": [
+        "python",
+        "-I",
+        "check_evidence.py"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "log": "evidence_lf.log"
+    },
+    {
+      "check": "evidence_crlf",
+      "command": [
+        "python",
+        "-I",
+        "check_evidence.py"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "log": "evidence_crlf.log"
+    },
+    {
+      "check": "changed_value_rejected",
+      "command": [
+        "python",
+        "-I",
+        "check_evidence.py"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "status": "PASS",
+      "log": "changed_value_rejected.log"
+    },
+    {
+      "check": "smoke_without_resource",
+      "command": [
+        "python",
+        "-I",
+        "-c",
+        "\nimport importlib.abc\nimport runpy\nimport sys\nclass NoResource(importlib.abc.MetaPathFinder):\n    def find_spec(self, fullname, path=None, target=None):\n        if fullname == 'resource':\n            raise ModuleNotFoundError(\"Simulated Windows: no resource module\", name='resource')\nsys.modules.pop('resource', None)\nsys.meta_path.insert(0, NoResource())\nrunpy.run_path('smoke.py', run_name='__main__')\n"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "log": "smoke_without_resource.log"
+    },
+    {
+      "check": "cli_help",
+      "command": [
+        "python",
+        "-I",
+        "reproduce.py",
+        "--help"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "log": "cli_help.log"
+    }
+  ],
+  "logs": "windows_compatibility/after",
+  "regression_before": "windows_compatibility/before/checks.json",
+  "package_comparison": "windows_compatibility/package_comparison.json",
+  "full_trace_executed": false,
+  "historical_replay_executed": false
+}

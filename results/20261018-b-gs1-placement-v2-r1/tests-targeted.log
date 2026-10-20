@@ -1,0 +1,10 @@
+test_fallback_tie (test_gs1_revision.RevisionChecks.test_fallback_tie) ... ok
+test_fault_injection (test_gs1_revision.RevisionChecks.test_fault_injection) ... ok
+test_ff_matches_source_commit_small (test_gs1_revision.RevisionChecks.test_ff_matches_source_commit_small) ... ok
+test_numeric_node_names_and_ff_order (test_gs1_revision.RevisionChecks.test_numeric_node_names_and_ff_order) ... ok
+test_valid_same_time_release (test_gs1_revision.RevisionChecks.test_valid_same_time_release) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.118s
+
+OK

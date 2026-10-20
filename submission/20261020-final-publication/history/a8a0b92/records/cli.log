@@ -1,0 +1,11 @@
+usage: reproduce.py [-h] --case {B1,B2,C0,C1,C2,C3,C4,full-H1,full-A1,full-C1}
+                    --data DATA --output OUTPUT
+
+Portable packaging adapter to unchanged research functions; explicit
+input/output.
+
+options:
+  -h, --help            show this help message and exit
+  --case {B1,B2,C0,C1,C2,C3,C4,full-H1,full-A1,full-C1}
+  --data DATA           Official CSV directory (or synthetic smoke fixture)
+  --output OUTPUT       New directory

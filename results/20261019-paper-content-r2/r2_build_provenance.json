@@ -1,0 +1,39 @@
+{
+  "candidate": "Paper Content R2",
+  "status": "candidate",
+  "tex": "problems/2026_gpu_scheduling/paper/output/document_paper_content_r2.tex",
+  "pdf": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r2.pdf",
+  "pdf_sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f",
+  "pages": 7,
+  "page_size": "595.28 x 841.89 pts (A4)",
+  "font_size_pt": 11,
+  "compiler": "Tectonic 0.17.0",
+  "source_sha256": {
+    "problems/2026_gpu_scheduling/paper/output/document_paper_content_r2.tex": "0a3aca6b787ef8ac08fb2913c5123959041fac8dfc0d3c427018ebe05c15a693",
+    "problems/2026_gpu_scheduling/paper/output/r2_preamble.tex": "db514b1ffd607f11130cccb4fa2d6b06725286a4b69c64e71d53497be37c8756",
+    "problems/2026_gpu_scheduling/paper/output/r2_q1.tex": "2cd2f829458656f165e22d9997acd76e19f3a9373f862f39a52a104db571ad4b",
+    "problems/2026_gpu_scheduling/paper/output/r2_q2.tex": "8474e372de10bfed101adaf2f01254ad56a76724e4603390a7cceb6b155df79b",
+    "problems/2026_gpu_scheduling/paper/output/r2_q3.tex": "9e37dacadeb176275c92b5ded9ba783b72ef63c1c81c2bb5ea4cc0e93fc1f9e5"
+  },
+  "supporting_sha256": {
+    "problems/2026_gpu_scheduling/paper/output/PAPER_CONTENT_R2_README.md": "4c2f41fec89e61db884419a922f6a8058f303d4a577812b631f2a0f946c4afa6",
+    "results/20261019-paper-content-r2/r2_metrics.json": "3b457c413929cf6b37e5b1d7d19bf196cd1211b6f99744c3924ab401ec23bc3d",
+    "results/20261019-paper-content-r2/r2_mapping.md": "7696d9a83baa5efbbe95d75215ed0fc9230553ee5820dec5864d98554b6cf801",
+    "results/20261019-paper-content-r2/r2_acceptance.md": "1333a4df8a59c5dc4da6f6b9720f09d7e6102392e20a7a23418d6b2ae4b1c472"
+  },
+  "verification": {
+    "scheduler_rerun": false,
+    "persisted_replay_rerun": false,
+    "new_values": "read-only post-processing of formal raw CSVs and saved schedules/ledgers",
+    "pdfinfo": "PASS: 7 pages, A4",
+    "visual_review": "PASS: pages 1--7 rendered and inspected; temporary render files removed before delivery",
+    "text_scan": "PASS: no commit, BOM, ZIP, version-history, branch/path, or Candidate B wording in PDF",
+    "table_caption_check": "PASS: visible table columns agree with captions and cited data",
+    "team_identity_human_signoff": "PENDING; no names inferred"
+  },
+  "preserved": {
+    "r1_pdf": "problems/2026_gpu_scheduling/paper/output/problem_b_paper_content_r1.pdf",
+    "historical_v2_pdf_sha256": "6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92",
+    "v1_pdf_sha256": "6de1fcfcd452be5bee0017a8b4e54d6c0e5247cd38aec13b14ae5298c538d9aa"
+  }
+}

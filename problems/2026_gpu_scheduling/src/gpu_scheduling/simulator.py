@@ -16,22 +16,23 @@ from typing import Iterable
 import numpy as np
 import pandas as pd
 
-from .placement import PlacementPlan, apply_plan, check_plan, plan_first_fit, slots
+from .placement import PlacementPlan, apply_plan, check_plan, plan_first_fit, plan_ratio_matching, slots
 from .validation import validate
 
 POLICY_ALIASES = {
     "FCFS": "FCFS-HOL", "SJF-HOL": "SPT-HOL", "FCFS-HOL": "FCFS-HOL",
     "SPT-HOL": "SPT-HOL", "SPT-FILL": "SPT-FILL", "SGW-FILL": "SGW-FILL",
+    "SPT-HEAD-TIME": "SPT-HEAD-TIME",
     "EASY-TIME": "EASY-TIME", "EASY-NR": "EASY-NR",
     "SPT-URGENT-HOL": "SPT-URGENT-HOL", "SPT-URGENT-TIME": "SPT-URGENT-TIME",
     "SPT-URGENT-FIXED": "SPT-URGENT-FIXED", "SPT-URGENT-FLEX": "SPT-URGENT-FLEX",
 }
 M1_POLICIES = frozenset(POLICY_ALIASES.values()) - {"FCFS-HOL", "SPT-HOL"}
-FILL_POLICIES = frozenset({"SPT-FILL", "SGW-FILL", "EASY-TIME", "EASY-NR", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX"})
+FILL_POLICIES = frozenset({"SPT-FILL", "SGW-FILL", "EASY-TIME", "EASY-NR", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX", "SPT-HEAD-TIME"})
 URGENT_POLICIES = frozenset({"SPT-URGENT-HOL", "SPT-URGENT-TIME", "SPT-URGENT-FIXED", "SPT-URGENT-FLEX"})
 FLEX_POLICIES = frozenset({"EASY-NR", "SPT-URGENT-FLEX"})
 FIXED_POLICIES = frozenset({"SPT-URGENT-FIXED"})
-TIME_POLICIES = frozenset({"EASY-TIME", "SPT-URGENT-TIME"})
+TIME_POLICIES = frozenset({"EASY-TIME", "SPT-URGENT-TIME", "SPT-HEAD-TIME"})
 EVENT_MODES = frozenset({"arrival-completion-only", "shared-timer"})
 
 
@@ -68,25 +69,37 @@ def _snapshot_hash(gpu, cpu) -> str:
 
 
 class _CurrentPlacementCache:
-    """Memoize pure FF-id plans for one unchanged current resource state.
+    """Memoize pure placement plans for one unchanged current resource state.
 
-    Demand, rather than job ID/duration, determines current placement. Both
+    Demand, rather than job ID/duration, determines current placement. The
+    strategy and physical node order are part of the cache identity. Both
     successful and unsuccessful plans are reusable until ANY allocation or
     release. Reservation projections/certificates never use this cache.
     """
 
-    def __init__(self, free_g, free_c):
+    def __init__(self, free_g, free_c, *, strategy="ff-id", order=None, capacity_g=None, capacity_c=None):
         self.free_g, self.free_c = free_g, free_c
-        self.plans: dict[tuple[int, int, int], PlacementPlan | None] = {}
+        self.strategy = str(strategy)
+        self.order = tuple(range(len(free_g)) if order is None else order)
+        self.capacity_g = np.asarray(free_g if capacity_g is None else capacity_g, dtype=np.int64)
+        self.capacity_c = np.asarray(free_c if capacity_c is None else capacity_c, dtype=np.int64)
+        self.plans: dict[tuple[str, tuple[int, ...], int, int, int], PlacementPlan | None] = {}
         self.hits = self.misses = self.peak_entries = 0
 
     def get(self, q: int, c: int, workers: int) -> PlacementPlan | None:
-        key = (q, c, workers)
+        key = (self.strategy, self.order, q, c, workers)
         if key in self.plans:
             self.hits += 1
             return self.plans[key]
         self.misses += 1
-        plan = plan_first_fit(self.free_g, self.free_c, q, c, workers)
+        if self.strategy == "ff-id":
+            plan = plan_first_fit(self.free_g, self.free_c, q, c, workers, self.order)
+        elif self.strategy == "ratio":
+            plan = plan_ratio_matching(self.free_g, self.free_c, q, c, workers,
+                                       capacity_g=self.capacity_g, capacity_c=self.capacity_c,
+                                       order=self.order)
+        else:
+            raise ValueError(f"unknown placement strategy: {self.strategy}")
         self.plans[key] = plan
         self.peak_entries = max(self.peak_entries, len(self.plans))
         return plan
@@ -103,6 +116,9 @@ def simulate_pool(
     theta_seconds: int = 4_860_000,
     reservation_k: int = 200,
     event_mode: str = "shared-timer",
+    diagnostics: bool = True,
+    placement: str = "ff-id",
+    node_order: Iterable[int] | None = None,
     progress=None,
 ) -> dict:
     """Simulate one GPU-model pool with node-local gang placement.
@@ -117,6 +133,8 @@ def simulate_pool(
         raise ValueError("theta_seconds must be nonnegative and K must be positive")
     if event_mode not in EVENT_MODES:
         raise ValueError(f"unknown event_mode: {event_mode}")
+    if placement not in {"ff-id", "ratio"}:
+        raise ValueError(f"unknown placement strategy: {placement}")
     nodes = nodes.sort_values("node_name", kind="stable").reset_index(drop=True)
     jobs = jobs.sort_values(["submit_time", "job_name"], kind="stable").reset_index(drop=True)
     if nodes.empty or jobs.empty:
@@ -138,7 +156,11 @@ def simulate_pool(
             raise ValueError("Job infeasible on an empty pool; no jobs were dropped")
 
     free_g, free_c = capg.copy(), capc.copy()
-    placement_cache = _CurrentPlacementCache(free_g, free_c)
+    order = tuple(range(len(nodes))) if node_order is None else tuple(int(i) for i in node_order)
+    if sorted(order) != list(range(len(nodes))):
+        raise ValueError("node_order must be a permutation of node indices")
+    placement_cache = _CurrentPlacementCache(
+        free_g, free_c, strategy=placement, order=order, capacity_g=capg, capacity_c=capc)
     starts = np.full(n, -1, dtype=np.int64)
     ends = np.full(n, -1, dtype=np.int64)
     plans: list[list[tuple[int, int]] | None] = [None] * n
@@ -150,6 +172,11 @@ def simulate_pool(
     running: dict[int, tuple[int, list[tuple[int, int]]]] = {}
     arrivals = finished = decisions = peak_queue = bypass_checks_total = 0
     order_builds = 0
+    dispatch_timestamps = 0
+    candidate_attempts = 0
+    unique_candidate_ids: set[int] = set()
+    repeated_candidate_attempts = 0
+    budget_exhausted = 0
     crossing_accepted = crossing_rejected = certificate_updates = reservation_rejects = 0
     protected_hol_blocked = protected_hol_fastpath = protected_hol_commits = 0
     state_version = 0
@@ -166,6 +193,12 @@ def simulate_pool(
     def current_plan(j: int) -> PlacementPlan | None:
         return placement_cache.get(int(reqg[j]), int(reqc[j]), int(workers[j]))
 
+    def make_plan(free_gpu, free_cpu, q, c, w):
+        if placement == "ff-id":
+            return plan_first_fit(free_gpu, free_cpu, q, c, w, order)
+        return plan_ratio_matching(free_gpu, free_cpu, q, c, w,
+                                   capacity_g=capg, capacity_c=capc, order=order)
+
     def build_reservation(protected: int, now: int) -> bool:
         nonlocal reservation, state_version
         if reservation is not None or current_plan(protected) is not None:
@@ -180,7 +213,7 @@ def simulate_pool(
         for candidate_r in sorted(groups):
             for j in groups[candidate_r]:
                 _release(projected_g, projected_c, capg, capc, j, running[j][1], reqg, reqc)
-            candidate = plan_first_fit(projected_g, projected_c, int(reqg[protected]), int(reqc[protected]), int(workers[protected]))
+            candidate = make_plan(projected_g, projected_c, int(reqg[protected]), int(reqc[protected]), int(workers[protected]))
             if candidate is not None:
                 chosen_r, witness = candidate_r, candidate
                 break
@@ -272,7 +305,7 @@ def simulate_pool(
             future_g, future_c = _future_after_crossing(j, plan)
             if np.all(future_g >= 0) and np.all(future_c >= 0):
                 head = int(reservation["protected_job"])
-                witness = plan_first_fit(future_g, future_c, int(reqg[head]), int(reqc[head]), int(workers[head]))
+                witness = make_plan(future_g, future_c, int(reqg[head]), int(reqc[head]), int(workers[head]))
                 if witness is not None:
                     return {"plan": plan, "mode": "flex", "crossing": True,
                             "future_g": future_g, "future_c": future_c,
@@ -285,7 +318,7 @@ def simulate_pool(
         future_c = np.asarray(reservation["future_free_at_R"]["cpu"], dtype=np.int64)
         effective_g = np.minimum(free_g, future_g - z_g)
         effective_c = np.minimum(free_c, future_c - z_c)
-        fixed_plan = plan_first_fit(effective_g, effective_c, int(reqg[j]), int(reqc[j]), int(workers[j]))
+        fixed_plan = make_plan(effective_g, effective_c, int(reqg[j]), int(reqc[j]), int(workers[j]))
         if fixed_plan is None:
             crossing_rejected += 1
             reservation_rejects += 1
@@ -401,7 +434,9 @@ def simulate_pool(
 
     def dispatch(now: int) -> None:
         nonlocal decisions, bypass_checks_total, peak_queue, order_builds
+        nonlocal dispatch_timestamps, candidate_attempts, repeated_candidate_attempts, budget_exhausted
         nonlocal protected_hol_blocked, protected_hol_fastpath, protected_hol_commits
+        dispatch_timestamps += 1
         if policy in ("FCFS-HOL", "SPT-HOL"):
             while waiting:
                 j = waiting[0] if policy == "FCFS-HOL" else waiting[0][3]
@@ -476,10 +511,16 @@ def simulate_pool(
                 # scan. Protected heads are handled above and are never here.
                 if bypass_mode and attempts >= reservation_k:
                     event("budget_exhausted", now, K=int(reservation_k))
+                    budget_exhausted += 1
                     return
                 if bypass_mode:
                     attempts += 1
                     bypass_checks_total += 1
+                    candidate_attempts += 1
+                    if diagnostics:
+                        if j in unique_candidate_ids:
+                            repeated_candidate_attempts += 1
+                        unique_candidate_ids.add(int(j))
                 decisions += 1
                 seen.add(j)
                 proposal = safe_plan(j, now)
@@ -496,6 +537,12 @@ def simulate_pool(
                         blocked = False
                         continue
                     urgent_head = j in urgent
+                    if policy == "SPT-HEAD-TIME" and reservation is None and j == ordered[0]:
+                        build_reservation(j, now)
+                        # The protected SPT head is exempt from K.  Continue
+                        # this same timestamp to inspect only safe backfill.
+                        blocked = False
+                        continue
                     if policy in URGENT_POLICIES and urgent_head and reservation is None:
                         build_reservation(j, now)
                         blocked = policy == "SPT-URGENT-HOL"
@@ -574,7 +621,8 @@ def simulate_pool(
         "feasibility_checks": int(decisions), "peak_queue": int(peak_queue),
         "policy": policy, "policy_input": requested_policy,
         "theta_seconds": int(theta_seconds), "reservation_k": int(reservation_k),
-        "event_mode": event_mode,
+        "event_mode": event_mode, "placement": placement,
+        "node_order": [int(x) for x in order],
         "reservation_evidence_schema_version": 2,
         "reservations": reservations, "events": events,
         "cost": {"planner_calls": int(decisions), "candidate_checks": int(decisions),
@@ -582,7 +630,12 @@ def simulate_pool(
                  "current_plan_evaluations": int(placement_cache.misses),
                  "current_plan_cache_peak_entries": int(placement_cache.peak_entries),
                  "order_builds": int(order_builds),
+                 "dispatch_timestamps": int(dispatch_timestamps),
                  "bypass_candidate_checks": int(bypass_checks_total),
+                 "candidate_attempts": int(candidate_attempts),
+                 "unique_candidate_ids": int(len(unique_candidate_ids)) if diagnostics else None,
+                 "repeated_candidate_attempts": int(repeated_candidate_attempts) if diagnostics else None,
+                 "budget_exhausted": int(budget_exhausted),
                  "protected_hol_blocked": int(protected_hol_blocked),
                  "protected_hol_fastpath": int(protected_hol_fastpath),
                  "protected_hol_commits": int(protected_hol_commits),

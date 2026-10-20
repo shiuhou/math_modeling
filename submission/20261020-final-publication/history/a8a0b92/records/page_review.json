@@ -1,0 +1,85 @@
+{
+  "pdf_sha256": "515e7ab33ba27452f79f8c52a9825971b2d5cef1482956950c65c1f395b62b26",
+  "pages": [
+    {
+      "page": 1,
+      "render_sha256": "9b630059458a584b3e1e8b6f572a6fdbbfc8f4162e61ed15a2b9c57861d8f42d",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Confirmed names/order, institution, abstract and Table 1; no clipping.",
+      "final_render_matches_inspected_render": true
+    },
+    {
+      "page": 2,
+      "render_sha256": "b3b635f57aba3f20bcc7faf811eb9f76a1d6e0243a7ca1a2706f5099923b84fd",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Demand and distribution figures; full-size decimal axis ticks and clear legends.",
+      "final_render_matches_inspected_render": true
+    },
+    {
+      "page": 3,
+      "render_sha256": "754b8bc47e1b92efaf18bc18385b127af1cfa47a4acfde491ecad022f07919b3",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Algorithm 1, resource constraints, gang condition, Table 2 and window note.",
+      "final_render_matches_inspected_render": true
+    },
+    {
+      "page": 4,
+      "render_sha256": "a2a34e2f1898c453ba29ea1c561b57bdf42c974c100ec51c9f804daaa6c9da66",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Lower-bound equations and accounting equality; Tables 3/4 readable at full size.",
+      "final_render_matches_inspected_render": true
+    },
+    {
+      "page": 5,
+      "render_sha256": "9a501d2b7d1199973840f3b816426b82359f2640ebeaebf06289b62f09f60670",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "GS1 optimum, HEAD-TIME, Q3 assumptions and Table 5(a) including A10 wait.",
+      "final_render_matches_inspected_render": true
+    },
+    {
+      "page": 6,
+      "render_sha256": "2e68ff2ea9fd6e24423315a7e964e46d351c9782912377cc858d09a7ce7dd167",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Table 5(b), explicit harm baseline, scenario comparisons and allocation denominators.",
+      "final_render_matches_inspected_render": true
+    },
+    {
+      "page": 7,
+      "render_sha256": "588be2180136362249a7e0a9480efe1b86544248b101eeabcc637d2a6bc85975",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "Figure 3 two-line native A100 axis label fully visible; negative cases, limits, references.",
+      "final_render_matches_inspected_render": true
+    },
+    {
+      "page": 8,
+      "render_sha256": "81327a582a3a7f632d6eca079cec026b75e2932678a55c1edf567743b3c31fd4",
+      "render": "Poppler pdftoppm -r 110 -png",
+      "review": "PASS",
+      "reviewer_type": "Codex visual inspection, not team human signoff",
+      "note": "References continue; complete Use of AI Tools section is last; no signoff claimed.",
+      "final_render_matches_inspected_render": true
+    }
+  ],
+  "ordinary_minimum_pdf_points": 11.058536529541016,
+  "math_scripts": "Only individually enumerated Computer Modern sub/superscripts are exempt. All figure ticks and legends are >=11 pt.",
+  "defects_resolved": [
+    "Reset table/caption type sizes fixed to >=11 actual PDF points; main math fonts made scalable.",
+    "Figure 2 log ticks use full-size decimal labels.",
+    "Figure 3 long rotated label was clipped in the first render; wrapped and recompiled."
+  ],
+  "human_review": "NOT_RUN"
+}

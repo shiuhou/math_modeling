@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "before_zip_sha256": "cca1b87de65e7b3aa99269daeea880dd53bc40f3edaaa4916a9ad9c2bf59d24e",
+  "after_zip_sha256": "037068a12f98cf6ff1b36db08edda273c048ead3e0d3320f3d2bb6ea3a207704",
+  "changed_members": [
+    "README.md",
+    "check_evidence.py",
+    "package_manifest.json",
+    "problems/2026_gpu_scheduling/experiments/analyze_m2f_bounds.py",
+    "problems/2026_gpu_scheduling/paper/final_publication/generate.py"
+  ],
+  "unchanged_core_files": [
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/__init__.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/audit.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/data.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/evaluation.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/placement.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q1_publication.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3_v2.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/q3_validation.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/simulator.py",
+    "problems/2026_gpu_scheduling/src/gpu_scheduling/validation.py"
+  ],
+  "all_packaged_member_hashes": "PASS",
+  "all_repository_source_hashes": "PASS",
+  "formal_evidence_and_generated_tex": "BYTE_IDENTICAL",
+  "PDF": "BYTE_IDENTICAL",
+  "native_windows_test": "NOT_RUN"
+}

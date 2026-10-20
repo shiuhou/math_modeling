@@ -1,0 +1,29 @@
+\input{r2_preamble.tex}
+\begin{document}
+\begin{center}
+{\Large\bfseries\color{primary} Capacity-Valid Scheduling of a Heterogeneous GPU Cluster}\\[3pt]
+{\large 2026 HKUST-GZ MCM Senior Track -- Problem B}\\[5pt]
+\end{center}
+\takeaway{Main findings}{A10 is the main sustained capacity-pressure pool in the immediate-start counterfactual. On the complete A10 trace, capacity-valid SPT-HOL lowers ordinary mean waiting to 32.906 h versus 34.967 h for SPT-FILL, while the fixed GPU-work objective reverses that small ranking. Ratio placement gives zero waiting for all 9,643 GS1 jobs in the measured instance. For both FCFS and SPT-HOL, Hash-10\% achieves lower mean A10 JCT at $\sigma=1$, whereas Shape-filtered achieves lower mean A10 JCT at $\sigma=2$. Shape-filtered also has the smaller worst-case value across these two evaluated scenarios; the choice depends on native harm, completion tails, and donor occupancy.}
+\textbf{Data and validation.} We use the supplied 224,112-job trace, exact integer-second durations, six model pools, non-preemptive gang starts, and complete drain for waiting/JCT. Allocation rates use the fixed 90-day window. Original IDs and requested fields, node-level CPU/GPU ledgers, full drain, fixed-window counts, and independently recomputed metrics were checked against saved formal schedules. This revision performs no scheduler or replay rerun.
+
+\input{r2_q1.tex}
+\input{r2_q2.tex}
+\input{r2_q3.tex}
+
+\section{Conclusion, strengths, limits, and provenance}
+The three questions answer different decisions. Q1 separates submitted work, immediate-start demand, and simulated allocation. Q2 provides a capacity-valid SPT-HOL contract, a count lower bound, a zero-wait GS1 construction, and complete-A10 tail and cost evidence. Q3 compares fixed physical partitions and measured speed assumptions while retaining native harm and duration sensitivity. These are finite trace results: allocation is request occupancy, GPU-hours across models are not interchangeable hardware or monetary units, and no heuristic optimality, speed guarantee, or dynamic substitution policy is claimed. An online completion-cost routing rule remains future work.
+
+\textbf{Strengths and limitations.} Strengths are exact integer-second accounting, node-level CPU/GPU gang checks, saved-ledger replay, and separate ordinary and GPU-work objectives. Limitations are the finite trace, request-based occupancy rather than device telemetry, unbenchmarked cross-GPU compatibility and speed assumptions, and fixed-policy rather than dynamic substitution. The reported choices are conditional on the measured cases and do not establish a universal optimum.
+
+\section*{References}
+\begin{enumerate}
+\item HKUST-GZ MCM 2026 Senior Track, Problem B, repository copy (official question PDF; hash in the source index).
+\item Graham, R. L. (1966), ``Bounds on multiprocessing timing anomalies,'' \emph{SIAM Journal on Applied Mathematics}, 14(2), 416--429. Used only as scheduling background; the reported lower bound is derived for this trace.
+\item Feitelson, D. G. (2015), \emph{Workload Modeling for Computer Systems Performance Evaluation}. Used for workload-trace terminology and the distinction between demand and allocation.
+\item SchedMD, ``Backfill scheduling'' documentation. Used to distinguish a feasible-fill bypass from SPT head-of-line blocking.
+\end{enumerate}
+
+\section*{Use of AI Tools}
+ChatGPT and OpenAI Codex were used throughout the research for discussion, source and data inspection, mathematical-notation assistance, read-only post-processing, plot generation, code and evidence cross-review, and English drafting/typesetting. Claude also provided substantive assistance in the research record: candidate lower-bound and decomposition reasoning, ratio-placement analysis, prototype analysis, and independent cross-review. Formal scheduler runs, saved-ledger replays, all numerical recomputation in this paper, and final submission decisions were carried out or checked by the team; prototype suggestions were treated as hypotheses and were not substituted for formal evidence. The team remains responsible for the final wording, identity information, and human review.
+\end{document}

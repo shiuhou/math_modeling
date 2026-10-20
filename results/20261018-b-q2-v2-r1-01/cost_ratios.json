@@ -1,0 +1,9 @@
+{
+  "scheduler_elapsed_ratios_same_event_mode": {
+    "65k-A2/A1": 2.732741394890808,
+    "65k-A4/A3": 2.639800157581511,
+    "full-A2/A1": 2.895504986953234,
+    "full-A4/A3": 2.613602822361457
+  },
+  "cpu_time": "NOT_AVAILABLE"
+}

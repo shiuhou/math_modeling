@@ -1,0 +1,35 @@
+{
+  "case": "full-C1",
+  "status": "PASS",
+  "validator": "gpu_scheduling.validation.validate_persisted + validate_reservations",
+  "validator_source_commit": "integration/b-v2-candidate working tree",
+  "input_hashes": {
+    "node_info_df.csv": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+    "job_info_clean.csv": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0"
+  },
+  "jobs": 111284,
+  "job_id_count": 111284,
+  "nodes": 2494,
+  "timing_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_job_times.csv.gz",
+  "placement_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_node_placements.csv.gz",
+  "reservation_path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_reservations.json",
+  "artifact_hashes": {
+    "q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_reservations.json": "509b7b682019310bbe4c3e8a98a3c788cbb10bcf070ea1fee4956fc361f1ecbd",
+    "q2-v2-full-c1/a10-111284-theta604800-spt-head-time/phase_log.jsonl": "b80f38042c7504bbea83dfeaf77349136959ac9fd5c0765d0e5b5fe798c186eb",
+    "q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_node_placements.csv.gz": "0c8b20f54fee04ea01a97d3e2d0d601afb0140d503f87cb7f68ee07c5cc3f3a7",
+    "q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_job_times.csv.gz": "05ecbea9324a3c71dfc2ffcde6b056d3b5c2d2da269ecd1a71f75af2b50435aa"
+  },
+  "csv_validation": {
+    "status": "PASS",
+    "jobs": 111284,
+    "ledger_rows": 115370,
+    "input_identity": "PASS",
+    "timing": "PASS",
+    "atomic_capacity_replay": "PASS",
+    "final_allocation_zero": "PASS"
+  },
+  "reservation_event_count": 842225,
+  "reservation_count": 100205,
+  "historical_scope": "read-only persisted artifact replay; no scheduler invocation",
+  "source_availability": "LOCAL_ONLY"
+}

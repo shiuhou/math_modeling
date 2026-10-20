@@ -1,0 +1,2670 @@
+{
+  "schema_version": 1,
+  "kind": "q2_v2_k_timer_ablation",
+  "status": "PASS",
+  "configuration": {
+    "theta_seconds": 604800,
+    "event_modes": [
+      "shared-timer",
+      "arrival-completion-only"
+    ],
+    "reservation_k": [
+      200,
+      2000
+    ],
+    "horizon_seconds": 7776000,
+    "placement": "FF-id",
+    "guardrails": {
+      "timeout_seconds": 900,
+      "max_rss_kib": 4194304
+    }
+  },
+  "source": {
+    "65k-A1": {
+      "benchmark": "outputs/q2-v2-65k-a1/benchmark.json",
+      "child_output": "outputs/q2-v2-65k-a1/a10-65536-theta604800-spt-fill",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-a1/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "f44d0339a52573cf923598cfe5bfe49cf6931f5ab9fb8e328f253f5796fc1517",
+        "row_count": 65536
+      },
+      "timing_sha256": "f44d0339a52573cf923598cfe5bfe49cf6931f5ab9fb8e328f253f5796fc1517",
+      "row_count": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "policy": "SPT-FILL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          65536
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "shared-timer",
+        "policies": [
+          "SPT-FILL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "65k-A2": {
+      "benchmark": "outputs/q2-v2-65k-a2/benchmark.json",
+      "child_output": "outputs/q2-v2-65k-a2/a10-65536-theta604800-spt-fill",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-a2/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "339053722f18f542c1060c9c10c6dfaaab110156458f69098e212767af7b2246",
+        "row_count": 65536
+      },
+      "timing_sha256": "339053722f18f542c1060c9c10c6dfaaab110156458f69098e212767af7b2246",
+      "row_count": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "policy": "SPT-FILL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          65536
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 2000,
+        "event_mode": "shared-timer",
+        "policies": [
+          "SPT-FILL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "65k-A3": {
+      "benchmark": "outputs/q2-v2-65k-a3/benchmark.json",
+      "child_output": "outputs/q2-v2-65k-a3/a10-65536-theta604800-spt-fill",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-a3/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "142bfb3e32b236c066e0ffb61a9822703e82cc4df139e531bf93e108ea3398b2",
+        "row_count": 65536
+      },
+      "timing_sha256": "142bfb3e32b236c066e0ffb61a9822703e82cc4df139e531bf93e108ea3398b2",
+      "row_count": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "policy": "SPT-FILL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          65536
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "arrival-completion-only",
+        "policies": [
+          "SPT-FILL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "65k-A4": {
+      "benchmark": "outputs/q2-v2-65k-a4/benchmark.json",
+      "child_output": "outputs/q2-v2-65k-a4/a10-65536-theta604800-spt-fill",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-a4/a10-65536-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "defa8c6574ea68cc50a84d1d256429f161970c951aa780ac47cb2d62f24b3037",
+        "row_count": 65536
+      },
+      "timing_sha256": "defa8c6574ea68cc50a84d1d256429f161970c951aa780ac47cb2d62f24b3037",
+      "row_count": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "policy": "SPT-FILL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          65536
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 2000,
+        "event_mode": "arrival-completion-only",
+        "policies": [
+          "SPT-FILL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "65k-H1": {
+      "benchmark": "outputs/q2-v2-65k-h1/benchmark.json",
+      "child_output": "outputs/q2-v2-65k-h1/a10-65536-theta604800-spt-hol",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-h1/a10-65536-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
+        "compressed_sha256": "3b8db32fc72bb27600d3481d0b2affe588d4a90a5d04a127bf4d2b7963843357",
+        "row_count": 65536
+      },
+      "timing_sha256": "3b8db32fc72bb27600d3481d0b2affe588d4a90a5d04a127bf4d2b7963843357",
+      "row_count": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "policy": "SPT-HOL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          65536
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "shared-timer",
+        "policies": [
+          "SPT-HOL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "65k-H2": {
+      "benchmark": "outputs/q2-v2-65k-h2/benchmark.json",
+      "child_output": "outputs/q2-v2-65k-h2/a10-65536-theta604800-spt-hol",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-h2/a10-65536-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
+        "compressed_sha256": "861e34afe3dfe281a381b6714fca98e92ddd7ebc91c0670a390dd96c4922048e",
+        "row_count": 65536
+      },
+      "timing_sha256": "861e34afe3dfe281a381b6714fca98e92ddd7ebc91c0670a390dd96c4922048e",
+      "row_count": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "policy": "SPT-HOL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          65536
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "arrival-completion-only",
+        "policies": [
+          "SPT-HOL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "65k-C1": {
+      "benchmark": "outputs/q2-v2-65k-c1/benchmark.json",
+      "child_output": "outputs/q2-v2-65k-c1/a10-65536-theta604800-spt-head-time",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-65k-c1/a10-65536-theta604800-spt-head-time/SPT-HEAD-TIME_job_times.csv.gz",
+        "compressed_sha256": "298f8b42c703a8f3290c6aee63bc089982d9a05a9f7a1d958bb3e7f53d4bf388",
+        "row_count": 65536
+      },
+      "timing_sha256": "298f8b42c703a8f3290c6aee63bc089982d9a05a9f7a1d958bb3e7f53d4bf388",
+      "row_count": 65536,
+      "job_id_sha256": "ffb79a91e97f061c52d0208545f15a08016ca3dcd5ef113a46db148bd6a0f142",
+      "policy": "SPT-HEAD-TIME",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          65536
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "shared-timer",
+        "policies": [
+          "SPT-HEAD-TIME"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "full-A1": {
+      "benchmark": "outputs/q2-v2-full-a1/benchmark.json",
+      "child_output": "outputs/q2-v2-full-a1/a10-111284-theta604800-spt-fill",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-a1/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "f1fb0a5775180d710daa71bd288a83d8debc36d08b4cf79fb8c35a08ca141764",
+        "row_count": 111284
+      },
+      "timing_sha256": "f1fb0a5775180d710daa71bd288a83d8debc36d08b4cf79fb8c35a08ca141764",
+      "row_count": 111284,
+      "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+      "policy": "SPT-FILL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          111284
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "shared-timer",
+        "policies": [
+          "SPT-FILL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "full-A2": {
+      "benchmark": "outputs/q2-v2-full-a2/benchmark.json",
+      "child_output": "outputs/q2-v2-full-a2/a10-111284-theta604800-spt-fill",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-a2/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "d0602452997fa548ec0a35278dfb82559ba9be0efddcb0ff73fa33fe0760eeb3",
+        "row_count": 111284
+      },
+      "timing_sha256": "d0602452997fa548ec0a35278dfb82559ba9be0efddcb0ff73fa33fe0760eeb3",
+      "row_count": 111284,
+      "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+      "policy": "SPT-FILL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          111284
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 2000,
+        "event_mode": "shared-timer",
+        "policies": [
+          "SPT-FILL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "full-A3": {
+      "benchmark": "outputs/q2-v2-full-a3/benchmark.json",
+      "child_output": "outputs/q2-v2-full-a3/a10-111284-theta604800-spt-fill",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-a3/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "eae97b898cebcd70a6179fe50aae917a1f72feb74a4c362920523fa5ac225b67",
+        "row_count": 111284
+      },
+      "timing_sha256": "eae97b898cebcd70a6179fe50aae917a1f72feb74a4c362920523fa5ac225b67",
+      "row_count": 111284,
+      "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+      "policy": "SPT-FILL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          111284
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "arrival-completion-only",
+        "policies": [
+          "SPT-FILL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "full-A4": {
+      "benchmark": "outputs/q2-v2-full-a4/benchmark.json",
+      "child_output": "outputs/q2-v2-full-a4/a10-111284-theta604800-spt-fill",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-a4/a10-111284-theta604800-spt-fill/SPT-FILL_job_times.csv.gz",
+        "compressed_sha256": "28b8b486a493137e41583fa70e2dc19ce456a2431bfec0692f36996119e3ccf3",
+        "row_count": 111284
+      },
+      "timing_sha256": "28b8b486a493137e41583fa70e2dc19ce456a2431bfec0692f36996119e3ccf3",
+      "row_count": 111284,
+      "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+      "policy": "SPT-FILL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          111284
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 2000,
+        "event_mode": "arrival-completion-only",
+        "policies": [
+          "SPT-FILL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "full-H1": {
+      "benchmark": "outputs/q2-v2-full-h1/benchmark.json",
+      "child_output": "outputs/q2-v2-full-h1/a10-111284-theta604800-spt-hol",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-h1/a10-111284-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
+        "compressed_sha256": "1a9c37a58b69cb5bded158728fa86da96f8f9d9999b9020059369e304a139b89",
+        "row_count": 111284
+      },
+      "timing_sha256": "1a9c37a58b69cb5bded158728fa86da96f8f9d9999b9020059369e304a139b89",
+      "row_count": 111284,
+      "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+      "policy": "SPT-HOL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          111284
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "shared-timer",
+        "policies": [
+          "SPT-HOL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "full-H2": {
+      "benchmark": "outputs/q2-v2-full-h2/benchmark.json",
+      "child_output": "outputs/q2-v2-full-h2/a10-111284-theta604800-spt-hol",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-h2/a10-111284-theta604800-spt-hol/SPT-HOL_job_times.csv.gz",
+        "compressed_sha256": "a4828ff746346d2ebbd3ff98c80287a82909b49c46011ffdc48f292dbe340789",
+        "row_count": 111284
+      },
+      "timing_sha256": "a4828ff746346d2ebbd3ff98c80287a82909b49c46011ffdc48f292dbe340789",
+      "row_count": 111284,
+      "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+      "policy": "SPT-HOL",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          111284
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "arrival-completion-only",
+        "policies": [
+          "SPT-HOL"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    },
+    "full-C1": {
+      "benchmark": "outputs/q2-v2-full-c1/benchmark.json",
+      "child_output": "outputs/q2-v2-full-c1/a10-111284-theta604800-spt-head-time",
+      "timing": {
+        "path": "/home/shiuhou/mm/math_modeling-b-q2-k-ablation/outputs/q2-v2-full-c1/a10-111284-theta604800-spt-head-time/SPT-HEAD-TIME_job_times.csv.gz",
+        "compressed_sha256": "05ecbea9324a3c71dfc2ffcde6b056d3b5c2d2da269ecd1a71f75af2b50435aa",
+        "row_count": 111284
+      },
+      "timing_sha256": "05ecbea9324a3c71dfc2ffcde6b056d3b5c2d2da269ecd1a71f75af2b50435aa",
+      "row_count": 111284,
+      "job_id_sha256": "6b202df0f43fcbccc0e1fda19bb0e8d642e1c097a759e62c69391b9aa874bfb5",
+      "policy": "SPT-HEAD-TIME",
+      "configuration": {
+        "model": "A10",
+        "jobs": [
+          111284
+        ],
+        "theta_seconds": [
+          604800
+        ],
+        "short_theta_seconds": 604800,
+        "reservation_k": 200,
+        "event_mode": "shared-timer",
+        "policies": [
+          "SPT-HEAD-TIME"
+        ],
+        "placement": "first-fit ascending node_name",
+        "horizon_seconds": 7776000,
+        "timeout_seconds": 900.0,
+        "max_rss_kib": 4194304
+      }
+    }
+  },
+  "results_by_job_count": {
+    "65536": {
+      "capacity_gpu": 2494,
+      "lower_bound": {
+        "capacity_gpu": 2494,
+        "job_count": 65536,
+        "event_records": 131072,
+        "event_timestamps": 121253,
+        "integration_intervals": 121252,
+        "integral_q_job_seconds": 5878938330,
+        "lower_bound_mean_hours": 24.918188858032227,
+        "peak_q_jobs": 1483,
+        "q_positive_seconds": 6151723,
+        "width_histogram": {
+          "1": 65131,
+          "2": 164,
+          "3": 64,
+          "4": 51,
+          "5": 22,
+          "6": 7,
+          "7": 4,
+          "8": 67,
+          "9": 2,
+          "11": 1,
+          "16": 20,
+          "32": 3
+        },
+        "integral_end_seconds": 15897599
+      },
+      "policies": {
+        "65k-A1": {
+          "policy": "SPT-FILL",
+          "metrics": {
+            "jobs": 65536,
+            "mean_wait_hours": 31.041706458197698,
+            "median_wait_hours": 0.02361111111111111,
+            "p95_wait_hours": 61.66236111111111,
+            "p99_wait_hours": 1254.2176944444461,
+            "max_wait_hours": 1860.19,
+            "mean_jct_hours": 157.17423668755424,
+            "zero_wait_fraction": 0.0726470947265625,
+            "mean_bounded_slowdown_60s": 2.2158897686650945,
+            "p99_bounded_slowdown_60s": 6.718516260162606,
+            "completed_at_horizon": 63403,
+            "gpu_allocation_rate_at_horizon": 0.9884900151825287,
+            "cpu_allocation_rate_at_horizon": 0.18087401911437154,
+            "final_completion_days": 261.5079050925926,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                455.0,
+                365855.5,
+                10953785.850000024,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 32757,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 454,
+                  "mean_wait_hours": 0.036279455112223684,
+                  "p95_wait_hours": 0.085,
+                  "zero_wait_fraction": 0.05852184265958421
+                },
+                "q50_q90": {
+                  "count": 26225,
+                  "duration_min_seconds": 455,
+                  "duration_max_seconds": 365836,
+                  "mean_wait_hours": 3.490046478127317,
+                  "p95_wait_hours": 2.7723333333333318,
+                  "zero_wait_fraction": 0.03332697807435653
+                },
+                "q90_q99": {
+                  "count": 5898,
+                  "duration_min_seconds": 365875,
+                  "duration_max_seconds": 10943185,
+                  "mean_wait_hours": 275.0958997871218,
+                  "p95_wait_hours": 1448.3224166666662,
+                  "zero_wait_fraction": 0.2619532044760936
+                },
+                "q99_q100": {
+                  "count": 656,
+                  "duration_min_seconds": 10959494,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 486.4615586890244,
+                  "p95_wait_hours": 1813.1536805555556,
+                  "zero_wait_fraction": 0.6478658536585366
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 35685893,
+            "candidate_checks": 35685893,
+            "current_plan_cache_hits": 34794124,
+            "current_plan_evaluations": 891769,
+            "current_plan_cache_peak_entries": 23,
+            "order_builds": 183079,
+            "dispatch_timestamps": 183079,
+            "bypass_candidate_checks": 35460175,
+            "candidate_attempts": 35460175,
+            "unique_candidate_ids": 40546,
+            "repeated_candidate_attempts": 35419629,
+            "budget_exhausted": 176358,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 51141,
+              "mean_wait_hours": 0.04250091794146467,
+              "p99_wait_hours": 0.34833333333333333,
+              "max_wait_hours": 2.8041666666666667
+            },
+            "short_multi": {
+              "n": 283,
+              "mean_wait_hours": 58.65196211228896,
+              "p99_wait_hours": 453.5389888888889,
+              "max_wait_hours": 915.2472222222223
+            },
+            "long_single": {
+              "n": 13990,
+              "mean_wait_hours": 140.9175133627194,
+              "p99_wait_hours": 1646.2005194444453,
+              "max_wait_hours": 1860.19
+            },
+            "long_multi": {
+              "n": 122,
+              "mean_wait_hours": 361.81326047358834,
+              "p99_wait_hours": 1509.5673694444433,
+              "max_wait_hours": 1547.9319444444445
+            }
+          },
+          "decomposition": {
+            "jobs": 65536,
+            "total_wait_job_seconds": 7323657388,
+            "mean_wait_hours": 31.041706458197698,
+            "capacity_lower_bound_job_seconds": 5878938330,
+            "capacity_lower_bound_hours": 24.918188858032227,
+            "within_window_total_job_seconds": 7101451527,
+            "within_window_gap_job_seconds": 1222513197,
+            "within_window_gap_hours": 5.18168638865153,
+            "beyond_duration_wait_job_seconds": 222205861,
+            "beyond_duration_wait_hours": 0.9418312115139431,
+            "decomposition_sum_job_seconds": 7323657388,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.2457448908126239,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.802732571792994,
+              "within_window_gap": 0.1669265958567531,
+              "beyond_duration_wait": 0.03034083235025303
+            },
+            "w_greater_than_p_count": 13749,
+            "w_greater_than_p_fraction": 0.2097930908203125,
+            "w_equal_p_count": 329,
+            "w_zero_count": 4761,
+            "wait_max_seconds": 6696684
+          },
+          "validation": "PASS",
+          "schedule_sha256": "7cc447d910164051695f7d3188d070d4aad1569618f874310ab5f86aad2a5067",
+          "runtime_seconds": 81.00586893700529,
+          "scheduler_seconds": 77.3991224099882,
+          "validation_seconds": 1.6682553269783966,
+          "io_seconds": 1.922431190032512,
+          "peak_rss_kib_process": 560480
+        },
+        "65k-A2": {
+          "policy": "SPT-FILL",
+          "metrics": {
+            "jobs": 65536,
+            "mean_wait_hours": 31.266062477959526,
+            "median_wait_hours": 0.02388888888888889,
+            "p95_wait_hours": 65.97666666666667,
+            "p99_wait_hours": 1257.256208333334,
+            "max_wait_hours": 1860.19,
+            "mean_jct_hours": 157.39859270731608,
+            "zero_wait_fraction": 0.072235107421875,
+            "mean_bounded_slowdown_60s": 2.717710020292647,
+            "p99_bounded_slowdown_60s": 6.795554966419236,
+            "completed_at_horizon": 63398,
+            "gpu_allocation_rate_at_horizon": 0.9884882119349814,
+            "cpu_allocation_rate_at_horizon": 0.18086105671999028,
+            "final_completion_days": 261.5079050925926,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                455.0,
+                365855.5,
+                10953785.850000024,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 32757,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 454,
+                  "mean_wait_hours": 0.03980118753243581,
+                  "p95_wait_hours": 0.08388888888888889,
+                  "zero_wait_fraction": 0.05788075831120066
+                },
+                "q50_q90": {
+                  "count": 26225,
+                  "duration_min_seconds": 455,
+                  "duration_max_seconds": 365836,
+                  "mean_wait_hours": 4.041776602054867,
+                  "p95_wait_hours": 2.9832777777777717,
+                  "zero_wait_fraction": 0.033060057197330794
+                },
+                "q90_q99": {
+                  "count": 5898,
+                  "duration_min_seconds": 365875,
+                  "duration_max_seconds": 10943185,
+                  "mean_wait_hours": 275.0433388436758,
+                  "p95_wait_hours": 1448.9966388888886,
+                  "zero_wait_fraction": 0.2621227534757545
+                },
+                "q99_q100": {
+                  "count": 656,
+                  "duration_min_seconds": 10959494,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 487.11539507113827,
+                  "p95_wait_hours": 1813.1536805555556,
+                  "zero_wait_fraction": 0.6478658536585366
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 216028089,
+            "candidate_checks": 216028089,
+            "current_plan_cache_hits": 214754767,
+            "current_plan_evaluations": 1273322,
+            "current_plan_cache_peak_entries": 29,
+            "order_builds": 183076,
+            "dispatch_timestamps": 183076,
+            "bypass_candidate_checks": 215802490,
+            "candidate_attempts": 215802490,
+            "unique_candidate_ids": 40702,
+            "repeated_candidate_attempts": 215761788,
+            "budget_exhausted": 0,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 51141,
+              "mean_wait_hours": 0.04226538719748669,
+              "p99_wait_hours": 0.3511111111111111,
+              "max_wait_hours": 2.6933333333333334
+            },
+            "short_multi": {
+              "n": 283,
+              "mean_wait_hours": 104.6727404789949,
+              "p99_wait_hours": 467.57825555555587,
+              "max_wait_hours": 915.2472222222223
+            },
+            "long_single": {
+              "n": 13990,
+              "mean_wait_hours": 140.91567812326267,
+              "p99_wait_hours": 1648.7359305555558,
+              "max_wait_hours": 1860.19
+            },
+            "long_multi": {
+              "n": 122,
+              "mean_wait_hours": 375.888966302368,
+              "p99_wait_hours": 1524.935602777777,
+              "max_wait_hours": 1566.0302777777779
+            }
+          },
+          "decomposition": {
+            "jobs": 65536,
+            "total_wait_job_seconds": 7376589614,
+            "mean_wait_hours": 31.266062477959526,
+            "capacity_lower_bound_job_seconds": 5878938330,
+            "capacity_lower_bound_hours": 24.918188858032227,
+            "within_window_total_job_seconds": 7101754209,
+            "within_window_gap_job_seconds": 1222815879,
+            "within_window_gap_hours": 5.18296932220459,
+            "beyond_duration_wait_job_seconds": 274835405,
+            "beyond_duration_wait_hours": 1.1649042977227104,
+            "decomposition_sum_job_seconds": 7376589614,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.2547485957383737,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.7969724002054265,
+              "within_window_gap": 0.16576981274371327,
+              "beyond_duration_wait": 0.03725778705086033
+            },
+            "w_greater_than_p_count": 13808,
+            "w_greater_than_p_fraction": 0.210693359375,
+            "w_equal_p_count": 325,
+            "w_zero_count": 4734,
+            "wait_max_seconds": 6696684
+          },
+          "validation": "PASS",
+          "schedule_sha256": "8a7d3adb88d09648a0e94356571ec0fba8080a8c5842626a4b48eb4fd3571c96",
+          "runtime_seconds": 214.71940525702666,
+          "scheduler_seconds": 211.51178573799552,
+          "validation_seconds": 1.6791420200024731,
+          "io_seconds": 1.5101081139873713,
+          "peak_rss_kib_process": 372380
+        },
+        "65k-A3": {
+          "policy": "SPT-FILL",
+          "metrics": {
+            "jobs": 65536,
+            "mean_wait_hours": 31.110320557488336,
+            "median_wait_hours": 0.02361111111111111,
+            "p95_wait_hours": 62.05034722222222,
+            "p99_wait_hours": 1257.254027777779,
+            "max_wait_hours": 1860.19,
+            "mean_jct_hours": 157.24285078684488,
+            "zero_wait_fraction": 0.072265625,
+            "mean_bounded_slowdown_60s": 2.381776730436381,
+            "p99_bounded_slowdown_60s": 6.644543010752711,
+            "completed_at_horizon": 63404,
+            "gpu_allocation_rate_at_horizon": 0.9883576654443916,
+            "cpu_allocation_rate_at_horizon": 0.180808063043995,
+            "final_completion_days": 261.5079050925926,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                455.0,
+                365855.5,
+                10953785.850000024,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 32757,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 454,
+                  "mean_wait_hours": 0.037698888787129466,
+                  "p95_wait_hours": 0.08422222222222141,
+                  "zero_wait_fraction": 0.05809445309399518
+                },
+                "q50_q90": {
+                  "count": 26225,
+                  "duration_min_seconds": 455,
+                  "duration_max_seconds": 365836,
+                  "mean_wait_hours": 3.6555222539985173,
+                  "p95_wait_hours": 2.680222222222221,
+                  "zero_wait_fraction": 0.03286939942802669
+                },
+                "q90_q99": {
+                  "count": 5898,
+                  "duration_min_seconds": 365875,
+                  "duration_max_seconds": 10943185,
+                  "mean_wait_hours": 275.05115594740215,
+                  "p95_wait_hours": 1449.2730416666661,
+                  "zero_wait_fraction": 0.2621227534757545
+                },
+                "q99_q100": {
+                  "count": 656,
+                  "duration_min_seconds": 10959494,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 487.0324339430894,
+                  "p95_wait_hours": 1813.1536805555556,
+                  "zero_wait_fraction": 0.6478658536585366
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 23583631,
+            "candidate_checks": 23583631,
+            "current_plan_cache_hits": 22704940,
+            "current_plan_evaluations": 878691,
+            "current_plan_cache_peak_entries": 22,
+            "order_builds": 122872,
+            "dispatch_timestamps": 122872,
+            "bypass_candidate_checks": 23418262,
+            "candidate_attempts": 23418262,
+            "unique_candidate_ids": 40659,
+            "repeated_candidate_attempts": 23377603,
+            "budget_exhausted": 116157,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 51141,
+              "mean_wait_hours": 0.042138705843756584,
+              "p99_wait_hours": 0.34444444444444444,
+              "max_wait_hours": 2.6758333333333333
+            },
+            "short_multi": {
+              "n": 283,
+              "mean_wait_hours": 73.0147595210051,
+              "p99_wait_hours": 453.5389888888889,
+              "max_wait_hours": 915.2472222222223
+            },
+            "long_single": {
+              "n": 13990,
+              "mean_wait_hours": 140.91336833849576,
+              "p99_wait_hours": 1647.7589083333337,
+              "max_wait_hours": 1860.19
+            },
+            "long_multi": {
+              "n": 122,
+              "mean_wait_hours": 365.98157786885247,
+              "p99_wait_hours": 1524.242777777777,
+              "max_wait_hours": 1566.0302777777779
+            }
+          },
+          "decomposition": {
+            "jobs": 65536,
+            "total_wait_job_seconds": 7339845485,
+            "mean_wait_hours": 31.110320557488336,
+            "capacity_lower_bound_job_seconds": 5878938330,
+            "capacity_lower_bound_hours": 24.918188858032227,
+            "within_window_total_job_seconds": 7101536266,
+            "within_window_gap_job_seconds": 1222597936,
+            "within_window_gap_hours": 5.182045559353298,
+            "beyond_duration_wait_job_seconds": 238309219,
+            "beyond_duration_wait_hours": 1.0100861401028103,
+            "decomposition_sum_job_seconds": 7339845485,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.2484984657085185,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.8009621376927392,
+              "within_window_gap": 0.16656998277396298,
+              "beyond_duration_wait": 0.03246787953329783
+            },
+            "w_greater_than_p_count": 13882,
+            "w_greater_than_p_fraction": 0.211822509765625,
+            "w_equal_p_count": 324,
+            "w_zero_count": 4736,
+            "wait_max_seconds": 6696684
+          },
+          "validation": "PASS",
+          "schedule_sha256": "e92be86a2184a31c09ef41aa37dd4b142b45eec404647ca7aa4df1154ea8893b",
+          "runtime_seconds": 57.57644361699931,
+          "scheduler_seconds": 54.30533639801433,
+          "validation_seconds": 1.672268320049625,
+          "io_seconds": 1.5816377449664287,
+          "peak_rss_kib_process": 416840
+        },
+        "65k-A4": {
+          "policy": "SPT-FILL",
+          "metrics": {
+            "jobs": 65536,
+            "mean_wait_hours": 31.266062477959526,
+            "median_wait_hours": 0.02388888888888889,
+            "p95_wait_hours": 65.97666666666667,
+            "p99_wait_hours": 1257.256208333334,
+            "max_wait_hours": 1860.19,
+            "mean_jct_hours": 157.39859270731608,
+            "zero_wait_fraction": 0.072235107421875,
+            "mean_bounded_slowdown_60s": 2.717710020292647,
+            "p99_bounded_slowdown_60s": 6.795554966419236,
+            "completed_at_horizon": 63398,
+            "gpu_allocation_rate_at_horizon": 0.9884882119349814,
+            "cpu_allocation_rate_at_horizon": 0.18086105671999028,
+            "final_completion_days": 261.5079050925926,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                455.0,
+                365855.5,
+                10953785.850000024,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 32757,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 454,
+                  "mean_wait_hours": 0.03980118753243581,
+                  "p95_wait_hours": 0.08388888888888889,
+                  "zero_wait_fraction": 0.05788075831120066
+                },
+                "q50_q90": {
+                  "count": 26225,
+                  "duration_min_seconds": 455,
+                  "duration_max_seconds": 365836,
+                  "mean_wait_hours": 4.041776602054867,
+                  "p95_wait_hours": 2.9832777777777717,
+                  "zero_wait_fraction": 0.033060057197330794
+                },
+                "q90_q99": {
+                  "count": 5898,
+                  "duration_min_seconds": 365875,
+                  "duration_max_seconds": 10943185,
+                  "mean_wait_hours": 275.0433388436758,
+                  "p95_wait_hours": 1448.9966388888886,
+                  "zero_wait_fraction": 0.2621227534757545
+                },
+                "q99_q100": {
+                  "count": 656,
+                  "duration_min_seconds": 10959494,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 487.11539507113827,
+                  "p95_wait_hours": 1813.1536805555556,
+                  "zero_wait_fraction": 0.6478658536585366
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 140942297,
+            "candidate_checks": 140942297,
+            "current_plan_cache_hits": 139668975,
+            "current_plan_evaluations": 1273322,
+            "current_plan_cache_peak_entries": 29,
+            "order_builds": 122855,
+            "dispatch_timestamps": 122855,
+            "bypass_candidate_checks": 140776919,
+            "candidate_attempts": 140776919,
+            "unique_candidate_ids": 40702,
+            "repeated_candidate_attempts": 140736217,
+            "budget_exhausted": 0,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 51141,
+              "mean_wait_hours": 0.04226538719748669,
+              "p99_wait_hours": 0.3511111111111111,
+              "max_wait_hours": 2.6933333333333334
+            },
+            "short_multi": {
+              "n": 283,
+              "mean_wait_hours": 104.6727404789949,
+              "p99_wait_hours": 467.57825555555587,
+              "max_wait_hours": 915.2472222222223
+            },
+            "long_single": {
+              "n": 13990,
+              "mean_wait_hours": 140.91567812326267,
+              "p99_wait_hours": 1648.7359305555558,
+              "max_wait_hours": 1860.19
+            },
+            "long_multi": {
+              "n": 122,
+              "mean_wait_hours": 375.888966302368,
+              "p99_wait_hours": 1524.935602777777,
+              "max_wait_hours": 1566.0302777777779
+            }
+          },
+          "decomposition": {
+            "jobs": 65536,
+            "total_wait_job_seconds": 7376589614,
+            "mean_wait_hours": 31.266062477959526,
+            "capacity_lower_bound_job_seconds": 5878938330,
+            "capacity_lower_bound_hours": 24.918188858032227,
+            "within_window_total_job_seconds": 7101754209,
+            "within_window_gap_job_seconds": 1222815879,
+            "within_window_gap_hours": 5.18296932220459,
+            "beyond_duration_wait_job_seconds": 274835405,
+            "beyond_duration_wait_hours": 1.1649042977227104,
+            "decomposition_sum_job_seconds": 7376589614,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.2547485957383737,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.7969724002054265,
+              "within_window_gap": 0.16576981274371327,
+              "beyond_duration_wait": 0.03725778705086033
+            },
+            "w_greater_than_p_count": 13808,
+            "w_greater_than_p_fraction": 0.210693359375,
+            "w_equal_p_count": 325,
+            "w_zero_count": 4734,
+            "wait_max_seconds": 6696684
+          },
+          "validation": "PASS",
+          "schedule_sha256": "8a7d3adb88d09648a0e94356571ec0fba8080a8c5842626a4b48eb4fd3571c96",
+          "runtime_seconds": 146.33431943802861,
+          "scheduler_seconds": 143.3552355809952,
+          "validation_seconds": 1.6038918800186366,
+          "io_seconds": 1.3615943250479177,
+          "peak_rss_kib_process": 280516
+        },
+        "65k-H1": {
+          "policy": "SPT-HOL",
+          "metrics": {
+            "jobs": 65536,
+            "mean_wait_hours": 30.33162114037408,
+            "median_wait_hours": 0.021944444444444444,
+            "p95_wait_hours": 48.640972222222224,
+            "p99_wait_hours": 1252.8401388888892,
+            "max_wait_hours": 1870.42,
+            "mean_jct_hours": 156.46415136973064,
+            "zero_wait_fraction": 0.10968017578125,
+            "mean_bounded_slowdown_60s": 1.4309617265646515,
+            "p99_bounded_slowdown_60s": 5.611600177304968,
+            "completed_at_horizon": 63411,
+            "gpu_allocation_rate_at_horizon": 0.9886586776885925,
+            "cpu_allocation_rate_at_horizon": 0.1808823562351342,
+            "final_completion_days": 261.9341550925926,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                455.0,
+                365855.5,
+                10953785.850000024,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 32757,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 454,
+                  "mean_wait_hours": 0.022889916659034712,
+                  "p95_wait_hours": 0.08694444444444445,
+                  "zero_wait_fraction": 0.09985651921726654
+                },
+                "q50_q90": {
+                  "count": 26225,
+                  "duration_min_seconds": 455,
+                  "duration_max_seconds": 365836,
+                  "mean_wait_hours": 1.4027871411926702,
+                  "p95_wait_hours": 2.577277777777777,
+                  "zero_wait_fraction": 0.07428026692087702
+                },
+                "q90_q99": {
+                  "count": 5898,
+                  "duration_min_seconds": 365875,
+                  "duration_max_seconds": 10943185,
+                  "mean_wait_hours": 276.56382511962624,
+                  "p95_wait_hours": 1445.3099722222219,
+                  "zero_wait_fraction": 0.2617836554764327
+                },
+                "q99_q100": {
+                  "count": 656,
+                  "duration_min_seconds": 10959494,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 486.43564744241195,
+                  "p95_wait_hours": 1813.1536805555556,
+                  "zero_wait_fraction": 0.6478658536585366
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 243648,
+            "candidate_checks": 243648,
+            "current_plan_cache_hits": 98977,
+            "current_plan_evaluations": 144671,
+            "current_plan_cache_peak_entries": 4,
+            "order_builds": 0,
+            "dispatch_timestamps": 182987,
+            "bypass_candidate_checks": 0,
+            "candidate_attempts": 0,
+            "unique_candidate_ids": 0,
+            "repeated_candidate_attempts": 0,
+            "budget_exhausted": 0,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 51141,
+              "mean_wait_hours": 0.0491684428019267,
+              "p99_wait_hours": 0.43688888888888766,
+              "max_wait_hours": 6.283611111111111
+            },
+            "short_multi": {
+              "n": 283,
+              "mean_wait_hours": 0.4147104436592069,
+              "p99_wait_hours": 4.575555555555558,
+              "max_wait_hours": 5.1066666666666665
+            },
+            "long_single": {
+              "n": 13990,
+              "mean_wait_hours": 141.87667603844014,
+              "p99_wait_hours": 1642.920486111112,
+              "max_wait_hours": 1870.42
+            },
+            "long_multi": {
+              "n": 122,
+              "mean_wait_hours": 2.6765482695810565,
+              "p99_wait_hours": 17.87874166666664,
+              "max_wait_hours": 26.078333333333333
+            }
+          },
+          "decomposition": {
+            "jobs": 65536,
+            "total_wait_job_seconds": 7156127243,
+            "mean_wait_hours": 30.33162114037408,
+            "capacity_lower_bound_job_seconds": 5878938330,
+            "capacity_lower_bound_hours": 24.918188858032227,
+            "within_window_total_job_seconds": 7145910027,
+            "within_window_gap_job_seconds": 1266971697,
+            "within_window_gap_hours": 5.370126075744629,
+            "beyond_duration_wait_job_seconds": 10217216,
+            "beyond_duration_wait_hours": 0.04330620659722222,
+            "decomposition_sum_job_seconds": 7156127243,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.2172482243065135,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.8215251253044272,
+              "within_window_gap": 0.17704711696390388,
+              "beyond_duration_wait": 0.001427757731668942
+            },
+            "w_greater_than_p_count": 13458,
+            "w_greater_than_p_fraction": 0.205352783203125,
+            "w_equal_p_count": 334,
+            "w_zero_count": 7188,
+            "wait_max_seconds": 6733512
+          },
+          "validation": "PASS",
+          "schedule_sha256": "7405acaa4fc22784e67225d48af0072e259bd61277f66f83d9b4b4a09e1559c6",
+          "runtime_seconds": 14.91637922800146,
+          "scheduler_seconds": 11.812352029024623,
+          "validation_seconds": 1.5898371830116957,
+          "io_seconds": 1.497545775026083,
+          "peak_rss_kib_process": 372768
+        },
+        "65k-H2": {
+          "policy": "SPT-HOL",
+          "metrics": {
+            "jobs": 65536,
+            "mean_wait_hours": 30.33162114037408,
+            "median_wait_hours": 0.021944444444444444,
+            "p95_wait_hours": 48.640972222222224,
+            "p99_wait_hours": 1252.8401388888892,
+            "max_wait_hours": 1870.42,
+            "mean_jct_hours": 156.46415136973064,
+            "zero_wait_fraction": 0.10968017578125,
+            "mean_bounded_slowdown_60s": 1.4309617265646515,
+            "p99_bounded_slowdown_60s": 5.611600177304968,
+            "completed_at_horizon": 63411,
+            "gpu_allocation_rate_at_horizon": 0.9886586776885925,
+            "cpu_allocation_rate_at_horizon": 0.1808823562351342,
+            "final_completion_days": 261.9341550925926,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                455.0,
+                365855.5,
+                10953785.850000024,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 32757,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 454,
+                  "mean_wait_hours": 0.022889916659034712,
+                  "p95_wait_hours": 0.08694444444444445,
+                  "zero_wait_fraction": 0.09985651921726654
+                },
+                "q50_q90": {
+                  "count": 26225,
+                  "duration_min_seconds": 455,
+                  "duration_max_seconds": 365836,
+                  "mean_wait_hours": 1.4027871411926702,
+                  "p95_wait_hours": 2.577277777777777,
+                  "zero_wait_fraction": 0.07428026692087702
+                },
+                "q90_q99": {
+                  "count": 5898,
+                  "duration_min_seconds": 365875,
+                  "duration_max_seconds": 10943185,
+                  "mean_wait_hours": 276.56382511962624,
+                  "p95_wait_hours": 1445.3099722222219,
+                  "zero_wait_fraction": 0.2617836554764327
+                },
+                "q99_q100": {
+                  "count": 656,
+                  "duration_min_seconds": 10959494,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 486.43564744241195,
+                  "p95_wait_hours": 1813.1536805555556,
+                  "zero_wait_fraction": 0.6478658536585366
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 183397,
+            "candidate_checks": 183397,
+            "current_plan_cache_hits": 38726,
+            "current_plan_evaluations": 144671,
+            "current_plan_cache_peak_entries": 4,
+            "order_builds": 0,
+            "dispatch_timestamps": 122736,
+            "bypass_candidate_checks": 0,
+            "candidate_attempts": 0,
+            "unique_candidate_ids": 0,
+            "repeated_candidate_attempts": 0,
+            "budget_exhausted": 0,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 51141,
+              "mean_wait_hours": 0.0491684428019267,
+              "p99_wait_hours": 0.43688888888888766,
+              "max_wait_hours": 6.283611111111111
+            },
+            "short_multi": {
+              "n": 283,
+              "mean_wait_hours": 0.4147104436592069,
+              "p99_wait_hours": 4.575555555555558,
+              "max_wait_hours": 5.1066666666666665
+            },
+            "long_single": {
+              "n": 13990,
+              "mean_wait_hours": 141.87667603844014,
+              "p99_wait_hours": 1642.920486111112,
+              "max_wait_hours": 1870.42
+            },
+            "long_multi": {
+              "n": 122,
+              "mean_wait_hours": 2.6765482695810565,
+              "p99_wait_hours": 17.87874166666664,
+              "max_wait_hours": 26.078333333333333
+            }
+          },
+          "decomposition": {
+            "jobs": 65536,
+            "total_wait_job_seconds": 7156127243,
+            "mean_wait_hours": 30.33162114037408,
+            "capacity_lower_bound_job_seconds": 5878938330,
+            "capacity_lower_bound_hours": 24.918188858032227,
+            "within_window_total_job_seconds": 7145910027,
+            "within_window_gap_job_seconds": 1266971697,
+            "within_window_gap_hours": 5.370126075744629,
+            "beyond_duration_wait_job_seconds": 10217216,
+            "beyond_duration_wait_hours": 0.04330620659722222,
+            "decomposition_sum_job_seconds": 7156127243,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.2172482243065135,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.8215251253044272,
+              "within_window_gap": 0.17704711696390388,
+              "beyond_duration_wait": 0.001427757731668942
+            },
+            "w_greater_than_p_count": 13458,
+            "w_greater_than_p_fraction": 0.205352783203125,
+            "w_equal_p_count": 334,
+            "w_zero_count": 7188,
+            "wait_max_seconds": 6733512
+          },
+          "validation": "PASS",
+          "schedule_sha256": "7405acaa4fc22784e67225d48af0072e259bd61277f66f83d9b4b4a09e1559c6",
+          "runtime_seconds": 14.498014896991663,
+          "scheduler_seconds": 11.641788838023786,
+          "validation_seconds": 1.5528128349687904,
+          "io_seconds": 1.2825967460521497,
+          "peak_rss_kib_process": 283080
+        },
+        "65k-C1": {
+          "policy": "SPT-HEAD-TIME",
+          "metrics": {
+            "jobs": 65536,
+            "mean_wait_hours": 30.35245744917128,
+            "median_wait_hours": 0.04555555555555556,
+            "p95_wait_hours": 49.322916666666664,
+            "p99_wait_hours": 1252.3962083333342,
+            "max_wait_hours": 1869.7697222222223,
+            "mean_jct_hours": 156.48498767852783,
+            "zero_wait_fraction": 0.071533203125,
+            "mean_bounded_slowdown_60s": 1.7046366255627734,
+            "p99_bounded_slowdown_60s": 7.25,
+            "completed_at_horizon": 63410,
+            "gpu_allocation_rate_at_horizon": 0.9886969632467717,
+            "cpu_allocation_rate_at_horizon": 0.18089423653763198,
+            "final_completion_days": 261.9070601851852,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                455.0,
+                365855.5,
+                10953785.850000024,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 32757,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 454,
+                  "mean_wait_hours": 0.038406311797648,
+                  "p95_wait_hours": 0.12116666666666585,
+                  "zero_wait_fraction": 0.05641542265775254
+                },
+                "q50_q90": {
+                  "count": 26225,
+                  "duration_min_seconds": 455,
+                  "duration_max_seconds": 365836,
+                  "mean_wait_hours": 1.4410055396674082,
+                  "p95_wait_hours": 2.552722222222215,
+                  "zero_wait_fraction": 0.03321258341277407
+                },
+                "q90_q99": {
+                  "count": 5898,
+                  "duration_min_seconds": 365875,
+                  "duration_max_seconds": 10943185,
+                  "mean_wait_hours": 276.539102897404,
+                  "p95_wait_hours": 1445.6299305555544,
+                  "zero_wait_fraction": 0.2617836554764327
+                },
+                "q99_q100": {
+                  "count": 656,
+                  "duration_min_seconds": 10959494,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 486.43685467479673,
+                  "p95_wait_hours": 1813.1536805555556,
+                  "zero_wait_fraction": 0.6478658536585366
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 35560870,
+            "candidate_checks": 35560870,
+            "current_plan_cache_hits": 35160804,
+            "current_plan_evaluations": 637369,
+            "current_plan_cache_peak_entries": 15,
+            "order_builds": 183209,
+            "dispatch_timestamps": 183209,
+            "bypass_candidate_checks": 35496475,
+            "candidate_attempts": 35496475,
+            "unique_candidate_ids": 60912,
+            "repeated_candidate_attempts": 35435563,
+            "budget_exhausted": 176549,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 57827,
+            "crossing_accepted": 0,
+            "crossing_rejected": 1066266,
+            "certificate_updates": 0,
+            "reservation_rejects": 35495334
+          },
+          "groups": {
+            "short_single": {
+              "n": 51141,
+              "mean_wait_hours": 0.07078183627400499,
+              "p99_wait_hours": 0.5894444444444444,
+              "max_wait_hours": 4.085
+            },
+            "short_multi": {
+              "n": 283,
+              "mean_wait_hours": 0.4281438947781704,
+              "p99_wait_hours": 3.45362222222223,
+              "max_wait_hours": 5.070833333333334
+            },
+            "long_single": {
+              "n": 13990,
+              "mean_wait_hours": 141.89664287983481,
+              "p99_wait_hours": 1643.7007555555565,
+              "max_wait_hours": 1869.7697222222223
+            },
+            "long_multi": {
+              "n": 122,
+              "mean_wait_hours": 2.4885154826958105,
+              "p99_wait_hours": 17.611522222222195,
+              "max_wait_hours": 24.73
+            }
+          },
+          "decomposition": {
+            "jobs": 65536,
+            "total_wait_job_seconds": 7161043145,
+            "mean_wait_hours": 30.35245744917128,
+            "capacity_lower_bound_job_seconds": 5878938330,
+            "capacity_lower_bound_hours": 24.918188858032227,
+            "within_window_total_job_seconds": 7150222867,
+            "within_window_gap_job_seconds": 1271284537,
+            "within_window_gap_hours": 5.3884062745836045,
+            "beyond_duration_wait_job_seconds": 10820278,
+            "beyond_duration_wait_hours": 0.04586231655544705,
+            "decomposition_sum_job_seconds": 7161043145,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.218084413040611,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.820961165986663,
+              "within_window_gap": 0.17752784213954068,
+              "beyond_duration_wait": 0.001510991873796342
+            },
+            "w_greater_than_p_count": 20702,
+            "w_greater_than_p_fraction": 0.315887451171875,
+            "w_equal_p_count": 265,
+            "w_zero_count": 4688,
+            "wait_max_seconds": 6731171
+          },
+          "validation": "PASS",
+          "schedule_sha256": "459534bcf55c920024f86f84055b250536cd1b53ca2123468758333b8053d55e",
+          "runtime_seconds": 358.33914554695366,
+          "scheduler_seconds": 199.2575158320251,
+          "validation_seconds": 154.4725543159875,
+          "io_seconds": 4.591051229974255,
+          "peak_rss_kib_process": 1316540
+        }
+      }
+    },
+    "111284": {
+      "capacity_gpu": 2494,
+      "lower_bound": {
+        "capacity_gpu": 2494,
+        "job_count": 111284,
+        "event_records": 222568,
+        "event_timestamps": 207676,
+        "integration_intervals": 207675,
+        "integral_q_job_seconds": 8941062908,
+        "lower_bound_mean_hours": 22.317930570033027,
+        "peak_q_jobs": 1489,
+        "q_positive_seconds": 8224125,
+        "width_histogram": {
+          "1": 110497,
+          "2": 231,
+          "3": 115,
+          "4": 100,
+          "5": 50,
+          "6": 30,
+          "7": 18,
+          "8": 93,
+          "9": 22,
+          "10": 8,
+          "11": 11,
+          "12": 9,
+          "13": 13,
+          "14": 6,
+          "15": 7,
+          "16": 31,
+          "17": 3,
+          "18": 4,
+          "19": 4,
+          "20": 3,
+          "21": 1,
+          "22": 5,
+          "23": 4,
+          "24": 10,
+          "25": 4,
+          "27": 1,
+          "32": 3,
+          "60": 1
+        },
+        "integral_end_seconds": 15897599
+      },
+      "policies": {
+        "full-A1": {
+          "policy": "SPT-FILL",
+          "metrics": {
+            "jobs": 111284,
+            "mean_wait_hours": 34.967030093674246,
+            "median_wait_hours": 0.025833333333333333,
+            "p95_wait_hours": 15.130388888888831,
+            "p99_wait_hours": 1575.461516666666,
+            "max_wait_hours": 3015.3105555555558,
+            "mean_jct_hours": 134.73678623312128,
+            "zero_wait_fraction": 0.04673627835088602,
+            "mean_bounded_slowdown_60s": 2.8919876454910067,
+            "p99_bounded_slowdown_60s": 6.518287654766184,
+            "completed_at_horizon": 106802,
+            "gpu_allocation_rate_at_horizon": 0.9995808286080008,
+            "cpu_allocation_rate_at_horizon": 0.17932238400422335,
+            "final_completion_days": 309.63792824074073,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                701.0,
+                158350.29999999987,
+                8836180.719999997,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 55628,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 700,
+                  "mean_wait_hours": 0.0673326282527584,
+                  "p95_wait_hours": 0.09,
+                  "zero_wait_fraction": 0.040015819371539516
+                },
+                "q50_q90": {
+                  "count": 44527,
+                  "duration_min_seconds": 701,
+                  "duration_max_seconds": 158323,
+                  "mean_wait_hours": 5.9011510244720435,
+                  "p95_wait_hours": 0.9112222222222206,
+                  "zero_wait_fraction": 0.016529296831136166
+                },
+                "q90_q99": {
+                  "count": 10016,
+                  "duration_min_seconds": 158362,
+                  "duration_max_seconds": 8835855,
+                  "mean_wait_hours": 253.44195539913918,
+                  "p95_wait_hours": 1890.3264583333332,
+                  "zero_wait_fraction": 0.17092651757188498
+                },
+                "q99_q100": {
+                  "count": 1113,
+                  "duration_min_seconds": 8837771,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 976.0019951083158,
+                  "p95_wait_hours": 2846.1865555555555,
+                  "zero_wait_fraction": 0.47349505840071876
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 62136265,
+            "candidate_checks": 62136265,
+            "current_plan_cache_hits": 59310423,
+            "current_plan_evaluations": 2825842,
+            "current_plan_cache_peak_entries": 53,
+            "order_builds": 314756,
+            "dispatch_timestamps": 314756,
+            "bypass_candidate_checks": 61758331,
+            "candidate_attempts": 61758331,
+            "unique_candidate_ids": 72686,
+            "repeated_candidate_attempts": 61685645,
+            "budget_exhausted": 307844,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 87576,
+              "mean_wait_hours": 0.04299787866792525,
+              "p99_wait_hours": 0.3433333333333333,
+              "max_wait_hours": 2.8041666666666667
+            },
+            "short_multi": {
+              "n": 377,
+              "mean_wait_hours": 68.29941718243442,
+              "p99_wait_hours": 897.1450555555557,
+              "max_wait_hours": 1290.121111111111
+            },
+            "long_single": {
+              "n": 22921,
+              "mean_wait_hours": 157.98293274241476,
+              "p99_wait_hours": 2362.4696666666664,
+              "max_wait_hours": 3015.3105555555558
+            },
+            "long_multi": {
+              "n": 410,
+              "mean_wait_hours": 586.9017391598916,
+              "p99_wait_hours": 2553.00429166666,
+              "max_wait_hours": 2987.6319444444443
+            }
+          },
+          "decomposition": {
+            "jobs": 111284,
+            "total_wait_job_seconds": 14008575517,
+            "mean_wait_hours": 34.967030093674246,
+            "capacity_lower_bound_job_seconds": 8941062908,
+            "capacity_lower_bound_hours": 22.317930570033027,
+            "within_window_total_job_seconds": 12195761655,
+            "within_window_gap_job_seconds": 3254698747,
+            "within_window_gap_hours": 8.124105758939091,
+            "beyond_duration_wait_job_seconds": 1812813862,
+            "beyond_duration_wait_hours": 4.524993764702123,
+            "decomposition_sum_job_seconds": 14008575517,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.566768477209332,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.6382563949596188,
+              "within_window_gap": 0.2323361674461679,
+              "beyond_duration_wait": 0.12940743759421314
+            },
+            "w_greater_than_p_count": 19315,
+            "w_greater_than_p_fraction": 0.17356493296430753,
+            "w_equal_p_count": 390,
+            "w_zero_count": 5201,
+            "wait_max_seconds": 10855118
+          },
+          "validation": "PASS",
+          "schedule_sha256": "e1c145ccae2cae5ffe9be1f955baca733a8e7e57d4b98b9e952bc2f59471e718",
+          "runtime_seconds": 163.0517130069784,
+          "scheduler_seconds": 156.53498156601563,
+          "validation_seconds": 2.985924259002786,
+          "io_seconds": 3.508669639006257,
+          "peak_rss_kib_process": 875348
+        },
+        "full-A2": {
+          "policy": "SPT-FILL",
+          "metrics": {
+            "jobs": 111284,
+            "mean_wait_hours": 35.37038955635032,
+            "median_wait_hours": 0.026111111111111113,
+            "p95_wait_hours": 16.281736111110906,
+            "p99_wait_hours": 1570.014330555549,
+            "max_wait_hours": 3012.4869444444444,
+            "mean_jct_hours": 135.14014569579734,
+            "zero_wait_fraction": 0.04656554401351497,
+            "mean_bounded_slowdown_60s": 3.3164111954259474,
+            "p99_bounded_slowdown_60s": 6.577255321706549,
+            "completed_at_horizon": 106795,
+            "gpu_allocation_rate_at_horizon": 0.9995810794672646,
+            "cpu_allocation_rate_at_horizon": 0.17930692190203684,
+            "final_completion_days": 309.5202777777778,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                701.0,
+                158350.29999999987,
+                8836180.719999997,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 55628,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 700,
+                  "mean_wait_hours": 0.07217510366482106,
+                  "p95_wait_hours": 0.08944444444444444,
+                  "zero_wait_fraction": 0.04033939742575681
+                },
+                "q50_q90": {
+                  "count": 44527,
+                  "duration_min_seconds": 701,
+                  "duration_max_seconds": 158323,
+                  "mean_wait_hours": 6.920884251253297,
+                  "p95_wait_hours": 0.9126388888888849,
+                  "zero_wait_fraction": 0.015675882049093808
+                },
+                "q90_q99": {
+                  "count": 10016,
+                  "duration_min_seconds": 158362,
+                  "duration_max_seconds": 8835855,
+                  "mean_wait_hours": 253.41689812965922,
+                  "p95_wait_hours": 1889.7257638888889,
+                  "zero_wait_fraction": 0.17102635782747605
+                },
+                "q99_q100": {
+                  "count": 1113,
+                  "duration_min_seconds": 8837771,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 975.5198652291106,
+                  "p95_wait_hours": 2842.2405555555556,
+                  "zero_wait_fraction": 0.47349505840071876
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 450843778,
+            "candidate_checks": 450843778,
+            "current_plan_cache_hits": 447176013,
+            "current_plan_evaluations": 3667765,
+            "current_plan_cache_peak_entries": 62,
+            "order_builds": 314591,
+            "dispatch_timestamps": 314591,
+            "bypass_candidate_checks": 450465479,
+            "candidate_attempts": 450465479,
+            "unique_candidate_ids": 72642,
+            "repeated_candidate_attempts": 450392837,
+            "budget_exhausted": 1798,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 87576,
+              "mean_wait_hours": 0.04308983371903007,
+              "p99_wait_hours": 0.34729166666666667,
+              "max_wait_hours": 2.6933333333333334
+            },
+            "short_multi": {
+              "n": 377,
+              "mean_wait_hours": 105.60643530798703,
+              "p99_wait_hours": 848.8927000000006,
+              "max_wait_hours": 1300.28
+            },
+            "long_single": {
+              "n": 22921,
+              "mean_wait_hours": 157.89825997750728,
+              "p99_wait_hours": 2361.9908333333333,
+              "max_wait_hours": 3012.4869444444444
+            },
+            "long_multi": {
+              "n": 410,
+              "mean_wait_hours": 666.7930562330623,
+              "p99_wait_hours": 2827.5476722222206,
+              "max_wait_hours": 3002.626388888889
+            }
+          },
+          "decomposition": {
+            "jobs": 111284,
+            "total_wait_job_seconds": 14170170353,
+            "mean_wait_hours": 35.37038955635032,
+            "capacity_lower_bound_job_seconds": 8941062908,
+            "capacity_lower_bound_hours": 22.317930570033027,
+            "within_window_total_job_seconds": 12194444652,
+            "within_window_gap_job_seconds": 3253381744,
+            "within_window_gap_hours": 8.120818366621537,
+            "beyond_duration_wait_job_seconds": 1975725701,
+            "beyond_duration_wait_hours": 4.931640619695753,
+            "decomposition_sum_job_seconds": 14170170353,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.5848418134180966,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.6309777995087452,
+              "within_window_gap": 0.22959369315635778,
+              "beyond_duration_wait": 0.13942850733489695
+            },
+            "w_greater_than_p_count": 19446,
+            "w_greater_than_p_fraction": 0.17474210129039214,
+            "w_equal_p_count": 385,
+            "w_zero_count": 5182,
+            "wait_max_seconds": 10844953
+          },
+          "validation": "PASS",
+          "schedule_sha256": "ee330b44b96ee6d22d74c91ff8802b5be920de6da99d0df94a41599119d389e6",
+          "runtime_seconds": 458.6585455890163,
+          "scheduler_seconds": 453.2478197570308,
+          "validation_seconds": 2.744796270970255,
+          "io_seconds": 2.643916408007499,
+          "peak_rss_kib_process": 553660
+        },
+        "full-A3": {
+          "policy": "SPT-FILL",
+          "metrics": {
+            "jobs": 111284,
+            "mean_wait_hours": 34.91854609976876,
+            "median_wait_hours": 0.025555555555555557,
+            "p95_wait_hours": 15.286277777777642,
+            "p99_wait_hours": 1571.3491083333306,
+            "max_wait_hours": 3012.494722222222,
+            "mean_jct_hours": 134.68830223921577,
+            "zero_wait_fraction": 0.04691599870601344,
+            "mean_bounded_slowdown_60s": 2.977553199595355,
+            "p99_bounded_slowdown_60s": 6.5,
+            "completed_at_horizon": 106802,
+            "gpu_allocation_rate_at_horizon": 0.9995806826816458,
+            "cpu_allocation_rate_at_horizon": 0.1791656481327432,
+            "final_completion_days": 309.52060185185184,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                701.0,
+                158350.29999999987,
+                8836180.719999997,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 55628,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 700,
+                  "mean_wait_hours": 0.06853551468884575,
+                  "p95_wait_hours": 0.08972222222222222,
+                  "zero_wait_fraction": 0.04086071762421802
+                },
+                "q50_q90": {
+                  "count": 44527,
+                  "duration_min_seconds": 701,
+                  "duration_max_seconds": 158323,
+                  "mean_wait_hours": 5.771133563156437,
+                  "p95_wait_hours": 0.9300277777777753,
+                  "zero_wait_fraction": 0.01585554831899746
+                },
+                "q90_q99": {
+                  "count": 10016,
+                  "duration_min_seconds": 158362,
+                  "duration_max_seconds": 8835855,
+                  "mean_wait_hours": 253.5529841420394,
+                  "p95_wait_hours": 1894.8477083333332,
+                  "zero_wait_fraction": 0.17122603833865815
+                },
+                "q99_q100": {
+                  "count": 1113,
+                  "duration_min_seconds": 8837771,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 975.29652940002,
+                  "p95_wait_hours": 2842.091388888889,
+                  "zero_wait_fraction": 0.47349505840071876
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 41392173,
+            "candidate_checks": 41392173,
+            "current_plan_cache_hits": 38648878,
+            "current_plan_evaluations": 2743295,
+            "current_plan_cache_peak_entries": 50,
+            "order_builds": 211558,
+            "dispatch_timestamps": 211558,
+            "bypass_candidate_checks": 41117765,
+            "candidate_attempts": 41117765,
+            "unique_candidate_ids": 72943,
+            "repeated_candidate_attempts": 41044822,
+            "budget_exhausted": 204626,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 87576,
+              "mean_wait_hours": 0.0430226888645291,
+              "p99_wait_hours": 0.34729166666666667,
+              "max_wait_hours": 2.6758333333333333
+            },
+            "short_multi": {
+              "n": 377,
+              "mean_wait_hours": 81.65666740347775,
+              "p99_wait_hours": 886.2642222222223,
+              "max_wait_hours": 1288.4288888888889
+            },
+            "long_single": {
+              "n": 22921,
+              "mean_wait_hours": 157.9799565173131,
+              "p99_wait_hours": 2360.6061111111107,
+              "max_wait_hours": 3012.494722222222
+            },
+            "long_multi": {
+              "n": 410,
+              "mean_wait_hours": 561.6209322493225,
+              "p99_wait_hours": 2544.4045916666573,
+              "max_wait_hours": 2986.5858333333335
+            }
+          },
+          "decomposition": {
+            "jobs": 111284,
+            "total_wait_job_seconds": 13989151743,
+            "mean_wait_hours": 34.91854609976876,
+            "capacity_lower_bound_job_seconds": 8941062908,
+            "capacity_lower_bound_hours": 22.317930570033027,
+            "within_window_total_job_seconds": 12194593693,
+            "within_window_gap_job_seconds": 3253530785,
+            "within_window_gap_hours": 8.121190390252767,
+            "beyond_duration_wait_job_seconds": 1794558050,
+            "beyond_duration_wait_hours": 4.479425139482965,
+            "decomposition_sum_job_seconds": 13989151743,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.5645960538408954,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.6391426065182256,
+              "within_window_gap": 0.23257527295234517,
+              "beyond_duration_wait": 0.12828212052942917
+            },
+            "w_greater_than_p_count": 19520,
+            "w_greater_than_p_fraction": 0.17540706660436362,
+            "w_equal_p_count": 381,
+            "w_zero_count": 5221,
+            "wait_max_seconds": 10844981
+          },
+          "validation": "PASS",
+          "schedule_sha256": "7e1c7cb452a46ba87c3e75ac3ccf080a620dca4a600dd3eae2bc41fe71658539",
+          "runtime_seconds": 123.76269978302298,
+          "scheduler_seconds": 118.1123937079683,
+          "validation_seconds": 2.847040344029665,
+          "io_seconds": 2.781080084037967,
+          "peak_rss_kib_process": 627528
+        },
+        "full-A4": {
+          "policy": "SPT-FILL",
+          "metrics": {
+            "jobs": 111284,
+            "mean_wait_hours": 35.37038955635032,
+            "median_wait_hours": 0.026111111111111113,
+            "p95_wait_hours": 16.281736111110906,
+            "p99_wait_hours": 1570.014330555549,
+            "max_wait_hours": 3012.4869444444444,
+            "mean_jct_hours": 135.14014569579734,
+            "zero_wait_fraction": 0.04656554401351497,
+            "mean_bounded_slowdown_60s": 3.3164111954259474,
+            "p99_bounded_slowdown_60s": 6.577255321706549,
+            "completed_at_horizon": 106795,
+            "gpu_allocation_rate_at_horizon": 0.9995810794672646,
+            "cpu_allocation_rate_at_horizon": 0.17930692190203684,
+            "final_completion_days": 309.5202777777778,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                701.0,
+                158350.29999999987,
+                8836180.719999997,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 55628,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 700,
+                  "mean_wait_hours": 0.07217510366482106,
+                  "p95_wait_hours": 0.08944444444444444,
+                  "zero_wait_fraction": 0.04033939742575681
+                },
+                "q50_q90": {
+                  "count": 44527,
+                  "duration_min_seconds": 701,
+                  "duration_max_seconds": 158323,
+                  "mean_wait_hours": 6.920884251253297,
+                  "p95_wait_hours": 0.9126388888888849,
+                  "zero_wait_fraction": 0.015675882049093808
+                },
+                "q90_q99": {
+                  "count": 10016,
+                  "duration_min_seconds": 158362,
+                  "duration_max_seconds": 8835855,
+                  "mean_wait_hours": 253.41689812965922,
+                  "p95_wait_hours": 1889.7257638888889,
+                  "zero_wait_fraction": 0.17102635782747605
+                },
+                "q99_q100": {
+                  "count": 1113,
+                  "duration_min_seconds": 8837771,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 975.5198652291106,
+                  "p95_wait_hours": 2842.2405555555556,
+                  "zero_wait_fraction": 0.47349505840071876
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 296316988,
+            "candidate_checks": 296316988,
+            "current_plan_cache_hits": 292649273,
+            "current_plan_evaluations": 3667715,
+            "current_plan_cache_peak_entries": 62,
+            "order_builds": 211523,
+            "dispatch_timestamps": 211523,
+            "bypass_candidate_checks": 296041757,
+            "candidate_attempts": 296041757,
+            "unique_candidate_ids": 72642,
+            "repeated_candidate_attempts": 295969115,
+            "budget_exhausted": 1600,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 87576,
+              "mean_wait_hours": 0.04308983371903007,
+              "p99_wait_hours": 0.34729166666666667,
+              "max_wait_hours": 2.6933333333333334
+            },
+            "short_multi": {
+              "n": 377,
+              "mean_wait_hours": 105.60643530798703,
+              "p99_wait_hours": 848.8927000000006,
+              "max_wait_hours": 1300.28
+            },
+            "long_single": {
+              "n": 22921,
+              "mean_wait_hours": 157.89825997750728,
+              "p99_wait_hours": 2361.9908333333333,
+              "max_wait_hours": 3012.4869444444444
+            },
+            "long_multi": {
+              "n": 410,
+              "mean_wait_hours": 666.7930562330623,
+              "p99_wait_hours": 2827.5476722222206,
+              "max_wait_hours": 3002.626388888889
+            }
+          },
+          "decomposition": {
+            "jobs": 111284,
+            "total_wait_job_seconds": 14170170353,
+            "mean_wait_hours": 35.37038955635032,
+            "capacity_lower_bound_job_seconds": 8941062908,
+            "capacity_lower_bound_hours": 22.317930570033027,
+            "within_window_total_job_seconds": 12194444652,
+            "within_window_gap_job_seconds": 3253381744,
+            "within_window_gap_hours": 8.120818366621537,
+            "beyond_duration_wait_job_seconds": 1975725701,
+            "beyond_duration_wait_hours": 4.931640619695753,
+            "decomposition_sum_job_seconds": 14170170353,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.5848418134180966,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.6309777995087452,
+              "within_window_gap": 0.22959369315635778,
+              "beyond_duration_wait": 0.13942850733489695
+            },
+            "w_greater_than_p_count": 19446,
+            "w_greater_than_p_fraction": 0.17474210129039214,
+            "w_equal_p_count": 385,
+            "w_zero_count": 5182,
+            "wait_max_seconds": 10844953
+          },
+          "validation": "PASS",
+          "schedule_sha256": "ee330b44b96ee6d22d74c91ff8802b5be920de6da99d0df94a41599119d389e6",
+          "runtime_seconds": 313.83785703300964,
+          "scheduler_seconds": 308.6988855510135,
+          "validation_seconds": 2.761141419003252,
+          "io_seconds": 2.3558327599894255,
+          "peak_rss_kib_process": 411656
+        },
+        "full-H1": {
+          "policy": "SPT-HOL",
+          "metrics": {
+            "jobs": 111284,
+            "mean_wait_hours": 32.906454035021504,
+            "median_wait_hours": 0.02277777777777778,
+            "p95_wait_hours": 11.086874999999964,
+            "p99_wait_hours": 1542.1810416666613,
+            "max_wait_hours": 3017.2880555555557,
+            "mean_jct_hours": 132.67621017446854,
+            "zero_wait_fraction": 0.10863196865677006,
+            "mean_bounded_slowdown_60s": 1.3929015855345612,
+            "p99_bounded_slowdown_60s": 5.071824733096079,
+            "completed_at_horizon": 107002,
+            "gpu_allocation_rate_at_horizon": 0.9992233791139888,
+            "cpu_allocation_rate_at_horizon": 0.1792678646076574,
+            "final_completion_days": 309.7203240740741,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                701.0,
+                158350.29999999987,
+                8836180.719999997,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 55628,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 700,
+                  "mean_wait_hours": 0.02411890894273867,
+                  "p95_wait_hours": 0.09,
+                  "zero_wait_fraction": 0.10866829654131013
+                },
+                "q50_q90": {
+                  "count": 44527,
+                  "duration_min_seconds": 701,
+                  "duration_max_seconds": 158323,
+                  "mean_wait_hours": 0.3536813493935016,
+                  "p95_wait_hours": 1.0488333333333302,
+                  "zero_wait_fraction": 0.08547622790666337
+                },
+                "q90_q99": {
+                  "count": 10016,
+                  "duration_min_seconds": 158362,
+                  "duration_max_seconds": 8835855,
+                  "mean_wait_hours": 255.50165945598155,
+                  "p95_wait_hours": 1896.677013888889,
+                  "zero_wait_fraction": 0.17082667731629392
+                },
+                "q99_q100": {
+                  "count": 1113,
+                  "duration_min_seconds": 8837771,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 975.5320337925526,
+                  "p95_wait_hours": 2852.3894999999998,
+                  "zero_wait_fraction": 0.47349505840071876
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 420642,
+            "candidate_checks": 420642,
+            "current_plan_cache_hits": 166241,
+            "current_plan_evaluations": 254401,
+            "current_plan_cache_peak_entries": 4,
+            "order_builds": 0,
+            "dispatch_timestamps": 314422,
+            "bypass_candidate_checks": 0,
+            "candidate_attempts": 0,
+            "unique_candidate_ids": 0,
+            "repeated_candidate_attempts": 0,
+            "budget_exhausted": 0,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 87576,
+              "mean_wait_hours": 0.04599478040660556,
+              "p99_wait_hours": 0.405,
+              "max_wait_hours": 6.283611111111111
+            },
+            "short_multi": {
+              "n": 377,
+              "mean_wait_hours": 0.4425375773651636,
+              "p99_wait_hours": 4.7973444444444455,
+              "max_wait_hours": 8.620833333333334
+            },
+            "long_single": {
+              "n": 22921,
+              "mean_wait_hours": 159.5135492803785,
+              "p99_wait_hours": 2357.9048333333326,
+              "max_wait_hours": 3017.2880555555557
+            },
+            "long_multi": {
+              "n": 410,
+              "mean_wait_hours": 3.7972981029810295,
+              "p99_wait_hours": 26.30507499999999,
+              "max_wait_hours": 50.269444444444446
+            }
+          },
+          "decomposition": {
+            "jobs": 111284,
+            "total_wait_job_seconds": 13183062591,
+            "mean_wait_hours": 32.906454035021504,
+            "capacity_lower_bound_job_seconds": 8941062908,
+            "capacity_lower_bound_hours": 22.317930570033027,
+            "within_window_total_job_seconds": 12280695460,
+            "within_window_gap_job_seconds": 3339632552,
+            "within_window_gap_hours": 8.33611039222969,
+            "beyond_duration_wait_job_seconds": 902367131,
+            "beyond_duration_wait_hours": 2.252413072758787,
+            "decomposition_sum_job_seconds": 13183062591,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.4744402009748168,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.6782235043095381,
+              "within_window_gap": 0.2533275199861334,
+              "beyond_duration_wait": 0.06844897570432844
+            },
+            "w_greater_than_p_count": 18599,
+            "w_greater_than_p_fraction": 0.16713094425074584,
+            "w_equal_p_count": 380,
+            "w_zero_count": 12089,
+            "wait_max_seconds": 10862237
+          },
+          "validation": "PASS",
+          "schedule_sha256": "a975854e2b06d1b7024d41dc5bde79249fca6832f2e110d67cb41a0e1d5435a2",
+          "runtime_seconds": 26.563173437025398,
+          "scheduler_seconds": 21.1254821929615,
+          "validation_seconds": 2.870672231016215,
+          "io_seconds": 2.5450539679732174,
+          "peak_rss_kib_process": 550196
+        },
+        "full-H2": {
+          "policy": "SPT-HOL",
+          "metrics": {
+            "jobs": 111284,
+            "mean_wait_hours": 32.906454035021504,
+            "median_wait_hours": 0.02277777777777778,
+            "p95_wait_hours": 11.086874999999964,
+            "p99_wait_hours": 1542.1810416666613,
+            "max_wait_hours": 3017.2880555555557,
+            "mean_jct_hours": 132.67621017446854,
+            "zero_wait_fraction": 0.10863196865677006,
+            "mean_bounded_slowdown_60s": 1.3929015855345612,
+            "p99_bounded_slowdown_60s": 5.071824733096079,
+            "completed_at_horizon": 107002,
+            "gpu_allocation_rate_at_horizon": 0.9992233791139888,
+            "cpu_allocation_rate_at_horizon": 0.1792678646076574,
+            "final_completion_days": 309.7203240740741,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                701.0,
+                158350.29999999987,
+                8836180.719999997,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 55628,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 700,
+                  "mean_wait_hours": 0.02411890894273867,
+                  "p95_wait_hours": 0.09,
+                  "zero_wait_fraction": 0.10866829654131013
+                },
+                "q50_q90": {
+                  "count": 44527,
+                  "duration_min_seconds": 701,
+                  "duration_max_seconds": 158323,
+                  "mean_wait_hours": 0.3536813493935016,
+                  "p95_wait_hours": 1.0488333333333302,
+                  "zero_wait_fraction": 0.08547622790666337
+                },
+                "q90_q99": {
+                  "count": 10016,
+                  "duration_min_seconds": 158362,
+                  "duration_max_seconds": 8835855,
+                  "mean_wait_hours": 255.50165945598155,
+                  "p95_wait_hours": 1896.677013888889,
+                  "zero_wait_fraction": 0.17082667731629392
+                },
+                "q99_q100": {
+                  "count": 1113,
+                  "duration_min_seconds": 8837771,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 975.5320337925526,
+                  "p95_wait_hours": 2852.3894999999998,
+                  "zero_wait_fraction": 0.47349505840071876
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 317503,
+            "candidate_checks": 317503,
+            "current_plan_cache_hits": 63102,
+            "current_plan_evaluations": 254401,
+            "current_plan_cache_peak_entries": 4,
+            "order_builds": 0,
+            "dispatch_timestamps": 211283,
+            "bypass_candidate_checks": 0,
+            "candidate_attempts": 0,
+            "unique_candidate_ids": 0,
+            "repeated_candidate_attempts": 0,
+            "budget_exhausted": 0,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 0,
+            "crossing_accepted": 0,
+            "crossing_rejected": 0,
+            "certificate_updates": 0,
+            "reservation_rejects": 0
+          },
+          "groups": {
+            "short_single": {
+              "n": 87576,
+              "mean_wait_hours": 0.04599478040660556,
+              "p99_wait_hours": 0.405,
+              "max_wait_hours": 6.283611111111111
+            },
+            "short_multi": {
+              "n": 377,
+              "mean_wait_hours": 0.4425375773651636,
+              "p99_wait_hours": 4.7973444444444455,
+              "max_wait_hours": 8.620833333333334
+            },
+            "long_single": {
+              "n": 22921,
+              "mean_wait_hours": 159.5135492803785,
+              "p99_wait_hours": 2357.9048333333326,
+              "max_wait_hours": 3017.2880555555557
+            },
+            "long_multi": {
+              "n": 410,
+              "mean_wait_hours": 3.7972981029810295,
+              "p99_wait_hours": 26.30507499999999,
+              "max_wait_hours": 50.269444444444446
+            }
+          },
+          "decomposition": {
+            "jobs": 111284,
+            "total_wait_job_seconds": 13183062591,
+            "mean_wait_hours": 32.906454035021504,
+            "capacity_lower_bound_job_seconds": 8941062908,
+            "capacity_lower_bound_hours": 22.317930570033027,
+            "within_window_total_job_seconds": 12280695460,
+            "within_window_gap_job_seconds": 3339632552,
+            "within_window_gap_hours": 8.33611039222969,
+            "beyond_duration_wait_job_seconds": 902367131,
+            "beyond_duration_wait_hours": 2.252413072758787,
+            "decomposition_sum_job_seconds": 13183062591,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.4744402009748168,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.6782235043095381,
+              "within_window_gap": 0.2533275199861334,
+              "beyond_duration_wait": 0.06844897570432844
+            },
+            "w_greater_than_p_count": 18599,
+            "w_greater_than_p_fraction": 0.16713094425074584,
+            "w_equal_p_count": 380,
+            "w_zero_count": 12089,
+            "wait_max_seconds": 10862237
+          },
+          "validation": "PASS",
+          "schedule_sha256": "a975854e2b06d1b7024d41dc5bde79249fca6832f2e110d67cb41a0e1d5435a2",
+          "runtime_seconds": 24.857990973978303,
+          "scheduler_seconds": 19.939033620001283,
+          "validation_seconds": 2.6883786200196482,
+          "io_seconds": 2.2090463739586994,
+          "peak_rss_kib_process": 391668
+        },
+        "full-C1": {
+          "policy": "SPT-HEAD-TIME",
+          "metrics": {
+            "jobs": 111284,
+            "mean_wait_hours": 32.92381685846822,
+            "median_wait_hours": 0.04972222222222222,
+            "p95_wait_hours": 10.932708333333297,
+            "p99_wait_hours": 1541.5865916666664,
+            "max_wait_hours": 3017.7277777777776,
+            "mean_jct_hours": 132.69357299791525,
+            "zero_wait_fraction": 0.050150965098307035,
+            "mean_bounded_slowdown_60s": 1.683963354926137,
+            "p99_bounded_slowdown_60s": 6.854635046113306,
+            "completed_at_horizon": 106999,
+            "gpu_allocation_rate_at_horizon": 0.9994261879745958,
+            "cpu_allocation_rate_at_horizon": 0.1793059460133529,
+            "final_completion_days": 309.73864583333335,
+            "duration_strata": {
+              "quantile_bounds_seconds": [
+                1.0,
+                701.0,
+                158350.29999999987,
+                8836180.719999997,
+                15897599.0
+              ],
+              "bands": {
+                "q00_q50": {
+                  "count": 55628,
+                  "duration_min_seconds": 1,
+                  "duration_max_seconds": 700,
+                  "mean_wait_hours": 0.04263036999752323,
+                  "p95_wait_hours": 0.12916666666666668,
+                  "zero_wait_fraction": 0.046487380455885526
+                },
+                "q50_q90": {
+                  "count": 44527,
+                  "duration_min_seconds": 701,
+                  "duration_max_seconds": 158323,
+                  "mean_wait_hours": 0.39468767389573867,
+                  "p95_wait_hours": 1.325,
+                  "zero_wait_fraction": 0.01704583735710917
+                },
+                "q90_q99": {
+                  "count": 10016,
+                  "duration_min_seconds": 158362,
+                  "duration_max_seconds": 8835855,
+                  "mean_wait_hours": 255.3554282314963,
+                  "p95_wait_hours": 1896.7225,
+                  "zero_wait_fraction": 0.1706269968051118
+                },
+                "q99_q100": {
+                  "count": 1113,
+                  "duration_min_seconds": 8837771,
+                  "duration_max_seconds": 15897599,
+                  "mean_wait_hours": 976.0182981431566,
+                  "p95_wait_hours": 2852.7253888888886,
+                  "zero_wait_fraction": 0.47349505840071876
+                }
+              }
+            }
+          },
+          "cost": {
+            "planner_calls": 61893349,
+            "candidate_checks": 61893349,
+            "current_plan_cache_hits": 61099385,
+            "current_plan_evaluations": 1206376,
+            "current_plan_cache_peak_entries": 24,
+            "order_builds": 314889,
+            "dispatch_timestamps": 314889,
+            "bypass_candidate_checks": 61784446,
+            "candidate_attempts": 61784446,
+            "unique_candidate_ids": 106363,
+            "repeated_candidate_attempts": 61678083,
+            "budget_exhausted": 307963,
+            "protected_hol_blocked": 0,
+            "protected_hol_fastpath": 0,
+            "protected_hol_commits": 0,
+            "reservation_calls": 100205,
+            "crossing_accepted": 0,
+            "crossing_rejected": 2780581,
+            "certificate_updates": 0,
+            "reservation_rejects": 61782065
+          },
+          "groups": {
+            "short_single": {
+              "n": 87576,
+              "mean_wait_hours": 0.07438909252154319,
+              "p99_wait_hours": 0.6000694444444444,
+              "max_wait_hours": 5.060833333333333
+            },
+            "short_multi": {
+              "n": 377,
+              "mean_wait_hours": 0.46332007073386383,
+              "p99_wait_hours": 4.708777777777782,
+              "max_wait_hours": 7.5713888888888885
+            },
+            "long_single": {
+              "n": 22921,
+              "mean_wait_hours": 159.49111502552245,
+              "p99_wait_hours": 2358.158666666666,
+              "max_wait_hours": 3017.7277777777776
+            },
+            "long_multi": {
+              "n": 410,
+              "mean_wait_hours": 3.6800413279132793,
+              "p99_wait_hours": 24.563249999999943,
+              "max_wait_hours": 50.43055555555556
+            }
+          },
+          "decomposition": {
+            "jobs": 111284,
+            "total_wait_job_seconds": 13190018527,
+            "mean_wait_hours": 32.92381685846822,
+            "capacity_lower_bound_job_seconds": 8941062908,
+            "capacity_lower_bound_hours": 22.317930570033027,
+            "within_window_total_job_seconds": 12289622106,
+            "within_window_gap_job_seconds": 3348559198,
+            "within_window_gap_hours": 8.358392336524368,
+            "beyond_duration_wait_job_seconds": 900396421,
+            "beyond_duration_wait_hours": 2.2474939519108266,
+            "decomposition_sum_job_seconds": 13190018527,
+            "residual_job_seconds": 0,
+            "mean_to_capacity_lb": 1.4752181773822723,
+            "fractions_of_mean": {
+              "capacity_lower_bound": 0.6778658339029336,
+              "within_window_gap": 0.25387069708397236,
+              "beyond_duration_wait": 0.06826346901309398
+            },
+            "w_greater_than_p_count": 30347,
+            "w_greater_than_p_fraction": 0.27269868085259336,
+            "w_equal_p_count": 339,
+            "w_zero_count": 5581,
+            "wait_max_seconds": 10863820
+          },
+          "validation": "PASS",
+          "schedule_sha256": "f2544b13c79747ee1cc51ca1f07b281fff817bb5ea3c1c5b532d27c2673333a5",
+          "runtime_seconds": 651.9099544250057,
+          "scheduler_seconds": 374.9804593740264,
+          "validation_seconds": 269.11326182598714,
+          "io_seconds": 7.796928813972045,
+          "peak_rss_kib_process": 2187224
+        }
+      }
+    }
+  },
+  "pairs": {
+    "65k-A1->65k-A2": {
+      "jobs": 65536,
+      "mean_delta_hours": 0.22435601976182726,
+      "improved_jobs": 16288,
+      "worsened_jobs": 16473,
+      "unchanged_jobs": 32775,
+      "positive_added_wait_job_seconds": 88383798,
+      "max_added_wait_hours": 384.0,
+      "base_zero_wait_new_delay_jobs": 284
+    },
+    "65k-A1->65k-A3": {
+      "jobs": 65536,
+      "mean_delta_hours": 0.06861409929063585,
+      "improved_jobs": 16248,
+      "worsened_jobs": 16306,
+      "unchanged_jobs": 32982,
+      "positive_added_wait_job_seconds": 49756136,
+      "max_added_wait_hours": 263.00805555555553,
+      "base_zero_wait_new_delay_jobs": 277
+    },
+    "65k-A1->65k-A4": {
+      "jobs": 65536,
+      "mean_delta_hours": 0.22435601976182726,
+      "improved_jobs": 16288,
+      "worsened_jobs": 16473,
+      "unchanged_jobs": 32775,
+      "positive_added_wait_job_seconds": 88383798,
+      "max_added_wait_hours": 384.0,
+      "base_zero_wait_new_delay_jobs": 284
+    },
+    "65k-A1->65k-H1": {
+      "jobs": 65536,
+      "mean_delta_hours": -0.7100853178236219,
+      "improved_jobs": 30659,
+      "worsened_jobs": 29695,
+      "unchanged_jobs": 5182,
+      "positive_added_wait_job_seconds": 96710350,
+      "max_added_wait_hours": 413.2427777777778,
+      "base_zero_wait_new_delay_jobs": 840
+    },
+    "65k-A1->65k-H2": {
+      "jobs": 65536,
+      "mean_delta_hours": -0.7100853178236219,
+      "improved_jobs": 30659,
+      "worsened_jobs": 29695,
+      "unchanged_jobs": 5182,
+      "positive_added_wait_job_seconds": 96710350,
+      "max_added_wait_hours": 413.2427777777778,
+      "base_zero_wait_new_delay_jobs": 840
+    },
+    "65k-A1->65k-C1": {
+      "jobs": 65536,
+      "mean_delta_hours": -0.6892490090264214,
+      "improved_jobs": 18818,
+      "worsened_jobs": 42164,
+      "unchanged_jobs": 4554,
+      "positive_added_wait_job_seconds": 98893799,
+      "max_added_wait_hours": 385.2447222222222,
+      "base_zero_wait_new_delay_jobs": 911
+    },
+    "full-A1->full-A2": {
+      "jobs": 111284,
+      "mean_delta_hours": 0.40335946267607603,
+      "improved_jobs": 38562,
+      "worsened_jobs": 39468,
+      "unchanged_jobs": 33254,
+      "positive_added_wait_job_seconds": 253836190,
+      "max_added_wait_hours": 1360.0619444444444,
+      "base_zero_wait_new_delay_jobs": 706
+    },
+    "full-A1->full-A3": {
+      "jobs": 111284,
+      "mean_delta_hours": -0.04848399390548307,
+      "improved_jobs": 39170,
+      "worsened_jobs": 38709,
+      "unchanged_jobs": 33405,
+      "positive_added_wait_job_seconds": 130437521,
+      "max_added_wait_hours": 675.4983333333333,
+      "base_zero_wait_new_delay_jobs": 705
+    },
+    "full-A1->full-A4": {
+      "jobs": 111284,
+      "mean_delta_hours": 0.40335946267607603,
+      "improved_jobs": 38562,
+      "worsened_jobs": 39468,
+      "unchanged_jobs": 33254,
+      "positive_added_wait_job_seconds": 253836190,
+      "max_added_wait_hours": 1360.0619444444444,
+      "base_zero_wait_new_delay_jobs": 706
+    },
+    "full-A1->full-H1": {
+      "jobs": 111284,
+      "mean_delta_hours": -2.0605760586527366,
+      "improved_jobs": 55266,
+      "worsened_jobs": 50575,
+      "unchanged_jobs": 5443,
+      "positive_added_wait_job_seconds": 208873690,
+      "max_added_wait_hours": 623.6480555555555,
+      "base_zero_wait_new_delay_jobs": 1226
+    },
+    "full-A1->full-H2": {
+      "jobs": 111284,
+      "mean_delta_hours": -2.0605760586527366,
+      "improved_jobs": 55266,
+      "worsened_jobs": 50575,
+      "unchanged_jobs": 5443,
+      "positive_added_wait_job_seconds": 208873690,
+      "max_added_wait_hours": 623.6480555555555,
+      "base_zero_wait_new_delay_jobs": 1226
+    },
+    "full-A1->full-C1": {
+      "jobs": 111284,
+      "mean_delta_hours": -2.0432132352060193,
+      "improved_jobs": 31962,
+      "worsened_jobs": 74725,
+      "unchanged_jobs": 4597,
+      "positive_added_wait_job_seconds": 215564420,
+      "max_added_wait_hours": 623.3591666666666,
+      "base_zero_wait_new_delay_jobs": 1343
+    }
+  },
+  "execution": {
+    "analysis_seconds": 0
+  },
+  "limitations": [
+    "168h is exploratory, not optimized",
+    "SPT-HEAD-TIME is a bounded candidate",
+    "results are A10-only; no 224112-job cluster claim"
+  ]
+}

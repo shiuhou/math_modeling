@@ -1,0 +1,319 @@
+{
+  "kind": "Q3-V2-R1 persisted-evidence postprocessing",
+  "new_scheduling_runs": 0,
+  "candidate_B": "IMPLEMENTATION_DEFERRED",
+  "horizon_seconds": 7776000,
+  "source_commit": "d460fdb348b58085aafd830be84d30f4d8821e9d",
+  "source_commit_scope": "HEAD before publication commit; new generator/tests were uncommitted at execution",
+  "baseline_tag_commit": "4ee2c6bfa98cf7177ff976abe73b122889437f46",
+  "command": [
+    "python",
+    "problems/2026_gpu_scheduling/experiments/analyze_q3_v2_tradeoffs.py",
+    "--out",
+    "results/20261018-b-q3-v2-r1-6f2c8a10"
+  ],
+  "environment": {
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "pandas": "2.2.3",
+    "numpy": "2.3.5"
+  },
+  "groups": {
+    "A10": 111284,
+    "ALL": 224112,
+    "native_A100": 80877
+  },
+  "pair_definition": "candidate minus named reference, aligned original ID; means over n, conditional means over harmed_jobs; null iff no harmed jobs",
+  "quantiles": "linear; full named cohort unless harmed_ prefix; each direction recomputed from timing",
+  "checks": [
+    {
+      "policy": "FCFS",
+      "option": "M0",
+      "sigma": null,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "FCFS",
+      "option": "R0",
+      "sigma": 1,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "FCFS",
+      "option": "R0",
+      "sigma": 2,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "FCFS",
+      "option": "R-shape",
+      "sigma": 1,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "FCFS",
+      "option": "R-shape",
+      "sigma": 2,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "SJF-HOL",
+      "option": "M0",
+      "sigma": null,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "SJF-HOL",
+      "option": "R0",
+      "sigma": 1,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "SJF-HOL",
+      "option": "R0",
+      "sigma": 2,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "SJF-HOL",
+      "option": "R-shape",
+      "sigma": 1,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    },
+    {
+      "policy": "SJF-HOL",
+      "option": "R-shape",
+      "sigma": 2,
+      "raw_attributes_ids_duration": "PASS",
+      "route_oracle": "PASS",
+      "published_metrics": "PASS"
+    }
+  ],
+  "paired_mean_and_reverse_identities": "PASS",
+  "native_timing_placement_vs_same_partition_R0": "PASS",
+  "physical_replay": "NOT_RUN in R1; prior PASS in hashed V1/S2/V2 independent reports, not rerun scheduling",
+  "prior_verifier_limit": "V2 prior route check called production route_shape; R1 independently audits raw attributes, arithmetic eligibility, hash and shape IDs; no new physical replay claim",
+  "historical_execution_count": "not audited; new_scheduling_runs=0 refers only to R1",
+  "sources": {
+    "results/20261017-b-q3-v2-shape-a17c4e9d/manifest.json": {
+      "sha256": "a95186890ac41dbde12e9b19ed9da80d9de5c205df8c0a3438f7123d0fb2add4",
+      "bytes": 6590
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/README.md": {
+      "sha256": "5b12b8ebed12c3d574ec17fc214c187f01baec3f2229af06bb2e5dfef3730c0f",
+      "bytes": 2994
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/Rshape_sigma1_FCFS_metrics.json": {
+      "sha256": "39ca6ad7265ace9eacfe69bcaf06584c1e80e2430a515ef58855f7dd9781857f",
+      "bytes": 36801
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/Rshape_sigma1_SJF-HOL_metrics.json": {
+      "sha256": "4b0b5fcf1e690f8ef045d4e5215eb4d7b5ab3cbe2d72968a329c241c71c33c98",
+      "bytes": 37371
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/Rshape_sigma2_FCFS_metrics.json": {
+      "sha256": "56231a200637d646f517fe005348a174979c05b7ea150420cfcd9bf15271911c",
+      "bytes": 36941
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/Rshape_sigma2_SJF-HOL_metrics.json": {
+      "sha256": "38e99e50b1dad13f6d6fb809dc44f4efde6d4c796b6bd85e8a71e0a2b7b3626d",
+      "bytes": 37434
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/candidate_B_spec.json": {
+      "sha256": "7e84fa4b255c5c19c9fc3f996e13db1fb8a470f24b53f467c3b45c885ea3678f",
+      "bytes": 1048
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/frozen_config.json": {
+      "sha256": "1f14585c3468f2f8ae3e0233995f127eae88d44622b1085b17bd7be1dfd27b7c",
+      "bytes": 561
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/independent_verification.json": {
+      "sha256": "4a65e4e4f08381fe39233253be39fa48983bb36b34b7405f7deb702ccf751c25",
+      "bytes": 790
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/scenario_status.json": {
+      "sha256": "daf8eff34290aaaa80283ef05e760a628cfe45b081305c67a90ddf50303fb235",
+      "bytes": 813
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/shape_audit.json": {
+      "sha256": "7682fc54e3b22f8f3479537c9cb0f6d47e834935e6078ad326ca9e3611f2107c",
+      "bytes": 235
+    },
+    "results/20261017-b-q3-v2-shape-a17c4e9d/shape_metrics.json": {
+      "sha256": "0ab2e915b61e9858faa522297356aea1df2f7e350f3f45e38a89ab9f3259fa7e",
+      "bytes": 164642
+    },
+    "results/20261015-b-q3-fixed-split-c9e8f1a2/run.json": {
+      "sha256": "313ce6aea4827910358cb65ee78640c2d028c3d40619b760acd3586136646279",
+      "bytes": 6813
+    },
+    "results/20261015-b-q3-fixed-split-c9e8f1a2/metrics.json": {
+      "sha256": "bccc58ab91c33b150499062e9c802331692de43ef1382ccde81d55fac58ec10b",
+      "bytes": 48302
+    },
+    "results/20261015-b-q3-fixed-split-c9e8f1a2/verified.json": {
+      "sha256": "32ed177b91ef050dad11e303d1f883cfebb1d85cb7cd687a28e02f8ef8ce67ed",
+      "bytes": 2779
+    },
+    "results/20261015-b-q3-s2-fixed-split-v1/manifest.json": {
+      "sha256": "a621ff9efb99438a19eab7b98b0de3aa28a58c20d7e5c5ee5e3add1fa606957f",
+      "bytes": 10971
+    },
+    "results/20261015-b-q3-s2-fixed-split-v1/independent_verification.json": {
+      "sha256": "f9fb6c0cbdc174deaab5cf8a0cc512a0dffb21c06f113572082edc8fa9a7c19d",
+      "bytes": 5417
+    },
+    "problems/2026_gpu_scheduling/paper/output/integration_runtime_equivalence.json": {
+      "sha256": "a6b99944f833c1050566959a9d34b84653df61ebe884386bd491a05f9d77b02d",
+      "bytes": 44737
+    },
+    "problems/2026_gpu_scheduling/data/raw/job_info_clean.csv": {
+      "sha256": "ef14d696adc1b5c7847db49b41a068a998c8cd669e63922c92b3f1c3f32eedb0",
+      "bytes": 7796214
+    },
+    "problems/2026_gpu_scheduling/data/raw/node_info_df.csv": {
+      "sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "bytes": 78330
+    },
+    "outputs/Q3_v2_shape_a17c4e9d_evidence.zip": {
+      "sha256": "797a6ceb7c9dff27992e79264728c92e83cd6f8b85492d38d7b70b6cf1cbdb64",
+      "bytes": 22995288
+    },
+    "outputs/b-q3-fixed-split-v1-final/FCFS_M0_jobs.csv.gz": {
+      "sha256": "fb16c68dee54c3c9ffbeb041cffd4c1a7f7ed428eab3e48d12b5125d4c891a22",
+      "bytes": 4533721
+    },
+    "outputs/b-q3-fixed-split-v1-final/FCFS_M0_placements.csv.gz": {
+      "sha256": "4084ce697ceb617f8d3ae7bf50004f4d7f1e2a3ecf26d0ec841b680238ff91cf",
+      "bytes": 1220607
+    },
+    "outputs/b-q3-fixed-split-v1-final/FCFS_M1_jobs.csv.gz": {
+      "sha256": "d996d7912ad5c92048946af22eb9b3dff69b0efa4ee9a4a59c0a652dc8cef77d",
+      "bytes": 4566102
+    },
+    "outputs/b-q3-fixed-split-v1-final/FCFS_M1_placements.csv.gz": {
+      "sha256": "12d977e19fd7d23379f5e34156ebdc38b099682b873297c05e4ca7eb1661cddc",
+      "bytes": 1221403
+    },
+    "outputs/q3-v2-r0-sigma2/S5_FCFS/jobs.csv.gz": {
+      "sha256": "e6085714fc70417c0b9fb357baaed6c1a71f833a6b3b11619d77aa46cd0fdcec",
+      "bytes": 4579737
+    },
+    "outputs/q3-v2-r0-sigma2/S5_FCFS/placements.csv.gz": {
+      "sha256": "22fffea4e64fcf559a2280e30e2c19601600651dbdf6f5d73aba1c822d8be82a",
+      "bytes": 1221407
+    },
+    "results/20261015-b-q3-s2-fixed-split-v1/S5_FCFS_metrics.json": {
+      "sha256": "50cceb2902d905c3f2c86c49c7a355da484765f1caee59d95429836497c8e37a",
+      "bytes": 27378
+    },
+    "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma1_FCFS/jobs.csv.gz": {
+      "sha256": "0145de2567361160da5ed692222ff4479293dbb388a3e6d210b4cc4fb4465f6f",
+      "bytes": 4568852
+    },
+    "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma1_FCFS/placements.csv.gz": {
+      "sha256": "27a9666c2880f9210c8c8aed958dddac10ca7c0184a4126b0bdb6a384d6f6c85",
+      "bytes": 1220441
+    },
+    "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma2_FCFS/jobs.csv.gz": {
+      "sha256": "8fd9146f5a64b0e2ded6631e032174fae11fe2289e2e2a8256a6eba85bcc1ba5",
+      "bytes": 4578357
+    },
+    "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma2_FCFS/placements.csv.gz": {
+      "sha256": "3f7cffe46d2a132a9174883b5afa555332343726a22d24d1a7df295bb90327d9",
+      "bytes": 1221282
+    },
+    "outputs/b-q3-fixed-split-v1-final/SJF-HOL_M0_jobs.csv.gz": {
+      "sha256": "d20208c418682d567bef7b55ff86aaec0bcd1e08635f4ee52f54949d503d2b75",
+      "bytes": 4459791
+    },
+    "outputs/b-q3-fixed-split-v1-final/SJF-HOL_M0_placements.csv.gz": {
+      "sha256": "292ecd954662bb37e2bd02b4bd923896a6d95c80f6266c704334904bf9ed15cd",
+      "bytes": 1191167
+    },
+    "outputs/b-q3-fixed-split-v1-final/SJF-HOL_M1_jobs.csv.gz": {
+      "sha256": "eb84592e486db524254757373ecb1ed9133d91b4c15847a2d61b3e29446b1133",
+      "bytes": 4513731
+    },
+    "outputs/b-q3-fixed-split-v1-final/SJF-HOL_M1_placements.csv.gz": {
+      "sha256": "96503934932e5eacba53f41a658df8f3b09a9b105153f9ac13ad4d3706a6c1ee",
+      "bytes": 1196694
+    },
+    "outputs/q3-v2-r0-sigma2/S5_SJF-HOL/jobs.csv.gz": {
+      "sha256": "d91782322e4acda6208d0d30624cea4e0de1dbf742996c73f7316bcf1d1b8230",
+      "bytes": 4529163
+    },
+    "outputs/q3-v2-r0-sigma2/S5_SJF-HOL/placements.csv.gz": {
+      "sha256": "b5e8e29855d6ab3ea6c23e21be756476e9313ef4ef3ae839f8bb0171e3d62bb1",
+      "bytes": 1196497
+    },
+    "results/20261015-b-q3-s2-fixed-split-v1/S5_SJF-HOL_metrics.json": {
+      "sha256": "41e811701048891a0554e0977443d7357e25e593091499729964f8b7343d22d0",
+      "bytes": 27489
+    },
+    "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma1_SJF-HOL/jobs.csv.gz": {
+      "sha256": "6dbcdf1b7954b5c70cbe2b5901396f655daeb489fd504909e217a20b38333360",
+      "bytes": 4509970
+    },
+    "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma1_SJF-HOL/placements.csv.gz": {
+      "sha256": "24a8d13bfe62743e61e0a3a3ca9abdb365788740df0024654aee6edb19126b63",
+      "bytes": 1196187
+    },
+    "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma2_SJF-HOL/jobs.csv.gz": {
+      "sha256": "a4f14854c8c889c0c1a0ca48b0629f56440f0331aaf4b98a49bdfa07b062d687",
+      "bytes": 4520422
+    },
+    "outputs/q3-v2-shape-a17c4e9d/Rshape_sigma2_SJF-HOL/placements.csv.gz": {
+      "sha256": "7db1ef5e9d15c24187ec93bd8f5b9573a0eed62931787c6ecda7fcfbfb5767a7",
+      "bytes": 1197299
+    },
+    "problems/2026_gpu_scheduling/experiments/analyze_q3_v2_tradeoffs.py": {
+      "sha256": "6d18427d07a365b61403960fc66a4c51a8b2cb84ae9fa91bb9e920aaaaff21dd",
+      "bytes": 31579
+    },
+    "problems/2026_gpu_scheduling/tests/test_q3_v2_tradeoffs.py": {
+      "sha256": "6ed783d64e022bc3c52660682e4aa57a3150acfee99aca6af2c28a2ba4d6adba",
+      "bytes": 6302
+    }
+  },
+  "delivery": {
+    "status": "LOCAL_ONLY",
+    "cross_machine": "BLOCKED",
+    "archive": "outputs/Q3_v2_shape_a17c4e9d_evidence.zip",
+    "sha256": "797a6ceb7c9dff27992e79264728c92e83cd6f8b85492d38d7b70b6cf1cbdb64",
+    "bytes": 22995288,
+    "access": "Authorized local filesystem read in this worktree; no remote/shared URI or transfer authorization established. Ask owner for an authorized copy; verify listed hash before extraction.",
+    "scope": "Archive contains four R-shape timing/placement pairs only; M0 and R0 inputs are separately listed local sources."
+  },
+  "result_sha256": {
+    "README.md": "ef6f6a500073231dee3f5f2e0afe7e7146f8f090e749eada5c8b44f88d799e73",
+    "discrete_worst.csv": "435e390444d5cf72a8d23650acb0318dfd7dd216e8e509139eb8c79c6f1aff4f",
+    "discrete_worst.json": "6b03c552f4f007672f350affbae62018088aca14cf519dca086d3b0f008374e4",
+    "discrete_worst.md": "f9c5ddb7b257c24f1d4f45571d8d111e659defd8758c194556aec7b7703d2b8b",
+    "main_table.csv": "4d07455a3533e864cb773754928f93aa346a66050cd2050fb47b05411cace8fe",
+    "main_table.json": "13c27806b3ff6e0622d812eb86f380612b6fd5df78b25d2e540998546bca9ac9",
+    "main_table.md": "ed8aba34d03f32d358ef9e33c2d04710b63d10dc32bf5f6517f213ccc83f2dc8",
+    "native_invariance.csv": "d0e072d8c073a5c4f2799fc1d429016ea43223959a8b86f30ce9964ab2bf237a",
+    "native_invariance.json": "1bde6448e41e5ce7f73bed89aac394078229f308c68aaf864add4056c4e3af52",
+    "paired.csv": "0396f0bd45e05af62271c953c2f0238153460f53f0f94e2978e55a244fe1e87f",
+    "paired.json": "8c6eeedbf202eb20f176af106024c2c641e70250dd54696fc9aa97b827c9b2dc",
+    "routing.json": "684de80019b338f8d3468b6b0ce4d201824f91df965e3409e356f71a2961d210"
+  }
+}

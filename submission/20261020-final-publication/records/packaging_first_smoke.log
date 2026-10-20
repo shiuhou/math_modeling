@@ -1,0 +1,45 @@
+test_supplied_hand_cases_and_scalar_oracle (test_baseline.SuppliedBaselineTests.test_supplied_hand_cases_and_scalar_oracle) ... ok
+test_default_ff_id_path_is_unchanged (test_gang_placement.GangPlacementChecks.test_default_ff_id_path_is_unchanged) ... ok
+test_ratio_and_ff_are_reproducible_with_explicit_order (test_gang_placement.GangPlacementChecks.test_ratio_and_ff_are_reproducible_with_explicit_order) ... ok
+test_ratio_prefers_shape_and_keeps_fallback (test_gang_placement.GangPlacementChecks.test_ratio_prefers_shape_and_keeps_fallback) ... ok
+test_zero_cpu_multigpu_atomic_and_tie (test_gang_placement.GangPlacementChecks.test_zero_cpu_multigpu_atomic_and_tie) ... ok
+test_roundtrip_and_semantic_tampering (test_q3.Q3PersistedCLI.test_roundtrip_and_semantic_tampering) ... ERROR
+test_bad_configuration_and_fractional_duration (test_q3.Q3Tests.test_bad_configuration_and_fractional_duration) ... ok
+test_capacity_overallocation_detected (test_q3.Q3Tests.test_capacity_overallocation_detected) ... ok
+test_corrupt_ledger_duplicate_workers_partition (test_q3.Q3Tests.test_corrupt_ledger_duplicate_workers_partition) ... ok
+test_corrupt_saved_job_identity_model_duration_and_time (test_q3.Q3Tests.test_corrupt_saved_job_identity_model_duration_and_time) ... ok
+test_cpu_bottleneck_same_node (test_q3.Q3Tests.test_cpu_bottleneck_same_node) ... ok
+test_empty_foreign_queue_retains_idle_capacity (test_q3.Q3Tests.test_empty_foreign_queue_retains_idle_capacity) ... ok
+test_hand_fcfs_queue_release_and_native_harm (test_q3.Q3Tests.test_hand_fcfs_queue_release_and_native_harm) ... ok
+test_hash_no_future_or_order_dependence (test_q3.Q3Tests.test_hash_no_future_or_order_dependence) ... ok
+test_infeasible_native_partition_rejected (test_q3.Q3Tests.test_infeasible_native_partition_rejected) ... ok
+test_metrics_tamper_detected (test_q3.Q3Tests.test_metrics_tamper_detected) ... ok
+test_multinode_gang_structural_fallback (test_q3.Q3Tests.test_multinode_gang_structural_fallback) ... ok
+test_sjf_hol_and_independent_scalar_oracle (test_q3.Q3Tests.test_sjf_hol_and_independent_scalar_oracle) ... ok
+test_zero_and_disabled_exact_equivalence (test_q3.Q3Tests.test_zero_and_disabled_exact_equivalence) ... ok
+test_completion_cost_is_explicitly_deferred_with_minimal_interface (test_q3_v2_shape.RShapeTests.test_completion_cost_is_explicitly_deferred_with_minimal_interface) ... ok
+test_no_transfer_restores_isolated_schedule_and_keeps_partition (test_q3_v2_shape.RShapeTests.test_no_transfer_restores_isolated_schedule_and_keeps_partition) ... ok
+test_reversing_arrival_order_does_not_change_route (test_q3_v2_shape.RShapeTests.test_reversing_arrival_order_does_not_change_route) ... ok
+test_sigma_two_can_start_earlier_but_finish_later (test_q3_v2_shape.RShapeTests.test_sigma_two_can_start_earlier_but_finish_later) ... ok
+test_sigma_two_changes_only_routed_duration (test_q3_v2_shape.RShapeTests.test_sigma_two_changes_only_routed_duration) ... ok
+test_threshold_is_derived_from_donor_data (test_q3_v2_shape.RShapeTests.test_threshold_is_derived_from_donor_data) ... ok
+test_v1_eligibility_hash_then_shape_filter (test_q3_v2_shape.RShapeTests.test_v1_eligibility_hash_then_shape_filter) ... ok
+test_exact_decomposition_beyond_and_positive_gap (test_q2_bounds.M2FBoundChecks.test_exact_decomposition_beyond_and_positive_gap) ... ok
+test_gang_width_and_random_small_oracle (test_q2_bounds.M2FBoundChecks.test_gang_width_and_random_small_oracle) ... ok
+test_input_set_mismatch_is_not_silently_comparable (test_q2_bounds.M2FBoundChecks.test_input_set_mismatch_is_not_silently_comparable) ... ok
+test_three_same_gpu_jobs_and_half_open_endpoints (test_q2_bounds.M2FBoundChecks.test_three_same_gpu_jobs_and_half_open_endpoints) ... ok
+test_width_histogram_minimum_deletions_is_not_rounding (test_q2_bounds.M2FBoundChecks.test_width_histogram_minimum_deletions_is_not_rounding) ... ok
+test_zero_overload (test_q2_bounds.M2FBoundChecks.test_zero_overload) ... ok
+
+======================================================================
+ERROR: test_roundtrip_and_semantic_tampering (test_q3.Q3PersistedCLI.test_roundtrip_and_semantic_tampering)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/problem-b-clean-6w30a2tr/problems/2026_gpu_scheduling/tests/test_q3.py", line 153, in test_roundtrip_and_semantic_tampering
+    from verify_q3_fixed_split import verify
+ModuleNotFoundError: No module named 'verify_q3_fixed_split'
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.741s
+
+FAILED (errors=1)

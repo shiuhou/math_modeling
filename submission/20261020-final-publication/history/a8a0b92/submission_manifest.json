@@ -1,0 +1,149 @@
+{
+  "state": "READY_FOR_TEAM_REVIEW",
+  "artifact_directory": "REVIEW_ONLY",
+  "sources": {
+    "core_commit": "990846fc89bf714d8e88e458d028d1f0d22712a4",
+    "publication_source_commit": "c5905595542b1f8a878332fc43d32e08854e8791",
+    "core_unchanged": true,
+    "publication_sha256": {
+      "build.py": "6a921bd684fdff6479a7b0e11a70fd27ca84ff1a827466a453ff68d6e1138dc6",
+      "document.tex": "4041299758c54ae853bc0f166ce4ffa0d4aec9b4d81100b81bfdb8ba6516c8af",
+      "figures/fig1_data_patterns.pdf": "d81d96aff1223fadb2655e9372fd459e7f835ae93e100f457561093be920947c",
+      "figures/fig1_demand.pdf": "d8d014b45546dfcb4582fa1cd3d8629f82412ff75b45f52b5929418ee86f86fe",
+      "figures/q1_daily_demand.csv": "73227093a9001c124b600c8121f11a2849bd5c45fd892a6af429a98f9647c9f7",
+      "figures/q3_donor_capacity_wait_tradeoff.pdf": "493e7974a65a9655ae048e2ee0cfb2e4d7829ec8dfdb1861a00ce499c2d2aa1d",
+      "generate.py": "f31f2835040d6500688bc7fc0ae214d287446d0b8a23fd348084cb48fc652a7a",
+      "generated/claims.tex": "db1a6cb550239da770dd7bd0ccca1f0031cf9933055a0ba49ec910f4fadabd06",
+      "generated/numerical_source_map.json": "f30141e03642fd4f2ad918c7ae79bff59cb6c643054c9cd19bd88cdfa1d8bde0",
+      "generated/sensitivity_plot_values.json": "7ddb569124d209dda60f631a8767a61b2fe40fd90d3af5924bb2648b9822a028",
+      "generated/table2.tex": "2db0ddf8fb258ff47d5c2abc40181ef6be92d40e8825b757a8cb8ca7d04c4625",
+      "generated/table3.tex": "42d531f54c0ac6c46fdcee9159141dfa56b144069edf56e62193b28f5501ef1d",
+      "generated/table4.tex": "67673a1ade1d93c384c0cf98e1cad9ed45e982a21f9d9ab9aafcba8ab4cf23cd",
+      "generated/table5.tex": "3eb4ef6c8140222c3e631c6fe92baaaa6ae5ca2d213acef230804e92d6b5417b",
+      "identity.json": "58cb18199ec61ee8e05172d64e166dcfe56dd1950136b87d065d6f118a1d8ccf",
+      "plot_q1.py": "b8ee9397101c585636b712e8ad031e5bf9180924a31c4e20336f315157bd498b",
+      "plot_sensitivity.py": "8ad4fe5514ae48a281239d63a801ba632fc10d2747a6f61f24079e9b7ef4276e",
+      "preamble.tex": "fd4f635d73dbf5e87a8c7146fad1057e46e424157a26f20eb5b9d2f30ba39a7a",
+      "q1.tex": "af417bdc4511c733f1efb0e01ca888b576c6df7078e6348356422e0a0c61a4cc",
+      "q2.tex": "fcd7159fd6b31536cbc8eaa1309ecfc218e8938d5fecfe5b71136e85255f736d",
+      "q3.tex": "526f91b105b533de098cd2e314652805a7eb977c4192e0e12fcf98ce92071f85",
+      "supplement/README.md": "c6b6b11853f471cb9ce8afde87ff441717de384e59170c999ceac2bed6af312a",
+      "supplement/check_evidence.py": "cd2af951c6cda894c45af09c9395c74fd7fe61edfacb5620b2171e33a298e535",
+      "supplement/frozen_cases.json": "24a886e553ad0209d36958d566f5d649ea9354289570a147dac1551f4d5b9e2a",
+      "supplement/paper_evidence_index.md": "a39777a54d04977abca5279708113d12e372ddf0e40f746284c7c8de8fa22dfd",
+      "supplement/reproduce.py": "9523a8a5b82e4262a29a27fbbb4dcdba6995b97ea7442f0f46550d6cbf4a0a1f",
+      "supplement/smoke.py": "860fc1ce06a005a2ef17f12a92495f810d940891311d0b09c75ad4b545ad57e8",
+      "verify_pdf.py": "b833cae9377f178f409b2c92ab6fc8c8a79ba8f62c254ea395918b9aa38be1fa"
+    },
+    "source_index": "problems/2026_gpu_scheduling/paper/paper_sources_v2.json",
+    "formal_runtime": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+    "formal_runtime_sha256": "305eb4d62db07068ed44fe32ec20aded14087876ceb926e65d525606bdc44451"
+  },
+  "files": {
+    "Problem_B_Code.zip": {
+      "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Code.zip",
+      "bytes": 473226,
+      "sha256": "761e14015355ef2c5e9d77cae5413da2c92df390235d98ae17925bc4135757ff"
+    },
+    "Problem_B_Report.pdf": {
+      "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Report.pdf",
+      "bytes": 124765,
+      "sha256": "515e7ab33ba27452f79f8c52a9825971b2d5cef1482956950c65c1f395b62b26"
+    }
+  },
+  "format": {
+    "pages": 8,
+    "all_pages_counted": true,
+    "A4": "PASS",
+    "ordinary_text_tables_headers_footers_and_plot_labels_min_pdf_pt": 11.058536529541016,
+    "math_scripts_enumerated_in": "records/pdf_numeric_checks.json",
+    "page_review": "records/page_review.json",
+    "visual_review": "PASS"
+  },
+  "checks": {
+    "TECHNICAL_AND_CONTENT_CHECKS": "PASS",
+    "IDENTITY_COMPLETE": "PASS",
+    "AI_DISCLOSURE_CONFIRMED": "PENDING_TEAM_CONFIRMATION",
+    "HUMAN_REVIEW": "NOT_RUN",
+    "CODE_SUPPLEMENT_USABLE": "PASS",
+    "SUBMISSION_READY": "BLOCKED_PENDING_TEAM_SIGNOFF",
+    "ACTUALLY_SUBMITTED": "NOT_RUN"
+  },
+  "numerical_checks": {
+    "status": "PASS",
+    "count": 100,
+    "evidence": "records/pdf_numeric_checks.json",
+    "six_pool_completion_sum": 217578,
+    "C0_all_mean_JCT_h": 93.33387935124699
+  },
+  "zip_checks": {
+    "status": "PASS",
+    "evidence": "records/zip_smoke_checks.json",
+    "existing_small_tests": 31,
+    "synthetic_CLI_cases": 3,
+    "official_trace_run": false,
+    "large_ledger_replay": false
+  },
+  "identity": {
+    "team": "falcons",
+    "members": [
+      "SHI U Hou",
+      "Ziyao Zhang",
+      "Beichen Ji",
+      "Sirui Zheng"
+    ],
+    "institution_display": "HKUST(GZ)",
+    "uploader": "Beichen Ji",
+    "public_identity_authorized": true,
+    "source": "Explicit user messages in this task; registration-record comparison remains team responsibility"
+  },
+  "registration_record_comparison": "NOT_RUN; Beichen Ji must compare existing CMT record, without changing membership",
+  "AI_disclosure": "ChatGPT, OpenAI Codex and Claude uses included; exact wording awaits team confirmation",
+  "human_signoff": null,
+  "official_requirements": {
+    "Problem_B": {
+      "sha256": "fb153a547ed57a3d16ab0929c27cccc5d49fc4e568d9c65a273546057e692967",
+      "pages_read": [
+        1,
+        2,
+        3
+      ]
+    },
+    "Registration_and_Submission_Guidelines": {
+      "sha256": "99dd0577e02bd47510d6e080dbc0285d7346d6898b8db4e98ec466a56ca05d85",
+      "pages_read": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "upload_screens_visually_reviewed": [
+        6,
+        7,
+        8
+      ]
+    },
+    "deadline_beijing": "2026-10-20T23:59:00+08:00",
+    "page_limit": 10,
+    "minimum_font_pt": 11,
+    "conservative_max_bytes_per_file": 50000000
+  },
+  "evidence_distribution": {
+    "raw_CSV": "Not redistributed; obtain authorized official materials",
+    "large_job_node_ledgers": "LOCAL_ONLY; retained untouched; not in ZIP",
+    "small_sources": "included with field mappings, original hashes and clearly marked portable metadata copies"
+  },
+  "not_executed": [
+    "No new full-trace scheduler run",
+    "No fourteen-case replay or seven-case rerun",
+    "No new model or parameter search",
+    "No original worktree/LOCAL_ONLY access during clean ZIP smoke",
+    "No main merge or tag movement",
+    "No CMT login, identity editing, declaration checkboxes, upload or submission",
+    "No team human read-through or AI wording approval claimed"
+  ]
+}

@@ -1,0 +1,32 @@
+\RequirePackage{fix-cm}
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{charter}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=0.68in,top=0.62in,bottom=0.62in]{geometry}
+\usepackage{graphicx,booktabs,tabularx,array,enumitem,hyperref,xcolor,fancyhdr,microtype,caption,float,lastpage}
+\definecolor{primary}{RGB}{27,79,114}
+\definecolor{graytext}{RGB}{80,80,80}
+\hypersetup{colorlinks=true,linkcolor=primary,citecolor=primary,urlcolor=primary}
+\makeatletter
+\renewcommand\normalsize{\@setfontsize\normalsize{11.1}{13.3}}
+\makeatother
+\DeclareMathSizes{11.1}{11.1}{8}{6}
+\AtBeginDocument{\normalsize}
+\captionsetup{font=normalsize}
+\setlength{\parskip}{3pt plus 1pt minus 1pt}
+\setlength{\parindent}{0pt}
+\setlist{nosep,leftmargin=*}
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.04}
+\setlength{\headheight}{14pt}
+\setlength{\emergencystretch}{2.5em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\fontsize{11.1}{13.3}\selectfont\color{graytext}2026 MCM Senior Track -- Problem B}
+\fancyhead[R]{\fontsize{11.1}{13.3}\selectfont\color{graytext}Page \thepage\ of \pageref{LastPage}}
+\fancyfoot[C]{\fontsize{11.1}{13.3}\selectfont\color{graytext}Capacity-valid GPU scheduling}
+\renewcommand{\headrulewidth}{0.35pt}
+\newcommand{\method}[1]{\texttt{#1}}
+\newcommand{\takeaway}[2]{\vspace{2pt}\noindent\colorbox{primary!8}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{\vspace{2pt}\textbf{\color{primary}#1:} #2\vspace{2pt}}}\vspace{2pt}}

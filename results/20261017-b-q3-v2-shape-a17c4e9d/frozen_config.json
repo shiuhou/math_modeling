@@ -1,0 +1,24 @@
+{
+  "candidate": "R-shape",
+  "shape_limit_cpu_per_gpu": 16.0,
+  "configs": {
+    "Rshape_sigma1": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "Rshape_sigma2": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 2,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    }
+  }
+}

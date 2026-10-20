@@ -1,0 +1,62 @@
+[
+  {
+    "policy": "FCFS",
+    "option": "M0",
+    "cohort": "A10",
+    "sigma1_mean_jct_hours": 999.8983257201794,
+    "sigma2_mean_jct_hours": 999.8983257201794,
+    "worst_mean_jct_hours": 999.8983257201794,
+    "post_hoc": true,
+    "best_of_three": false
+  },
+  {
+    "policy": "FCFS",
+    "option": "R0",
+    "cohort": "A10",
+    "sigma1_mean_jct_hours": 687.6448252918459,
+    "sigma2_mean_jct_hours": 831.4555450069693,
+    "worst_mean_jct_hours": 831.4555450069693,
+    "post_hoc": true,
+    "best_of_three": false
+  },
+  {
+    "policy": "FCFS",
+    "option": "R-shape",
+    "cohort": "A10",
+    "sigma1_mean_jct_hours": 756.1252745228425,
+    "sigma2_mean_jct_hours": 761.6676872136954,
+    "worst_mean_jct_hours": 761.6676872136954,
+    "post_hoc": true,
+    "best_of_three": true
+  },
+  {
+    "policy": "SJF-HOL",
+    "option": "M0",
+    "cohort": "A10",
+    "sigma1_mean_jct_hours": 132.67621017446854,
+    "sigma2_mean_jct_hours": 132.67621017446854,
+    "worst_mean_jct_hours": 132.67621017446854,
+    "post_hoc": true,
+    "best_of_three": false
+  },
+  {
+    "policy": "SJF-HOL",
+    "option": "R0",
+    "cohort": "A10",
+    "sigma1_mean_jct_hours": 120.3034876057854,
+    "sigma2_mean_jct_hours": 134.80973557145083,
+    "worst_mean_jct_hours": 134.80973557145083,
+    "post_hoc": true,
+    "best_of_three": false
+  },
+  {
+    "policy": "SJF-HOL",
+    "option": "R-shape",
+    "cohort": "A10",
+    "sigma1_mean_jct_hours": 124.12835993693811,
+    "sigma2_mean_jct_hours": 129.67077262779117,
+    "worst_mean_jct_hours": 129.67077262779117,
+    "post_hoc": true,
+    "best_of_three": true
+  }
+]

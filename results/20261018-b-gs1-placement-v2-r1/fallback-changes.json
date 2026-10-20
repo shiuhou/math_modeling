@@ -1,0 +1,18 @@
+{
+  "FCFS-HOL": {
+    "timing_changed_jobs": 15,
+    "placement_changed_jobs": 1347,
+    "old_timing_sha256": "bfffa4de7950a8e20a0a4aaace452faab0e81f255bca57fbd676149c5883b1e2",
+    "new_timing_sha256": "05e3d921cd87d123d8e46e2b6577bd0ebfc57e7ee626ac891ce5100ef801b1e8",
+    "old_placement_sha256": "5bc62f603896a933c2e83aa74d547ab61fc627a1f31e6808edb172ab17b91415",
+    "new_placement_sha256": "645fff25ffd76b28ac810dd3bdec9975279f8f286bb2a6c903741590059c4c05"
+  },
+  "SPT-HOL": {
+    "timing_changed_jobs": 13,
+    "placement_changed_jobs": 1299,
+    "old_timing_sha256": "1710c31cec47230556987cc378ae69e03d762aa598431f78425ce3e1e8ad1e33",
+    "new_timing_sha256": "d76cd13a4dc0149d72905cfb6380b8e55ee4781c26e77598bfb55c307fdb529a",
+    "old_placement_sha256": "2324a5a3d100d916746db2637eba9cb1d6672b24e57389428df65db32087c0f3",
+    "new_placement_sha256": "e884d60dfd23c7646165804c51ea12e3b6d8789f5921de602155db5319a5862e"
+  }
+}

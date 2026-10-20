@@ -1,0 +1,33 @@
+\begin{table}[H]\centering
+\caption{Fixed-split results: (a) performance. Waiting and JCT use complete drain; completions use the 90-day horizon.}
+\label{tab:q3main}
+\begin{tabular}{lrrrrr}
+\toprule
+Scenario & $\sigma$ & \shortstack{A10 mean\\wait (h)} & \shortstack{A10 mean\\JCT (h)} & \shortstack{All mean\\JCT (h)} & \shortstack{90-day\\completions}\\
+\midrule
+No substitution & --- & 32.906 & 132.676 & 93.334 & 217,578\\
+Hash-10\% & 1 & 20.534 & 120.303 & 87.190 & 217,822\\
+Hash-10\% & 2 & 25.106 & 134.810 & 94.393 & 217,529\\
+Shape-filtered & 1 & 24.359 & 124.128 & 89.089 & 217,809\\
+Shape-filtered & 2 & 24.359 & 129.671 & 91.842 & 217,621\\
+\bottomrule
+\end{tabular}
+
+\end{table}
+\addtocounter{table}{-1}
+\begin{table}[H]\centering
+\caption{Fixed-split results: (b) harm relative to the No-substitution baseline. A10 harm means a later completion; native A100 harm means increased waiting.}
+\label{tab:q3harm}
+\begin{tabular}{lrrr}
+\toprule
+Scenario & $\sigma$ & \shortstack{Native A100\\increased-wait jobs} & \shortstack{A10 later-\\completion jobs}\\
+\midrule
+No substitution & --- & 0 & 0\\
+Hash-10\% & 1 & 0 & 49,772\\
+Hash-10\% & 2 & 0 & 56,422\\
+Shape-filtered & 1 & 0 & 46,803\\
+Shape-filtered & 2 & 0 & 55,465\\
+\bottomrule
+\end{tabular}
+\smallskip\par Both parts use SPT-HOL, GS1 ratio placement, and FF-id in the other pools. Substitution scenarios dedicate 60 A100 nodes to foreign jobs. No substitution keeps the full native pools and has no foreign partition.
+\end{table}

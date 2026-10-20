@@ -1,0 +1,12 @@
+{
+  "policy": "SPT-HOL",
+  "jobs": 9643,
+  "mean_wait_delta_hours": -0.4342770518626061,
+  "p95_wait_delta_hours": 0.0,
+  "positive_added_wait_total_hours": 0.0,
+  "improved_jobs": 480,
+  "worsened_jobs": 0,
+  "unchanged_jobs": 9163,
+  "max_improvement_hours": 76.81805555555556,
+  "max_regression_hours": 0.0
+}

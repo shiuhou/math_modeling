@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Iterable
+from functools import cmp_to_key
 
 import numpy as np
 
@@ -48,6 +49,68 @@ def plan_first_fit(
             continue
         take = min(remaining, room)
         chosen.append((int(node), take))
+        remaining -= take
+        if remaining == 0:
+            return PlacementPlan(tuple(chosen), int(workers))
+    raise AssertionError("slot capacity and placement construction disagree")
+
+
+def _ratio_cmp(a: int, b: int, cpu_cap: np.ndarray, gpu_cap: np.ndarray) -> int:
+    """Compare only original CPU/GPU ratios exactly; ties return zero."""
+    left = int(cpu_cap[a]) * int(gpu_cap[b])
+    right = int(cpu_cap[b]) * int(gpu_cap[a])
+    return (left > right) - (left < right)
+
+
+def plan_ratio_matching(
+    free_g: np.ndarray,
+    free_c: np.ndarray,
+    q: int,
+    c: int,
+    workers: int,
+    *,
+    capacity_g: np.ndarray | None = None,
+    capacity_c: np.ndarray | None = None,
+    order: Iterable[int] | None = None,
+) -> PlacementPlan | None:
+    """Place a complete gang, preferring nodes whose original shape fits.
+
+    The ratio is a sorting heuristic only.  Feasibility always comes from the
+    current integer worker-slot count, so a low-ratio node remains a valid
+    fallback when it can host workers. All comparisons use Python integer
+    cross-products. Arrays MUST be sorted by numeric node_name; order is a
+    permutation of those indices, not a physical reordering of the arrays.
+    """
+    if workers <= 0:
+        raise ValueError("worker count must be positive")
+    capacity = slots(free_g, free_c, q, c)
+    if int(capacity.sum()) < workers:
+        return None
+    original_g = np.asarray(free_g if capacity_g is None else capacity_g, dtype=np.int64)
+    original_c = np.asarray(free_c if capacity_c is None else capacity_c, dtype=np.int64)
+    indices = list(range(len(capacity))) if order is None else list(order)
+    indices = [int(i) for i in indices if int(capacity[int(i)]) > 0]
+    # Preserve node-name/index tie breaking while allowing an explicit physical
+    # order for the ordinary FF sensitivity control.
+    def shape_cmp(a: int, b: int) -> int:
+        # R_i >= rho_j iff C_i*q >= c*G_i.  Within each group sort the
+        # distance from rho exactly, then fall back to the stable node order.
+        da = int(original_c[a]) * int(q) - int(c) * int(original_g[a])
+        db = int(original_c[b]) * int(q) - int(c) * int(original_g[b])
+        if (da >= 0) != (db >= 0):
+            return -1 if da >= 0 else 1
+        if da >= 0:
+            # Compare (R-rho) = da/(G*q), not the raw cross-product.
+            left = da * int(original_g[b])
+            right = db * int(original_g[a])
+            return (left > right) - (left < right) or ((a > b) - (a < b))
+        return _ratio_cmp(b, a, original_c, original_g) or ((a > b) - (a < b))
+    candidates = sorted(indices, key=cmp_to_key(shape_cmp))
+    chosen: list[tuple[int, int]] = []
+    remaining = int(workers)
+    for node in candidates:
+        take = min(remaining, int(capacity[node]))
+        chosen.append((node, take))
         remaining -= take
         if remaining == 0:
             return PlacementPlan(tuple(chosen), int(workers))

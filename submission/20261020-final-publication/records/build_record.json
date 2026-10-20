@@ -1,0 +1,41 @@
+{
+  "entry": "document.tex",
+  "sources_sha256": {
+    "build.py": "6a921bd684fdff6479a7b0e11a70fd27ca84ff1a827466a453ff68d6e1138dc6",
+    "document.tex": "c11ee49a0a6379d110c6bff97b5b9315495d2ea320cef31909e488aac887550d",
+    "figures/fig1_data_patterns.pdf": "d81d96aff1223fadb2655e9372fd459e7f835ae93e100f457561093be920947c",
+    "figures/fig1_demand.pdf": "d8d014b45546dfcb4582fa1cd3d8629f82412ff75b45f52b5929418ee86f86fe",
+    "figures/q1_daily_demand.csv": "73227093a9001c124b600c8121f11a2849bd5c45fd892a6af429a98f9647c9f7",
+    "figures/q3_donor_capacity_wait_tradeoff.pdf": "493e7974a65a9655ae048e2ee0cfb2e4d7829ec8dfdb1861a00ce499c2d2aa1d",
+    "generate.py": "f31f2835040d6500688bc7fc0ae214d287446d0b8a23fd348084cb48fc652a7a",
+    "generated/claims.tex": "db1a6cb550239da770dd7bd0ccca1f0031cf9933055a0ba49ec910f4fadabd06",
+    "generated/numerical_source_map.json": "f30141e03642fd4f2ad918c7ae79bff59cb6c643054c9cd19bd88cdfa1d8bde0",
+    "generated/sensitivity_plot_values.json": "7ddb569124d209dda60f631a8767a61b2fe40fd90d3af5924bb2648b9822a028",
+    "generated/table2.tex": "2db0ddf8fb258ff47d5c2abc40181ef6be92d40e8825b757a8cb8ca7d04c4625",
+    "generated/table3.tex": "42d531f54c0ac6c46fdcee9159141dfa56b144069edf56e62193b28f5501ef1d",
+    "generated/table4.tex": "67673a1ade1d93c384c0cf98e1cad9ed45e982a21f9d9ab9aafcba8ab4cf23cd",
+    "generated/table5.tex": "3eb4ef6c8140222c3e631c6fe92baaaa6ae5ca2d213acef230804e92d6b5417b",
+    "identity.json": "58cb18199ec61ee8e05172d64e166dcfe56dd1950136b87d065d6f118a1d8ccf",
+    "plot_q1.py": "b8ee9397101c585636b712e8ad031e5bf9180924a31c4e20336f315157bd498b",
+    "plot_sensitivity.py": "8ad4fe5514ae48a281239d63a801ba632fc10d2747a6f61f24079e9b7ef4276e",
+    "preamble.tex": "fd4f635d73dbf5e87a8c7146fad1057e46e424157a26f20eb5b9d2f30ba39a7a",
+    "q1.tex": "af417bdc4511c733f1efb0e01ca888b576c6df7078e6348356422e0a0c61a4cc",
+    "q2.tex": "2b8c76ef093790380a26a241f5c69cfe52dcf38e1de90a0ef77b0085c617b6fa",
+    "q3.tex": "526f91b105b533de098cd2e314652805a7eb977c4192e0e12fcf98ce92071f85",
+    "supplement/README.md": "c6b6b11853f471cb9ce8afde87ff441717de384e59170c999ceac2bed6af312a",
+    "supplement/check_evidence.py": "cd2af951c6cda894c45af09c9395c74fd7fe61edfacb5620b2171e33a298e535",
+    "supplement/frozen_cases.json": "24a886e553ad0209d36958d566f5d649ea9354289570a147dac1551f4d5b9e2a",
+    "supplement/paper_evidence_index.md": "a39777a54d04977abca5279708113d12e372ddf0e40f746284c7c8de8fa22dfd",
+    "supplement/reproduce.py": "9523a8a5b82e4262a29a27fbbb4dcdba6995b97ea7442f0f46550d6cbf4a0a1f",
+    "supplement/smoke.py": "860fc1ce06a005a2ef17f12a92495f810d940891311d0b09c75ad4b545ad57e8",
+    "verify_pdf.py": "b833cae9377f178f409b2c92ab6fc8c8a79ba8f62c254ea395918b9aa38be1fa"
+  },
+  "command": [
+    "tectonic",
+    "--keep-logs",
+    "--keep-intermediates",
+    "document.tex"
+  ],
+  "exit_code": 0,
+  "pdf_sha256": "f18bc18bd2ebb70f8af6a06dcb1feb076cd334ba426177f9d04608765390b3b0"
+}
