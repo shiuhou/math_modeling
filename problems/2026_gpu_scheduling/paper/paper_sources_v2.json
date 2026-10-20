@@ -271,8 +271,8 @@
     },
     "code_zip": {
       "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Code.zip",
-      "bytes": 473268,
-      "sha256": "cca1b87de65e7b3aa99269daeea880dd53bc40f3edaaa4916a9ad9c2bf59d24e"
+      "bytes": 473953,
+      "sha256": "037068a12f98cf6ff1b36db08edda273c048ead3e0d3320f3d2bb6ea3a207704"
     },
     "pages": 8,
     "numeric_checks": "submission/20261020-final-publication/records/pdf_numeric_checks.json",
@@ -281,6 +281,9 @@
     "human_review": "NOT_RUN",
     "actually_submitted": "NOT_RUN",
     "AI_disclosure": "user-supplied final wording",
-    "previous_review": "submission/20261020-final-publication/history/a8a0b92"
+    "previous_review": "submission/20261020-final-publication/history/a8a0b92",
+    "code_source_commit": "76ace221463a8930ff4bd782e8744c1a24bb7113",
+    "code_compatibility_checks": "submission/20261020-final-publication/records/windows_compatibility/after/checks.json",
+    "previous_code_package": "submission/20261020-final-publication/history/216dd3c"
   }
 }

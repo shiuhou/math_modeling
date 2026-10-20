@@ -1,45 +1,97 @@
 {
-  "zip_sha256": "cca1b87de65e7b3aa99269daeea880dd53bc40f3edaaa4916a9ad9c2bf59d24e",
-  "zip_bytes": 473268,
+  "zip_sha256": "037068a12f98cf6ff1b36db08edda273c048ead3e0d3320f3d2bb6ea3a207704",
+  "zip_bytes": 473953,
   "members": 181,
   "status": "PASS",
   "clean_extraction": "PASS",
   "manifest_member_hashes": "PASS",
-  "publication_member_source_hashes": "PASS",
+  "repository_source_hashes": "PASS",
+  "code_supplement_source_commit": "76ace221463a8930ff4bd782e8744c1a24bb7113",
   "publication_source_commit": "618720013f6d45e2cec193c9f015cf7ebe224f03",
-  "extraction_directory": "/tmp/problem-b-team-edits-hqqgpz4j",
-  "environment": "Previously verified standalone venv; imports checked to resolve exclusively to this fresh extraction",
-  "commands": [
+  "environment": "Linux; previously verified standalone venv; fresh ZIP extraction; blocked resource import reproduces the Windows failure mode",
+  "native_windows_test": "NOT_RUN",
+  "existing_small_tests": 31,
+  "synthetic_CLI_cases": [
     {
-      "command": "strace -f -e trace=%file <standalone-venv>/bin/python -I check_evidence.py",
-      "exit_code": 0
+      "case": "C0",
+      "jobs": 5
     },
     {
-      "command": "<standalone-venv>/bin/python -I reproduce.py --help",
-      "exit_code": 0
+      "case": "C3",
+      "jobs": 5
     },
     {
-      "command": "<standalone-venv>/bin/python -I [import simulator, q3, q3_v2; assert local module paths]",
-      "exit_code": 0
+      "case": "full-A1",
+      "jobs": 2
     }
   ],
-  "file_access_trace": {
-    "evidence.files.log": {
-      "sha256": "43a1640064f7b3af8214b0bbd9a16d6b30b5a42de5d6be078dd58b4961bef73f",
-      "forbidden_worktree_or_local_only_accesses": 0,
-      "local_record": "/tmp/problem-b-team-edits-hqqgpz4j/evidence.files.log"
+  "checks": [
+    {
+      "check": "evidence_lf",
+      "command": [
+        "python",
+        "-I",
+        "check_evidence.py"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "log": "evidence_lf.log"
+    },
+    {
+      "check": "evidence_crlf",
+      "command": [
+        "python",
+        "-I",
+        "check_evidence.py"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "log": "evidence_crlf.log"
+    },
+    {
+      "check": "changed_value_rejected",
+      "command": [
+        "python",
+        "-I",
+        "check_evidence.py"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "status": "PASS",
+      "log": "changed_value_rejected.log"
+    },
+    {
+      "check": "smoke_without_resource",
+      "command": [
+        "python",
+        "-I",
+        "-c",
+        "\nimport importlib.abc\nimport runpy\nimport sys\nclass NoResource(importlib.abc.MetaPathFinder):\n    def find_spec(self, fullname, path=None, target=None):\n        if fullname == 'resource':\n            raise ModuleNotFoundError(\"Simulated Windows: no resource module\", name='resource')\nsys.modules.pop('resource', None)\nsys.meta_path.insert(0, NoResource())\nrunpy.run_path('smoke.py', run_name='__main__')\n"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "log": "smoke_without_resource.log"
+    },
+    {
+      "check": "cli_help",
+      "command": [
+        "python",
+        "-I",
+        "reproduce.py",
+        "--help"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "status": "PASS",
+      "log": "cli_help.log"
     }
-  },
-  "unchanged_core_smoke": {
-    "status": "INHERITED_PASS",
-    "unit_tests": 31,
-    "synthetic_CLI_cases": 3,
-    "source": "history/a8a0b92/records/zip_smoke_checks.json",
-    "previous_zip_sha256": "761e14015355ef2c5e9d77cae5413da2c92df390235d98ae17925bc4135757ff",
-    "reason": "Only document.tex and q2.tex prose changed; all packaged core source hashes match preceding package",
-    "compared_core_files": 12
-  },
-  "scheduler_calls_this_followup": 0,
+  ],
+  "logs": "windows_compatibility/after",
+  "regression_before": "windows_compatibility/before/checks.json",
+  "package_comparison": "windows_compatibility/package_comparison.json",
   "full_trace_executed": false,
   "historical_replay_executed": false
 }

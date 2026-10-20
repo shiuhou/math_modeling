@@ -1,3 +1,7 @@
+C0: wrote 5 jobs to /tmp/problem-b-portability-47n7cvdf/smoke-_6v_ilt_/C0
+C3: wrote 5 jobs to /tmp/problem-b-portability-47n7cvdf/smoke-_6v_ilt_/C3
+full-A1: wrote 2 jobs to /tmp/problem-b-portability-47n7cvdf/smoke-_6v_ilt_/full-A1
+{"existing_tests": 31, "synthetic_CLI_cases": ["C0", "C3", "full-A1"], "official_trace_executed": false, "status": "PASS"}
 test_supplied_hand_cases_and_scalar_oracle (test_baseline.SuppliedBaselineTests.test_supplied_hand_cases_and_scalar_oracle) ... ok
 test_default_ff_id_path_is_unchanged (test_gang_placement.GangPlacementChecks.test_default_ff_id_path_is_unchanged) ... ok
 test_ratio_and_ff_are_reproducible_with_explicit_order (test_gang_placement.GangPlacementChecks.test_ratio_and_ff_are_reproducible_with_explicit_order) ... ok
@@ -31,10 +35,6 @@ test_width_histogram_minimum_deletions_is_not_rounding (test_q2_bounds.M2FBoundC
 test_zero_overload (test_q2_bounds.M2FBoundChecks.test_zero_overload) ... ok
 
 ----------------------------------------------------------------------
-Ran 31 tests in 0.744s
+Ran 31 tests in 0.724s
 
 OK
-C0: wrote 5 jobs to /tmp/problem-b-clean-final-01zgsppl/smoke-j1hs1bj7/C0
-C3: wrote 5 jobs to /tmp/problem-b-clean-final-01zgsppl/smoke-j1hs1bj7/C3
-full-A1: wrote 2 jobs to /tmp/problem-b-clean-final-01zgsppl/smoke-j1hs1bj7/full-A1
-{"existing_tests": 31, "synthetic_CLI_cases": ["C0", "C3", "full-A1"], "official_trace_executed": false, "status": "PASS"}

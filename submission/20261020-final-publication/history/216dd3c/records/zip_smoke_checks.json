@@ -1,0 +1,45 @@
+{
+  "zip_sha256": "cca1b87de65e7b3aa99269daeea880dd53bc40f3edaaa4916a9ad9c2bf59d24e",
+  "zip_bytes": 473268,
+  "members": 181,
+  "status": "PASS",
+  "clean_extraction": "PASS",
+  "manifest_member_hashes": "PASS",
+  "publication_member_source_hashes": "PASS",
+  "publication_source_commit": "618720013f6d45e2cec193c9f015cf7ebe224f03",
+  "extraction_directory": "/tmp/problem-b-team-edits-hqqgpz4j",
+  "environment": "Previously verified standalone venv; imports checked to resolve exclusively to this fresh extraction",
+  "commands": [
+    {
+      "command": "strace -f -e trace=%file <standalone-venv>/bin/python -I check_evidence.py",
+      "exit_code": 0
+    },
+    {
+      "command": "<standalone-venv>/bin/python -I reproduce.py --help",
+      "exit_code": 0
+    },
+    {
+      "command": "<standalone-venv>/bin/python -I [import simulator, q3, q3_v2; assert local module paths]",
+      "exit_code": 0
+    }
+  ],
+  "file_access_trace": {
+    "evidence.files.log": {
+      "sha256": "43a1640064f7b3af8214b0bbd9a16d6b30b5a42de5d6be078dd58b4961bef73f",
+      "forbidden_worktree_or_local_only_accesses": 0,
+      "local_record": "/tmp/problem-b-team-edits-hqqgpz4j/evidence.files.log"
+    }
+  },
+  "unchanged_core_smoke": {
+    "status": "INHERITED_PASS",
+    "unit_tests": 31,
+    "synthetic_CLI_cases": 3,
+    "source": "history/a8a0b92/records/zip_smoke_checks.json",
+    "previous_zip_sha256": "761e14015355ef2c5e9d77cae5413da2c92df390235d98ae17925bc4135757ff",
+    "reason": "Only document.tex and q2.tex prose changed; all packaged core source hashes match preceding package",
+    "compared_core_files": 12
+  },
+  "scheduler_calls_this_followup": 0,
+  "full_trace_executed": false,
+  "historical_replay_executed": false
+}

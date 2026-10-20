@@ -37,13 +37,14 @@
     },
     "source_index": "problems/2026_gpu_scheduling/paper/paper_sources_v2.json",
     "formal_runtime": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
-    "formal_runtime_sha256": "305eb4d62db07068ed44fe32ec20aded14087876ceb926e65d525606bdc44451"
+    "formal_runtime_sha256": "305eb4d62db07068ed44fe32ec20aded14087876ceb926e65d525606bdc44451",
+    "code_supplement_source_commit": "76ace221463a8930ff4bd782e8744c1a24bb7113"
   },
   "files": {
     "Problem_B_Code.zip": {
       "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Code.zip",
-      "bytes": 473268,
-      "sha256": "cca1b87de65e7b3aa99269daeea880dd53bc40f3edaaa4916a9ad9c2bf59d24e"
+      "bytes": 473953,
+      "sha256": "037068a12f98cf6ff1b36db08edda273c048ead3e0d3320f3d2bb6ea3a207704"
     },
     "Problem_B_Report.pdf": {
       "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Report.pdf",
@@ -79,11 +80,14 @@
   "zip_checks": {
     "status": "PASS",
     "evidence": "records/zip_smoke_checks.json",
-    "existing_small_tests": "31 inherited PASS; unchanged core",
-    "synthetic_CLI_cases": "3 inherited PASS; no scheduler calls this follow-up",
+    "existing_small_tests": "31 PASS; rerun with resource import unavailable",
+    "synthetic_CLI_cases": "3 PASS; 5/5/2 synthetic jobs only",
     "official_trace_run": false,
     "large_ledger_replay": false,
-    "fresh_extraction_evidence_and_CLI": "PASS"
+    "fresh_extraction_evidence_and_CLI": "PASS",
+    "windows_failure_mode_regression": "PASS; old CRLF and missing-resource FAIL reproduced; both corrected",
+    "native_windows_execution": "NOT_RUN",
+    "compatibility_evidence": "records/windows_compatibility/after/checks.json"
   },
   "identity": {
     "team": "falcons",
@@ -151,5 +155,10 @@
     "commit": "a8a0b920984d6d874305a5a1902767d3f42ca8ed",
     "preserved_at": "history/a8a0b92",
     "status": "SUPERSEDED_REVIEW_ONLY_NOT_FOR_UPLOAD"
+  },
+  "previous_code_package": {
+    "commit": "216dd3c2bbe8054b6a0b8a463f3e65e34cd2bec7",
+    "preserved_at": "history/216dd3c",
+    "status": "SUPERSEDED_BY_WINDOWS_COMPATIBILITY_FIX"
   }
 }
