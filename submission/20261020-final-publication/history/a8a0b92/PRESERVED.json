@@ -1,0 +1,16 @@
+{
+  "commit": "a8a0b920984d6d874305a5a1902767d3f42ca8ed",
+  "status": "SUPERSEDED_REVIEW_ONLY_NOT_FOR_UPLOAD",
+  "files": {
+    "Problem_B_Code.zip": {
+      "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Code.zip",
+      "bytes": 473226,
+      "sha256": "761e14015355ef2c5e9d77cae5413da2c92df390235d98ae17925bc4135757ff"
+    },
+    "Problem_B_Report.pdf": {
+      "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Report.pdf",
+      "bytes": 124765,
+      "sha256": "515e7ab33ba27452f79f8c52a9825971b2d5cef1482956950c65c1f395b62b26"
+    }
+  }
+}

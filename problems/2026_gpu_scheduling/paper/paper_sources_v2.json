@@ -262,23 +262,25 @@
   },
   "final_publication": {
     "status": "READY_FOR_TEAM_REVIEW",
-    "source_commit": "c5905595542b1f8a878332fc43d32e08854e8791",
+    "source_commit": "618720013f6d45e2cec193c9f015cf7ebe224f03",
     "tex": "problems/2026_gpu_scheduling/paper/final_publication/document.tex",
     "pdf": {
       "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Report.pdf",
-      "bytes": 124765,
-      "sha256": "515e7ab33ba27452f79f8c52a9825971b2d5cef1482956950c65c1f395b62b26"
+      "bytes": 124551,
+      "sha256": "f18bc18bd2ebb70f8af6a06dcb1feb076cd334ba426177f9d04608765390b3b0"
     },
     "code_zip": {
       "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Code.zip",
-      "bytes": 473226,
-      "sha256": "761e14015355ef2c5e9d77cae5413da2c92df390235d98ae17925bc4135757ff"
+      "bytes": 473268,
+      "sha256": "cca1b87de65e7b3aa99269daeea880dd53bc40f3edaaa4916a9ad9c2bf59d24e"
     },
     "pages": 8,
     "numeric_checks": "submission/20261020-final-publication/records/pdf_numeric_checks.json",
     "manifest": "submission/20261020-final-publication/submission_manifest.json",
     "identity": "confirmed user messages; public distribution authorized",
     "human_review": "NOT_RUN",
-    "actually_submitted": "NOT_RUN"
+    "actually_submitted": "NOT_RUN",
+    "AI_disclosure": "user-supplied final wording",
+    "previous_review": "submission/20261020-final-publication/history/a8a0b92"
   }
 }

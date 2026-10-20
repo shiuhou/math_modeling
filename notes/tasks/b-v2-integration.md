@@ -58,3 +58,7 @@ hashes, source mappings, checks and CMT instructions are in the adjacent manifes
 and records. AI wording and human read-through/approval of those exact hashes are
 pending; SUBMISSION_READY is not PASS and ACTUALLY_SUBMITTED remains NOT_RUN.
 The PR stays Draft; main, the V1 tag, all historical PDFs and results are unchanged.
+
+## Final publication follow-up — 2026-10-20
+
+Publication source `618720013f6d45e2cec193c9f015cf7ebe224f03` adopts the team's exact final AI disclosure, quantifies C1 later finishes as 49,772/111,284 = 44.7252075770% (about 45%), and removes the historical program alias sentence. Fresh build: 8 A4 pages, 104 actual-PDF checks PASS, minimum ordinary embedded font 11.058537 pt; all pages visually inspected. The new ZIP was freshly extracted and passed member/source hashes, imports, CLI and small-evidence checks. Core bytes are unchanged; the prior 31 small tests and three synthetic CLI checks are inherited, not rerun. This follow-up calls zero schedulers and zero historical replays. Previous artifact pair and records are preserved under `submission/20261020-final-publication/history/a8a0b92/`. AI wording is user-confirmed; full-report human review and exact-artifact submission signoff remain pending. Current PDF SHA `f18bc18bd2ebb70f8af6a06dcb1feb076cd334ba426177f9d04608765390b3b0`; ZIP SHA `cca1b87de65e7b3aa99269daeea880dd53bc40f3edaaa4916a9ad9c2bf59d24e`. PR #6 remains Draft; no CMT action.

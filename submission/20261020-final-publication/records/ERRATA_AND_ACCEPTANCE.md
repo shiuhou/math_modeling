@@ -9,6 +9,8 @@ The old R2 PDF and its acceptance table, and the eight-page correctness-patch PD
 | Old F1 / summary: Shape-filtered wins at both speeds | Under both policies Hash-10% wins A10 mean JCT at sigma1, Shape-filtered at sigma2; Shape-filtered wins the two-point maximum comparison separately. Exact prose and actual printed numeric comparisons are checked. | pp. 1, 6 |
 | Earlier font PASS did not measure ordinary embedded labels | Final ordinary text, tables, headers/footers and plot labels are measured at >=11 actual PDF points; script exceptions are individually listed. | all 8 pages |
 
-Current final checks: 100 actual-PDF checks PASS; 8 A4 pages; final Poppler renders match the pages visually inspected; no clipped Figure 3 label remains. Actual comparison values, source fields and page numbers are in pdf_numeric_checks.json. Team human review is NOT_RUN.
+Current final checks: 104 actual-PDF checks PASS; 8 A4 pages; final Poppler renders match the pages visually inspected; no clipped Figure 3 label remains. Actual comparison values, source fields and page numbers are in pdf_numeric_checks.json. Team human review is NOT_RUN.
 
 The first standalone smoke exposed an unnecessary dependency on a historical Git-based CLI test. The final documented test selection contains the unchanged standalone core tests, and tests the portable reproduction CLI separately on synthetic data. No full trace or historical replay was run.
+
+Follow-up requested by the team: the abstract now states about 45% of A10 jobs finish later in Hash-10%, sigma=1 (49,772/111,284 = 44.7252075770%); the internal SJF-HOL alias sentence is removed. The exact user-supplied AI disclosure is on p. 8. All eight final pages were visually inspected; pp. 2/4/5/6/7 are pixel-identical to the preceding accepted renders. The preceding artifact pair and all its records are preserved under history/a8a0b92. No scheduler or historical replay was called in this follow-up.

@@ -3,11 +3,11 @@
   "artifact_directory": "REVIEW_ONLY",
   "sources": {
     "core_commit": "990846fc89bf714d8e88e458d028d1f0d22712a4",
-    "publication_source_commit": "c5905595542b1f8a878332fc43d32e08854e8791",
+    "publication_source_commit": "618720013f6d45e2cec193c9f015cf7ebe224f03",
     "core_unchanged": true,
     "publication_sha256": {
       "build.py": "6a921bd684fdff6479a7b0e11a70fd27ca84ff1a827466a453ff68d6e1138dc6",
-      "document.tex": "4041299758c54ae853bc0f166ce4ffa0d4aec9b4d81100b81bfdb8ba6516c8af",
+      "document.tex": "c11ee49a0a6379d110c6bff97b5b9315495d2ea320cef31909e488aac887550d",
       "figures/fig1_data_patterns.pdf": "d81d96aff1223fadb2655e9372fd459e7f835ae93e100f457561093be920947c",
       "figures/fig1_demand.pdf": "d8d014b45546dfcb4582fa1cd3d8629f82412ff75b45f52b5929418ee86f86fe",
       "figures/q1_daily_demand.csv": "73227093a9001c124b600c8121f11a2849bd5c45fd892a6af429a98f9647c9f7",
@@ -25,7 +25,7 @@
       "plot_sensitivity.py": "8ad4fe5514ae48a281239d63a801ba632fc10d2747a6f61f24079e9b7ef4276e",
       "preamble.tex": "fd4f635d73dbf5e87a8c7146fad1057e46e424157a26f20eb5b9d2f30ba39a7a",
       "q1.tex": "af417bdc4511c733f1efb0e01ca888b576c6df7078e6348356422e0a0c61a4cc",
-      "q2.tex": "fcd7159fd6b31536cbc8eaa1309ecfc218e8938d5fecfe5b71136e85255f736d",
+      "q2.tex": "2b8c76ef093790380a26a241f5c69cfe52dcf38e1de90a0ef77b0085c617b6fa",
       "q3.tex": "526f91b105b533de098cd2e314652805a7eb977c4192e0e12fcf98ce92071f85",
       "supplement/README.md": "c6b6b11853f471cb9ce8afde87ff441717de384e59170c999ceac2bed6af312a",
       "supplement/check_evidence.py": "cd2af951c6cda894c45af09c9395c74fd7fe61edfacb5620b2171e33a298e535",
@@ -42,13 +42,13 @@
   "files": {
     "Problem_B_Code.zip": {
       "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Code.zip",
-      "bytes": 473226,
-      "sha256": "761e14015355ef2c5e9d77cae5413da2c92df390235d98ae17925bc4135757ff"
+      "bytes": 473268,
+      "sha256": "cca1b87de65e7b3aa99269daeea880dd53bc40f3edaaa4916a9ad9c2bf59d24e"
     },
     "Problem_B_Report.pdf": {
       "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Report.pdf",
-      "bytes": 124765,
-      "sha256": "515e7ab33ba27452f79f8c52a9825971b2d5cef1482956950c65c1f395b62b26"
+      "bytes": 124551,
+      "sha256": "f18bc18bd2ebb70f8af6a06dcb1feb076cd334ba426177f9d04608765390b3b0"
     }
   },
   "format": {
@@ -63,7 +63,7 @@
   "checks": {
     "TECHNICAL_AND_CONTENT_CHECKS": "PASS",
     "IDENTITY_COMPLETE": "PASS",
-    "AI_DISCLOSURE_CONFIRMED": "PENDING_TEAM_CONFIRMATION",
+    "AI_DISCLOSURE_CONFIRMED": "PASS_USER_SUPPLIED_FINAL_WORDING",
     "HUMAN_REVIEW": "NOT_RUN",
     "CODE_SUPPLEMENT_USABLE": "PASS",
     "SUBMISSION_READY": "BLOCKED_PENDING_TEAM_SIGNOFF",
@@ -71,7 +71,7 @@
   },
   "numerical_checks": {
     "status": "PASS",
-    "count": 100,
+    "count": 104,
     "evidence": "records/pdf_numeric_checks.json",
     "six_pool_completion_sum": 217578,
     "C0_all_mean_JCT_h": 93.33387935124699
@@ -79,10 +79,11 @@
   "zip_checks": {
     "status": "PASS",
     "evidence": "records/zip_smoke_checks.json",
-    "existing_small_tests": 31,
-    "synthetic_CLI_cases": 3,
+    "existing_small_tests": "31 inherited PASS; unchanged core",
+    "synthetic_CLI_cases": "3 inherited PASS; no scheduler calls this follow-up",
     "official_trace_run": false,
-    "large_ledger_replay": false
+    "large_ledger_replay": false,
+    "fresh_extraction_evidence_and_CLI": "PASS"
   },
   "identity": {
     "team": "falcons",
@@ -98,7 +99,7 @@
     "source": "Explicit user messages in this task; registration-record comparison remains team responsibility"
   },
   "registration_record_comparison": "NOT_RUN; Beichen Ji must compare existing CMT record, without changing membership",
-  "AI_disclosure": "ChatGPT, OpenAI Codex and Claude uses included; exact wording awaits team confirmation",
+  "AI_disclosure": "Exact final wording explicitly supplied by user, including team verification and responsibility statements; inserted and checked in actual PDF. This is not approval to submit the entire PDF/ZIP.",
   "human_signoff": null,
   "official_requirements": {
     "Problem_B": {
@@ -144,6 +145,11 @@
     "No original worktree/LOCAL_ONLY access during clean ZIP smoke",
     "No main merge or tag movement",
     "No CMT login, identity editing, declaration checkboxes, upload or submission",
-    "No team human read-through or AI wording approval claimed"
-  ]
+    "No full-report team read-through or exact-artifact submission signoff claimed; AI wording was supplied by user"
+  ],
+  "previous_review": {
+    "commit": "a8a0b920984d6d874305a5a1902767d3f42ca8ed",
+    "preserved_at": "history/a8a0b92",
+    "status": "SUPERSEDED_REVIEW_ONLY_NOT_FOR_UPLOAD"
+  }
 }

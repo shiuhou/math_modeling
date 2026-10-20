@@ -1,5 +1,5 @@
 {
-  "pdf_sha256": "515e7ab33ba27452f79f8c52a9825971b2d5cef1482956950c65c1f395b62b26",
+  "pdf_sha256": "f18bc18bd2ebb70f8af6a06dcb1feb076cd334ba426177f9d04608765390b3b0",
   "pages": 8,
   "checks": [
     {
@@ -1085,6 +1085,43 @@
       "expected": true,
       "source": "actual MediaBox",
       "page": null
+    },
+    {
+      "item": "abstract.harm_percentage",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "C1 a10_later_finish_count / original_A10.jobs; same SPT-HOL, Hash-10%, sigma=1",
+      "page": 1,
+      "numerator": 49772,
+      "denominator": 111284,
+      "exact_percentage": 44.725207577010174
+    },
+    {
+      "item": "abstract.harm_scenario",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "actual abstract context; formal C1 configuration",
+      "page": 1
+    },
+    {
+      "item": "Q2.internal_alias_removed",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "user-requested removal; source alias retained in supplement",
+      "page": 3
+    },
+    {
+      "item": "AI.exact_user_wording",
+      "status": "PASS",
+      "pdf_actual": "TheteamdesignedthemodelschosetheevaluationcriteriaandmadeallmethodologicaldecisionsWeusedChatGPTandOpenAICodexasprogrammingdataprocessingandwritingaidscodedraftingandreviewpostprocessingplottingandEnglisheditingandtypesettingClaudewasconsultedduringmodeldevelopmentitproposedcandidatelowerboundanddecompositionargumentsandtheratioplacementideaandreviewedourderivationsTheteamadoptedthesesuggestionsonlyafterderivingandverifyingthemAllreportednumberscomefromtheteamsownschedulerimplementationandsavedschedulesvalidatedbyindependentreplaychecksnoAIprototypeoutputisreportedasaresultTheteamcheckedallAIassistedcontentcalculationscodeandreferencesforcorrectnessandplagiarismandtakesfullresponsibilityforthisreport",
+      "expected": "TheteamdesignedthemodelschosetheevaluationcriteriaandmadeallmethodologicaldecisionsWeusedChatGPTandOpenAICodexasprogrammingdataprocessingandwritingaidscodedraftingandreviewpostprocessingplottingandEnglisheditingandtypesettingClaudewasconsultedduringmodeldevelopmentitproposedcandidatelowerboundanddecompositionargumentsandtheratioplacementideaandreviewedourderivationsTheteamadoptedthesesuggestionsonlyafterderivingandverifyingthemAllreportednumberscomefromtheteamsownschedulerimplementationandsavedschedulesvalidatedbyindependentreplaychecksnoAIprototypeoutputisreportedasaresultTheteamcheckedallAIassistedcontentcalculationscodeandreferencesforcorrectnessandplagiarismandtakesfullresponsibilityforthisreport",
+      "source": "user-supplied final AI disclosure; compared to actual last-page text ignoring punctuation/line wraps",
+      "page": 8,
+      "actual_text": "The team designed the models, chose the evaluation criteria, and made all methodological decisions.\nWe used ChatGPT and OpenAI Codex as programming, data-processing, and writing aids (code draft-\ning and review, post-processing, plotting, and English editing and typesetting). Claude was consulted\nduring model development; it proposed candidate lower-bound and decomposition arguments and the\nratio-placement idea, and reviewed our derivations. The team adopted these suggestions only after de-\nriving and verifying them. All reported numbers come from the team’s own scheduler implementation\nand saved schedules, validated by independent replay checks; no AI prototype output is reported as a\nresult. The team checked all AI-assisted content, calculations, code, and references for correctness and\nplagiarism, and takes full responsibility for this report.",
+      "expected_text": "The team designed the models, chose the evaluation criteria, and made all methodological decisions. We used ChatGPT and OpenAI Codex as programming, data-processing, and writing aids (code drafting and review, post-processing, plotting, and English editing and typesetting). Claude was consulted during model development; it proposed candidate lower-bound and decomposition arguments and the ratio-placement idea, and reviewed our derivations. The team adopted these suggestions only after deriving and verifying them. All reported numbers come from the team's own scheduler implementation and saved schedules, validated by independent replay checks; no AI prototype output is reported as a result. The team checked all AI-assisted content, calculations, code, and references for correctness and plagiarism, and takes full responsibility for this report."
     }
   ],
   "minimum_ordinary_font_pdf_pt": 11.058536529541016,
@@ -1096,9 +1133,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         196.04478454589844,
-        411.7200012207031,
+        424.9703369140625,
         199.46395874023438,
-        419.6900939941406
+        432.9404296875
       ]
     },
     {
@@ -1108,9 +1145,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         290.0399169921875,
-        411.7200012207031,
+        424.9703369140625,
         293.4591064453125,
-        419.6900939941406
+        432.9404296875
       ]
     },
     {
@@ -1120,9 +1157,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         358.64422607421875,
-        411.7200012207031,
+        424.9703369140625,
         362.06341552734375,
-        419.6900939941406
+        432.9404296875
       ]
     },
     {
@@ -1132,9 +1169,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         446.0932922363281,
-        411.7200012207031,
+        424.9703369140625,
         449.5124816894531,
-        419.6900939941406
+        432.9404296875
       ]
     },
     {
@@ -1144,9 +1181,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         460.1760559082031,
-        411.7200012207031,
+        424.9703369140625,
         463.5952453613281,
-        419.6900939941406
+        432.9404296875
       ]
     },
     {
@@ -1156,9 +1193,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         310.7352294921875,
-        424.9703063964844,
+        438.22064208984375,
         314.1544189453125,
-        432.9403991699219
+        446.19073486328125
       ]
     },
     {
@@ -1168,9 +1205,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         345.6627502441406,
-        424.9703063964844,
+        438.22064208984375,
         349.0819396972656,
-        432.9403991699219
+        446.19073486328125
       ]
     },
     {
@@ -1180,9 +1217,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         355.3194885253906,
-        424.9703063964844,
+        438.22064208984375,
         358.7386779785156,
-        432.9403991699219
+        446.19073486328125
       ]
     },
     {
@@ -1192,9 +1229,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         365.2655029296875,
-        424.9703063964844,
+        438.22064208984375,
         368.6846923828125,
-        432.9403991699219
+        446.19073486328125
       ]
     },
     {
@@ -1504,9 +1541,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         357.176513671875,
-        104.75753784179688,
+        105.53697204589844,
         360.595703125,
-        112.72765350341797
+        113.50708770751953
       ]
     },
     {
@@ -1516,9 +1553,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         384.2624206542969,
-        104.75753784179688,
+        105.53697204589844,
         387.6816101074219,
-        112.72765350341797
+        113.50708770751953
       ]
     },
     {
@@ -1528,9 +1565,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         466.12408447265625,
-        104.75753784179688,
+        105.53697204589844,
         469.54327392578125,
-        112.72765350341797
+        113.50708770751953
       ]
     },
     {
@@ -1540,9 +1577,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         492.54827880859375,
-        104.75753784179688,
+        105.53697204589844,
         495.96746826171875,
-        112.72765350341797
+        113.50708770751953
       ]
     },
     {
@@ -1552,9 +1589,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         516.855712890625,
-        104.75753784179688,
+        105.53697204589844,
         520.27490234375,
-        112.72765350341797
+        113.50708770751953
       ]
     },
     {
@@ -1564,9 +1601,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         74.45586395263672,
-        118.00784301757812,
+        118.78727722167969,
         77.87504577636719,
-        125.97795867919922
+        126.75739288330078
       ]
     },
     {
@@ -1576,9 +1613,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         386.30206298828125,
-        118.00784301757812,
+        118.78727722167969,
         393.052734375,
-        125.97795867919922
+        126.75739288330078
       ]
     },
     {
@@ -1588,9 +1625,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         167.46780395507812,
-        152.05938720703125,
+        155.17709350585938,
         170.88697814941406,
-        160.0294952392578
+        163.14720153808594
       ]
     },
     {
@@ -1600,9 +1637,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         178.17022705078125,
-        152.05938720703125,
+        155.17709350585938,
         184.92091369628906,
-        160.0294952392578
+        163.14720153808594
       ]
     },
     {
@@ -1612,9 +1649,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         208.87503051757812,
-        145.04183959960938,
+        148.1595458984375,
         225.70791625976562,
-        153.01194763183594
+        156.12965393066406
       ]
     },
     {
@@ -1624,9 +1661,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         208.87503051757812,
-        153.6298370361328,
+        156.74754333496094,
         211.7522430419922,
-        161.59994506835938
+        164.7176513671875
       ]
     },
     {
@@ -1636,9 +1673,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         270.6454162597656,
-        152.05938720703125,
+        155.17709350585938,
         274.0646057128906,
-        160.0294952392578
+        163.14720153808594
       ]
     },
     {
@@ -1648,9 +1685,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         281.34783935546875,
-        152.05938720703125,
+        155.17709350585938,
         288.0985107421875,
-        160.0294952392578
+        163.14720153808594
       ]
     },
     {
@@ -1660,9 +1697,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         312.0526428222656,
-        145.04183959960938,
+        148.1595458984375,
         328.8855285644531,
-        153.01194763183594
+        156.12965393066406
       ]
     },
     {
@@ -1672,9 +1709,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         311.26165771484375,
-        153.6298370361328,
+        156.74754333496094,
         314.13885498046875,
-        161.59994506835938
+        164.7176513671875
       ]
     },
     {
@@ -1684,9 +1721,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         375.5824890136719,
-        163.5949249267578,
+        166.71263122558594,
         378.4596862792969,
-        171.56503295898438
+        174.6827392578125
       ]
     },
     {
@@ -1696,9 +1733,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         393.1741638183594,
-        152.05938720703125,
+        155.17709350585938,
         399.9248352050781,
-        160.0294952392578
+        163.14720153808594
       ]
     },
     {
@@ -1708,9 +1745,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         425.62841796875,
-        152.05938720703125,
+        155.17709350585938,
         429.047607421875,
-        160.0294952392578
+        163.14720153808594
       ]
     },
     {
@@ -1720,9 +1757,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         380.8701171875,
-        183.62693786621094,
+        189.0829315185547,
         384.289306640625,
-        191.5970458984375
+        197.05303955078125
       ]
     },
     {
@@ -1732,9 +1769,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         384.754150390625,
-        183.62693786621094,
+        189.0829315185547,
         387.1053466796875,
-        191.5970458984375
+        197.05303955078125
       ]
     },
     {
@@ -1744,9 +1781,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         387.1064758300781,
-        183.62693786621094,
+        189.0829315185547,
         391.0198059082031,
-        191.5970458984375
+        197.05303955078125
       ]
     },
     {
@@ -1756,9 +1793,9 @@
       "size_pdf_pt": 5.977583885192871,
       "bbox": [
         391.02239990234375,
-        186.39776611328125,
+        191.853759765625,
         394.0769348144531,
-        192.37535095214844
+        197.8313446044922
       ]
     },
     {
@@ -1768,9 +1805,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         394.9251708984375,
-        183.47975158691406,
+        188.9357452392578,
         401.50848388671875,
-        191.44985961914062
+        196.90585327148438
       ]
     },
     {
@@ -1780,9 +1817,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         401.5116882324219,
-        183.62693786621094,
+        189.0829315185547,
         415.2123107910156,
-        191.5970458984375
+        197.05303955078125
       ]
     },
     {
@@ -1792,9 +1829,9 @@
       "size_pdf_pt": 5.977583885192871,
       "bbox": [
         415.2243347167969,
-        186.39776611328125,
+        191.853759765625,
         418.27886962890625,
-        192.37535095214844
+        197.8313446044922
       ]
     },
     {
@@ -1804,9 +1841,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         426.7428894042969,
-        182.02284240722656,
+        187.4788360595703,
         430.1620788574219,
-        189.99295043945312
+        195.44894409179688
       ]
     },
     {
@@ -1816,9 +1853,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         437.4453125,
-        182.02284240722656,
+        187.4788360595703,
         444.19598388671875,
-        189.99295043945312
+        195.44894409179688
       ]
     },
     {
@@ -1828,9 +1865,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         471.32794189453125,
-        175.0052947998047,
+        180.46128845214844,
         483.7453918457031,
-        182.97540283203125
+        188.431396484375
       ]
     },
     {
@@ -1840,9 +1877,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         471.32794189453125,
-        183.59329223632812,
+        189.04928588867188,
         474.20513916015625,
-        191.5634002685547
+        197.01939392089844
       ]
     },
     {
@@ -1852,9 +1889,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         132.6080322265625,
-        257.34930419921875,
+        263.19500732421875,
         136.02720642089844,
-        265.31939697265625
+        271.16510009765625
       ]
     },
     {
@@ -1864,9 +1901,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         147.75054931640625,
-        257.34930419921875,
+        263.19500732421875,
         151.1697235107422,
-        265.31939697265625
+        271.16510009765625
       ]
     },
     {
@@ -1876,9 +1913,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         166.2631072998047,
-        257.34930419921875,
+        263.19500732421875,
         169.68228149414062,
-        265.31939697265625
+        271.16510009765625
       ]
     },
     {
@@ -1887,10 +1924,10 @@
       "font": "CMSY8",
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
-        429.0293273925781,
-        420.0484313964844,
-        435.6126403808594,
-        428.0185546875
+        429.02935791015625,
+        413.42327880859375,
+        435.6126708984375,
+        421.3934020996094
       ]
     },
     {
@@ -1900,9 +1937,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         270.76885986328125,
-        465.1231689453125,
+        460.8363037109375,
         277.3521728515625,
-        473.0932922363281
+        468.8064270019531
       ]
     },
     {
@@ -1912,9 +1949,9 @@
       "size_pdf_pt": 7.970111846923828,
       "bbox": [
         396.6793518066406,
-        498.0534362792969,
+        496.1048278808594,
         403.2626647949219,
-        506.0235595703125
+        504.074951171875
       ]
     },
     {

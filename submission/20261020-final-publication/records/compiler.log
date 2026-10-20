@@ -1,7 +1,7 @@
 note: Running TeX ...
 note: Rerunning TeX because "document.aux" changed ...
 note: Running xdvipdfmx ...
-note: Writing `document.pdf` (121.8408203125 KiB)
-note: Writing `document.aux` (6.6083984375 KiB)
 note: Writing `document.log` (17.9697265625 KiB)
+note: Writing `document.pdf` (121.6318359375 KiB)
+note: Writing `document.aux` (6.6083984375 KiB)
 note: Writing `document.out` (2.2421875 KiB)
