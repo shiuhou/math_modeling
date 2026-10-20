@@ -1,0 +1,225 @@
+{
+  "records": [
+    {
+      "case": "C0",
+      "policy": "SPT-HOL",
+      "historical_policy_alias": "SJF-HOL",
+      "placement": {
+        "GPU-series-1": "ratio",
+        "other_pools": "ff-id"
+      },
+      "routing": "M0",
+      "display": "No substitution",
+      "sigma": null,
+      "cohort": {
+        "a10": "original_A10",
+        "all": "ALL",
+        "native": "native_A100"
+      },
+      "fields": {
+        "a10_wait": "metrics.cohorts.original_A10.mean_wait_hours",
+        "a10_jct": "metrics.cohorts.original_A10.mean_jct_hours",
+        "all_jct": "metrics.cohorts.ALL.mean_jct_hours",
+        "done": "metrics.cohorts.ALL.completed_at_horizon",
+        "native_harm": "native_a100_wait_increase_count",
+        "a10_harm": "a10_later_finish_count"
+      },
+      "metric_source": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+      "harm_source": "results/20261020-final-publication/saved_timing_checks.json",
+      "baseline": "No-substitution (C0)",
+      "values": {
+        "a10_wait": 32.906454035021504,
+        "a10_jct": 132.67621017446854,
+        "all_jct": 93.33387935124699,
+        "done": 217578,
+        "native_harm": 0,
+        "a10_harm": 0
+      }
+    },
+    {
+      "case": "C1",
+      "policy": "SPT-HOL",
+      "historical_policy_alias": "SJF-HOL",
+      "placement": {
+        "GPU-series-1": "ratio",
+        "other_pools": "ff-id"
+      },
+      "routing": "R0",
+      "display": "Hash-10%",
+      "sigma": 1,
+      "cohort": {
+        "a10": "original_A10",
+        "all": "ALL",
+        "native": "native_A100"
+      },
+      "fields": {
+        "a10_wait": "metrics.cohorts.original_A10.mean_wait_hours",
+        "a10_jct": "metrics.cohorts.original_A10.mean_jct_hours",
+        "all_jct": "metrics.cohorts.ALL.mean_jct_hours",
+        "done": "metrics.cohorts.ALL.completed_at_horizon",
+        "native_harm": "native_a100_wait_increase_count",
+        "a10_harm": "a10_later_finish_count"
+      },
+      "metric_source": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+      "harm_source": "results/20261020-final-publication/saved_timing_checks.json",
+      "baseline": "No-substitution (C0)",
+      "values": {
+        "a10_wait": 20.533731466338377,
+        "a10_jct": 120.3034876057854,
+        "all_jct": 87.19013846127531,
+        "done": 217822,
+        "native_harm": 0,
+        "a10_harm": 49772
+      }
+    },
+    {
+      "case": "C2",
+      "policy": "SPT-HOL",
+      "historical_policy_alias": "SJF-HOL",
+      "placement": {
+        "GPU-series-1": "ratio",
+        "other_pools": "ff-id"
+      },
+      "routing": "R0",
+      "display": "Hash-10%",
+      "sigma": 2,
+      "cohort": {
+        "a10": "original_A10",
+        "all": "ALL",
+        "native": "native_A100"
+      },
+      "fields": {
+        "a10_wait": "metrics.cohorts.original_A10.mean_wait_hours",
+        "a10_jct": "metrics.cohorts.original_A10.mean_jct_hours",
+        "all_jct": "metrics.cohorts.ALL.mean_jct_hours",
+        "done": "metrics.cohorts.ALL.completed_at_horizon",
+        "native_harm": "native_a100_wait_increase_count",
+        "a10_harm": "a10_later_finish_count"
+      },
+      "metric_source": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+      "harm_source": "results/20261020-final-publication/saved_timing_checks.json",
+      "baseline": "No-substitution (C0)",
+      "values": {
+        "a10_wait": 25.105831381370585,
+        "a10_jct": 134.80973557145083,
+        "all_jct": 94.39329268153621,
+        "done": 217529,
+        "native_harm": 0,
+        "a10_harm": 56422
+      }
+    },
+    {
+      "case": "C3",
+      "policy": "SPT-HOL",
+      "historical_policy_alias": "SJF-HOL",
+      "placement": {
+        "GPU-series-1": "ratio",
+        "other_pools": "ff-id"
+      },
+      "routing": "R-shape",
+      "display": "Shape-filtered",
+      "sigma": 1,
+      "cohort": {
+        "a10": "original_A10",
+        "all": "ALL",
+        "native": "native_A100"
+      },
+      "fields": {
+        "a10_wait": "metrics.cohorts.original_A10.mean_wait_hours",
+        "a10_jct": "metrics.cohorts.original_A10.mean_jct_hours",
+        "all_jct": "metrics.cohorts.ALL.mean_jct_hours",
+        "done": "metrics.cohorts.ALL.completed_at_horizon",
+        "native_harm": "native_a100_wait_increase_count",
+        "a10_harm": "a10_later_finish_count"
+      },
+      "metric_source": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+      "harm_source": "results/20261020-final-publication/saved_timing_checks.json",
+      "baseline": "No-substitution (C0)",
+      "values": {
+        "a10_wait": 24.358603797491103,
+        "a10_jct": 124.12835993693811,
+        "all_jct": 89.08939906534827,
+        "done": 217809,
+        "native_harm": 0,
+        "a10_harm": 46803
+      }
+    },
+    {
+      "case": "C4",
+      "policy": "SPT-HOL",
+      "historical_policy_alias": "SJF-HOL",
+      "placement": {
+        "GPU-series-1": "ratio",
+        "other_pools": "ff-id"
+      },
+      "routing": "R-shape",
+      "display": "Shape-filtered",
+      "sigma": 2,
+      "cohort": {
+        "a10": "original_A10",
+        "all": "ALL",
+        "native": "native_A100"
+      },
+      "fields": {
+        "a10_wait": "metrics.cohorts.original_A10.mean_wait_hours",
+        "a10_jct": "metrics.cohorts.original_A10.mean_jct_hours",
+        "all_jct": "metrics.cohorts.ALL.mean_jct_hours",
+        "done": "metrics.cohorts.ALL.completed_at_horizon",
+        "native_harm": "native_a100_wait_increase_count",
+        "a10_harm": "a10_later_finish_count"
+      },
+      "metric_source": "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json",
+      "harm_source": "results/20261020-final-publication/saved_timing_checks.json",
+      "baseline": "No-substitution (C0)",
+      "values": {
+        "a10_wait": 24.358603797491103,
+        "a10_jct": 129.67077262779117,
+        "all_jct": 91.84151342731413,
+        "done": 217621,
+        "native_harm": 0,
+        "a10_harm": 55465
+      }
+    }
+  ],
+  "winners": {
+    "FCFS": {
+      "1": {
+        "Hash-10%": 687.6448252918459,
+        "Shape-filtered": 756.1252745228425,
+        "winner": "Hash-10%"
+      },
+      "2": {
+        "Hash-10%": 831.4555450069693,
+        "Shape-filtered": 761.6676872136954,
+        "winner": "Shape-filtered"
+      },
+      "two_point_max": {
+        "Hash-10%": 831.4555450069693,
+        "Shape-filtered": 761.6676872136954
+      }
+    },
+    "SPT-HOL": {
+      "1": {
+        "Hash-10%": 120.3034876057854,
+        "Shape-filtered": 124.12835993693811,
+        "winner": "Hash-10%"
+      },
+      "2": {
+        "Hash-10%": 134.80973557145083,
+        "Shape-filtered": 129.67077262779117,
+        "winner": "Shape-filtered"
+      },
+      "two_point_max": {
+        "Hash-10%": 134.80973557145083,
+        "Shape-filtered": 129.67077262779117
+      }
+    }
+  },
+  "fcfs_hol_mean_ratio": 27.354164888831487,
+  "sources_sha256": {
+    "results/20261019-b-v2-integration-candidate/v2_runtime_equivalence.json": "305eb4d62db07068ed44fe32ec20aded14087876ceb926e65d525606bdc44451",
+    "results/20261019-paper-content-r2/r2_metrics.json": "3b457c413929cf6b37e5b1d7d19bf196cd1211b6f99744c3924ab401ec23bc3d",
+    "results/20261020-final-publication/saved_timing_checks.json": "97de7923da291d1c553eaee6273b6e6a165442066737eac578139df138bc7194",
+    "results/20261018-b-q3-v2-r1-6f2c8a10/main_table.csv": "4d07455a3533e864cb773754928f93aa346a66050cd2050fb47b05411cace8fe"
+  }
+}

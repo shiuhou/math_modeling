@@ -1,0 +1,17 @@
+\begin{table}[H]\centering
+\caption{Six-pool SPT-HOL results. GS1 uses ratio; other pools use FF-id. Waiting uses complete drain; allocation and completion use $H=7{,}776{,}000$ s.}
+\label{tab:r2pools}
+\begin{tabular}{lrrrrrr}
+\toprule
+Pool & Jobs & GPUs & \shortstack{Mean\\wait (h)} & \shortstack{Median/P99\\wait (h)} & \shortstack{GPU/CPU\\allocation} & \shortstack{90-day\\done}\\
+\midrule
+A10 & 111,284 & 2,494 & 32.906 & 0.023/1542.181 & 99.922\%/17.927\% & 107,002\\
+A100 & 80,877 & 3,456 & 0.000 & 0.000/0.000 & 62.755\%/42.032\% & 80,101\\
+GS1 & 9,643 & 1,558 & 0.000 & 0.000/0.000 & 60.867\%/34.814\% & 8,221\\
+GS2 & 13,633 & 976 & 0.016 & 0.000/0.045 & 56.931\%/37.424\% & 13,606\\
+H800 & 4,716 & 1,752 & 0.016 & 0.000/0.000 & 55.816\%/52.193\% & 4,705\\
+A800 & 3,959 & 176 & 0.115 & 0.000/4.390 & 57.311\%/49.493\% & 3,943\\
+\bottomrule
+\end{tabular}
+\smallskip\par A100 and A800 denote the SXM4-80GB models; GS1 and GS2 denote GPU-series-1 and GPU-series-2. Allocation integrates $[0,H)$; a completion at $H$ is included.
+\end{table}

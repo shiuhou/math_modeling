@@ -1,0 +1,186 @@
+{
+  "B1": {
+    "policy": "FCFS",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": false,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "M0",
+    "placement": {
+      "GPU-series-1": "ff-id"
+    },
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "B2": {
+    "policy": "SJF-HOL",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": false,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "M0",
+    "placement": {
+      "GPU-series-1": "ff-id"
+    },
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "C0": {
+    "policy": "SJF-HOL",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": false,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "M0",
+    "placement": {
+      "GPU-series-1": "ratio"
+    },
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "C1": {
+    "policy": "SJF-HOL",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "R0",
+    "placement": {
+      "GPU-series-1": "ratio"
+    },
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "C2": {
+    "policy": "SJF-HOL",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 2,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "R0",
+    "placement": {
+      "GPU-series-1": "ratio"
+    },
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "C3": {
+    "policy": "SJF-HOL",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "R-shape",
+    "placement": {
+      "GPU-series-1": "ratio"
+    },
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "C4": {
+    "policy": "SJF-HOL",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": true,
+      "sigma": 2,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "R-shape",
+    "placement": {
+      "GPU-series-1": "ratio"
+    },
+    "theta_seconds": 4860000,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "full-H1": {
+    "policy": "SPT-HOL",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": false,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "native A10 only",
+    "placement": {},
+    "theta_seconds": 604800,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "full-A1": {
+    "policy": "SPT-FILL",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": false,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "native A10 only",
+    "placement": {},
+    "theta_seconds": 604800,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  },
+  "full-C1": {
+    "policy": "SPT-HEAD-TIME",
+    "config": {
+      "donor_nodes": 60,
+      "route_numerator": 1,
+      "route_denominator": 10,
+      "compatibility": false,
+      "sigma": 1,
+      "horizon_seconds": 7776000,
+      "hash_namespace": "q3-fixed-split-v1"
+    },
+    "routing": "native A10 only",
+    "placement": {},
+    "theta_seconds": 604800,
+    "reservation_k": 200,
+    "event_mode": "shared-timer"
+  }
+}

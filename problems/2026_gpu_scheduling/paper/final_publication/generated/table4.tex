@@ -1,0 +1,14 @@
+\begin{table}[H]\centering
+\caption{HOL/FILL worker strata: waiting in hours; paired difference is HOL minus FILL.}
+\label{tab:r2strata}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Stratum & Jobs & \shortstack{HOL\\mean} & \shortstack{FILL\\mean} & \shortstack{HOL\\P99} & \shortstack{FILL\\P99} & \shortstack{Paired\\mean} & \shortstack{Improve / worsen\\/ same (jobs)}\\
+\midrule
+$W=1$ & 110,497 & 33.125 & 32.805 & 1553.319 & 1539.480 & $+0.320$ & \shortstack{54,489 / 50,566\\ / 5,442}\\
+$W=2$--8 & 637 & 1.529 & 186.767 & 15.603$^\dagger$ & 1952.714$^\dagger$ & $-185.237$ & \shortstack{628 / 8\\ / 1}\\
+$W\ge9$ & 150 & 4.997 & 982.722 & 36.186$^\dagger$ & 2907.896$^\dagger$ & $-977.725$ & \shortstack{149 / 1\\ / 0}\\
+\bottomrule
+\end{tabular}
+\smallskip\par $^\dagger$ Small strata; P99 is unstable. The groups use the same complete A10 population.
+\end{table}
