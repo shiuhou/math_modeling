@@ -1,0 +1,2440 @@
+{
+  "pdf_sha256": "515e7ab33ba27452f79f8c52a9825971b2d5cef1482956950c65c1f395b62b26",
+  "pages": 8,
+  "checks": [
+    {
+      "item": "performance.C0.sigma",
+      "status": "PASS",
+      "pdf_actual": "—",
+      "expected": "—",
+      "source": "No substitution has no foreign partition",
+      "page": 5
+    },
+    {
+      "item": "performance.C0.label",
+      "status": "PASS",
+      "pdf_actual": "No substitution",
+      "expected": "No substitution",
+      "source": "C0 routing mapping",
+      "page": 5
+    },
+    {
+      "item": "Table5.C0.a10_wait",
+      "status": "PASS",
+      "pdf_actual": "32.906",
+      "expected": "32.906",
+      "source": "v2_runtime_equivalence.json case=C0.metrics.cohorts.original_A10.mean_wait_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C0.a10_jct",
+      "status": "PASS",
+      "pdf_actual": "132.676",
+      "expected": "132.676",
+      "source": "v2_runtime_equivalence.json case=C0.metrics.cohorts.original_A10.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C0.all_jct",
+      "status": "PASS",
+      "pdf_actual": "93.334",
+      "expected": "93.334",
+      "source": "v2_runtime_equivalence.json case=C0.metrics.cohorts.ALL.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C0.done",
+      "status": "PASS",
+      "pdf_actual": "217,578",
+      "expected": "217,578",
+      "source": "v2_runtime_equivalence.json case=C0.metrics.cohorts.ALL.completed_at_horizon",
+      "page": 5
+    },
+    {
+      "item": "performance.C1.sigma",
+      "status": "PASS",
+      "pdf_actual": 1,
+      "expected": 1,
+      "source": "C1.config.sigma",
+      "page": 5
+    },
+    {
+      "item": "performance.C1.label",
+      "status": "PASS",
+      "pdf_actual": "Hash-10%",
+      "expected": "Hash-10%",
+      "source": "C1 routing mapping",
+      "page": 5
+    },
+    {
+      "item": "Table5.C1.a10_wait",
+      "status": "PASS",
+      "pdf_actual": "20.534",
+      "expected": "20.534",
+      "source": "v2_runtime_equivalence.json case=C1.metrics.cohorts.original_A10.mean_wait_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C1.a10_jct",
+      "status": "PASS",
+      "pdf_actual": "120.303",
+      "expected": "120.303",
+      "source": "v2_runtime_equivalence.json case=C1.metrics.cohorts.original_A10.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C1.all_jct",
+      "status": "PASS",
+      "pdf_actual": "87.190",
+      "expected": "87.190",
+      "source": "v2_runtime_equivalence.json case=C1.metrics.cohorts.ALL.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C1.done",
+      "status": "PASS",
+      "pdf_actual": "217,822",
+      "expected": "217,822",
+      "source": "v2_runtime_equivalence.json case=C1.metrics.cohorts.ALL.completed_at_horizon",
+      "page": 5
+    },
+    {
+      "item": "performance.C2.sigma",
+      "status": "PASS",
+      "pdf_actual": 2,
+      "expected": 2,
+      "source": "C2.config.sigma",
+      "page": 5
+    },
+    {
+      "item": "performance.C2.label",
+      "status": "PASS",
+      "pdf_actual": "Hash-10%",
+      "expected": "Hash-10%",
+      "source": "C2 routing mapping",
+      "page": 5
+    },
+    {
+      "item": "Table5.C2.a10_wait",
+      "status": "PASS",
+      "pdf_actual": "25.106",
+      "expected": "25.106",
+      "source": "v2_runtime_equivalence.json case=C2.metrics.cohorts.original_A10.mean_wait_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C2.a10_jct",
+      "status": "PASS",
+      "pdf_actual": "134.810",
+      "expected": "134.810",
+      "source": "v2_runtime_equivalence.json case=C2.metrics.cohorts.original_A10.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C2.all_jct",
+      "status": "PASS",
+      "pdf_actual": "94.393",
+      "expected": "94.393",
+      "source": "v2_runtime_equivalence.json case=C2.metrics.cohorts.ALL.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C2.done",
+      "status": "PASS",
+      "pdf_actual": "217,529",
+      "expected": "217,529",
+      "source": "v2_runtime_equivalence.json case=C2.metrics.cohorts.ALL.completed_at_horizon",
+      "page": 5
+    },
+    {
+      "item": "performance.C3.sigma",
+      "status": "PASS",
+      "pdf_actual": 1,
+      "expected": 1,
+      "source": "C3.config.sigma",
+      "page": 5
+    },
+    {
+      "item": "performance.C3.label",
+      "status": "PASS",
+      "pdf_actual": "Shape-filtered",
+      "expected": "Shape-filtered",
+      "source": "C3 routing mapping",
+      "page": 5
+    },
+    {
+      "item": "Table5.C3.a10_wait",
+      "status": "PASS",
+      "pdf_actual": "24.359",
+      "expected": "24.359",
+      "source": "v2_runtime_equivalence.json case=C3.metrics.cohorts.original_A10.mean_wait_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C3.a10_jct",
+      "status": "PASS",
+      "pdf_actual": "124.128",
+      "expected": "124.128",
+      "source": "v2_runtime_equivalence.json case=C3.metrics.cohorts.original_A10.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C3.all_jct",
+      "status": "PASS",
+      "pdf_actual": "89.089",
+      "expected": "89.089",
+      "source": "v2_runtime_equivalence.json case=C3.metrics.cohorts.ALL.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C3.done",
+      "status": "PASS",
+      "pdf_actual": "217,809",
+      "expected": "217,809",
+      "source": "v2_runtime_equivalence.json case=C3.metrics.cohorts.ALL.completed_at_horizon",
+      "page": 5
+    },
+    {
+      "item": "performance.C4.sigma",
+      "status": "PASS",
+      "pdf_actual": 2,
+      "expected": 2,
+      "source": "C4.config.sigma",
+      "page": 5
+    },
+    {
+      "item": "performance.C4.label",
+      "status": "PASS",
+      "pdf_actual": "Shape-filtered",
+      "expected": "Shape-filtered",
+      "source": "C4 routing mapping",
+      "page": 5
+    },
+    {
+      "item": "Table5.C4.a10_wait",
+      "status": "PASS",
+      "pdf_actual": "24.359",
+      "expected": "24.359",
+      "source": "v2_runtime_equivalence.json case=C4.metrics.cohorts.original_A10.mean_wait_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C4.a10_jct",
+      "status": "PASS",
+      "pdf_actual": "129.671",
+      "expected": "129.671",
+      "source": "v2_runtime_equivalence.json case=C4.metrics.cohorts.original_A10.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C4.all_jct",
+      "status": "PASS",
+      "pdf_actual": "91.842",
+      "expected": "91.842",
+      "source": "v2_runtime_equivalence.json case=C4.metrics.cohorts.ALL.mean_jct_hours",
+      "page": 5
+    },
+    {
+      "item": "Table5.C4.done",
+      "status": "PASS",
+      "pdf_actual": "217,621",
+      "expected": "217,621",
+      "source": "v2_runtime_equivalence.json case=C4.metrics.cohorts.ALL.completed_at_horizon",
+      "page": 5
+    },
+    {
+      "item": "harm.C0.sigma",
+      "status": "PASS",
+      "pdf_actual": "—",
+      "expected": "—",
+      "source": "No substitution has no foreign partition",
+      "page": 6
+    },
+    {
+      "item": "harm.C0.label",
+      "status": "PASS",
+      "pdf_actual": "No substitution",
+      "expected": "No substitution",
+      "source": "C0 routing mapping",
+      "page": 6
+    },
+    {
+      "item": "Table5.C0.native_a100_wait_increase_count",
+      "status": "PASS",
+      "pdf_actual": "0",
+      "expected": "0",
+      "source": "saved_timing_checks.json case=C0.native_a100_wait_increase_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "Table5.C0.a10_later_finish_count",
+      "status": "PASS",
+      "pdf_actual": "0",
+      "expected": "0",
+      "source": "saved_timing_checks.json case=C0.a10_later_finish_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "harm.C1.sigma",
+      "status": "PASS",
+      "pdf_actual": 1,
+      "expected": 1,
+      "source": "C1.config.sigma",
+      "page": 6
+    },
+    {
+      "item": "harm.C1.label",
+      "status": "PASS",
+      "pdf_actual": "Hash-10%",
+      "expected": "Hash-10%",
+      "source": "C1 routing mapping",
+      "page": 6
+    },
+    {
+      "item": "Table5.C1.native_a100_wait_increase_count",
+      "status": "PASS",
+      "pdf_actual": "0",
+      "expected": "0",
+      "source": "saved_timing_checks.json case=C1.native_a100_wait_increase_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "Table5.C1.a10_later_finish_count",
+      "status": "PASS",
+      "pdf_actual": "49,772",
+      "expected": "49,772",
+      "source": "saved_timing_checks.json case=C1.a10_later_finish_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "harm.C2.sigma",
+      "status": "PASS",
+      "pdf_actual": 2,
+      "expected": 2,
+      "source": "C2.config.sigma",
+      "page": 6
+    },
+    {
+      "item": "harm.C2.label",
+      "status": "PASS",
+      "pdf_actual": "Hash-10%",
+      "expected": "Hash-10%",
+      "source": "C2 routing mapping",
+      "page": 6
+    },
+    {
+      "item": "Table5.C2.native_a100_wait_increase_count",
+      "status": "PASS",
+      "pdf_actual": "0",
+      "expected": "0",
+      "source": "saved_timing_checks.json case=C2.native_a100_wait_increase_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "Table5.C2.a10_later_finish_count",
+      "status": "PASS",
+      "pdf_actual": "56,422",
+      "expected": "56,422",
+      "source": "saved_timing_checks.json case=C2.a10_later_finish_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "harm.C3.sigma",
+      "status": "PASS",
+      "pdf_actual": 1,
+      "expected": 1,
+      "source": "C3.config.sigma",
+      "page": 6
+    },
+    {
+      "item": "harm.C3.label",
+      "status": "PASS",
+      "pdf_actual": "Shape-filtered",
+      "expected": "Shape-filtered",
+      "source": "C3 routing mapping",
+      "page": 6
+    },
+    {
+      "item": "Table5.C3.native_a100_wait_increase_count",
+      "status": "PASS",
+      "pdf_actual": "0",
+      "expected": "0",
+      "source": "saved_timing_checks.json case=C3.native_a100_wait_increase_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "Table5.C3.a10_later_finish_count",
+      "status": "PASS",
+      "pdf_actual": "46,803",
+      "expected": "46,803",
+      "source": "saved_timing_checks.json case=C3.a10_later_finish_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "harm.C4.sigma",
+      "status": "PASS",
+      "pdf_actual": 2,
+      "expected": 2,
+      "source": "C4.config.sigma",
+      "page": 6
+    },
+    {
+      "item": "harm.C4.label",
+      "status": "PASS",
+      "pdf_actual": "Shape-filtered",
+      "expected": "Shape-filtered",
+      "source": "C4 routing mapping",
+      "page": 6
+    },
+    {
+      "item": "Table5.C4.native_a100_wait_increase_count",
+      "status": "PASS",
+      "pdf_actual": "0",
+      "expected": "0",
+      "source": "saved_timing_checks.json case=C4.native_a100_wait_increase_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "Table5.C4.a10_later_finish_count",
+      "status": "PASS",
+      "pdf_actual": "55,465",
+      "expected": "55,465",
+      "source": "saved_timing_checks.json case=C4.a10_later_finish_count; historical pair and C0 timing comparisons",
+      "page": 6
+    },
+    {
+      "item": "Table2.A10",
+      "status": "PASS",
+      "pdf_actual": [
+        "111,284",
+        "2,494",
+        "32.906",
+        "0.023",
+        "1542.181",
+        "99.922",
+        "17.927",
+        "107,002"
+      ],
+      "expected": [
+        "111,284",
+        "2,494",
+        "32.906",
+        "0.023",
+        "1542.181",
+        "99.922",
+        "17.927",
+        "107,002"
+      ],
+      "source": "r2_metrics.q2_c0_six_pool.A10; formal C0",
+      "page": 3
+    },
+    {
+      "item": "Table2.A100-SXM4-80GB",
+      "status": "PASS",
+      "pdf_actual": [
+        "80,877",
+        "3,456",
+        "0.000",
+        "0.000",
+        "0.000",
+        "62.755",
+        "42.032",
+        "80,101"
+      ],
+      "expected": [
+        "80,877",
+        "3,456",
+        "0.000",
+        "0.000",
+        "0.000",
+        "62.755",
+        "42.032",
+        "80,101"
+      ],
+      "source": "r2_metrics.q2_c0_six_pool.A100-SXM4-80GB; formal C0",
+      "page": 3
+    },
+    {
+      "item": "Table2.GPU-series-1",
+      "status": "PASS",
+      "pdf_actual": [
+        "9,643",
+        "1,558",
+        "0.000",
+        "0.000",
+        "0.000",
+        "60.867",
+        "34.814",
+        "8,221"
+      ],
+      "expected": [
+        "9,643",
+        "1,558",
+        "0.000",
+        "0.000",
+        "0.000",
+        "60.867",
+        "34.814",
+        "8,221"
+      ],
+      "source": "r2_metrics.q2_c0_six_pool.GPU-series-1; formal C0",
+      "page": 3
+    },
+    {
+      "item": "Table2.GPU-series-2",
+      "status": "PASS",
+      "pdf_actual": [
+        "13,633",
+        "976",
+        "0.016",
+        "0.000",
+        "0.045",
+        "56.931",
+        "37.424",
+        "13,606"
+      ],
+      "expected": [
+        "13,633",
+        "976",
+        "0.016",
+        "0.000",
+        "0.045",
+        "56.931",
+        "37.424",
+        "13,606"
+      ],
+      "source": "r2_metrics.q2_c0_six_pool.GPU-series-2; formal C0",
+      "page": 3
+    },
+    {
+      "item": "Table2.H800",
+      "status": "PASS",
+      "pdf_actual": [
+        "4,716",
+        "1,752",
+        "0.016",
+        "0.000",
+        "0.000",
+        "55.816",
+        "52.193",
+        "4,705"
+      ],
+      "expected": [
+        "4,716",
+        "1,752",
+        "0.016",
+        "0.000",
+        "0.000",
+        "55.816",
+        "52.193",
+        "4,705"
+      ],
+      "source": "r2_metrics.q2_c0_six_pool.H800; formal C0",
+      "page": 3
+    },
+    {
+      "item": "Table2.A800-SXM4-80GB",
+      "status": "PASS",
+      "pdf_actual": [
+        "3,959",
+        "176",
+        "0.115",
+        "0.000",
+        "4.390",
+        "57.311",
+        "49.493",
+        "3,943"
+      ],
+      "expected": [
+        "3,959",
+        "176",
+        "0.115",
+        "0.000",
+        "4.390",
+        "57.311",
+        "49.493",
+        "3,943"
+      ],
+      "source": "r2_metrics.q2_c0_six_pool.A800-SXM4-80GB; formal C0",
+      "page": 3
+    },
+    {
+      "item": "Table2.sum_equals_Table5.C0",
+      "status": "PASS",
+      "pdf_actual": 217578,
+      "expected": 217578,
+      "source": "sum actual PDF six pools vs actual PDF C0",
+      "page": 3
+    },
+    {
+      "item": "Table3.FCFS",
+      "status": "PASS",
+      "pdf_actual": [
+        "900.129",
+        "1419.616",
+        "1423.254",
+        "619.352"
+      ],
+      "expected": [
+        "900.129",
+        "1419.616",
+        "1423.254",
+        "619.352"
+      ],
+      "source": "r2_metrics.q2_a10_three_policy.FCFS_B1",
+      "page": 4
+    },
+    {
+      "item": "Table3.SPT-HOL",
+      "status": "PASS",
+      "pdf_actual": [
+        "32.906",
+        "1542.181",
+        "3017.288",
+        "677.690"
+      ],
+      "expected": [
+        "32.906",
+        "1542.181",
+        "3017.288",
+        "677.690"
+      ],
+      "source": "r2_metrics.q2_a10_three_policy.SPT-HOL_C0",
+      "page": 4
+    },
+    {
+      "item": "Table3.SPT-FILL",
+      "status": "PASS",
+      "pdf_actual": [
+        "34.967",
+        "1575.462",
+        "3015.311",
+        "677.496"
+      ],
+      "expected": [
+        "34.967",
+        "1575.462",
+        "3015.311",
+        "677.496"
+      ],
+      "source": "r2_metrics.q2_a10_three_policy.SPT-FILL_full-A1",
+      "page": 4
+    },
+    {
+      "item": "Table4.W=1",
+      "status": "PASS",
+      "pdf_actual": [
+        "110,497",
+        "33.125",
+        "32.805",
+        "1553.319",
+        "1539.480",
+        "+0.320",
+        "54,489",
+        "50,566",
+        "5,442"
+      ],
+      "expected": [
+        "110,497",
+        "33.125",
+        "32.805",
+        "1553.319",
+        "1539.480",
+        "+0.320",
+        "54,489",
+        "50,566",
+        "5,442"
+      ],
+      "source": "r2_metrics.q2_worker_strata.W=1; full-H1/full-A1",
+      "page": 4
+    },
+    {
+      "item": "Table4.W=2-8",
+      "status": "PASS",
+      "pdf_actual": [
+        "637",
+        "1.529",
+        "186.767",
+        "15.603",
+        "1952.714",
+        "-185.237",
+        "628",
+        "8",
+        "1"
+      ],
+      "expected": [
+        "637",
+        "1.529",
+        "186.767",
+        "15.603",
+        "1952.714",
+        "-185.237",
+        "628",
+        "8",
+        "1"
+      ],
+      "source": "r2_metrics.q2_worker_strata.W=2-8; full-H1/full-A1",
+      "page": 4
+    },
+    {
+      "item": "Table4.W>=9",
+      "status": "PASS",
+      "pdf_actual": [
+        "150",
+        "4.997",
+        "982.722",
+        "36.186",
+        "2907.896",
+        "-977.725",
+        "149",
+        "1",
+        "0"
+      ],
+      "expected": [
+        "150",
+        "4.997",
+        "982.722",
+        "36.186",
+        "2907.896",
+        "-977.725",
+        "149",
+        "1",
+        "0"
+      ],
+      "source": "r2_metrics.q2_worker_strata.W>=9; full-H1/full-A1",
+      "page": 4
+    },
+    {
+      "item": "Table4.paired_counts",
+      "status": "PASS",
+      "pdf_actual": [
+        55266,
+        50575,
+        5443
+      ],
+      "expected": [
+        55266,
+        50575,
+        5443
+      ],
+      "source": "sum extracted Table4 counts",
+      "page": null
+    },
+    {
+      "item": "Table4.population",
+      "status": "PASS",
+      "pdf_actual": 111284,
+      "expected": 111284,
+      "source": "complete original A10",
+      "page": null
+    },
+    {
+      "item": "Table4.count_partition",
+      "status": "PASS",
+      "pdf_actual": 111284,
+      "expected": 111284,
+      "source": "actual PDF stratum outcomes partition population",
+      "page": null
+    },
+    {
+      "item": "Table4.weighted_mean.SPT-HOL_C0",
+      "pdf_actual": 32.90622774163402,
+      "expected_exact": 32.906454035021504,
+      "display_rounding_bound": 0.0005,
+      "status": "PASS",
+      "source": "PDF stratum counts and means; exact formal total"
+    },
+    {
+      "item": "Table4.weighted_mean.SPT-FILL_full-A1",
+      "pdf_actual": 34.96668850868049,
+      "expected_exact": 34.967030093674246,
+      "display_rounding_bound": 0.0005,
+      "status": "PASS",
+      "source": "PDF stratum counts and means; exact formal total"
+    },
+    {
+      "item": "Table1.all.duration_le_1h.fraction",
+      "status": "PASS",
+      "pdf_actual": "70.751%",
+      "expected": "70.751%",
+      "source": "r2_metrics.q1_type_stats; formal raw CSV",
+      "page": 1
+    },
+    {
+      "item": "Table1.all.duration_le_1h.gpu_work_fraction",
+      "status": "PASS",
+      "pdf_actual": "0.721%",
+      "expected": "0.721%",
+      "source": "r2_metrics.q1_type_stats; formal raw CSV",
+      "page": 1
+    },
+    {
+      "item": "Table1.all.duration_gt_24h.fraction",
+      "status": "PASS",
+      "pdf_actual": "9.295%",
+      "expected": "9.295%",
+      "source": "r2_metrics.q1_type_stats; formal raw CSV",
+      "page": 1
+    },
+    {
+      "item": "Table1.all.duration_gt_24h.gpu_work_fraction",
+      "status": "PASS",
+      "pdf_actual": "92.350%",
+      "expected": "92.350%",
+      "source": "r2_metrics.q1_type_stats; formal raw CSV",
+      "page": 1
+    },
+    {
+      "item": "Table1.A10.duration_le_1h.fraction",
+      "status": "PASS",
+      "pdf_actual": "79.035%",
+      "expected": "79.035%",
+      "source": "r2_metrics.q1_type_stats; formal raw CSV",
+      "page": 1
+    },
+    {
+      "item": "Table1.A10.duration_le_1h.gpu_work_fraction",
+      "status": "PASS",
+      "pdf_actual": "0.176%",
+      "expected": "0.176%",
+      "source": "r2_metrics.q1_type_stats; formal raw CSV",
+      "page": 1
+    },
+    {
+      "item": "Table1.A10.duration_gt_24h.fraction",
+      "status": "PASS",
+      "pdf_actual": "10.717%",
+      "expected": "10.717%",
+      "source": "r2_metrics.q1_type_stats; formal raw CSV",
+      "page": 1
+    },
+    {
+      "item": "Table1.A10.duration_gt_24h.gpu_work_fraction",
+      "status": "PASS",
+      "pdf_actual": "99.417%",
+      "expected": "99.417%",
+      "source": "r2_metrics.q1_type_stats; formal raw CSV",
+      "page": 1
+    },
+    {
+      "item": "allocation.identity.C1",
+      "source": "integer occupancy from saved jobs and 2976/480 capacity",
+      "pdf_total": "0.722376",
+      "weighted_exact": 0.7223755103100946,
+      "occupancy_exact": 0.7223755103100947,
+      "status": "PASS"
+    },
+    {
+      "item": "allocation.identity.C2",
+      "source": "integer occupancy from saved jobs and 2976/480 capacity",
+      "pdf_total": "0.720535",
+      "weighted_exact": 0.7205354433691986,
+      "occupancy_exact": 0.7205354433691987,
+      "status": "PASS"
+    },
+    {
+      "item": "allocation.identity.C3",
+      "source": "integer occupancy from saved jobs and 2976/480 capacity",
+      "pdf_total": "0.689946",
+      "weighted_exact": 0.6899455596547066,
+      "occupancy_exact": 0.6899455596547068,
+      "status": "PASS"
+    },
+    {
+      "item": "allocation.identity.C4",
+      "source": "integer occupancy from saved jobs and 2976/480 capacity",
+      "pdf_total": "0.714832",
+      "weighted_exact": 0.714831910463463,
+      "occupancy_exact": 0.7148319104634631,
+      "status": "PASS"
+    },
+    {
+      "item": "allocation.pdf.own",
+      "status": "PASS",
+      "pdf_actual": [
+        "0.728770",
+        "0.682727",
+        "0.728770",
+        "0.669479",
+        "0.728770",
+        "0.449232",
+        "0.728770",
+        "0.628414"
+      ],
+      "expected": [
+        "0.728770",
+        "0.682727",
+        "0.728770",
+        "0.669479",
+        "0.728770",
+        "0.449232",
+        "0.728770",
+        "0.628414"
+      ],
+      "source": "saved_timing_checks integer occupancy by C1-C4",
+      "page": null
+    },
+    {
+      "item": "allocation.pdf.contribution",
+      "status": "PASS",
+      "pdf_actual": [
+        "0.627552",
+        "0.094823",
+        "0.627552",
+        "0.092983",
+        "0.627552",
+        "0.062393",
+        "0.627552",
+        "0.087280"
+      ],
+      "expected": [
+        "0.627552",
+        "0.094823",
+        "0.627552",
+        "0.092983",
+        "0.627552",
+        "0.062393",
+        "0.627552",
+        "0.087280"
+      ],
+      "source": "saved_timing_checks integer occupancy by C1-C4",
+      "page": null
+    },
+    {
+      "item": "allocation.pdf.total",
+      "status": "PASS",
+      "pdf_actual": [
+        "0.722376",
+        "0.720535",
+        "0.689946",
+        "0.714832"
+      ],
+      "expected": [
+        "0.722376",
+        "0.720535",
+        "0.689946",
+        "0.714832"
+      ],
+      "source": "saved_timing_checks integer occupancy by C1-C4",
+      "page": null
+    },
+    {
+      "item": "winners.sentence.abstract",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "same policy/cohort/sigma formal comparisons + two-point maxima",
+      "page": null
+    },
+    {
+      "item": "winners.sentence.Q3",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "same policy/cohort/sigma formal comparisons + two-point maxima",
+      "page": null
+    },
+    {
+      "item": "winners.pdf_numbers",
+      "status": "PASS",
+      "pdf_actual": [
+        "687.645",
+        "756.125",
+        "831.456",
+        "761.668",
+        "120.303",
+        "124.128",
+        "134.810",
+        "129.671",
+        "831.456",
+        "761.668",
+        "134.810",
+        "129.671"
+      ],
+      "expected": [
+        "687.645",
+        "756.125",
+        "831.456",
+        "761.668",
+        "120.303",
+        "124.128",
+        "134.810",
+        "129.671",
+        "831.456",
+        "761.668",
+        "134.810",
+        "129.671"
+      ],
+      "source": "main_table.csv FCFS/A10; C1-C4 original_A10.mean_jct_hours",
+      "page": null
+    },
+    {
+      "item": "FCFS.mean_ratio",
+      "status": "PASS",
+      "pdf_actual": "27.35",
+      "expected": "27.35",
+      "source": "exact means; display rounding",
+      "page": null
+    },
+    {
+      "item": "abstract.wait_values",
+      "status": "PASS",
+      "pdf_actual": [
+        "32.906",
+        "20.534"
+      ],
+      "expected": [
+        "32.906",
+        "20.534"
+      ],
+      "source": "formal C0/C1 original_A10.mean_wait_hours",
+      "page": 1
+    },
+    {
+      "item": "identity.SHI U Hou",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "confirmed user messages",
+      "page": 1
+    },
+    {
+      "item": "identity.Ziyao Zhang",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "confirmed user messages",
+      "page": 1
+    },
+    {
+      "item": "identity.Beichen Ji",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "confirmed user messages",
+      "page": 1
+    },
+    {
+      "item": "identity.Sirui Zheng",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "confirmed user messages",
+      "page": 1
+    },
+    {
+      "item": "identity.HKUST(GZ)",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "confirmed user messages",
+      "page": 1
+    },
+    {
+      "item": "identity.Team falcons",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "confirmed user messages",
+      "page": 1
+    },
+    {
+      "item": "AI.at_end",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "AI section is final section",
+      "page": 8
+    },
+    {
+      "item": "body.no_internal_metadata",
+      "status": "PASS",
+      "pdf_actual": [],
+      "expected": [],
+      "source": "reader-facing publication",
+      "page": null
+    },
+    {
+      "item": "fonts.non_script_below_11",
+      "status": "PASS",
+      "pdf_actual": [],
+      "expected": [],
+      "source": "actual embedded text spans; scripts enumerated separately",
+      "page": null
+    },
+    {
+      "item": "layout.text_outside_page",
+      "status": "PASS",
+      "pdf_actual": [],
+      "expected": [],
+      "source": "actual PDF text bounding boxes",
+      "page": null
+    },
+    {
+      "item": "format.max_10_pages",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "all pages counted",
+      "page": null
+    },
+    {
+      "item": "format.A4",
+      "status": "PASS",
+      "pdf_actual": true,
+      "expected": true,
+      "source": "actual MediaBox",
+      "page": null
+    }
+  ],
+  "minimum_ordinary_font_pdf_pt": 11.058536529541016,
+  "math_script_exceptions": [
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        196.04478454589844,
+        411.7200012207031,
+        199.46395874023438,
+        419.6900939941406
+      ]
+    },
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        290.0399169921875,
+        411.7200012207031,
+        293.4591064453125,
+        419.6900939941406
+      ]
+    },
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        358.64422607421875,
+        411.7200012207031,
+        362.06341552734375,
+        419.6900939941406
+      ]
+    },
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        446.0932922363281,
+        411.7200012207031,
+        449.5124816894531,
+        419.6900939941406
+      ]
+    },
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        460.1760559082031,
+        411.7200012207031,
+        463.5952453613281,
+        419.6900939941406
+      ]
+    },
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        310.7352294921875,
+        424.9703063964844,
+        314.1544189453125,
+        432.9403991699219
+      ]
+    },
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        345.6627502441406,
+        424.9703063964844,
+        349.0819396972656,
+        432.9403991699219
+      ]
+    },
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        355.3194885253906,
+        424.9703063964844,
+        358.7386779785156,
+        432.9403991699219
+      ]
+    },
+    {
+      "page": 1,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        365.2655029296875,
+        424.9703063964844,
+        368.6846923828125,
+        432.9403991699219
+      ]
+    },
+    {
+      "page": 2,
+      "text": "GPU",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        174.72634887695312,
+        683.6075439453125,
+        193.57565307617188,
+        691.57763671875
+      ]
+    },
+    {
+      "page": 2,
+      "text": "m",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        174.72634887695312,
+        690.9074096679688,
+        182.2102813720703,
+        698.8775024414062
+      ]
+    },
+    {
+      "page": 2,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        222.55923461914062,
+        682.31103515625,
+        225.97840881347656,
+        690.2811279296875
+      ]
+    },
+    {
+      "page": 2,
+      "text": "∈J",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        226.44325256347656,
+        682.163818359375,
+        237.82456970214844,
+        690.1339111328125
+      ]
+    },
+    {
+      "page": 2,
+      "text": "m",
+      "font": "CMMI6",
+      "size_pdf_pt": 5.977583885192871,
+      "bbox": [
+        237.82850646972656,
+        684.863037109375,
+        244.36199951171875,
+        690.8406372070312
+      ]
+    },
+    {
+      "page": 2,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        257.6499938964844,
+        680.7069702148438,
+        261.0691833496094,
+        688.6770629882812
+      ]
+    },
+    {
+      "page": 2,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        267.3067321777344,
+        680.7069702148438,
+        270.7259216308594,
+        688.6770629882812
+      ]
+    },
+    {
+      "page": 2,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        277.25274658203125,
+        680.7069702148438,
+        280.67193603515625,
+        688.6770629882812
+      ]
+    },
+    {
+      "page": 2,
+      "text": "i",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        239.6934814453125,
+        699.0220336914062,
+        242.57069396972656,
+        706.9921264648438
+      ]
+    },
+    {
+      "page": 2,
+      "text": "∈I",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        242.5766143798828,
+        698.8748168945312,
+        252.88197326660156,
+        706.8449096679688
+      ]
+    },
+    {
+      "page": 2,
+      "text": "m",
+      "font": "CMMI6",
+      "size_pdf_pt": 5.977583885192871,
+      "bbox": [
+        252.88864135742188,
+        701.5740356445312,
+        259.4221496582031,
+        707.5516357421875
+      ]
+    },
+    {
+      "page": 2,
+      "text": "i",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        270.960693359375,
+        697.41796875,
+        273.837890625,
+        705.3880615234375
+      ]
+    },
+    {
+      "page": 2,
+      "text": "CPU",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        315.57977294921875,
+        683.6076049804688,
+        334.43707275390625,
+        691.5776977539062
+      ]
+    },
+    {
+      "page": 2,
+      "text": "m",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        315.57977294921875,
+        690.907470703125,
+        323.063720703125,
+        698.8775634765625
+      ]
+    },
+    {
+      "page": 2,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        363.41265869140625,
+        682.3110961914062,
+        366.83184814453125,
+        690.2811889648438
+      ]
+    },
+    {
+      "page": 2,
+      "text": "∈J",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        367.29669189453125,
+        682.1638793945312,
+        378.67803955078125,
+        690.1339721679688
+      ]
+    },
+    {
+      "page": 2,
+      "text": "m",
+      "font": "CMMI6",
+      "size_pdf_pt": 5.977583885192871,
+      "bbox": [
+        378.68194580078125,
+        684.8630981445312,
+        385.2154541015625,
+        690.8406982421875
+      ]
+    },
+    {
+      "page": 2,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        398.5034484863281,
+        680.70703125,
+        401.9226379394531,
+        688.6771240234375
+      ]
+    },
+    {
+      "page": 2,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        407.6712646484375,
+        680.70703125,
+        411.0904541015625,
+        688.6771240234375
+      ]
+    },
+    {
+      "page": 2,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        417.6172790527344,
+        680.70703125,
+        421.0364685058594,
+        688.6771240234375
+      ]
+    },
+    {
+      "page": 2,
+      "text": "i",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        380.697998046875,
+        699.0220336914062,
+        383.5751953125,
+        706.9921264648438
+      ]
+    },
+    {
+      "page": 2,
+      "text": "∈I",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        383.5811462402344,
+        698.8748168945312,
+        393.8865051269531,
+        706.8449096679688
+      ]
+    },
+    {
+      "page": 2,
+      "text": "m",
+      "font": "CMMI6",
+      "size_pdf_pt": 5.977583885192871,
+      "bbox": [
+        393.8931579589844,
+        701.5740356445312,
+        400.4266662597656,
+        707.5516357421875
+      ]
+    },
+    {
+      "page": 2,
+      "text": "i",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        411.17425537109375,
+        697.41796875,
+        414.05145263671875,
+        705.3880615234375
+      ]
+    },
+    {
+      "page": 2,
+      "text": "GPU",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        98.41840362548828,
+        717.419677734375,
+        117.2677230834961,
+        725.3897705078125
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        357.176513671875,
+        104.75753784179688,
+        360.595703125,
+        112.72765350341797
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        384.2624206542969,
+        104.75753784179688,
+        387.6816101074219,
+        112.72765350341797
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        466.12408447265625,
+        104.75753784179688,
+        469.54327392578125,
+        112.72765350341797
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        492.54827880859375,
+        104.75753784179688,
+        495.96746826171875,
+        112.72765350341797
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        516.855712890625,
+        104.75753784179688,
+        520.27490234375,
+        112.72765350341797
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        74.45586395263672,
+        118.00784301757812,
+        77.87504577636719,
+        125.97795867919922
+      ]
+    },
+    {
+      "page": 3,
+      "text": "ji",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        386.30206298828125,
+        118.00784301757812,
+        393.052734375,
+        125.97795867919922
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        167.46780395507812,
+        152.05938720703125,
+        170.88697814941406,
+        160.0294952392578
+      ]
+    },
+    {
+      "page": 3,
+      "text": "ji",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        178.17022705078125,
+        152.05938720703125,
+        184.92091369628906,
+        160.0294952392578
+      ]
+    },
+    {
+      "page": 3,
+      "text": "free",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        208.87503051757812,
+        145.04183959960938,
+        225.70791625976562,
+        153.01194763183594
+      ]
+    },
+    {
+      "page": 3,
+      "text": "i",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        208.87503051757812,
+        153.6298370361328,
+        211.7522430419922,
+        161.59994506835938
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        270.6454162597656,
+        152.05938720703125,
+        274.0646057128906,
+        160.0294952392578
+      ]
+    },
+    {
+      "page": 3,
+      "text": "ji",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        281.34783935546875,
+        152.05938720703125,
+        288.0985107421875,
+        160.0294952392578
+      ]
+    },
+    {
+      "page": 3,
+      "text": "free",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        312.0526428222656,
+        145.04183959960938,
+        328.8855285644531,
+        153.01194763183594
+      ]
+    },
+    {
+      "page": 3,
+      "text": "i",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        311.26165771484375,
+        153.6298370361328,
+        314.13885498046875,
+        161.59994506835938
+      ]
+    },
+    {
+      "page": 3,
+      "text": "i",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        375.5824890136719,
+        163.5949249267578,
+        378.4596862792969,
+        171.56503295898438
+      ]
+    },
+    {
+      "page": 3,
+      "text": "ji",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        393.1741638183594,
+        152.05938720703125,
+        399.9248352050781,
+        160.0294952392578
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        425.62841796875,
+        152.05938720703125,
+        429.047607421875,
+        160.0294952392578
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        380.8701171875,
+        183.62693786621094,
+        384.289306640625,
+        191.5970458984375
+      ]
+    },
+    {
+      "page": 3,
+      "text": ":",
+      "font": "CMR8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        384.754150390625,
+        183.62693786621094,
+        387.1053466796875,
+        191.5970458984375
+      ]
+    },
+    {
+      "page": 3,
+      "text": "s",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        387.1064758300781,
+        183.62693786621094,
+        391.0198059082031,
+        191.5970458984375
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI6",
+      "size_pdf_pt": 5.977583885192871,
+      "bbox": [
+        391.02239990234375,
+        186.39776611328125,
+        394.0769348144531,
+        192.37535095214844
+      ]
+    },
+    {
+      "page": 3,
+      "text": "≤",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        394.9251708984375,
+        183.47975158691406,
+        401.50848388671875,
+        191.44985961914062
+      ]
+    },
+    {
+      "page": 3,
+      "text": "t<f",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        401.5116882324219,
+        183.62693786621094,
+        415.2123107910156,
+        191.5970458984375
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI6",
+      "size_pdf_pt": 5.977583885192871,
+      "bbox": [
+        415.2243347167969,
+        186.39776611328125,
+        418.27886962890625,
+        192.37535095214844
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        426.7428894042969,
+        182.02284240722656,
+        430.1620788574219,
+        189.99295043945312
+      ]
+    },
+    {
+      "page": 3,
+      "text": "ji",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        437.4453125,
+        182.02284240722656,
+        444.19598388671875,
+        189.99295043945312
+      ]
+    },
+    {
+      "page": 3,
+      "text": "cap",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        471.32794189453125,
+        175.0052947998047,
+        483.7453918457031,
+        182.97540283203125
+      ]
+    },
+    {
+      "page": 3,
+      "text": "i",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        471.32794189453125,
+        183.59329223632812,
+        474.20513916015625,
+        191.5634002685547
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        132.6080322265625,
+        257.34930419921875,
+        136.02720642089844,
+        265.31939697265625
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        147.75054931640625,
+        257.34930419921875,
+        151.1697235107422,
+        265.31939697265625
+      ]
+    },
+    {
+      "page": 3,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        166.2631072998047,
+        257.34930419921875,
+        169.68228149414062,
+        265.31939697265625
+      ]
+    },
+    {
+      "page": 3,
+      "text": "−",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        429.0293273925781,
+        420.0484313964844,
+        435.6126403808594,
+        428.0185546875
+      ]
+    },
+    {
+      "page": 3,
+      "text": "−",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        270.76885986328125,
+        465.1231689453125,
+        277.3521728515625,
+        473.0932922363281
+      ]
+    },
+    {
+      "page": 3,
+      "text": "−",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        396.6793518066406,
+        498.0534362792969,
+        403.2626647949219,
+        506.0235595703125
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        262.0414123535156,
+        76.58572387695312,
+        265.4606018066406,
+        84.55583953857422
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        294.576904296875,
+        76.58572387695312,
+        297.99609375,
+        84.55583953857422
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        304.233642578125,
+        76.58572387695312,
+        307.65283203125,
+        84.55583953857422
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        383.26336669921875,
+        76.58572387695312,
+        386.68255615234375,
+        84.55583953857422
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        432.90264892578125,
+        76.58572387695312,
+        436.32183837890625,
+        84.55583953857422
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        457.5504455566406,
+        76.58572387695312,
+        460.9696350097656,
+        84.55583953857422
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        174.05172729492188,
+        103.08634948730469,
+        177.4709014892578,
+        111.05646514892578
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        218.55918884277344,
+        103.08634948730469,
+        221.97836303710938,
+        111.05646514892578
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        132.61068725585938,
+        153.62461853027344,
+        136.0298614501953,
+        161.5947265625
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        173.99746704101562,
+        142.08909606933594,
+        177.41664123535156,
+        150.0592041015625
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        188.8583984375,
+        142.08909606933594,
+        192.27757263183594,
+        150.0592041015625
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        385.4338684082031,
+        153.62461853027344,
+        388.8530578613281,
+        161.5947265625
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        404.08917236328125,
+        142.08909606933594,
+        407.50836181640625,
+        150.0592041015625
+      ]
+    },
+    {
+      "page": 4,
+      "text": "count",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        69.97116088867188,
+        175.0241241455078,
+        90.81300354003906,
+        182.99423217773438
+      ]
+    },
+    {
+      "page": 4,
+      "text": "−",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        146.97483825683594,
+        169.2051239013672,
+        153.5581512451172,
+        177.17523193359375
+      ]
+    },
+    {
+      "page": 4,
+      "text": "1",
+      "font": "CMR8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        153.56134033203125,
+        169.35231018066406,
+        157.79347229003906,
+        177.32241821289062
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        219.46580505371094,
+        201.52474975585938,
+        222.88497924804688,
+        209.49485778808594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        268.2076416015625,
+        201.52474975585938,
+        271.6268310546875,
+        209.49485778808594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        283.0685729980469,
+        201.52474975585938,
+        286.4877624511719,
+        209.49485778808594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        337.03253173828125,
+        201.52474975585938,
+        340.45172119140625,
+        209.49485778808594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        360.49456787109375,
+        201.52474975585938,
+        363.91375732421875,
+        209.49485778808594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        489.2726745605469,
+        369.0595397949219,
+        492.6918640136719,
+        377.0296325683594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        520.7946166992188,
+        369.0595397949219,
+        524.2138061523438,
+        377.0296325683594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        530.4513549804688,
+        369.0595397949219,
+        533.8705444335938,
+        377.0296325683594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        540.3973388671875,
+        369.0595397949219,
+        543.8165283203125,
+        377.0296325683594
+      ]
+    },
+    {
+      "page": 4,
+      "text": "†",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        306.1170654296875,
+        742.9552612304688,
+        309.87896728515625,
+        750.9253540039062
+      ]
+    },
+    {
+      "page": 4,
+      "text": "†",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        362.86907958984375,
+        742.9552612304688,
+        366.6309814453125,
+        750.9253540039062
+      ]
+    },
+    {
+      "page": 4,
+      "text": "†",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        306.11700439453125,
+        766.1184692382812,
+        309.87890625,
+        774.0885620117188
+      ]
+    },
+    {
+      "page": 4,
+      "text": "†",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        362.8690185546875,
+        766.1184692382812,
+        366.63092041015625,
+        774.0885620117188
+      ]
+    },
+    {
+      "page": 4,
+      "text": "†",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        99.12410736083984,
+        786.5369873046875,
+        102.88600158691406,
+        794.507080078125
+      ]
+    },
+    {
+      "page": 5,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        169.75680541992188,
+        488.7572326660156,
+        173.1759796142578,
+        496.7273254394531
+      ]
+    },
+    {
+      "page": 5,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        256.3173522949219,
+        488.7572326660156,
+        259.7365417480469,
+        496.7273254394531
+      ]
+    },
+    {
+      "page": 5,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        317.47271728515625,
+        488.7572326660156,
+        320.89190673828125,
+        496.7273254394531
+      ]
+    },
+    {
+      "page": 5,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        380.611083984375,
+        488.7572326660156,
+        384.0302734375,
+        496.7273254394531
+      ]
+    },
+    {
+      "page": 5,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        522.32373046875,
+        488.7572326660156,
+        525.742919921875,
+        496.7273254394531
+      ]
+    },
+    {
+      "page": 5,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        536.406494140625,
+        488.7572326660156,
+        539.82568359375,
+        496.7273254394531
+      ]
+    },
+    {
+      "page": 5,
+      "text": "′",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        347.02850341796875,
+        496.1885070800781,
+        349.3238830566406,
+        504.15863037109375
+      ]
+    },
+    {
+      "page": 5,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        347.02850341796875,
+        503.37396240234375,
+        350.44769287109375,
+        511.34405517578125
+      ]
+    },
+    {
+      "page": 5,
+      "text": "j",
+      "font": "CMMI8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        378.9585876464844,
+        502.0075378417969,
+        382.3777770996094,
+        509.9776306152344
+      ]
+    },
+    {
+      "page": 6,
+      "text": "∗",
+      "font": "CMSY8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        425.14080810546875,
+        326.1212158203125,
+        429.3729248046875,
+        334.0913391113281
+      ]
+    },
+    {
+      "page": 6,
+      "text": "all",
+      "font": "CMR8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        146.29513549804688,
+        552.493896484375,
+        155.22962951660156,
+        560.4639892578125
+      ]
+    },
+    {
+      "page": 6,
+      "text": "native",
+      "font": "CMR8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        207.5240020751953,
+        552.4268798828125,
+        230.0953369140625,
+        560.39697265625
+      ]
+    },
+    {
+      "page": 6,
+      "text": "foreign",
+      "font": "CMR8",
+      "size_pdf_pt": 7.970111846923828,
+      "bbox": [
+        269.49041748046875,
+        552.493896484375,
+        294.65203857421875,
+        560.4639892578125
+      ]
+    }
+  ],
+  "status": "PASS",
+  "visual_review": "SEPARATE_REQUIRED",
+  "human_review": "NOT_RUN"
+}

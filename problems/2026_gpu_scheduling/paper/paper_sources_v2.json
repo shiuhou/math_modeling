@@ -259,5 +259,26 @@
     "old_r2_pdf_sha256": "26a0a268e7c89439764388d94dd5b21708c17e35a810d51626e2e74085593f0f",
     "no_scheduler_or_replay_rerun": true,
     "notes": "All C0--C4 Table 5 JCT/completion values are generated from v2_runtime_equivalence.json case keys; allocation rates use partition-own and full-pool contribution labels separately."
+  },
+  "final_publication": {
+    "status": "READY_FOR_TEAM_REVIEW",
+    "source_commit": "c5905595542b1f8a878332fc43d32e08854e8791",
+    "tex": "problems/2026_gpu_scheduling/paper/final_publication/document.tex",
+    "pdf": {
+      "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Report.pdf",
+      "bytes": 124765,
+      "sha256": "515e7ab33ba27452f79f8c52a9825971b2d5cef1482956950c65c1f395b62b26"
+    },
+    "code_zip": {
+      "path": "submission/20261020-final-publication/REVIEW_ONLY/Problem_B_Code.zip",
+      "bytes": 473226,
+      "sha256": "761e14015355ef2c5e9d77cae5413da2c92df390235d98ae17925bc4135757ff"
+    },
+    "pages": 8,
+    "numeric_checks": "submission/20261020-final-publication/records/pdf_numeric_checks.json",
+    "manifest": "submission/20261020-final-publication/submission_manifest.json",
+    "identity": "confirmed user messages; public distribution authorized",
+    "human_review": "NOT_RUN",
+    "actually_submitted": "NOT_RUN"
   }
 }

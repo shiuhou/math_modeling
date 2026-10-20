@@ -1,0 +1,57 @@
+{
+  "zip_sha256": "761e14015355ef2c5e9d77cae5413da2c92df390235d98ae17925bc4135757ff",
+  "zip_bytes": 473226,
+  "members": 181,
+  "manifest_member_hashes": "PASS",
+  "clean_extraction": "PASS",
+  "independent_environment": "fresh venv without system-site-packages",
+  "python": "Python 3.12.3",
+  "commands": [
+    {
+      "command": "python3 -m venv .venv",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pip install -r requirements.txt",
+      "exit_code": 0
+    },
+    {
+      "command": "strace -f -e trace=%file -o smoke.files.log .venv/bin/python -I smoke.py",
+      "exit_code": 0
+    },
+    {
+      "command": "strace -f -e trace=%file -o evidence.files.log .venv/bin/python -I check_evidence.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -I reproduce.py --help",
+      "exit_code": 0
+    }
+  ],
+  "unit_tests": 31,
+  "synthetic_CLI_cases": {
+    "C0": 5,
+    "C3": 5,
+    "full-A1": 2
+  },
+  "file_access_trace": {
+    "smoke.files.log": {
+      "sha256": "39e5546cbd7c8a3d9b2295407047ab74480e225e6fdd4ebfc96f45183cff9fc8",
+      "forbidden_worktree_or_local_only_accesses": 0,
+      "local_record": "/tmp/problem-b-clean-final-01zgsppl/smoke.files.log"
+    },
+    "evidence.files.log": {
+      "sha256": "1db724e5fb9674c141c07052918150fb53f6a235e99dbe72e74029867ae42646",
+      "forbidden_worktree_or_local_only_accesses": 0,
+      "local_record": "/tmp/problem-b-clean-final-01zgsppl/evidence.files.log"
+    }
+  },
+  "historical_git_CLI_test": "Not in selected standalone scope; portable CLI tested separately",
+  "full_trace_executed": false,
+  "historical_replay_executed": false,
+  "status": "PASS",
+  "initial_packaging_diagnostics": [
+    "Private legacy absolute prefixes in source metadata: replaced only in distributed provenance copies, with original and portable hashes recorded.",
+    "First smoke selected Git-dependent historical Q3PersistedCLI: recorded ModuleNotFoundError for legacy runner dependency; final smoke selects unchanged standalone Q3Tests and separately exercises portable CLI."
+  ]
+}

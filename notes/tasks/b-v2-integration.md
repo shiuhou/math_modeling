@@ -33,3 +33,28 @@ The fourteen Q2 cases (65k A1-A4/H1-H2/C1 and full A1-A4/H1-H2/C1) are PASS as r
 `paper/output/pdf/problem_b_v2_candidate.pdf` is a new candidate; the unchanged V1 PDF remains in place. It is 9 pages, A4, SHA256 `6249fc0e305ef33880860b577341ba8814e399663952c9e9818f6ca7c2e11e92`. It is based on the V1 document and adds only a bounded integration section with fixed sources and limitations. The source index is `paper/paper_sources_v2.json`. The code supplement candidate is `paper/output/code_supplement_v2_candidate.zip`, 63,904 bytes, SHA256 `958772c8cbc90af656325022d89149f0ac5b3265cd1ff3c736b32a3a55b2e723`; raw CSV and large ledgers are excluded.
 
 This candidate is ready for team review as a technical baseline candidate. It is not a submission release while distribution, identity, human review, and disclosure gates remain blocked.
+
+## Final publication handoff — 2026-10-20
+
+The historical gates above describe the original V2 integration and are retained.
+Current handoff: `submission/20261020-final-publication/`. Publication sources are
+frozen at `c5905595542b1f8a878332fc43d32e08854e8791`; core research sources remain
+unchanged from `990846fc89bf714d8e88e458d028d1f0d22712a4`.
+
+The eight-page report includes the confirmed falcons names and HKUST(GZ), with
+explicit permission for public GitHub. The supplied registration guidelines have
+now been read, including the separate report/ZIP upload screens. Beichen Ji is the
+confirmed uploader. No advisor or unrelated competition control number is required.
+
+All 100 actual-PDF checks pass, including C0–C4 cells, 217,578 completions, worker
+strata, winner wording, and A100 weighted occupancy. Ordinary embedded type is at
+least 11.0585 PDF points; all pages were visually inspected. The standalone ZIP
+passes 31 existing small tests, three synthetic CLI cases and packaged evidence
+checks in a fresh environment. File-access traces show no original-worktree or
+LOCAL_ONLY dependency. No full-trace scheduler or historical replay was run.
+
+State is READY_FOR_TEAM_REVIEW. The only artifact pair is in REVIEW_ONLY; exact
+hashes, source mappings, checks and CMT instructions are in the adjacent manifest
+and records. AI wording and human read-through/approval of those exact hashes are
+pending; SUBMISSION_READY is not PASS and ACTUALLY_SUBMITTED remains NOT_RUN.
+The PR stays Draft; main, the V1 tag, all historical PDFs and results are unchanged.
